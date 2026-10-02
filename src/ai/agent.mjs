@@ -108,6 +108,7 @@ export async function askHomeAssistant(userText) {
         parts: [
           {
             functionResponse: {
+              id: call.id,
               name: call.name,
               response: {
                 result,

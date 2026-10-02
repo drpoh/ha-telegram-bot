@@ -11,11 +11,14 @@ import {
 } from "../memory/devices.mjs";
 
 import { callHA } from "../mcp/executor.mjs";
+import { rememberControlledMany } from "../memory/controlled.mjs";
+import { getLastControlledText } from "../memory/controlled.mjs";
 
 const MAX_AGENT_STEPS = 10;
 
 export async function askHomeAssistant(userText) {
   const deviceContext = getDeviceMemoryText();
+  const controlledContext = getLastControlledText();
 
   const contents = [
     ...getConversationHistory(),
@@ -25,7 +28,8 @@ export async function askHomeAssistant(userText) {
         {
           text: buildSystemPrompt(
             userText,
-            deviceContext
+            deviceContext,
+            controlledContext
           ),
         },
       ],
@@ -60,6 +64,7 @@ export async function askHomeAssistant(userText) {
       return finalText;
     }
 
+    const controlledByDomain = new Map();
     for (const part of functionCalls) {
       const call = part.functionCall;
 
@@ -70,6 +75,23 @@ export async function askHomeAssistant(userText) {
           call.name,
           call.args || {}
         );
+        
+        if (
+          call.name === "ha_call_service" &&
+          call.args?.domain &&
+          call.args?.entity_id &&
+          !result?.isError
+        ) {
+          const entities =
+            controlledByDomain.get(call.args.domain) || [];
+
+          entities.push(call.args.entity_id);
+
+          controlledByDomain.set(
+            call.args.domain,
+            entities
+          );
+        }
       } catch (error) {
         console.error(
           `MCP tool ${call.name} error:`,
@@ -94,6 +116,13 @@ export async function askHomeAssistant(userText) {
           },
         ],
       });
+    }
+    for (const [domain, entityIds] of controlledByDomain) {
+      rememberControlledMany(domain, entityIds);
+
+      console.log(
+        `Controlled → ${domain} / ${entityIds.join(", ")}`
+      );
     }
   }
 

@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node src/index.mjs",
     "dev": "node --watch src/index.mjs",
-    "check": "node --check src/index.mjs",
+    "check": "find src -name \"*.mjs\" -type f -exec node --check {} \\;",
     "test": "npm run check"
   },
   "keywords": [

@@ -7,8 +7,8 @@
   "scripts": {
     "start": "node src/index.mjs",
     "dev": "node --watch src/index.mjs",
-    "check": "find src -name \"*.mjs\" -type f -exec node --check {} \\;",
-    "test": "npm run check"
+    "check": "find src test -name \"*.mjs\" -type f -exec node --check {} \\;",
+    "test": "npm run check && node --test test/*.test.mjs"
   },
   "keywords": [
     "home-assistant",

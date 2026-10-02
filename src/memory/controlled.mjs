@@ -44,3 +44,10 @@ ${lastControlled.entities.map((id) => `- ${id}`).join("\n")}
 Не используй весь список результатов предыдущего поиска вместо реально управляемых устройств.
 `;
 }
+
+export function clearControlledMemory() {
+  lastControlled = {
+    domain: null,
+    entities: [],
+  };
+}

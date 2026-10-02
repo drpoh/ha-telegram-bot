@@ -20,3 +20,9 @@ export function getConversationHistory() {
 export function clearConversationHistory() {
   conversationHistory.length = 0;
 }
+export function clearControlledMemory() {
+  lastControlled = {
+    domain: null,
+    entities: [],
+  };
+}

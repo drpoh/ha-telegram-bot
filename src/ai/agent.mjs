@@ -1,4 +1,4 @@
-import { generateWithGemini } from "./providers/gemini.mjs";
+import { generateAI } from "./router.mjs";
 import { buildSystemPrompt } from "./prompt.mjs";
 
 import {
@@ -34,7 +34,7 @@ export async function askHomeAssistant(userText) {
 
   for (let step = 0; step < MAX_AGENT_STEPS; step++) {
     const { response, model, provider } =
-      await generateWithGemini(contents);
+      await generateAI(contents);
 
     console.log(`${provider} OK → ${model}`);
 

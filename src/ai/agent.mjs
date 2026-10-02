@@ -1,5 +1,7 @@
 import { generateAI } from "./router.mjs";
 import { buildSystemPrompt } from "./prompt.mjs";
+import { getKnownDeviceContext } from "../home/entity-resolver.mjs";
+
 
 import {
   addToHistory,
@@ -19,7 +21,7 @@ const MAX_AGENT_STEPS = 10;
 export async function askHomeAssistant(userText) {
   const deviceContext = getDeviceMemoryText();
   const controlledContext = getLastControlledText();
-
+  const knownDeviceContext = getKnownDeviceContext(userText);
   const contents = [
     ...getConversationHistory(),
     {
@@ -29,7 +31,8 @@ export async function askHomeAssistant(userText) {
           text: buildSystemPrompt(
             userText,
             deviceContext,
-            controlledContext
+            controlledContext,
+            knownDeviceContext
           ),
         },
       ],

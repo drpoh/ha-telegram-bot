@@ -1,0 +1,12 @@
+{
+  "kitchen_main_light": {
+    "name": "Основной свет кухни",
+    "entity_id": "light.kukhnia_svet",
+    "domain": "light",
+    "aliases": [
+      "свет на кухне",
+      "кухонный свет",
+      "основной свет на кухне"
+    ]
+  }
+}

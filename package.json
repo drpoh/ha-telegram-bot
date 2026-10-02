@@ -5,9 +5,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "node bot.mjs",
-    "dev": "node --watch bot.mjs",
-    "check": "node --check bot.mjs",
+    "start": "node src/index.mjs",
+    "dev": "node --watch src/index.mjs",
+    "check": "node --check src/index.mjs",
     "test": "npm run check"
   },
   "keywords": [

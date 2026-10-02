@@ -1,0 +1,47 @@
+import { connectMcp, closeMcp } from "./mcp/client.mjs";
+import {
+  startTelegram,
+  stopTelegram,
+} from "./telegram/bot.mjs";
+import {
+  startHttpServer,
+  stopHttpServer,
+} from "./api/server.mjs";
+
+let shuttingDown = false;
+
+async function shutdown(signal) {
+  if (shuttingDown) {
+    return;
+  }
+
+  shuttingDown = true;
+
+  console.log(`Shutdown → ${signal}`);
+
+  stopTelegram(signal);
+
+  try {
+    await stopHttpServer();
+  } catch (error) {
+    console.error("HTTP shutdown error:", error);
+  }
+
+  try {
+    await closeMcp();
+  } catch (error) {
+    console.error("MCP shutdown error:", error);
+  }
+
+  process.exit(0);
+}
+
+await connectMcp();
+
+startHttpServer();
+startTelegram();
+
+console.log("Home Assistant AI Bot v2 started");
+
+process.once("SIGINT", () => shutdown("SIGINT"));
+process.once("SIGTERM", () => shutdown("SIGTERM"));

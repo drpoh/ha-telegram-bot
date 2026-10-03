@@ -13,6 +13,10 @@ import {
 } from "../memory/devices.mjs";
 
 import { callHA } from "../mcp/executor.mjs";
+import {
+  isAiSceneTool,
+  callAiSceneTool,
+} from "../scenes/tools.mjs";
 import { rememberControlledMany } from "../memory/controlled.mjs";
 import { startLearningSession } from "../learning/session.mjs";
 import { getLastControlledText } from "../memory/controlled.mjs";
@@ -78,10 +82,17 @@ export async function askHomeAssistant(userText) {
       let result;
 
       try {
-        result = await callHA(
-          call.name,
-          call.args || {}
-        );
+        if (isAiSceneTool(call.name)) {
+          result = await callAiSceneTool(
+            call.name,
+            call.args || {}
+          );
+        } else {
+          result = await callHA(
+            call.name,
+            call.args || {}
+          );
+        }
         
         if (
           call.name === "ha_call_service" &&

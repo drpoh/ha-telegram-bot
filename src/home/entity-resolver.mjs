@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { findLearnedDevice } from "../memory/learned-devices.mjs";
 
 const devices = JSON.parse(
   fs.readFileSync(
@@ -17,15 +18,40 @@ function normalize(text) {
 export function resolveKnownDevice(text) {
   const normalized = normalize(text);
 
+  // 1. Manual config always has highest priority.
   for (const [id, device] of Object.entries(devices)) {
     for (const alias of device.aliases || []) {
       if (normalized.includes(normalize(alias))) {
         return {
           id,
+          source: "config",
           ...device,
         };
       }
     }
+  }
+
+  // 2. Learned aliases from SQLite.
+  try {
+    const learned = findLearnedDevice(text);
+
+    if (learned) {
+      return {
+        id: `learned:${learned.alias}`,
+        name:
+          learned.friendly_name ||
+          learned.alias,
+        entity_id: learned.entity_id,
+        domain: learned.domain,
+        aliases: [learned.alias],
+        source: "learned",
+      };
+    }
+  } catch (error) {
+    console.error(
+      "Learned device lookup failed:",
+      error?.message || error
+    );
   }
 
   return null;

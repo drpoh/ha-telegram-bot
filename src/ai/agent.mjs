@@ -14,11 +14,14 @@ import {
 
 import { callHA } from "../mcp/executor.mjs";
 import { rememberControlledMany } from "../memory/controlled.mjs";
+import { startLearningSession } from "../learning/session.mjs";
 import { getLastControlledText } from "../memory/controlled.mjs";
+import { finalizeLearning } from "../learning/learner.mjs";
 
 const MAX_AGENT_STEPS = 10;
 
 export async function askHomeAssistant(userText) {
+  startLearningSession(userText);
   const deviceContext = getDeviceMemoryText();
   const controlledContext = getLastControlledText();
   const knownDeviceContext = getKnownDeviceContext(userText);
@@ -63,6 +66,7 @@ export async function askHomeAssistant(userText) {
 
       addToHistory("user", userText);
       addToHistory("model", finalText);
+      finalizeLearning();
 
       return finalText;
     }

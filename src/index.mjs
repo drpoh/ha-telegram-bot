@@ -1,3 +1,6 @@
+import { initDatabase } from "./db/database.mjs";
+import { loadControlledMemory } from "./memory/controlled.mjs";
+import { loadConversationHistory } from "./memory/conversation.mjs";
 import { connectMcp, closeMcp } from "./mcp/client.mjs";
 import {
   startTelegram,
@@ -35,6 +38,10 @@ async function shutdown(signal) {
 
   process.exit(0);
 }
+
+initDatabase();
+loadControlledMemory();
+loadConversationHistory();
 
 await connectMcp();
 

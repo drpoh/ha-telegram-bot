@@ -42,3 +42,7 @@ export async function closeMcp() {
   await client.close();
   client = null;
 }
+
+export function isMcpConnected() {
+  return client !== null;
+}

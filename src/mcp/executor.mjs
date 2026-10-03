@@ -10,6 +10,8 @@ export async function callHA(name, args = {}) {
     name,
     arguments: args,
   });
+  console.log(`MCP ← ${name}`, JSON.stringify(result?.structuredContent ?? result, null, 2));
+
 
   if (name === "ha_search") {
     const updated = updateDeviceMemory(

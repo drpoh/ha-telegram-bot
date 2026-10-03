@@ -2,7 +2,7 @@ import { Telegraf } from "telegraf";
 
 import { config } from "../config/env.mjs";
 import { queueHomeAssistantRequest } from "../utils/queue.mjs";
-
+import { getAIStatus } from "../ai/router.mjs";
 import {
   clearConversationHistory,
 } from "../memory/conversation.mjs";
@@ -14,6 +14,8 @@ import {
 import {
   clearControlledMemory,
 } from "../memory/controlled.mjs";
+
+import { getHealthStatus } from "../status/health.mjs";
 
 let bot = null;
 
@@ -35,26 +37,48 @@ export function startTelegram() {
     );
   });
 
-  bot.command("status", async (ctx) => {
-    if (!isAllowed(ctx)) return;
+bot.command("status", async (ctx) => {
+  if (!isAllowed(ctx)) return;
 
-    await ctx.reply(
-      "🟢 Home Assistant AI Bot работает\n" +
-      "MCP: подключён\n" +
-      "HTTP API: активен\n" +
-      "Telegram: активен"
-    );
-  });
+  const status = getHealthStatus();
+
+  await ctx.reply(
+    "🏠 Home Assistant AI Bot v2\n\n" +
+    `HA-MCP: ${status.mcp ? "🟢 connected" : "🔴 disconnected"}\n` +
+    `Queue: ${status.queue.active} active / ${status.queue.pending} pending\n` +
+    `Requests: ${status.queue.total}\n` +
+    `Uptime: ${status.uptime}\n` +
+    `Node: ${status.node}\n` +
+    `PID: ${status.pid}`
+  );
+});
 
   bot.command("model", async (ctx) => {
     if (!isAllowed(ctx)) return;
 
+    const ai = getAIStatus();
+
+    let lastUsed = "never";
+
+    if (ai.timestamp) {
+      const seconds = Math.floor(
+        (Date.now() - ai.timestamp) / 1000
+      );
+
+      if (seconds < 60) {
+        lastUsed = `${seconds}s ago`;
+      } else {
+        lastUsed = `${Math.floor(seconds / 60)}m ago`;
+      }
+    }
+
     await ctx.reply(
-      "🤖 AI configuration\n\n" +
-      "Primary: Gemini\n" +
-      "Model: gemini-3.5-flash-lite\n" +
-      "Fallback: OpenRouter\n" +
-      "OpenRouter model: nvidia/nemotron-3.5-lightning:free"
+      "🤖 AI status\n\n" +
+      `Primary: ${ai.primary}\n` +
+      `Fallback: ${ai.fallback.join(", ") || "none"}\n\n` +
+      `Last provider: ${ai.provider || "none"}\n` +
+      `Last model: ${ai.model || "none"}\n` +
+      `Last used: ${lastUsed}`
     );
   });
 

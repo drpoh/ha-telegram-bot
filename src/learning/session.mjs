@@ -1,3 +1,12 @@
+const LEARNABLE_DOMAINS = new Set([
+  "light",
+  "switch",
+  "climate",
+  "cover",
+  "fan",
+  "media_player",
+]);
+
 let session = {
   userText: null,
   originalUserText: null,
@@ -11,6 +20,7 @@ export function startLearningSession(userText) {
   const hasPendingSearch =
     session.searchQuery &&
     session.searchDomain &&
+    LEARNABLE_DOMAINS.has(session.searchDomain) &&
     session.searchedEntities.length > 0 &&
     session.controlledEntities.length === 0;
 
@@ -47,6 +57,10 @@ export function rememberLearningSearch(
   domain,
   entities = []
 ) {
+  if (!LEARNABLE_DOMAINS.has(domain)) {
+    return;
+  }
+
   session.searchQuery = query || null;
   session.searchDomain = domain || null;
 

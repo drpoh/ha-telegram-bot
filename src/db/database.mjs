@@ -9,7 +9,14 @@ function runSql(sql, dbPath = DEFAULT_DB_PATH) {
 
   return execFileSync(
     "sqlite3",
-    ["-batch", "-noheader", dbPath, sql],
+    [
+      "-batch",
+      "-noheader",
+      "-cmd",
+      ".timeout 5000",
+      dbPath,
+      sql,
+    ],
     {
       encoding: "utf8",
       maxBuffer: 1024 * 1024,
@@ -69,4 +76,12 @@ export function deleteMemory(key, dbPath = DEFAULT_DB_PATH) {
 
 function sqlString(value) {
   return `'${String(value).replaceAll("'", "''")}'`;
+}
+
+export function executeSql(sql, dbPath = DEFAULT_DB_PATH) {
+  return runSql(sql, dbPath);
+}
+
+export function escapeSql(value) {
+  return sqlString(value);
 }

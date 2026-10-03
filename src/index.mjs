@@ -1,3 +1,4 @@
+import { initSceneDatabase } from "./scenes/store.mjs";
 import { initDatabase } from "./db/database.mjs";
 import { loadControlledMemory } from "./memory/controlled.mjs";
 import { loadConversationHistory } from "./memory/conversation.mjs";
@@ -40,6 +41,7 @@ async function shutdown(signal) {
 }
 
 initDatabase();
+initSceneDatabase();
 loadControlledMemory();
 loadConversationHistory();
 

@@ -22,14 +22,62 @@ import { startLearningSession } from "../learning/session.mjs";
 import { getLastControlledText } from "../memory/controlled.mjs";
 import { finalizeLearning } from "../learning/learner.mjs";
 import { isAiHistoryTool, callAiHistoryTool } from "../history/tools.mjs";
+import { resolveKnownDevice } from "../home/entity-resolver.mjs";
+import { buildHomeContext, renderHomeContext } from "../context/builder.mjs";
 
 const MAX_AGENT_STEPS = 10;
+
+export function isReadStateRequest(text = "") {
+  return /(состояни|статус|включен|включён|выключен|выключён|работает|горит|открыт|закрыт)/i.test(text);
+}
+
+function extractState(result, entityId) {
+  const content = result?.structuredContent ?? result;
+  const data = content?.data ?? content;
+
+  if (data?.entity_id === entityId) return data;
+  if (data?.data?.entity_id === entityId) return data.data;
+  if (data?.state?.entity_id === entityId) return data.state;
+  if (data?.entity?.entity_id === entityId) return data.entity;
+  return null;
+}
+
+async function buildCurrentStateContext(userText) {
+  if (!isReadStateRequest(userText)) return "";
+
+  const device = resolveKnownDevice(userText);
+  if (!device?.entity_id) return "";
+
+  try {
+    const result = await callHA("ha_get_state", {
+      entity_id: device.entity_id,
+    });
+    const state = extractState(result, device.entity_id);
+    if (!state) return "";
+
+    return renderHomeContext(buildHomeContext({
+      currentState: [{
+        entity_id: device.entity_id,
+        name: device.name,
+        state: state.state,
+      }],
+      limits: { currentState: 1 },
+    }));
+  } catch (error) {
+    console.error(
+      "Current state context failed:",
+      error?.message || error
+    );
+    return "";
+  }
+}
 
 export async function askHomeAssistant(userText) {
   startLearningSession(userText);
   const deviceContext = getDeviceMemoryText();
   const controlledContext = getLastControlledText();
   const knownDeviceContext = getKnownDeviceContext(userText);
+  const homeContext = await buildCurrentStateContext(userText);
   const contents = [
     ...getConversationHistory(),
     {
@@ -40,7 +88,8 @@ export async function askHomeAssistant(userText) {
             userText,
             deviceContext,
             controlledContext,
-            knownDeviceContext
+            knownDeviceContext,
+            homeContext
           ),
         },
       ],

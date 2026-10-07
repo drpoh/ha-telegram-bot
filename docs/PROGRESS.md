@@ -43,7 +43,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 | Device/semantic memory | 🟡 In progress | 65% | Existing device memory reused; v3 semantic expansion remains |
 | Behavioral memory | 🟡 Early | 25% | Learning infrastructure exists; correction learning remains |
 | Operational memory | 🟡 Early | 25% | Controlled-device/outcome foundations exist |
-| Current HA state context | 🟡 In progress | 40% | Needs fuller integration into v3 context |
+| Current HA state context | 🟡 In progress | 65% | Known-device read requests prefetch one bounded live state into v3 context; broader relevant-state context remains |
 | Post-action verification | 🟡 Early | 20% | Needs deterministic verify-after-action pipeline |
 | Shadow / Suggest mode | ⬜ Planned | 0% | Next major autonomy stage |
 | AUTO_SAFE autonomy | ⬜ Planned | 0% | Enable only after shadow-mode validation |
@@ -58,10 +58,12 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 - The assistant correctly avoids presenting one full cycle as a reliable average.
 - Raw `ha_get_history` is not directly exposed as an AI tool.
 - History logging was reduced by roughly 220× without changing analysis results.
+- A known-device state question prefetches exactly one live `ha_get_state`, performs no search/history call, and reuses that state in the AI context without a duplicate state request.
+- Control commands are excluded from state prefetch so normal actions do not gain an unnecessary read call.
 
 ## Test status
 
-**41 / 41 tests passing**
+**43 / 43 tests passing**
 
 Current automated coverage includes:
 

@@ -61,7 +61,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 - A known-device state question prefetches exactly one live `ha_get_state`, performs no search/history call, and reuses that state in the AI context without a duplicate state request.
 - Control commands are excluded from state prefetch so normal actions do not gain an unnecessary read call.
 - Decision Engine deterministically maps proposals through Policy Engine to observe/suggest/approve/confirm/deny outcomes; it has no MCP execution access.
-- State-changing `ha_call_service` proposals now pass through a shadow evaluator before the existing v2 execution path; shadow records what policy would decide but never executes an action itself.
+- State-changing `ha_call_service` proposals now pass through a shadow evaluator before the existing v2 execution path; shadow records what policy would decide but never executes an action itself. Persistent decision audit entries now link authorized decisions to execution and post-action verification status.
 - Live read-only regression produced one bounded `ha_get_state`, zero service calls and zero shadow proposals.
 - Runtime action source is explicit: current user requests default to `user_explicit`; future proactive calls must opt into `autonomous`.
 - Live autonomous regression proposed `light.turn_off` for the kitchen, produced one shadow decision and one policy block, and made zero `ha_call_service` calls; the device was not changed.
@@ -81,7 +81,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 
 ## Test status
 
-**107 / 107 tests passing**
+**109 / 109 tests passing**
 
 Current automated coverage includes:
 

@@ -85,7 +85,8 @@ bot.command("status", async (ctx) => {
       const entity = Array.isArray(item.entity_id)
         ? item.entity_id.join(",")
         : item.entity_id || "-";
-      return `${mark} ${item.outcome} | ${item.action} | ${entity} | ${item.source}`;
+      const verification = item.verification ? ` | verify:${item.verification}` : "";
+      return `${mark} ${item.outcome} | ${item.action} | ${entity} | ${item.source} | exec:${item.execution || "-"}${verification}`;
     });
 
     await ctx.reply(header + "\n\nПоследние решения:\n" + lines.join("\n"));

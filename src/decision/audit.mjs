@@ -30,6 +30,7 @@ export function rememberDecisionAudit({
   if (!shadow?.proposal) return null;
 
   const entry = {
+    id: crypto.randomUUID(),
     at,
     source: source || null,
     action: shadow.proposal.action || null,
@@ -38,6 +39,8 @@ export function rememberDecisionAudit({
     policy: shadow.policy?.level || null,
     authorized: Boolean(authorized),
     behavioral_downgrade: Boolean(shadow.behavioralDowngrade),
+    execution: authorized ? "pending" : "blocked",
+    verification: null,
   };
 
   entries.push(entry);
@@ -48,6 +51,18 @@ export function rememberDecisionAudit({
 
 export function getDecisionAudit(limit = 20) {
   return structuredClone(entries.slice(-Math.max(0, limit)));
+}
+
+export function completeDecisionAudit(id, { result } = {}) {
+  const entry = entries.find((item) => item.id === id);
+  if (!entry) return null;
+
+  const content = result?.structuredContent ?? result;
+  const failed = result?.isError === true || content?.success === false;
+  entry.execution = failed ? "failed" : "completed";
+  entry.verification = result?.verification?.status ?? null;
+  persist();
+  return structuredClone(entry);
 }
 
 function summarize(items) {

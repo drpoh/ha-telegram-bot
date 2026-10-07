@@ -4,6 +4,7 @@ import { initDatabase } from "../src/db/database.mjs";
 
 import {
   clearDecisionAudit,
+  completeDecisionAudit,
   getDecisionAudit,
   getDecisionAuditSummary,
   rememberDecisionAudit,
@@ -35,7 +36,9 @@ test("stores compact decision audit without raw prompt or payload", () => {
     at: 123,
   });
 
-  assert.deepEqual(entry, {
+  assert.equal(typeof entry.id, "string");
+  assert.deepEqual({ ...entry, id: "<id>" }, {
+    id: "<id>",
     at: 123,
     source: "autonomous",
     action: "light.turn_on",
@@ -44,7 +47,36 @@ test("stores compact decision audit without raw prompt or payload", () => {
     policy: "auto_safe",
     authorized: true,
     behavioral_downgrade: false,
+    execution: "pending",
+    verification: null,
   });
+});
+
+test("links authorized decision to execution verification", () => {
+  const entry = rememberDecisionAudit({
+    shadow: shadow("approve", "auto_safe"),
+    source: "autonomous",
+    authorized: true,
+  });
+
+  const completed = completeDecisionAudit(entry.id, {
+    result: { verification: { status: "confirmed" } },
+  });
+
+  assert.equal(completed.execution, "completed");
+  assert.equal(completed.verification, "confirmed");
+  assert.equal(getDecisionAudit(1)[0].verification, "confirmed");
+});
+
+test("blocked decision never enters pending execution", () => {
+  const entry = rememberDecisionAudit({
+    shadow: shadow("suggest", "suggest"),
+    source: "autonomous",
+    authorized: false,
+  });
+
+  assert.equal(entry.execution, "blocked");
+  assert.equal(entry.verification, null);
 });
 
 test("summarizes lifetime buffer and recent decision window", () => {

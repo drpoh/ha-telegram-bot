@@ -11,51 +11,82 @@ function numericPoints(samples = []) {
     .sort((a, b) => a.timeMs - b.timeMs);
 }
 
-export function analyzeSaunaHeating(
+function splitContinuous(points, maxGapMinutes) {
+  const maxGapMs = maxGapMinutes * 60_000;
+  const segments = [];
+  let current = [];
+
+  for (const point of points) {
+    const previous = current.at(-1);
+    if (previous && point.timeMs - previous.timeMs > maxGapMs) {
+      if (current.length) segments.push(current);
+      current = [];
+    }
+    current.push(point);
+  }
+
+  if (current.length) segments.push(current);
+  return segments;
+}
+
+export function findSaunaHeatingCycles(
   samples = [],
   {
     targetTemperature = 85,
     minimumRise = 5,
-    lookbackMinutes = 30,
+    lookbackMinutes = 90,
+    maxGapMinutes = 5,
   } = {}
 ) {
-  const points = numericPoints(samples);
-  if (points.length < 2) return null;
+  const segments = splitContinuous(numericPoints(samples), maxGapMinutes);
+  const cycles = [];
 
-  const targetIndex = points.findIndex((point) => point.temperature >= targetTemperature);
-  if (targetIndex < 1) return null;
+  for (const points of segments) {
+    for (let i = 1; i < points.length; i++) {
+      const previous = points[i - 1];
+      const target = points[i];
 
-  const target = points[targetIndex];
-  const lookbackMs = lookbackMinutes * 60_000;
-  const candidates = points
-    .slice(0, targetIndex)
-    .filter((point) =>
-      target.timeMs - point.timeMs <= lookbackMs &&
-      target.temperature - point.temperature >= minimumRise
-    );
+      if (!(previous.temperature < targetTemperature && target.temperature >= targetTemperature)) {
+        continue;
+      }
 
-  if (candidates.length === 0) return null;
+      const lookbackMs = lookbackMinutes * 60_000;
+      const candidates = points
+        .slice(0, i)
+        .filter((point) =>
+          target.timeMs - point.timeMs <= lookbackMs &&
+          target.temperature - point.temperature >= minimumRise
+        );
 
-  const start = candidates.reduce((lowest, point) =>
-    point.temperature < lowest.temperature ? point : lowest
-  );
+      if (!candidates.length) continue;
 
-  const durationMinutes = (target.timeMs - start.timeMs) / 60_000;
-  if (!(durationMinutes > 0)) return null;
+      const start = candidates.reduce((lowest, point) =>
+        point.temperature < lowest.temperature ? point : lowest
+      );
 
-  const rise = target.temperature - start.temperature;
-  const rateCPerMinute = rise / durationMinutes;
+      const durationMinutes = (target.timeMs - start.timeMs) / 60_000;
+      if (!(durationMinutes > 0)) continue;
 
-  return {
-    targetTemperature,
-    startTemperature: start.temperature,
-    startTime: start.timestamp,
-    reachedTemperature: target.temperature,
-    reachedTime: target.timestamp,
-    durationMinutes,
-    rise,
-    rateCPerMinute,
-  };
+      const rise = target.temperature - start.temperature;
+      cycles.push({
+        targetTemperature,
+        startTemperature: start.temperature,
+        startTime: start.timestamp,
+        reachedTemperature: target.temperature,
+        reachedTime: target.timestamp,
+        durationMinutes,
+        rise,
+        rateCPerMinute: rise / durationMinutes,
+        complete: true,
+      });
+    }
+  }
+
+  return cycles;
+}
+
+export function analyzeSaunaHeating(samples = [], options = {}) {
+  return findSaunaHeatingCycles(samples, options).at(-1) ?? null;
 }
 
 export function estimateMinutesToTarget(
@@ -64,9 +95,11 @@ export function estimateMinutesToTarget(
     targetTemperature = 85,
     windowMinutes = 15,
     minimumRate = 0.05,
+    maxGapMinutes = 5,
   } = {}
 ) {
-  const points = numericPoints(samples);
+  const segments = splitContinuous(numericPoints(samples), maxGapMinutes);
+  const points = segments.at(-1) ?? [];
   if (points.length < 2) return null;
 
   const current = points.at(-1);

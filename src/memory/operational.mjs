@@ -47,6 +47,13 @@ export function rememberOperationalAction({
     verification: result?.verification?.status ?? null,
     expected_state: result?.verification?.expectedState ?? null,
     observed_state: result?.verification?.observedState ?? null,
+    entities: Array.isArray(result?.verification?.entities)
+      ? result.verification.entities.map((item) => ({
+          entity_id: item.entityId,
+          status: item.status,
+          observed_state: item.observedState ?? null,
+        }))
+      : null,
   };
 
   entries.push(entry);
@@ -69,3 +76,29 @@ export function setOperationalMemoryPersistence(dbPath) {
 }
 
 export { MAX_ENTRIES };
+
+
+export function getOperationalContextForEntity(entityId, limit = 3) {
+  if (!entityId) return [];
+
+  return entries
+    .filter((entry) => {
+      const ids = Array.isArray(entry.entity_id)
+        ? entry.entity_id
+        : String(entry.entity_id || "")
+            .split(",")
+            .map((id) => id.trim())
+            .filter(Boolean);
+      return ids.includes(entityId);
+    })
+    .slice(-Math.max(0, limit))
+    .map((entry) => ({
+      at: entry.at,
+      service: entry.service,
+      accepted: entry.accepted,
+      verification: entry.verification,
+      expected_state: entry.expected_state,
+      observed_state: entry.observed_state,
+      entities: entry.entities,
+    }));
+}

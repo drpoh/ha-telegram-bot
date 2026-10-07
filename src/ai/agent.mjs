@@ -34,6 +34,7 @@ import {
 } from "../policy/engine.mjs";
 import { autonomyPolicy } from "../policy/config.mjs";
 import { createPendingConfirmation } from "../decision/pending-confirmation.mjs";
+import { getOperationalContextForEntity } from "../memory/operational.mjs";
 
 const MAX_AGENT_STEPS = 10;
 
@@ -71,7 +72,8 @@ async function buildCurrentStateContext(userText) {
         name: device.name,
         state: state.state,
       }],
-      limits: { currentState: 1 },
+      memories: getOperationalContextForEntity(device.entity_id, 3),
+      limits: { currentState: 1, memories: 3 },
     }));
   } catch (error) {
     console.error(

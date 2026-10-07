@@ -4,7 +4,7 @@
 
 ## Overall status
 
-**Foundation progress: ~65%**
+**Foundation progress: ~70%**
 
 The project is evolving the working v2 bot into a safe, context-aware Home AI Agent without rebuilding the existing system.
 
@@ -42,9 +42,9 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 | Conversation memory | ✅ Existing | 100% | Reused from v2 |
 | Device/semantic memory | 🟡 In progress | 65% | Existing device memory reused; v3 semantic expansion remains |
 | Behavioral memory | 🟡 Early | 25% | Learning infrastructure exists; correction learning remains |
-| Operational memory | 🟡 In progress | 60% | Compact bounded action outcomes persist in SQLite; raw MCP payloads are excluded |
+| Operational memory | 🟡 In progress | 70% | Compact bounded action outcomes persist in SQLite, include per-entity verification, and expose only bounded entity-relevant context |
 | Current HA state context | 🟡 In progress | 65% | Known-device read requests prefetch one bounded live state into v3 context; broader relevant-state context remains |
-| Post-action verification | 🟡 In progress | 75% | Deterministic single-entity light/switch turn_on/turn_off verification is wired with bounded polling and pending/failed states |
+| Post-action verification | 🟡 In progress | 85% | Deterministic light/switch turn_on/turn_off verification supports single and multi-entity calls with bounded per-entity polling and pending/failed states |
 | Shadow / Suggest mode | 🟡 In progress | 40% | State-changing HA service proposals are evaluated/logged in shadow; v2 user-command execution is unchanged |
 | AUTO_SAFE autonomy | 🟡 In progress | 55% | Strict kitchen/living-room allowlist wired; live kitchen autonomous actuation and restore verified |
 | Manual-override learning | ⬜ Planned | 0% | Detect quick user reversal as negative feedback |
@@ -69,13 +69,15 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 - Live AUTO_SAFE smoke test verified the kitchen end to end: initial `on` → autonomous `turn_off` → verified `off` → restored `on` → verified `on`.
 - CONFIRM pending actions are scoped to user+chat, carry an exact one-time token, expire after TTL, execute the stored tool name/arguments rather than regenerated LLM output, and now survive bot restarts through SQLite persistence.
 - Operational memory stores a bounded last-50 compact action ledger with accepted/verification/expected/observed state fields and excludes raw MCP responses.
+- Multi-entity light/switch actions now use one service call followed by independent bounded verification for every entity; one stale entity makes the aggregate result pending without retrying the action.
+- Operational context is exposed to AI only for a precisely resolved entity and is limited to its 3 most recent action outcomes.
 - Explicit user commands remain backward-compatible for normal `suggest` policy, but explicit `confirm` and `deny` policies now stop execution before the HA tool call.
 - Post-action verifier performs bounded state reads without retrying the state-changing service; `confirmed`, `pending`, and `failed` are distinguished.
 - Live verifier test on `light.kukhnia_svet` succeeded: `off` → `on` confirmed in one read → restored `off` confirmed in one read. The verifier also handled an HA-MCP service warning where the subsequent state read already showed the correct restored state.
 
 ## Test status
 
-**87 / 87 tests passing**
+**91 / 91 tests passing**
 
 Current automated coverage includes:
 
@@ -108,9 +110,8 @@ Security-sensitive or high-impact actions remain confirmation/deny candidates.
 
 ## Next milestones
 
-1. Extend verification to multi-entity actions and additional deterministic service types.
-2. Feed only useful bounded operational outcomes into decision context when relevant.
-3. Expand current-state context only where it improves decisions without excessive HA reads.
+1. Extend verification to additional deterministic service types beyond light/switch.
+2. Expand current-state context only where it improves decisions without excessive HA reads.
 4. Add behavioral learning from manual corrections and quick reversals.
 5. Continue shadow/suggest evaluation before expanding the existing AUTO_SAFE allowlist.
 

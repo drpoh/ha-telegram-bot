@@ -4,7 +4,7 @@ import { rememberLearningSearch, rememberLearningControl } from "../learning/ses
 import { rememberOperationalAction } from "../memory/operational.mjs";
 import {
   expectedStateForService,
-  verifyActionState,
+  verifyActionStates,
 } from "../decision/verifier.mjs";
 
 function logMcpResult(name, result) {
@@ -87,10 +87,10 @@ export async function callHA(name, args = {}, { mcpClient = null } = {}) {
           .filter(Boolean);
     const expectedState = expectedStateForService(args.domain, args.service);
 
-    if (entityIds.length === 1 && expectedState) {
-      const verification = await verifyActionState({
+    if (entityIds.length && expectedState) {
+      const verification = await verifyActionStates({
         serviceResult: result,
-        entityId: entityIds[0],
+        entityIds,
         expectedState,
         readState: (entityId) =>
           mcp.callTool({
@@ -107,10 +107,14 @@ export async function callHA(name, args = {}, { mcpClient = null } = {}) {
       };
 
       console.log("VERIFY →", {
-        entity_id: entityIds[0],
+        entity_ids: entityIds,
         expected: expectedState,
-        observed: verification.observedState,
         status: verification.status,
+        entities: verification.entities.map((item) => ({
+          entity_id: item.entityId,
+          observed: item.observedState,
+          status: item.status,
+        })),
       });
     }
 

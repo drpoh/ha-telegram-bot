@@ -81,6 +81,56 @@ export async function verifyActionState({
   };
 }
 
+export async function verifyActionStates({
+  serviceResult,
+  entityIds = [],
+  expectedState,
+  readState,
+  attempts = 3,
+  intervalMs = 250,
+} = {}) {
+  const ids = [...new Set(entityIds)].filter(Boolean);
+  if (!ids.length) {
+    return verifyActionState({
+      serviceResult,
+      expectedState,
+      readState,
+      attempts,
+      intervalMs,
+    });
+  }
+
+  const entities = [];
+  for (const entityId of ids) {
+    entities.push({
+      entityId,
+      ...(await verifyActionState({
+        serviceResult,
+        entityId,
+        expectedState,
+        readState,
+        attempts,
+        intervalMs,
+      })),
+    });
+  }
+
+  const status = entities.some((item) => item.status === VERIFICATION_STATUS.FAILED)
+    ? VERIFICATION_STATUS.FAILED
+    : entities.every((item) => item.status === VERIFICATION_STATUS.CONFIRMED)
+      ? VERIFICATION_STATUS.CONFIRMED
+      : VERIFICATION_STATUS.PENDING;
+
+  return {
+    status,
+    serviceAccepted: entities.every((item) => item.serviceAccepted),
+    expectedState: expectedState ?? null,
+    observedState: entities.length === 1 ? entities[0].observedState : null,
+    attempts: entities.length === 1 ? entities[0].attempts : null,
+    entities,
+  };
+}
+
 export function expectedStateForService(domain, service) {
   if (domain === "light" || domain === "switch") {
     if (service === "turn_on") return "on";

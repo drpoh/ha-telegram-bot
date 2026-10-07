@@ -7,6 +7,7 @@ import {
   MAX_ENTRIES,
   clearOperationalMemory,
   getOperationalMemory,
+  getOperationalContextForEntity,
   loadOperationalMemory,
   rememberOperationalAction,
   setOperationalMemoryPersistence,
@@ -58,6 +59,7 @@ test("stores compact action outcome and reloads it", () => {
     verification: "confirmed",
     expected_state: "on",
     observed_state: "on",
+    entities: null,
   }]);
 
   setOperationalMemoryPersistence(dbPath);
@@ -79,4 +81,56 @@ test("keeps only bounded recent entries", () => {
   assert.equal(saved.length, MAX_ENTRIES);
   assert.equal(saved[0].entity_id, "light.test_5");
   assert.equal(saved.at(-1).entity_id, `light.test_${MAX_ENTRIES + 4}`);
+});
+
+
+test("stores compact per-entity verification for multi-entity action", () => {
+  rememberOperationalAction({
+    name: "ha_call_service",
+    args: {
+      domain: "light",
+      service: "turn_off",
+      entity_id: ["light.one", "light.two"],
+    },
+    result: {
+      structuredContent: { success: true },
+      verification: {
+        status: "pending",
+        expectedState: "off",
+        entities: [
+          { entityId: "light.one", status: "confirmed", observedState: "off" },
+          { entityId: "light.two", status: "pending", observedState: "on" },
+        ],
+      },
+    },
+    at: 2222,
+  });
+
+  const entry = getOperationalMemory()[0];
+  assert.deepEqual(entry.entities, [
+    { entity_id: "light.one", status: "confirmed", observed_state: "off" },
+    { entity_id: "light.two", status: "pending", observed_state: "on" },
+  ]);
+});
+
+
+test("returns only bounded operational context for requested entity", () => {
+  for (const [at, entityId] of [
+    [1, "light.one"],
+    [2, "light.two"],
+    [3, "light.one"],
+    [4, "light.one"],
+  ]) {
+    rememberOperationalAction({
+      name: "ha_call_service",
+      args: { domain: "light", service: "turn_on", entity_id: entityId },
+      result: { structuredContent: { success: true } },
+      at,
+    });
+  }
+
+  const context = getOperationalContextForEntity("light.one", 2);
+  assert.equal(context.length, 2);
+  assert.deepEqual(context.map((item) => item.at), [3, 4]);
+  assert.equal(context.some((item) => "name" in item), false);
 });

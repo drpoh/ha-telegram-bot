@@ -43,6 +43,10 @@ import {
 
 const MAX_AGENT_STEPS = 10;
 
+export function shouldObserveBehaviorAction(source, verificationStatus) {
+  return source !== ACTION_SOURCES.AUTONOMOUS || verificationStatus === "confirmed";
+}
+
 export function isReadStateRequest(text = "") {
   return /(состояни|статус|включен|включён|выключен|выключён|работает|горит|открыт|закрыт|температур|сколько\s+(?:сейчас\s+)?градус)/i.test(text);
 }
@@ -251,14 +255,28 @@ export async function askHomeAssistant(
               result?.isError !== true &&
               result?.structuredContent?.success !== false
             ) {
-              const corrections = observeBehaviorAction({
+              const verificationStatus = result?.verification?.status ?? null;
+              const shouldObserveBehavior = shouldObserveBehaviorAction(
                 source,
-                domain: call.args?.domain,
-                service: call.args?.service,
-                entity_id: call.args?.entity_id,
-              });
-              if (corrections.length) {
-                console.log("Behavior correction →", corrections);
+                verificationStatus
+              );
+
+              if (shouldObserveBehavior) {
+                const corrections = observeBehaviorAction({
+                  source,
+                  domain: call.args?.domain,
+                  service: call.args?.service,
+                  entity_id: call.args?.entity_id,
+                });
+                if (corrections.length) {
+                  console.log("Behavior correction →", corrections);
+                }
+              } else {
+                console.log("Behavior learning skipped →", {
+                  source,
+                  verification: verificationStatus || "unsupported",
+                  entity_id: call.args?.entity_id,
+                });
               }
             }
           }

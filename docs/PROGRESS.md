@@ -71,7 +71,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 - Operational memory stores a bounded last-50 compact action ledger with accepted/verification/expected/observed state fields and excludes raw MCP responses.
 - Multi-entity light/switch actions now use one service call followed by independent bounded verification for every entity; one stale entity makes the aggregate result pending without retrying the action.
 - Operational context is exposed to AI only for a precisely resolved entity and is limited to its 3 most recent action outcomes.
-- Behavioral correction learning observes quick USER_EXPLICIT reversals of successful AUTONOMOUS turn_on/turn_off actions within 2 minutes and persists bounded correction history.
+- Behavioral correction learning observes quick USER_EXPLICIT reversals only after an AUTONOMOUS action has a confirmed verifier result; pending/failed/unsupported autonomous outcomes do not seed correction learning. Corrections within 2 minutes persist as bounded history.
 - Repeated corrections now conservatively downgrade autonomous AUTO_SAFE execution to SUGGEST for the affected entity/service using a 30-day evidence horizon. Learning can only reduce autonomy; it never grants new permissions, and explicit user commands are unaffected.
 - Behavioral audit visibility exposes per-entity correction counts, latest reversal pair, and active autonomy reduction through the read-only health status/API.
 - Operator commands `/behavior` and `/behavior_reset <entity_id>` inspect and selectively reset behavioral correction state without clearing unrelated memory.
@@ -81,7 +81,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 
 ## Test status
 
-**104 / 104 tests passing**
+**105 / 105 tests passing**
 
 Current automated coverage includes:
 

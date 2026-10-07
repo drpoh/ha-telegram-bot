@@ -1,7 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { isReadStateRequest } from "../src/ai/agent.mjs";
+import {
+  isReadStateRequest,
+  shouldObserveBehaviorAction,
+} from "../src/ai/agent.mjs";
 
 test("detects read-only state requests", () => {
   assert.equal(isReadStateRequest("Какое состояние света на кухне?"), true);
@@ -20,4 +23,13 @@ test("detects known sensor value requests", () => {
   assert.equal(isReadStateRequest("Какая температура в сауне?"), true);
   assert.equal(isReadStateRequest("Сколько градусов в сауне?"), true);
   assert.equal(isReadStateRequest("Сколько сейчас градусов в сауне?"), true);
+});
+
+
+test("autonomous behavioral learning requires confirmed verification", () => {
+  assert.equal(shouldObserveBehaviorAction("autonomous", "confirmed"), true);
+  assert.equal(shouldObserveBehaviorAction("autonomous", "pending"), false);
+  assert.equal(shouldObserveBehaviorAction("autonomous", "failed"), false);
+  assert.equal(shouldObserveBehaviorAction("autonomous", null), false);
+  assert.equal(shouldObserveBehaviorAction("user_explicit", null), true);
 });

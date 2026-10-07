@@ -48,6 +48,9 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 | Shadow / Suggest mode | 🟡 In progress | 40% | State-changing HA service proposals are evaluated/logged in shadow; v2 user-command execution is unchanged |
 | AUTO_SAFE autonomy | 🟡 In progress | 55% | Strict kitchen/living-room allowlist wired; live kitchen autonomous actuation and restore verified |
 | Manual-override learning | 🟡 In progress | 80% | Quick explicit reversals of autonomous actions are persisted as negative feedback and can conservatively downgrade matching autonomy |
+| Context freshness + preconditions | ⬜ Planned | 0% | Classify decision inputs by freshness and revalidate relevant assumptions before state-changing execution |
+| Risk classes | ⬜ Planned | 0% | Add R0-R4 impact classification independently from autonomy level |
+| Idempotency + autonomy budget | ⬜ Planned | 0% | Deduplicate logical actions and bound autonomous rate/cooldowns |
 | Additional history analyzers | ⬜ Planned | 0% | Sauna is the first supported subject |
 
 ## Verified live behavior
@@ -114,14 +117,15 @@ Security-sensitive or high-impact actions remain confirmation/deny candidates.
 
 ## Next milestones
 
-1. Extend verification only when additional service outcomes can be modeled deterministically without unsafe assumptions.
-2. Expand current-state context only where it improves decisions without excessive HA reads.
-4. Continue shadow/suggest evaluation before expanding the existing AUTO_SAFE allowlist.
-5. Add explicit operator controls to inspect/reset behavioral downgrade state without clearing unrelated memory.
+1. Implement context freshness and deterministic preconditions for state-changing autonomous actions.
+2. Add R0-R4 risk classification independently from autonomy permissions.
+3. Add action idempotency/deduplication and deterministic autonomy rate/cooldown budgets.
+4. Continue shadow/suggest evaluation and verified decision audit before expanding the existing AUTO_SAFE allowlist.
+5. Extend verification only where service outcomes can be modeled deterministically without unsafe assumptions.
 
 ## Definition of v3 success
 
-v3 is complete when the assistant can understand natural home requests, combine current state with bounded history and useful memory, make explicit decisions, enforce deterministic safety policy, execute permitted HA actions, verify outcomes, learn from corrections, and remain auditable and testable.
+v3 is complete when the assistant can understand natural home requests and make bounded autonomous household decisions from sufficiently fresh current state, history and memory. Every state-changing action must pass deterministic risk, policy and precondition checks, be protected against duplicate execution and autonomy-budget violations, execute only through HA-MCP, be verified from Home Assistant afterward, and remain fully auditable. Learning may conservatively reduce autonomy from verified outcomes and corrections, but may never grant new permissions without explicit operator approval.
 
 ---
 

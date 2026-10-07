@@ -5,9 +5,11 @@
 2. Reason — produce a proposed response/action.
 3. Decide — attach intent, confidence and evidence.
 4. Policy — deterministic permission check.
-5. Act — execute only an approved action through HA-MCP.
-6. Verify — re-read state/result.
-7. Learn — record outcome, failure or user override.
+5. Preconditions — validate fresh assumptions immediately before action.
+6. Act — execute only an approved, non-duplicate action through HA-MCP.
+7. Verify — re-read state/result without repeating the state-changing service.
+8. Remember — record outcome, failure or user override.
+9. Audit/Evaluate/Adapt — evaluate verified behavior over time and only reduce autonomy automatically.
 
 ## Important rule
 The LLM proposes. The Policy Engine authorizes.

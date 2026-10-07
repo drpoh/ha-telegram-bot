@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { analyzeSaunaHeating, estimateMinutesToTarget, findSaunaHeatingCycles } from "../src/history/sauna-analyzer.mjs";
+import { analyzeSaunaHeating, estimateMinutesToTarget, findSaunaHeatingCycles, summarizeSaunaHeating } from "../src/history/sauna-analyzer.mjs";
 
 const heating = [
   { state: "60", last_changed: "2026-10-07T18:00:00+03:00" },
@@ -59,4 +59,30 @@ test("does not forecast when temperature is not rising", () => {
     { state: "74", last_changed: "2026-10-07T18:10:00+03:00" },
   ], { maxGapMinutes: 15 });
   assert.equal(result, null);
+});
+
+
+test("classifies full heat and reheat and avoids premature average", () => {
+  const cycles = [
+    { type: "full", complete: true, durationMinutes: 60.8, rateCPerMinute: 0.95 },
+    { type: "reheat", complete: true, durationMinutes: 13, rateCPerMinute: 0.39 },
+  ];
+  const summary = summarizeSaunaHeating(cycles);
+  assert.equal(summary.fullCycles, 1);
+  assert.equal(summary.reheatCycles, 1);
+  assert.equal(summary.enoughData, false);
+  assert.equal(summary.averageDurationMinutes, null);
+  assert.equal(summary.lastFullCycle.durationMinutes, 60.8);
+});
+
+test("averages only full heating cycles when enough data exists", () => {
+  const cycles = [
+    { type: "full", complete: true, durationMinutes: 60, rateCPerMinute: 1 },
+    { type: "reheat", complete: true, durationMinutes: 10, rateCPerMinute: 0.5 },
+    { type: "full", complete: true, durationMinutes: 70, rateCPerMinute: 0.8 },
+  ];
+  const summary = summarizeSaunaHeating(cycles);
+  assert.equal(summary.enoughData, true);
+  assert.equal(summary.averageDurationMinutes, 65);
+  assert.equal(summary.averageRateCPerMinute, 0.9);
 });

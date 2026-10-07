@@ -1,12 +1,18 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { initDatabase } from "../src/db/database.mjs";
 
 import {
   clearDecisionAudit,
   getDecisionAudit,
   getDecisionAuditSummary,
   rememberDecisionAudit,
+  setDecisionAuditPersistence,
 } from "../src/decision/audit.mjs";
+
+const TEST_DB = "/tmp/ha-telegram-bot-decision-audit-test.db";
+initDatabase(TEST_DB);
+setDecisionAuditPersistence(TEST_DB);
 
 test.beforeEach(() => clearDecisionAudit());
 

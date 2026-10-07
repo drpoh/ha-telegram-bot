@@ -78,4 +78,8 @@ export function clearDecisionAudit() {
   persist();
 }
 
+export function setDecisionAuditPersistence(dbPath) {
+  persistenceDbPath = dbPath;
+}
+
 export { MAX_ENTRIES, DEFAULT_RECENT_WINDOW_MS };

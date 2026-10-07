@@ -21,6 +21,10 @@ import {
 import { clearPendingConfirmations } from "../decision/pending-confirmation.mjs";
 
 import { getHealthStatus } from "../status/health.mjs";
+import {
+  clearBehaviorCorrectionsForEntity,
+  getBehaviorAuditSnapshot,
+} from "../learning/corrections.mjs";
 
 let bot = null;
 
@@ -57,6 +61,42 @@ bot.command("status", async (ctx) => {
     `PID: ${status.pid}`
   );
 });
+
+  bot.command("behavior", async (ctx) => {
+    if (!isAllowed(ctx)) return;
+
+    const items = getBehaviorAuditSnapshot();
+    if (!items.length) {
+      await ctx.reply("🧠 Behavioral learning: коррекций пока нет.");
+      return;
+    }
+
+    const lines = items.slice(0, 20).map((item) =>
+      `${item.autonomy_reduced ? "⚠️" : "ℹ️"} ${item.entity_id}: ${item.corrections} correction(s), autonomy ${item.autonomy_reduced ? "SUGGEST" : "AUTO_SAFE eligible"}`
+    );
+    await ctx.reply("🧠 Behavioral learning\n\n" + lines.join("\n"));
+  });
+
+  bot.command("behavior_reset", async (ctx) => {
+    if (!isAllowed(ctx)) return;
+
+    const entityId = String(ctx.message?.text || "")
+      .split(/\s+/)
+      .slice(1)
+      .join(" ")
+      .trim();
+    if (!entityId) {
+      await ctx.reply("Использование: /behavior_reset light.entity_id");
+      return;
+    }
+
+    const removed = clearBehaviorCorrectionsForEntity(entityId);
+    await ctx.reply(
+      removed
+        ? `✅ ${entityId}: удалено behavioral corrections: ${removed}.`
+        : `ℹ️ ${entityId}: behavioral corrections не найдены.`
+    );
+  });
 
   bot.command("model", async (ctx) => {
     if (!isAllowed(ctx)) return;

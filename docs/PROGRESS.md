@@ -74,13 +74,14 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 - Behavioral correction learning observes quick USER_EXPLICIT reversals of successful AUTONOMOUS turn_on/turn_off actions within 2 minutes and persists bounded correction history.
 - Repeated corrections now conservatively downgrade autonomous AUTO_SAFE execution to SUGGEST for the affected entity. Learning can only reduce autonomy; it never grants new permissions, and explicit user commands are unaffected.
 - Behavioral audit visibility exposes per-entity correction counts, latest reversal pair, and active autonomy reduction through the read-only health status/API.
+- Operator commands `/behavior` and `/behavior_reset <entity_id>` inspect and selectively reset behavioral correction state without clearing unrelated memory.
 - Explicit user commands remain backward-compatible for normal `suggest` policy, but explicit `confirm` and `deny` policies now stop execution before the HA tool call.
 - Post-action verifier performs bounded state reads without retrying the state-changing service; `confirmed`, `pending`, and `failed` are distinguished.
 - Live verifier test on `light.kukhnia_svet` succeeded: `off` → `on` confirmed in one read → restored `off` confirmed in one read. The verifier also handled an HA-MCP service warning where the subsequent state read already showed the correct restored state.
 
 ## Test status
 
-**100 / 100 tests passing**
+**101 / 101 tests passing**
 
 Current automated coverage includes:
 

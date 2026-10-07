@@ -5,6 +5,7 @@ import { existsSync, rmSync } from "node:fs";
 import { initDatabase } from "../src/db/database.mjs";
 import {
   clearBehaviorCorrections,
+  clearBehaviorCorrectionsForEntity,
   getBehaviorCorrections,
   getBehaviorCorrectionSignal,
   getBehaviorAuditSnapshot,
@@ -162,4 +163,29 @@ test("audit snapshot exposes correction counts and downgrade state", () => {
     last_correction_service: "turn_off",
     autonomy_reduced: true,
   }]);
+});
+
+
+test("operator reset removes corrections only for selected entity", () => {
+  for (const entityId of ["light.one", "light.two"]) {
+    observeBehaviorAction({
+      source: "autonomous",
+      domain: "light",
+      service: "turn_on",
+      entity_id: entityId,
+      at: 1000,
+    });
+    observeBehaviorAction({
+      source: "user_explicit",
+      domain: "light",
+      service: "turn_off",
+      entity_id: entityId,
+      at: 2000,
+    });
+  }
+
+  assert.equal(clearBehaviorCorrectionsForEntity("light.one"), 1);
+  assert.equal(getBehaviorCorrections("light.one").length, 0);
+  assert.equal(getBehaviorCorrections("light.two").length, 1);
+  assert.equal(clearBehaviorCorrectionsForEntity("light.unknown"), 0);
 });

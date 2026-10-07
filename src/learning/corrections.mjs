@@ -140,3 +140,16 @@ export function getBehaviorAuditSnapshot() {
     (a, b) => (b.last_correction_at || 0) - (a.last_correction_at || 0)
   );
 }
+
+
+export function clearBehaviorCorrectionsForEntity(entityId) {
+  const normalized = String(entityId || "").trim();
+  if (!normalized) return 0;
+
+  const before = corrections.length;
+  corrections = corrections.filter((item) => item.entity_id !== normalized);
+  recentActions.delete(normalized);
+  const removed = before - corrections.length;
+  if (removed) persist();
+  return removed;
+}

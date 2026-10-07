@@ -63,6 +63,16 @@ export function recordDecisionPrecondition(id, precondition) {
   return structuredClone(entry);
 }
 
+export function failDecisionAudit(id, error = null) {
+  const entry = entries.find((item) => item.id === id);
+  if (!entry) return null;
+  entry.execution = "failed";
+  entry.verification = null;
+  entry.error = error ? String(error?.message || error).slice(0, 160) : null;
+  persist();
+  return structuredClone(entry);
+}
+
 export function completeDecisionAudit(id, { result } = {}) {
   const entry = entries.find((item) => item.id === id);
   if (!entry) return null;

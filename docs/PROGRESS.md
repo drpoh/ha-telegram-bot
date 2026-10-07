@@ -49,8 +49,8 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 | AUTO_SAFE autonomy | 🟡 In progress | 55% | Strict kitchen/living-room allowlist wired; live kitchen autonomous actuation and restore verified |
 | Manual-override learning | 🟡 In progress | 80% | Quick explicit reversals of autonomous actions are persisted as negative feedback and can conservatively downgrade matching autonomy |
 | Context freshness + preconditions | 🟢 Implemented | 90% | Freshness plus target/context gates are implemented; trusted contextual preconditions come only from deterministic policy config, never from LLM proposal metadata |
-| Risk classes | ⬜ Planned | 0% | Add R0-R4 impact classification independently from autonomy level |
-| Idempotency + autonomy budget | ⬜ Planned | 0% | Deduplicate logical actions and bound autonomous rate/cooldowns |
+| Risk classes | 🟢 Implemented | 90% | Generic R0-R4 domain/service classification is independent from autonomy; unknown state-changing domains fail conservatively and deployment config may override risk |
+| Idempotency + autonomy budget | 🟢 Implemented | 85% | Stable action fingerprints, 30s duplicate guard, 10s per-entity cooldown and 6/min global autonomous budget; reservation occurs before ACT so uncertain MCP outcomes cannot auto-retry |
 | Additional history analyzers | ⬜ Planned | 0% | Sauna is the first supported subject |
 
 ## Verified live behavior
@@ -80,11 +80,14 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 - Operator commands `/behavior` and `/behavior_reset <entity_id>` inspect and selectively reset behavioral correction state without clearing unrelated memory.
 - Explicit user commands remain backward-compatible for normal `suggest` policy, but explicit `confirm` and `deny` policies now stop execution before the HA tool call.
 - Post-action verifier performs bounded state reads without retrying the state-changing service; `confirmed`, `pending`, and `failed` are distinguished.
+- Autonomous state-changing calls now pass a deterministic deduplication/cooldown/rate budget before ACT; reservations occur before MCP execution so an uncertain timeout cannot immediately trigger a duplicate service call.
+- Structured `TRACE` logging exposes factual runtime stages (policy, risk, precondition, budget, ACT and verification) while explicitly excluding prompts, raw evidence and MCP payloads.
+- Decision Audit now marks thrown execution errors as `failed` instead of leaving authorized decisions indefinitely `pending`.
 - Live verifier test on `light.kukhnia_svet` succeeded: `off` → `on` confirmed in one read → restored `off` confirmed in one read. The verifier also handled an HA-MCP service warning where the subsequent state read already showed the correct restored state.
 
 ## Test status
 
-**127 / 127 tests passing**
+**135 / 135 tests passing**
 
 Current automated coverage includes:
 

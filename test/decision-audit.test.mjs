@@ -5,6 +5,7 @@ import { initDatabase } from "../src/db/database.mjs";
 import {
   clearDecisionAudit,
   completeDecisionAudit,
+  failDecisionAudit,
   getDecisionAudit,
   getDecisionAuditSummary,
   rememberDecisionAudit,
@@ -107,4 +108,17 @@ test("summarizes lifetime buffer and recent decision window", () => {
     },
   });
   assert.equal(getDecisionAudit(2).length, 2);
+});
+
+
+test("thrown execution failure cannot leave authorized audit pending", () => {
+  const entry = rememberDecisionAudit({
+    shadow: shadow("approve", "auto_safe"),
+    source: "autonomous",
+    authorized: true,
+  });
+  const failed = failDecisionAudit(entry.id, new Error("MCP unavailable"));
+  assert.equal(failed.execution, "failed");
+  assert.equal(failed.verification, null);
+  assert.equal(failed.error, "MCP unavailable");
 });

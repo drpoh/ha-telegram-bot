@@ -34,9 +34,11 @@ import {
   enforceActionSource,
 } from "../policy/engine.mjs";
 import { autonomyPolicy } from "../policy/config.mjs";
+import { checkAutonomyBudget, commitAutonomousAction } from "../policy/autonomy-budget.mjs";
 import { createPendingConfirmation } from "../decision/pending-confirmation.mjs";
-import { completeDecisionAudit, recordDecisionPrecondition, rememberDecisionAudit } from "../decision/audit.mjs";
+import { completeDecisionAudit, failDecisionAudit, recordDecisionPrecondition, rememberDecisionAudit } from "../decision/audit.mjs";
 import { checkActionPreconditions, checkContextPreconditions } from "../decision/preconditions.mjs";
+import { traceDecision } from "../decision/trace.mjs";
 import { getOperationalContextForEntity } from "../memory/operational.mjs";
 import {
   getBehaviorCorrectionSignal,
@@ -160,6 +162,7 @@ export async function askHomeAssistant(
       const call = part.functionCall;
 
       let result;
+      let activeDecisionAuditId = null;
 
       try {
         if (isAiHistoryTool(call.name)) {
@@ -207,6 +210,15 @@ export async function askHomeAssistant(
                 authorized: enforcement.authorized,
               })
             : null;
+          activeDecisionAuditId = decisionAudit?.id || null;
+          traceDecision("policy", {
+            source,
+            action: evaluatedShadow?.proposal?.action,
+            entity_id: evaluatedShadow?.proposal?.args?.entity_id,
+            risk: evaluatedShadow?.policy?.risk,
+            policy: evaluatedShadow?.policy?.level,
+            outcome: evaluatedShadow?.outcome,
+          });
 
           if (!enforcement.authorized) {
             console.log("POLICY BLOCK →", {
@@ -287,7 +299,18 @@ export async function askHomeAssistant(
               }
             }
 
-            if (precondition && precondition.allowed !== true) {
+            if (precondition) traceDecision("precondition", { status: precondition.status, entity_id: call.args?.entity_id });
+            const autonomyBudget = source === ACTION_SOURCES.AUTONOMOUS && call.name === "ha_call_service" && (!precondition || precondition.allowed === true) ? checkAutonomyBudget(call.args || {}) : null;
+            if (autonomyBudget) traceDecision("budget", { status: autonomyBudget.allowed ? "ready" : "blocked", reason: autonomyBudget.reason, entity_id: call.args?.entity_id });
+
+            if (autonomyBudget && autonomyBudget.allowed !== true) {
+              result = {
+                blocked: true,
+                outcome: "autonomy_budget_blocked",
+                autonomy_budget: autonomyBudget,
+                user_message: "Автономное действие не выполнено: сработала защита от повтора или ограничения частоты.",
+              };
+            } else if (precondition && precondition.allowed !== true) {
               result = {
                 blocked: true,
                 outcome: precondition.status === "noop" ? "noop" : "precondition_blocked",
@@ -298,10 +321,15 @@ export async function askHomeAssistant(
                     : "Автономное действие не выполнено: precondition не подтвержден свежим состоянием Home Assistant.",
               };
             } else {
+              if (source === ACTION_SOURCES.AUTONOMOUS && call.name === "ha_call_service") {
+                commitAutonomousAction(call.args || {});
+              }
+              traceDecision("act", { action: evaluatedShadow?.proposal?.action, entity_id: call.args?.entity_id, status: "execute" });
               result = await callHA(
                 call.name,
                 call.args || {}
               );
+              traceDecision("verify", { entity_id: call.args?.entity_id, verification: result?.verification?.status ?? "unsupported" });
 
               if (decisionAudit?.id) {
                 completeDecisionAudit(decisionAudit.id, { result });
@@ -358,6 +386,7 @@ export async function askHomeAssistant(
           );
         }
       } catch (error) {
+        if (activeDecisionAuditId) failDecisionAudit(activeDecisionAuditId, error);
         console.error(
           `MCP tool ${call.name} error:`,
           error

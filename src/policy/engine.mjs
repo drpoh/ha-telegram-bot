@@ -67,3 +67,28 @@ export function enforceActionSource(
       : `Autonomous action blocked: ${decision?.outcome || "no decision"}`,
   };
 }
+
+
+export function applyBehaviorDowngrade(decision, signal = {}) {
+  if (
+    decision?.policy?.level !== AUTONOMY_LEVELS.AUTO_SAFE ||
+    decision?.outcome !== "approve" ||
+    signal?.should_reduce_autonomy !== true
+  ) {
+    return decision;
+  }
+
+  return {
+    ...decision,
+    policy: {
+      ...decision.policy,
+      level: AUTONOMY_LEVELS.SUGGEST,
+      allowed: false,
+      reason: `Behavioral downgrade after ${signal.corrections || 0} corrections`,
+      behavioralDowngrade: true,
+    },
+    outcome: "suggest",
+    executable: false,
+    behavioralSignal: signal,
+  };
+}

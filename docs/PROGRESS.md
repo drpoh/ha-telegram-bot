@@ -4,7 +4,7 @@
 
 ## Overall status
 
-**Foundation progress: ~75%**
+**Foundation progress: ~80%**
 
 The project is evolving the working v2 bot into a safe, context-aware Home AI Agent without rebuilding the existing system.
 
@@ -71,14 +71,15 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 - Operational memory stores a bounded last-50 compact action ledger with accepted/verification/expected/observed state fields and excludes raw MCP responses.
 - Multi-entity light/switch actions now use one service call followed by independent bounded verification for every entity; one stale entity makes the aggregate result pending without retrying the action.
 - Operational context is exposed to AI only for a precisely resolved entity and is limited to its 3 most recent action outcomes.
-- Behavioral correction learning now observes quick USER_EXPLICIT reversals of successful AUTONOMOUS turn_on/turn_off actions within 2 minutes, persists a bounded correction history, and exposes a conservative repeated-correction risk signal. It does not change AUTO_SAFE policy automatically.
+- Behavioral correction learning observes quick USER_EXPLICIT reversals of successful AUTONOMOUS turn_on/turn_off actions within 2 minutes and persists bounded correction history.
+- Repeated corrections now conservatively downgrade autonomous AUTO_SAFE execution to SUGGEST for the affected entity. Learning can only reduce autonomy; it never grants new permissions, and explicit user commands are unaffected.
 - Explicit user commands remain backward-compatible for normal `suggest` policy, but explicit `confirm` and `deny` policies now stop execution before the HA tool call.
 - Post-action verifier performs bounded state reads without retrying the state-changing service; `confirmed`, `pending`, and `failed` are distinguished.
 - Live verifier test on `light.kukhnia_svet` succeeded: `off` → `on` confirmed in one read → restored `off` confirmed in one read. The verifier also handled an HA-MCP service warning where the subsequent state read already showed the correct restored state.
 
 ## Test status
 
-**96 / 96 tests passing**
+**99 / 99 tests passing**
 
 Current automated coverage includes:
 
@@ -113,7 +114,7 @@ Security-sensitive or high-impact actions remain confirmation/deny candidates.
 
 1. Extend verification to additional deterministic service types beyond light/switch.
 2. Expand current-state context only where it improves decisions without excessive HA reads.
-4. Connect repeated behavioral-correction signals to a conservative policy downgrade path with explicit tests before enabling it.
+4. Add audit visibility for behavioral downgrades and correction counts.
 5. Continue shadow/suggest evaluation before expanding the existing AUTO_SAFE allowlist.
 
 ## Definition of v3 success

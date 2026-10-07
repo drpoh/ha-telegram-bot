@@ -30,12 +30,16 @@ import {
 } from "../decision/shadow.mjs";
 import {
   ACTION_SOURCES,
+  applyBehaviorDowngrade,
   enforceActionSource,
 } from "../policy/engine.mjs";
 import { autonomyPolicy } from "../policy/config.mjs";
 import { createPendingConfirmation } from "../decision/pending-confirmation.mjs";
 import { getOperationalContextForEntity } from "../memory/operational.mjs";
-import { observeBehaviorAction } from "../learning/corrections.mjs";
+import {
+  getBehaviorCorrectionSignal,
+  observeBehaviorAction,
+} from "../learning/corrections.mjs";
 
 const MAX_AGENT_STEPS = 10;
 
@@ -171,21 +175,36 @@ export async function askHomeAssistant(
           );
           logShadowDecision(shadow);
 
-          const enforcement = shadow
-            ? enforceActionSource(shadow, source)
+          const behaviorEntityIds = Array.isArray(call.args?.entity_id)
+            ? call.args.entity_id
+            : String(call.args?.entity_id || "")
+                .split(",")
+                .map((id) => id.trim())
+                .filter(Boolean);
+          const behaviorSignal = behaviorEntityIds
+            .map((entityId) => getBehaviorCorrectionSignal(entityId))
+            .find((signal) => signal.should_reduce_autonomy) || null;
+
+          const evaluatedShadow =
+            shadow && source === ACTION_SOURCES.AUTONOMOUS
+              ? applyBehaviorDowngrade(shadow, behaviorSignal)
+              : shadow;
+
+          const enforcement = evaluatedShadow
+            ? enforceActionSource(evaluatedShadow, source)
             : { authorized: true };
 
           if (!enforcement.authorized) {
             console.log("POLICY BLOCK →", {
               source,
-              action: shadow?.proposal?.action,
-              entity_id: shadow?.proposal?.args?.entity_id,
-              outcome: shadow?.outcome,
+              action: evaluatedShadow?.proposal?.action,
+              entity_id: evaluatedShadow?.proposal?.args?.entity_id,
+              outcome: evaluatedShadow?.outcome,
             });
 
             let pendingConfirmation = null;
             if (
-              shadow?.outcome === "confirm" &&
+              evaluatedShadow?.outcome === "confirm" &&
               actor?.userId != null &&
               actor?.chatId != null
             ) {
@@ -201,9 +220,9 @@ export async function askHomeAssistant(
 
             result = {
               blocked: true,
-              outcome: shadow?.outcome,
+              outcome: evaluatedShadow?.outcome,
               reason: enforcement.reason,
-              policy: shadow?.policy,
+              policy: evaluatedShadow?.policy,
               pending_confirmation: pendingConfirmation
                 ? {
                     token: pendingConfirmation.token,
@@ -211,13 +230,13 @@ export async function askHomeAssistant(
                   }
                 : null,
               user_message:
-                shadow?.outcome === "confirm"
+                evaluatedShadow?.outcome === "confirm"
                   ? pendingConfirmation
                     ? "Действие не выполнено. Подтвердите: да или отмена."
                     : "Действие не выполнено: требуется подтверждение."
-                  : shadow?.outcome === "suggest"
+                  : evaluatedShadow?.outcome === "suggest"
                     ? "Действие не выполнено: оно доступно только как предложение."
-                    : shadow?.outcome === "deny"
+                    : evaluatedShadow?.outcome === "deny"
                       ? "Действие запрещено политикой."
                       : "Действие не выполнено.",
             };

@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import { decide } from "../src/decision/engine.mjs";
 import {
   ACTION_SOURCES,
+  applyBehaviorDowngrade,
   enforceActionSource,
 } from "../src/policy/engine.mjs";
 
@@ -91,4 +92,43 @@ test("autonomous auto_safe action is authorized", () => {
   );
 
   assert.equal(gate.authorized, true);
+});
+
+
+test("repeated corrections downgrade autonomous auto-safe to suggest", () => {
+  const original = decision({ "light.hall": "auto_safe" });
+  const downgraded = applyBehaviorDowngrade(original, {
+    entity_id: "light.hall",
+    corrections: 2,
+    should_reduce_autonomy: true,
+  });
+  const gate = enforceActionSource(downgraded, ACTION_SOURCES.AUTONOMOUS);
+
+  assert.equal(downgraded.outcome, "suggest");
+  assert.equal(downgraded.executable, false);
+  assert.equal(downgraded.policy.behavioralDowngrade, true);
+  assert.equal(gate.authorized, false);
+});
+
+test("behavior signal never upgrades suggest policy", () => {
+  const original = decision();
+  const evaluated = applyBehaviorDowngrade(original, {
+    corrections: 5,
+    should_reduce_autonomy: true,
+  });
+
+  assert.equal(evaluated.outcome, "suggest");
+  assert.equal(evaluated.executable, false);
+  assert.equal(evaluated.policy.behavioralDowngrade, undefined);
+});
+
+test("single correction does not downgrade auto-safe", () => {
+  const original = decision({ "light.hall": "auto_safe" });
+  const evaluated = applyBehaviorDowngrade(original, {
+    corrections: 1,
+    should_reduce_autonomy: false,
+  });
+
+  assert.equal(evaluated.outcome, "approve");
+  assert.equal(evaluated.executable, true);
 });

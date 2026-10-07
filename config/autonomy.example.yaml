@@ -1,0 +1,17 @@
+# Example only. Runtime policy loading is not enabled yet.
+# Start with least privilege.
+
+default: suggest
+
+observe:
+  - sensor.*
+  - binary_sensor.*
+
+auto_safe: []
+
+confirm:
+  - climate.*
+
+deny:
+  - lock.*
+  - alarm_control_panel.*

@@ -46,7 +46,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 | Current HA state context | 🟡 In progress | 65% | Known-device read requests prefetch one bounded live state into v3 context; broader relevant-state context remains |
 | Post-action verification | 🟡 Early | 20% | Needs deterministic verify-after-action pipeline |
 | Shadow / Suggest mode | 🟡 In progress | 40% | State-changing HA service proposals are evaluated/logged in shadow; v2 user-command execution is unchanged |
-| AUTO_SAFE autonomy | 🟡 In progress | 35% | Strict entity/service allowlist wired for three safe devices; live autonomous actuation not yet validated |
+| AUTO_SAFE autonomy | 🟡 In progress | 55% | Strict kitchen/living-room allowlist wired; live kitchen autonomous actuation and restore verified |
 | Manual-override learning | ⬜ Planned | 0% | Detect quick user reversal as negative feedback |
 | Additional history analyzers | ⬜ Planned | 0% | Sauna is the first supported subject |
 
@@ -66,6 +66,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 - Runtime action source is explicit: current user requests default to `user_explicit`; future proactive calls must opt into `autonomous`.
 - Live autonomous regression proposed `light.turn_off` for the kitchen, produced one shadow decision and one policy block, and made zero `ha_call_service` calls; the device was not changed.
 - Strict AUTO_SAFE allowlist now permits only `turn_on` / `turn_off` for kitchen `light.kukhnia_svet` and living-room lights `light.liustra`, `light.podsvetka`, `light.podsvetka_2`; bathroom/sauna are back to default `suggest`, and unlisted services such as `toggle` are blocked.
+- Live AUTO_SAFE smoke test verified the kitchen end to end: initial `on` → autonomous `turn_off` → verified `off` → restored `on` → verified `on`.
 
 ## Test status
 

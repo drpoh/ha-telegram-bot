@@ -35,6 +35,7 @@ import {
 import { autonomyPolicy } from "../policy/config.mjs";
 import { createPendingConfirmation } from "../decision/pending-confirmation.mjs";
 import { getOperationalContextForEntity } from "../memory/operational.mjs";
+import { observeBehaviorAction } from "../learning/corrections.mjs";
 
 const MAX_AGENT_STEPS = 10;
 
@@ -225,6 +226,22 @@ export async function askHomeAssistant(
               call.name,
               call.args || {}
             );
+
+            if (
+              call.name === "ha_call_service" &&
+              result?.isError !== true &&
+              result?.structuredContent?.success !== false
+            ) {
+              const corrections = observeBehaviorAction({
+                source,
+                domain: call.args?.domain,
+                service: call.args?.service,
+                entity_id: call.args?.entity_id,
+              });
+              if (corrections.length) {
+                console.log("Behavior correction →", corrections);
+              }
+            }
           }
         }
         

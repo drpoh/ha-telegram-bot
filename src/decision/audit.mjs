@@ -2,6 +2,7 @@ import { getMemory, setMemory, deleteMemory } from "../db/database.mjs";
 
 const MEMORY_KEY = "decisionAudit";
 const MAX_ENTRIES = 100;
+const DEFAULT_RECENT_WINDOW_MS = 24 * 60 * 60 * 1000;
 let entries = [];
 let persistenceDbPath;
 
@@ -49,13 +50,27 @@ export function getDecisionAudit(limit = 20) {
   return structuredClone(entries.slice(-Math.max(0, limit)));
 }
 
-export function getDecisionAuditSummary() {
-  const summary = { total: entries.length, approve: 0, suggest: 0, confirm: 0, deny: 0, authorized: 0 };
-  for (const entry of entries) {
+function summarize(items) {
+  const summary = { total: items.length, approve: 0, suggest: 0, confirm: 0, deny: 0, authorized: 0 };
+  for (const entry of items) {
     if (Object.hasOwn(summary, entry.outcome)) summary[entry.outcome] += 1;
     if (entry.authorized) summary.authorized += 1;
   }
   return summary;
+}
+
+export function getDecisionAuditSummary({
+  now = Date.now(),
+  recentWindowMs = DEFAULT_RECENT_WINDOW_MS,
+} = {}) {
+  const recentSince = now - Math.max(0, recentWindowMs);
+  const recent = entries.filter((entry) => entry.at >= recentSince && entry.at <= now);
+
+  return {
+    ...summarize(entries),
+    recent_window_ms: recentWindowMs,
+    recent: summarize(recent),
+  };
 }
 
 export function clearDecisionAudit() {
@@ -63,4 +78,4 @@ export function clearDecisionAudit() {
   persist();
 }
 
-export { MAX_ENTRIES };
+export { MAX_ENTRIES, DEFAULT_RECENT_WINDOW_MS };

@@ -71,8 +71,9 @@ bot.command("status", async (ctx) => {
 
     const header =
       "🧭 Decision audit\n\n" +
-      `Total: ${summary.total} | authorized: ${summary.authorized}\n` +
-      `approve: ${summary.approve} | suggest: ${summary.suggest} | confirm: ${summary.confirm} | deny: ${summary.deny}`;
+      `Buffer: ${summary.total} | authorized: ${summary.authorized}\n` +
+      `24h: ${summary.recent.total} | authorized: ${summary.recent.authorized}\n` +
+      `24h outcomes: approve ${summary.recent.approve} | suggest ${summary.recent.suggest} | confirm ${summary.recent.confirm} | deny ${summary.recent.deny}`;
 
     if (!items.length) {
       await ctx.reply(header + "\n\nРешений пока нет.");

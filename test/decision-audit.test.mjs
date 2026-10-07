@@ -41,19 +41,31 @@ test("stores compact decision audit without raw prompt or payload", () => {
   });
 });
 
-test("summarizes policy outcomes and authorization", () => {
-  rememberDecisionAudit({ shadow: shadow("approve", "auto_safe"), source: "autonomous", authorized: true });
-  rememberDecisionAudit({ shadow: shadow("suggest", "suggest"), source: "autonomous", authorized: false });
-  rememberDecisionAudit({ shadow: shadow("confirm", "confirm"), source: "user_explicit", authorized: false });
-  rememberDecisionAudit({ shadow: shadow("deny", "deny"), source: "user_explicit", authorized: false });
+test("summarizes lifetime buffer and recent decision window", () => {
+  const now = 200_000_000;
+  const day = 24 * 60 * 60 * 1000;
 
-  assert.deepEqual(getDecisionAuditSummary(), {
+  rememberDecisionAudit({ shadow: shadow("approve", "auto_safe"), source: "autonomous", authorized: true, at: now - day - 1 });
+  rememberDecisionAudit({ shadow: shadow("suggest", "suggest"), source: "autonomous", authorized: false, at: now - 1000 });
+  rememberDecisionAudit({ shadow: shadow("confirm", "confirm"), source: "user_explicit", authorized: false, at: now - 500 });
+  rememberDecisionAudit({ shadow: shadow("deny", "deny"), source: "user_explicit", authorized: false, at: now });
+
+  assert.deepEqual(getDecisionAuditSummary({ now }), {
     total: 4,
     approve: 1,
     suggest: 1,
     confirm: 1,
     deny: 1,
     authorized: 1,
+    recent_window_ms: day,
+    recent: {
+      total: 3,
+      approve: 0,
+      suggest: 1,
+      confirm: 1,
+      deny: 1,
+      authorized: 0,
+    },
   });
   assert.equal(getDecisionAudit(2).length, 2);
 });

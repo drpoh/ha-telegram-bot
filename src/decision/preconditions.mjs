@@ -1,3 +1,4 @@
+import { FRESHNESS } from "../context/freshness.mjs";
 import { expectedStateForService } from "./verifier.mjs";
 
 export const PRECONDITION_STATUS = Object.freeze({
@@ -37,10 +38,15 @@ export async function checkActionPreconditions({ domain, service, entity_id, rea
     } catch {
       state = null;
     }
-    entities.push({ entityId, state, fresh: state !== null });
+    entities.push({
+      entityId,
+      state,
+      freshness: state !== null ? FRESHNESS.LIVE : FRESHNESS.UNKNOWN,
+      observed_at: state !== null ? new Date().toISOString() : null,
+    });
   }
 
-  if (entities.some((item) => !item.fresh)) {
+  if (entities.some((item) => item.freshness !== FRESHNESS.LIVE)) {
     return { status: PRECONDITION_STATUS.BLOCKED, allowed: false, expectedState, entities };
   }
   if (entities.every((item) => item.state === expectedState)) {

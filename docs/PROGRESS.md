@@ -48,7 +48,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 | Shadow / Suggest mode | 🟡 In progress | 40% | State-changing HA service proposals are evaluated/logged in shadow; v2 user-command execution is unchanged |
 | AUTO_SAFE autonomy | 🟡 In progress | 55% | Strict kitchen/living-room allowlist wired; live kitchen autonomous actuation and restore verified |
 | Manual-override learning | 🟡 In progress | 80% | Quick explicit reversals of autonomous actions are persisted as negative feedback and can conservatively downgrade matching autonomy |
-| Context freshness + preconditions | 🟡 In progress | 45% | Autonomous deterministic on/off actions now re-read every target immediately before ACT; already-satisfied actions become no-op and unreadable state fails closed |
+| Context freshness + preconditions | 🟡 In progress | 60% | Freshness model now classifies live/recent/stale/unknown; autonomous deterministic on/off actions re-read every target immediately before ACT and record live observation evidence |
 | Risk classes | ⬜ Planned | 0% | Add R0-R4 impact classification independently from autonomy level |
 | Idempotency + autonomy budget | ⬜ Planned | 0% | Deduplicate logical actions and bound autonomous rate/cooldowns |
 | Additional history analyzers | ⬜ Planned | 0% | Sauna is the first supported subject |
@@ -84,7 +84,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 
 ## Test status
 
-**114 / 114 tests passing**
+**116 / 116 tests passing**
 
 Current automated coverage includes:
 

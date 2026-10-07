@@ -6,6 +6,8 @@ test("ready when fresh state differs from target", async () => {
   const result = await checkActionPreconditions({ domain: "light", service: "turn_off", entity_id: "light.test", readState: async () => ({ state: "on" }) });
   assert.equal(result.status, PRECONDITION_STATUS.READY);
   assert.equal(result.allowed, true);
+  assert.equal(result.entities[0].freshness, "live");
+  assert.match(result.entities[0].observed_at, /^\d{4}-/);
 });
 
 test("noop when target state is already satisfied", async () => {

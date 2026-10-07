@@ -115,3 +115,28 @@ export function getBehaviorCorrectionSignal(entityId, limit = 5) {
     should_reduce_autonomy: recent.length >= 2,
   };
 }
+
+
+export function getBehaviorAuditSnapshot() {
+  const grouped = new Map();
+  for (const item of corrections) {
+    const current = grouped.get(item.entity_id) || {
+      entity_id: item.entity_id,
+      corrections: 0,
+      last_correction_at: null,
+      last_autonomous_service: null,
+      last_correction_service: null,
+      autonomy_reduced: false,
+    };
+    current.corrections++;
+    current.last_correction_at = item.at;
+    current.last_autonomous_service = item.autonomous_service;
+    current.last_correction_service = item.correction_service;
+    current.autonomy_reduced = current.corrections >= 2;
+    grouped.set(item.entity_id, current);
+  }
+
+  return [...grouped.values()].sort(
+    (a, b) => (b.last_correction_at || 0) - (a.last_correction_at || 0)
+  );
+}

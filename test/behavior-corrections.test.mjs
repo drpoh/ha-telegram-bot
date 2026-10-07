@@ -7,6 +7,7 @@ import {
   clearBehaviorCorrections,
   getBehaviorCorrections,
   getBehaviorCorrectionSignal,
+  getBehaviorAuditSnapshot,
   loadBehaviorCorrections,
   observeBehaviorAction,
   setBehaviorCorrectionPersistence,
@@ -132,4 +133,33 @@ test("risk signal requires repeated corrections before reducing autonomy", () =>
   const signal = getBehaviorCorrectionSignal("light.test");
   assert.equal(signal.corrections, 2);
   assert.equal(signal.should_reduce_autonomy, true);
+});
+
+
+test("audit snapshot exposes correction counts and downgrade state", () => {
+  for (const base of [1000, 10000]) {
+    observeBehaviorAction({
+      source: "autonomous",
+      domain: "light",
+      service: "turn_on",
+      entity_id: "light.test",
+      at: base,
+    });
+    observeBehaviorAction({
+      source: "user_explicit",
+      domain: "light",
+      service: "turn_off",
+      entity_id: "light.test",
+      at: base + 1000,
+    });
+  }
+
+  assert.deepEqual(getBehaviorAuditSnapshot(), [{
+    entity_id: "light.test",
+    corrections: 2,
+    last_correction_at: 11000,
+    last_autonomous_service: "turn_on",
+    last_correction_service: "turn_off",
+    autonomy_reduced: true,
+  }]);
 });

@@ -4,7 +4,7 @@
 
 ## Overall status
 
-**Foundation progress: ~80%**
+**Foundation progress: ~82%**
 
 The project is evolving the working v2 bot into a safe, context-aware Home AI Agent without rebuilding the existing system.
 
@@ -73,13 +73,14 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 - Operational context is exposed to AI only for a precisely resolved entity and is limited to its 3 most recent action outcomes.
 - Behavioral correction learning observes quick USER_EXPLICIT reversals of successful AUTONOMOUS turn_on/turn_off actions within 2 minutes and persists bounded correction history.
 - Repeated corrections now conservatively downgrade autonomous AUTO_SAFE execution to SUGGEST for the affected entity. Learning can only reduce autonomy; it never grants new permissions, and explicit user commands are unaffected.
+- Behavioral audit visibility exposes per-entity correction counts, latest reversal pair, and active autonomy reduction through the read-only health status/API.
 - Explicit user commands remain backward-compatible for normal `suggest` policy, but explicit `confirm` and `deny` policies now stop execution before the HA tool call.
 - Post-action verifier performs bounded state reads without retrying the state-changing service; `confirmed`, `pending`, and `failed` are distinguished.
 - Live verifier test on `light.kukhnia_svet` succeeded: `off` → `on` confirmed in one read → restored `off` confirmed in one read. The verifier also handled an HA-MCP service warning where the subsequent state read already showed the correct restored state.
 
 ## Test status
 
-**99 / 99 tests passing**
+**100 / 100 tests passing**
 
 Current automated coverage includes:
 
@@ -114,8 +115,8 @@ Security-sensitive or high-impact actions remain confirmation/deny candidates.
 
 1. Extend verification to additional deterministic service types beyond light/switch.
 2. Expand current-state context only where it improves decisions without excessive HA reads.
-4. Add audit visibility for behavioral downgrades and correction counts.
-5. Continue shadow/suggest evaluation before expanding the existing AUTO_SAFE allowlist.
+4. Continue shadow/suggest evaluation before expanding the existing AUTO_SAFE allowlist.
+5. Add explicit operator controls to inspect/reset behavioral downgrade state without clearing unrelated memory.
 
 ## Definition of v3 success
 

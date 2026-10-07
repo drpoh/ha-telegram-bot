@@ -2,6 +2,7 @@ import express from "express";
 
 import { config } from "../config/env.mjs";
 import { queueHomeAssistantRequest } from "../utils/queue.mjs";
+import { getHealthStatus } from "../status/health.mjs";
 
 let server = null;
 
@@ -13,6 +14,7 @@ export function startHttpServer() {
   app.get("/health", (req, res) => {
     res.json({
       status: "ok",
+      ...getHealthStatus(),
     });
   });
 

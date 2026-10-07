@@ -137,7 +137,7 @@ export function getBehaviorCorrectionSignal(
 }
 
 
-export function getBehaviorAuditSnapshot() {
+export function getBehaviorAuditSnapshot({ now = Date.now(), horizonMs = DEFAULT_SIGNAL_HORIZON_MS } = {}) {
   const grouped = new Map();
   for (const item of corrections) {
     const current = grouped.get(item.entity_id) || {
@@ -146,19 +146,30 @@ export function getBehaviorAuditSnapshot() {
       last_correction_at: null,
       last_autonomous_service: null,
       last_correction_service: null,
+      services: {},
       autonomy_reduced: false,
     };
     current.corrections++;
     current.last_correction_at = item.at;
     current.last_autonomous_service = item.autonomous_service;
     current.last_correction_service = item.correction_service;
-    current.autonomy_reduced = current.corrections >= 2;
     grouped.set(item.entity_id, current);
   }
 
-  return [...grouped.values()].sort(
-    (a, b) => (b.last_correction_at || 0) - (a.last_correction_at || 0)
-  );
+  for (const current of grouped.values()) {
+    const services = [...new Set(corrections.filter((item) => item.entity_id === current.entity_id).map((item) => item.autonomous_service))];
+    for (const service of services) {
+      const signal = getBehaviorCorrectionSignal(current.entity_id, service, { now, horizonMs });
+      current.services[service] = {
+        corrections: signal.corrections,
+        last_correction_at: signal.last_correction_at,
+        autonomy_reduced: signal.should_reduce_autonomy,
+      };
+    }
+    current.autonomy_reduced = Object.values(current.services).some((service) => service.autonomy_reduced);
+  }
+
+  return [...grouped.values()].sort((a, b) => (b.last_correction_at || 0) - (a.last_correction_at || 0));
 }
 
 

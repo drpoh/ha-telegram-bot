@@ -41,7 +41,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 | Decision Engine | 🟡 In progress | 80% | Deterministic proposal → policy → source enforcement is wired; one-time scoped confirmation flow is implemented |
 | Conversation memory | ✅ Existing | 100% | Reused from v2 |
 | Device/semantic memory | 🟡 In progress | 65% | Existing device memory reused; v3 semantic expansion remains |
-| Behavioral memory | 🟡 In progress | 70% | Persistent correction learning, service-specific 30-day downgrade signals, audit visibility and selective operator reset implemented |
+| Behavioral memory | 🟡 In progress | 80% | Persistent correction learning, service-specific 30-day downgrade signals, truthful per-service audit visibility and selective operator reset implemented |
 | Operational memory | 🟡 In progress | 70% | Compact bounded action outcomes persist in SQLite, include per-entity verification, and expose only bounded entity-relevant context |
 | Current HA state context | 🟡 In progress | 70% | Known-device state and sensor-value requests prefetch one bounded live state into v3 context; control requests still avoid extra reads |
 | Post-action verification | 🟡 In progress | 90% | Deterministic on/off verification covers light, switch, input_boolean, fan and media_player with bounded single/multi-entity polling and pending/failed states |
@@ -87,7 +87,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 
 ## Test status
 
-**135 / 135 tests passing**
+**137 / 137 tests passing**
 
 Current automated coverage includes:
 

@@ -157,12 +157,13 @@ test("audit snapshot exposes correction counts and downgrade state", () => {
     });
   }
 
-  assert.deepEqual(getBehaviorAuditSnapshot(), [{
+  assert.deepEqual(getBehaviorAuditSnapshot({ now: 12000 }), [{
     entity_id: "light.test",
     corrections: 2,
     last_correction_at: 11000,
     last_autonomous_service: "turn_on",
     last_correction_service: "turn_off",
+    services: { turn_on: { corrections: 2, last_correction_at: 11000, autonomy_reduced: true } },
     autonomy_reduced: true,
   }]);
 });
@@ -231,4 +232,28 @@ test("risk signal ignores corrections outside horizon", () => {
   });
   assert.equal(signal.corrections, 0);
   assert.equal(signal.should_reduce_autonomy, false);
+});
+
+
+test("audit downgrade matches service-specific policy signal", () => {
+  for (const [base, service, correction] of [[1000, "turn_on", "turn_off"], [10000, "turn_off", "turn_on"]]) {
+    observeBehaviorAction({ source: "autonomous", domain: "light", service, entity_id: "light.test", at: base });
+    observeBehaviorAction({ source: "user_explicit", domain: "light", service: correction, entity_id: "light.test", at: base + 1000 });
+  }
+  const audit = getBehaviorAuditSnapshot({ now: 12000 })[0];
+  assert.equal(audit.corrections, 2);
+  assert.equal(audit.services.turn_on.autonomy_reduced, false);
+  assert.equal(audit.services.turn_off.autonomy_reduced, false);
+  assert.equal(audit.autonomy_reduced, false);
+});
+
+test("audit ignores expired corrections for active downgrade", () => {
+  for (const base of [1000, 10000]) {
+    observeBehaviorAction({ source: "autonomous", domain: "light", service: "turn_on", entity_id: "light.test", at: base });
+    observeBehaviorAction({ source: "user_explicit", domain: "light", service: "turn_off", entity_id: "light.test", at: base + 1000 });
+  }
+  const audit = getBehaviorAuditSnapshot({ now: 100000, horizonMs: 1000 })[0];
+  assert.equal(audit.corrections, 2);
+  assert.equal(audit.services.turn_on.corrections, 0);
+  assert.equal(audit.autonomy_reduced, false);
 });

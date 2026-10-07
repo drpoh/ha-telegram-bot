@@ -123,6 +123,18 @@ Security-sensitive or high-impact actions remain confirmation/deny candidates.
 4. Continue shadow/suggest evaluation and verified decision audit before expanding the existing AUTO_SAFE allowlist.
 5. Extend verification only where service outcomes can be modeled deterministically without unsafe assumptions.
 
+## Post-v3 sustainability and monetization
+
+Monetization is intentionally deferred until v3 is stable, documented and ready for a public release. It must not influence runtime safety policy, autonomy decisions or core architecture.
+
+After release readiness:
+- prepare a GitHub Sponsors profile and repository sponsor button via `.github/FUNDING.yml`
+- evaluate optional complementary funding platforms supported by GitHub funding links
+- define transparent one-time/monthly sponsorship tiers and benefits that do not weaken the open-source core
+- improve public README, installation guide, screenshots/examples, release notes and contribution documentation before promoting sponsorship
+- document funding transparently and keep sponsorship optional; normal Home Assistant functionality must not depend on sponsorship
+- review licensing, third-party licenses, privacy/security documentation and applicable tax/accounting requirements before accepting project income
+
 ## Definition of v3 success
 
 v3 is complete when the assistant can understand natural home requests and make bounded autonomous household decisions from sufficiently fresh current state, history and memory. Every state-changing action must pass deterministic risk, policy and precondition checks, be protected against duplicate execution and autonomy-budget violations, execute only through HA-MCP, be verified from Home Assistant afterward, and remain fully auditable. Learning may conservatively reduce autonomy from verified outcomes and corrections, but may never grant new permissions without explicit operator approval.

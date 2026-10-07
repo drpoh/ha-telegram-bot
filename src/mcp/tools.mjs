@@ -62,50 +62,23 @@ export const tools = [
         },
       },
       {
-        name: "ha_get_history",
+        name: "ai_history_summary",
         description:
-          "Получить ограниченную историю или долгосрочную статистику сущности Home Assistant. Используй history для недавних изменений состояния, statistics для долгосрочных числовых трендов.",
+          "Получить безопасную компактную сводку истории Home Assistant для поддерживаемого объекта. Используй только когда пользователь спрашивает о прошлом, длительности, обычном поведении, тенденции или сравнении с прошлым.",
         parameters: {
           type: "OBJECT",
           properties: {
-            entity_ids: {
+            subject: {
               type: "STRING",
-              description: "Точный entity_id. Для AI-запросов предпочитай одну сущность за раз.",
-            },
-            source: {
-              type: "STRING",
-              enum: ["history", "statistics"],
-              description: "history = недавние состояния; statistics = агрегированная долгосрочная статистика.",
+              enum: ["sauna"],
+              description: "Поддерживаемый объект истории.",
             },
             start_time: {
               type: "STRING",
-              description: "ISO datetime или относительное время: 24h, 7d, 30d.",
-            },
-            end_time: {
-              type: "STRING",
-              description: "Необязательное конечное время ISO.",
-            },
-            period: {
-              type: "STRING",
-              enum: ["5minute", "hour", "day", "week", "month", "year"],
-              description: "Период агрегации только для statistics.",
-            },
-            statistic_types: {
-              type: "ARRAY",
-              items: { type: "STRING" },
-              description: "Для statistics: mean, min, max, sum, state, change.",
-            },
-            limit: {
-              type: "INTEGER",
-              description: "Максимум записей; используй минимально достаточное значение.",
-            },
-            order: {
-              type: "STRING",
-              enum: ["asc", "desc"],
-              description: "Порядок history; обычно asc для анализа.",
+              description: "Период анализа, например 7d. Для сауны по умолчанию 7d.",
             },
           },
-          required: ["entity_ids"],
+          required: ["subject"],
         },
       },
       {

@@ -34,3 +34,18 @@ export function contextStats(context = {}) {
     historyFacts: context.historyFacts?.length ?? 0,
   };
 }
+
+function renderSection(title, items = []) {
+  if (!items.length) return `${title}\nнет данных`;
+  return `${title}\n${items.map((item) =>
+    typeof item === "string" ? `- ${item}` : `- ${JSON.stringify(item)}`
+  ).join("\n")}`;
+}
+
+export function renderHomeContext(context = {}) {
+  return [
+    renderSection("ТЕКУЩЕЕ СОСТОЯНИЕ ДОМА", context.currentState),
+    renderSection("ПАМЯТЬ О ДОМЕ", context.memories),
+    renderSection("ФАКТЫ ИЗ ИСТОРИИ HOME ASSISTANT", context.historyFacts),
+  ].join("\n\n");
+}

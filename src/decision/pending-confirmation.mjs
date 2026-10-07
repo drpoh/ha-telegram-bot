@@ -1,7 +1,14 @@
 import crypto from "node:crypto";
+import {
+  deleteMemory,
+  getMemory,
+  setMemory,
+} from "../db/database.mjs";
 
 const DEFAULT_TTL_MS = 60_000;
+const MEMORY_KEY = "pendingConfirmations";
 const pending = new Map();
+let persistenceDbPath;
 
 function keyFor(userId, chatId) {
   if (userId === undefined || userId === null) throw new Error("userId is required");
@@ -15,6 +22,49 @@ function cloneAction(action) {
 
 function isExpired(entry, now = Date.now()) {
   return now >= entry.expiresAt;
+}
+
+function persist() {
+  if (pending.size === 0) {
+    deleteMemory(MEMORY_KEY, persistenceDbPath);
+    return;
+  }
+  setMemory(MEMORY_KEY, [...pending.values()], persistenceDbPath);
+}
+
+function removeEntry(key) {
+  const removed = pending.delete(key);
+  if (removed) persist();
+  return removed;
+}
+
+export function loadPendingConfirmations({
+  now = Date.now(),
+  dbPath,
+} = {}) {
+  persistenceDbPath = dbPath;
+  pending.clear();
+
+  const saved = getMemory(MEMORY_KEY, persistenceDbPath);
+  if (!Array.isArray(saved)) return 0;
+
+  for (const entry of saved) {
+    if (
+      entry?.token &&
+      entry?.action?.name &&
+      entry?.action?.args &&
+      entry?.userId != null &&
+      entry?.chatId != null &&
+      Number.isFinite(entry?.expiresAt) &&
+      !isExpired(entry, now)
+    ) {
+      pending.set(keyFor(entry.userId, entry.chatId), Object.freeze(cloneAction(entry)));
+    }
+  }
+
+  persist();
+  if (pending.size) console.log(`Pending confirmations loaded → ${pending.size}`);
+  return pending.size;
 }
 
 export function createPendingConfirmation({
@@ -38,6 +88,7 @@ export function createPendingConfirmation({
   });
 
   pending.set(key, entry);
+  persist();
   return cloneAction(entry);
 }
 
@@ -46,7 +97,7 @@ export function peekPendingConfirmation({ userId, chatId, now = Date.now() } = {
   const entry = pending.get(key);
   if (!entry) return null;
   if (isExpired(entry, now)) {
-    pending.delete(key);
+    removeEntry(key);
     return null;
   }
   return cloneAction(entry);
@@ -58,22 +109,27 @@ export function consumePendingConfirmation({ userId, chatId, token, now = Date.n
   if (!entry) return null;
 
   if (isExpired(entry, now)) {
-    pending.delete(key);
+    removeEntry(key);
     return null;
   }
 
   if (!token || token !== entry.token) return null;
 
-  pending.delete(key);
+  removeEntry(key);
   return cloneAction(entry);
 }
 
 export function cancelPendingConfirmation({ userId, chatId } = {}) {
-  return pending.delete(keyFor(userId, chatId));
+  return removeEntry(keyFor(userId, chatId));
 }
 
-export function clearPendingConfirmations() {
+export function clearPendingConfirmations({ persist: shouldPersist = true } = {}) {
   pending.clear();
+  if (shouldPersist) persist();
+}
+
+export function setPendingConfirmationPersistence(dbPath) {
+  persistenceDbPath = dbPath;
 }
 
 export { DEFAULT_TTL_MS };

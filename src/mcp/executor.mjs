@@ -1,6 +1,7 @@
 import { getMcpClient } from "./client.mjs";
 import { updateDeviceMemory, getDeviceMemory } from "../memory/devices.mjs";
 import { rememberLearningSearch, rememberLearningControl } from "../learning/session.mjs";
+import { rememberOperationalAction } from "../memory/operational.mjs";
 import {
   expectedStateForService,
   verifyActionState,
@@ -118,6 +119,8 @@ export async function callHA(name, args = {}, { mcpClient = null } = {}) {
         rememberLearningControl(entityId);
       }
     }
+
+    rememberOperationalAction({ name, args, result });
   }
 
   return result;

@@ -2,6 +2,8 @@ import { initSceneDatabase } from "./scenes/store.mjs";
 import { initDatabase } from "./db/database.mjs";
 import { loadControlledMemory } from "./memory/controlled.mjs";
 import { loadConversationHistory } from "./memory/conversation.mjs";
+import { loadPendingConfirmations } from "./decision/pending-confirmation.mjs";
+import { loadOperationalMemory } from "./memory/operational.mjs";
 import { connectMcp, closeMcp } from "./mcp/client.mjs";
 import {
   startTelegram,
@@ -44,6 +46,8 @@ initDatabase();
 initSceneDatabase();
 loadControlledMemory();
 loadConversationHistory();
+loadPendingConfirmations();
+loadOperationalMemory();
 
 await connectMcp();
 

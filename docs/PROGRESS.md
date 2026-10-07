@@ -43,7 +43,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 | Device/semantic memory | 🟡 In progress | 65% | Existing device memory reused; v3 semantic expansion remains |
 | Behavioral memory | 🟡 In progress | 70% | Persistent correction learning, service-specific 30-day downgrade signals, audit visibility and selective operator reset implemented |
 | Operational memory | 🟡 In progress | 70% | Compact bounded action outcomes persist in SQLite, include per-entity verification, and expose only bounded entity-relevant context |
-| Current HA state context | 🟡 In progress | 65% | Known-device read requests prefetch one bounded live state into v3 context; broader relevant-state context remains |
+| Current HA state context | 🟡 In progress | 70% | Known-device state and sensor-value requests prefetch one bounded live state into v3 context; control requests still avoid extra reads |
 | Post-action verification | 🟡 In progress | 90% | Deterministic on/off verification covers light, switch, input_boolean, fan and media_player with bounded single/multi-entity polling and pending/failed states |
 | Shadow / Suggest mode | 🟡 In progress | 40% | State-changing HA service proposals are evaluated/logged in shadow; v2 user-command execution is unchanged |
 | AUTO_SAFE autonomy | 🟡 In progress | 55% | Strict kitchen/living-room allowlist wired; live kitchen autonomous actuation and restore verified |
@@ -81,7 +81,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 
 ## Test status
 
-**103 / 103 tests passing**
+**104 / 104 tests passing**
 
 Current automated coverage includes:
 

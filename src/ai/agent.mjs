@@ -44,7 +44,7 @@ import {
 const MAX_AGENT_STEPS = 10;
 
 export function isReadStateRequest(text = "") {
-  return /(состояни|статус|включен|включён|выключен|выключён|работает|горит|открыт|закрыт)/i.test(text);
+  return /(состояни|статус|включен|включён|выключен|выключён|работает|горит|открыт|закрыт|температур|сколько\s+(?:сейчас\s+)?градус)/i.test(text);
 }
 
 function extractState(result, entityId) {

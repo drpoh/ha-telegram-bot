@@ -14,3 +14,10 @@ test("does not prefetch state for control commands", () => {
   assert.equal(isReadStateRequest("Выключи свет на кухне"), false);
   assert.equal(isReadStateRequest("Переключи свет на кухне"), false);
 });
+
+
+test("detects known sensor value requests", () => {
+  assert.equal(isReadStateRequest("Какая температура в сауне?"), true);
+  assert.equal(isReadStateRequest("Сколько градусов в сауне?"), true);
+  assert.equal(isReadStateRequest("Сколько сейчас градусов в сауне?"), true);
+});

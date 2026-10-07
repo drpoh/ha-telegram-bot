@@ -131,7 +131,9 @@ test("risk signal requires repeated corrections before reducing autonomy", () =>
     });
   }
 
-  const signal = getBehaviorCorrectionSignal("light.test");
+  const signal = getBehaviorCorrectionSignal("light.test", "turn_on", {
+    now: 12000,
+  });
   assert.equal(signal.corrections, 2);
   assert.equal(signal.should_reduce_autonomy, true);
 });
@@ -188,4 +190,45 @@ test("operator reset removes corrections only for selected entity", () => {
   assert.equal(getBehaviorCorrections("light.one").length, 0);
   assert.equal(getBehaviorCorrections("light.two").length, 1);
   assert.equal(clearBehaviorCorrectionsForEntity("light.unknown"), 0);
+});
+
+
+test("risk signal is service-specific", () => {
+  for (const [base, service, correction] of [
+    [1000, "turn_on", "turn_off"],
+    [10000, "turn_off", "turn_on"],
+  ]) {
+    observeBehaviorAction({
+      source: "autonomous", domain: "light", service,
+      entity_id: "light.test", at: base,
+    });
+    observeBehaviorAction({
+      source: "user_explicit", domain: "light", service: correction,
+      entity_id: "light.test", at: base + 1000,
+    });
+  }
+
+  assert.equal(getBehaviorCorrectionSignal("light.test", "turn_on", { now: 12000 }).corrections, 1);
+  assert.equal(getBehaviorCorrectionSignal("light.test", "turn_off", { now: 12000 }).corrections, 1);
+  assert.equal(getBehaviorCorrectionSignal("light.test", "turn_on", { now: 12000 }).should_reduce_autonomy, false);
+});
+
+test("risk signal ignores corrections outside horizon", () => {
+  for (const base of [1000, 10000]) {
+    observeBehaviorAction({
+      source: "autonomous", domain: "light", service: "turn_on",
+      entity_id: "light.test", at: base,
+    });
+    observeBehaviorAction({
+      source: "user_explicit", domain: "light", service: "turn_off",
+      entity_id: "light.test", at: base + 1000,
+    });
+  }
+
+  const signal = getBehaviorCorrectionSignal("light.test", "turn_on", {
+    now: 100000,
+    horizonMs: 1000,
+  });
+  assert.equal(signal.corrections, 0);
+  assert.equal(signal.should_reduce_autonomy, false);
 });

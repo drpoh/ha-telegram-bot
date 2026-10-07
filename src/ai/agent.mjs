@@ -182,7 +182,7 @@ export async function askHomeAssistant(
                 .map((id) => id.trim())
                 .filter(Boolean);
           const behaviorSignal = behaviorEntityIds
-            .map((entityId) => getBehaviorCorrectionSignal(entityId))
+            .map((entityId) => getBehaviorCorrectionSignal(entityId, call.args?.service))
             .find((signal) => signal.should_reduce_autonomy) || null;
 
           const evaluatedShadow =

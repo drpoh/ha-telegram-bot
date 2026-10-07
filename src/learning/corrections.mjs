@@ -7,6 +7,7 @@ import {
 const MEMORY_KEY = "behaviorCorrections";
 const DEFAULT_WINDOW_MS = 120_000;
 const MAX_CORRECTIONS = 50;
+const DEFAULT_SIGNAL_HORIZON_MS = 30 * 24 * 60 * 60 * 1000;
 
 let recentActions = new Map();
 let corrections = [];
@@ -103,15 +104,34 @@ export function setBehaviorCorrectionPersistence(dbPath) {
   persistenceDbPath = dbPath;
 }
 
-export { DEFAULT_WINDOW_MS, MAX_CORRECTIONS };
+export { DEFAULT_WINDOW_MS, DEFAULT_SIGNAL_HORIZON_MS, MAX_CORRECTIONS };
 
 
-export function getBehaviorCorrectionSignal(entityId, limit = 5) {
-  const recent = getBehaviorCorrections(entityId, limit);
+export function getBehaviorCorrectionSignal(
+  entityId,
+  service = null,
+  {
+    limit = 5,
+    now = Date.now(),
+    horizonMs = DEFAULT_SIGNAL_HORIZON_MS,
+  } = {}
+) {
+  const cutoff = now - Math.max(0, horizonMs);
+  const recent = corrections
+    .filter((item) =>
+      item.entity_id === entityId &&
+      (!service || item.autonomous_service === service) &&
+      item.at >= cutoff &&
+      item.at <= now
+    )
+    .slice(-Math.max(0, limit));
+
   return {
     entity_id: entityId || null,
+    service: service || null,
     corrections: recent.length,
     last_correction_at: recent.at(-1)?.at ?? null,
+    horizon_ms: horizonMs,
     should_reduce_autonomy: recent.length >= 2,
   };
 }

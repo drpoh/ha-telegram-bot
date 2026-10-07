@@ -81,7 +81,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 
 ## Test status
 
-**101 / 101 tests passing**
+**103 / 103 tests passing**
 
 Current automated coverage includes:
 

@@ -35,6 +35,9 @@ export function evaluatePolicy(proposal, policy = {}) {
       serviceAllowed,
     requiresConfirmation: level === AUTONOMY_LEVELS.CONFIRM,
     serviceAllowed,
+    preconditions: Array.isArray(entry?.preconditions)
+      ? structuredClone(entry.preconditions)
+      : [],
     reason: serviceAllowed
       ? `Policy level: ${level}`
       : `Service not allowed for ${key}: ${service || "unknown"}`,

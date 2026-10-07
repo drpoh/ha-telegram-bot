@@ -71,3 +71,29 @@ test("unknown entity remains suggest and blocked", () => {
   assert.equal(result.outcome, "suggest");
   assert.equal(result.executable, false);
 });
+
+
+test("AI proposal preconditions cannot become trusted policy preconditions", () => {
+  const input = proposal("light.kukhnia_svet", "turn_on");
+  input.preconditions = [{ entity_id: "binary_sensor.fake", state: "off" }];
+  const result = decide(input, autonomyPolicy);
+  assert.deepEqual(result.proposal.preconditions, input.preconditions);
+  assert.deepEqual(result.policy.preconditions, []);
+});
+
+test("only deterministic policy entry supplies trusted preconditions", () => {
+  const policy = {
+    default: "suggest",
+    entities: {
+      "light.test": {
+        level: "auto_safe",
+        services: ["turn_on"],
+        preconditions: [{ entity_id: "binary_sensor.presence", state: "off" }],
+      },
+    },
+  };
+  const result = decide(proposal("light.test", "turn_on"), policy);
+  assert.deepEqual(result.policy.preconditions, [
+    { entity_id: "binary_sensor.presence", state: "off" },
+  ]);
+});

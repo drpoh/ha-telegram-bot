@@ -267,7 +267,7 @@ export async function askHomeAssistant(
               });
               const contextPrecondition = targetPrecondition.allowed
                 ? await checkContextPreconditions(
-                    evaluatedShadow?.proposal?.preconditions,
+                    evaluatedShadow?.policy?.preconditions,
                     { readState }
                   )
                 : null;

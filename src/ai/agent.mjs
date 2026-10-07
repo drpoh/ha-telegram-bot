@@ -35,7 +35,8 @@ import {
 } from "../policy/engine.mjs";
 import { autonomyPolicy } from "../policy/config.mjs";
 import { createPendingConfirmation } from "../decision/pending-confirmation.mjs";
-import { completeDecisionAudit, rememberDecisionAudit } from "../decision/audit.mjs";
+import { completeDecisionAudit, recordDecisionPrecondition, rememberDecisionAudit } from "../decision/audit.mjs";
+import { checkActionPreconditions } from "../decision/preconditions.mjs";
 import { getOperationalContextForEntity } from "../memory/operational.mjs";
 import {
   getBehaviorCorrectionSignal,
@@ -254,13 +255,39 @@ export async function askHomeAssistant(
                       : "Действие не выполнено.",
             };
           } else {
-            result = await callHA(
-              call.name,
-              call.args || {}
-            );
+            let precondition = null;
+            if (
+              source === ACTION_SOURCES.AUTONOMOUS &&
+              call.name === "ha_call_service"
+            ) {
+              precondition = await checkActionPreconditions({
+                ...call.args,
+                readState: (entityId) => callHA("ha_get_state", { entity_id: entityId }),
+              });
+              if (decisionAudit?.id) {
+                recordDecisionPrecondition(decisionAudit.id, precondition);
+              }
+            }
 
-            if (decisionAudit?.id) {
-              completeDecisionAudit(decisionAudit.id, { result });
+            if (precondition && precondition.allowed !== true) {
+              result = {
+                blocked: true,
+                outcome: precondition.status === "noop" ? "noop" : "precondition_blocked",
+                precondition,
+                user_message:
+                  precondition.status === "noop"
+                    ? "Действие не требуется: Home Assistant уже в нужном состоянии."
+                    : "Автономное действие не выполнено: precondition не подтвержден свежим состоянием Home Assistant.",
+              };
+            } else {
+              result = await callHA(
+                call.name,
+                call.args || {}
+              );
+
+              if (decisionAudit?.id) {
+                completeDecisionAudit(decisionAudit.id, { result });
+              }
             }
 
             if (

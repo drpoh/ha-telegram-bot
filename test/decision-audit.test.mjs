@@ -48,6 +48,7 @@ test("stores compact decision audit without raw prompt or payload", () => {
     authorized: true,
     behavioral_downgrade: false,
     execution: "pending",
+    precondition: null,
     verification: null,
   });
 });

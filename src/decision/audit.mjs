@@ -40,6 +40,7 @@ export function rememberDecisionAudit({
     authorized: Boolean(authorized),
     behavioral_downgrade: Boolean(shadow.behavioralDowngrade),
     execution: authorized ? "pending" : "blocked",
+    precondition: null,
     verification: null,
   };
 
@@ -51,6 +52,15 @@ export function rememberDecisionAudit({
 
 export function getDecisionAudit(limit = 20) {
   return structuredClone(entries.slice(-Math.max(0, limit)));
+}
+
+export function recordDecisionPrecondition(id, precondition) {
+  const entry = entries.find((item) => item.id === id);
+  if (!entry) return null;
+  entry.precondition = precondition?.status ?? null;
+  if (precondition?.allowed === false) entry.execution = "blocked";
+  persist();
+  return structuredClone(entry);
 }
 
 export function completeDecisionAudit(id, { result } = {}) {

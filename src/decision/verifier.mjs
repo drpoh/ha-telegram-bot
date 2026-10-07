@@ -132,7 +132,13 @@ export async function verifyActionStates({
 }
 
 export function expectedStateForService(domain, service) {
-  if (domain === "light" || domain === "switch") {
+  if ([
+    "light",
+    "switch",
+    "input_boolean",
+    "fan",
+    "media_player",
+  ].includes(domain)) {
     if (service === "turn_on") return "on";
     if (service === "turn_off") return "off";
   }

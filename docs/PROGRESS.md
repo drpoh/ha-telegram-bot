@@ -41,13 +41,13 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 | Decision Engine | 🟡 In progress | 80% | Deterministic proposal → policy → source enforcement is wired; one-time scoped confirmation flow is implemented |
 | Conversation memory | ✅ Existing | 100% | Reused from v2 |
 | Device/semantic memory | 🟡 In progress | 65% | Existing device memory reused; v3 semantic expansion remains |
-| Behavioral memory | 🟡 Early | 25% | Learning infrastructure exists; correction learning remains |
+| Behavioral memory | 🟡 In progress | 70% | Persistent correction learning, service-specific 30-day downgrade signals, audit visibility and selective operator reset implemented |
 | Operational memory | 🟡 In progress | 70% | Compact bounded action outcomes persist in SQLite, include per-entity verification, and expose only bounded entity-relevant context |
 | Current HA state context | 🟡 In progress | 65% | Known-device read requests prefetch one bounded live state into v3 context; broader relevant-state context remains |
-| Post-action verification | 🟡 In progress | 85% | Deterministic light/switch turn_on/turn_off verification supports single and multi-entity calls with bounded per-entity polling and pending/failed states |
+| Post-action verification | 🟡 In progress | 90% | Deterministic on/off verification covers light, switch, input_boolean, fan and media_player with bounded single/multi-entity polling and pending/failed states |
 | Shadow / Suggest mode | 🟡 In progress | 40% | State-changing HA service proposals are evaluated/logged in shadow; v2 user-command execution is unchanged |
 | AUTO_SAFE autonomy | 🟡 In progress | 55% | Strict kitchen/living-room allowlist wired; live kitchen autonomous actuation and restore verified |
-| Manual-override learning | ⬜ Planned | 0% | Detect quick user reversal as negative feedback |
+| Manual-override learning | 🟡 In progress | 80% | Quick explicit reversals of autonomous actions are persisted as negative feedback and can conservatively downgrade matching autonomy |
 | Additional history analyzers | ⬜ Planned | 0% | Sauna is the first supported subject |
 
 ## Verified live behavior
@@ -72,7 +72,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 - Multi-entity light/switch actions now use one service call followed by independent bounded verification for every entity; one stale entity makes the aggregate result pending without retrying the action.
 - Operational context is exposed to AI only for a precisely resolved entity and is limited to its 3 most recent action outcomes.
 - Behavioral correction learning observes quick USER_EXPLICIT reversals of successful AUTONOMOUS turn_on/turn_off actions within 2 minutes and persists bounded correction history.
-- Repeated corrections now conservatively downgrade autonomous AUTO_SAFE execution to SUGGEST for the affected entity. Learning can only reduce autonomy; it never grants new permissions, and explicit user commands are unaffected.
+- Repeated corrections now conservatively downgrade autonomous AUTO_SAFE execution to SUGGEST for the affected entity/service using a 30-day evidence horizon. Learning can only reduce autonomy; it never grants new permissions, and explicit user commands are unaffected.
 - Behavioral audit visibility exposes per-entity correction counts, latest reversal pair, and active autonomy reduction through the read-only health status/API.
 - Operator commands `/behavior` and `/behavior_reset <entity_id>` inspect and selectively reset behavioral correction state without clearing unrelated memory.
 - Explicit user commands remain backward-compatible for normal `suggest` policy, but explicit `confirm` and `deny` policies now stop execution before the HA tool call.
@@ -114,7 +114,7 @@ Security-sensitive or high-impact actions remain confirmation/deny candidates.
 
 ## Next milestones
 
-1. Extend verification to additional deterministic service types beyond light/switch.
+1. Extend verification only when additional service outcomes can be modeled deterministically without unsafe assumptions.
 2. Expand current-state context only where it improves decisions without excessive HA reads.
 4. Continue shadow/suggest evaluation before expanding the existing AUTO_SAFE allowlist.
 5. Add explicit operator controls to inspect/reset behavioral downgrade state without clearing unrelated memory.

@@ -65,10 +65,18 @@ test("unknown expected state is pending, not falsely confirmed", async () => {
   assert.equal(result.attempts, 0);
 });
 
-test("maps deterministic light and switch services to expected state", () => {
-  assert.equal(expectedStateForService("light", "turn_on"), "on");
-  assert.equal(expectedStateForService("light", "turn_off"), "off");
-  assert.equal(expectedStateForService("switch", "turn_on"), "on");
-  assert.equal(expectedStateForService("switch", "turn_off"), "off");
+test("maps deterministic on/off domains to expected state", () => {
+  for (const domain of [
+    "light",
+    "switch",
+    "input_boolean",
+    "fan",
+    "media_player",
+  ]) {
+    assert.equal(expectedStateForService(domain, "turn_on"), "on");
+    assert.equal(expectedStateForService(domain, "turn_off"), "off");
+  }
   assert.equal(expectedStateForService("light", "toggle"), null);
+  assert.equal(expectedStateForService("cover", "open_cover"), null);
+  assert.equal(expectedStateForService("climate", "set_temperature"), null);
 });

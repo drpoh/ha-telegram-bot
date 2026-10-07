@@ -2,11 +2,7 @@ import { normalizeHistorySamples } from "./analyzer.mjs";
 
 function numericPoints(samples = []) {
   return normalizeHistorySamples(samples)
-    .map((sample) => ({
-      temperature: Number(sample.state),
-      timestamp: sample.timestamp,
-      timeMs: Date.parse(sample.timestamp),
-    }))
+    .map((sample) => ({ temperature: Number(sample.state), timestamp: sample.timestamp, timeMs: Date.parse(sample.timestamp) }))
     .filter((point) => Number.isFinite(point.temperature) && Number.isFinite(point.timeMs))
     .sort((a, b) => a.timeMs - b.timeMs);
 }
@@ -15,7 +11,6 @@ function splitContinuous(points, maxGapMinutes) {
   const maxGapMs = maxGapMinutes * 60_000;
   const segments = [];
   let current = [];
-
   for (const point of points) {
     const previous = current.at(-1);
     if (previous && point.timeMs - previous.timeMs > maxGapMs) {
@@ -24,104 +19,80 @@ function splitContinuous(points, maxGapMinutes) {
     }
     current.push(point);
   }
-
   if (current.length) segments.push(current);
   return segments;
 }
 
-export function findSaunaHeatingCycles(
-  samples = [],
-  {
-    targetTemperature = 85,
-    minimumRise = 5,
-    lookbackMinutes = 90,
-    maxGapMinutes = 5,
-  } = {}
-) {
+export function findSaunaHeatingCycles(samples = [], {
+  targetTemperature = 85, minimumRise = 5, lookbackMinutes = 90,
+  maxGapMinutes = 5, fullHeatMaxStartTemperature = 50,
+} = {}) {
   const segments = splitContinuous(numericPoints(samples), maxGapMinutes);
   const cycles = [];
-
   for (const points of segments) {
     for (let i = 1; i < points.length; i++) {
       const previous = points[i - 1];
       const target = points[i];
-
-      if (!(previous.temperature < targetTemperature && target.temperature >= targetTemperature)) {
-        continue;
-      }
-
+      if (!(previous.temperature < targetTemperature && target.temperature >= targetTemperature)) continue;
       const lookbackMs = lookbackMinutes * 60_000;
-      const candidates = points
-        .slice(0, i)
-        .filter((point) =>
-          target.timeMs - point.timeMs <= lookbackMs &&
-          target.temperature - point.temperature >= minimumRise
-        );
-
-      if (!candidates.length) continue;
-
-      const start = candidates.reduce((lowest, point) =>
-        point.temperature < lowest.temperature ? point : lowest
+      const candidates = points.slice(0, i).filter((point) =>
+        target.timeMs - point.timeMs <= lookbackMs &&
+        target.temperature - point.temperature >= minimumRise
       );
-
+      if (!candidates.length) continue;
+      const start = candidates.reduce((lowest, point) => point.temperature < lowest.temperature ? point : lowest);
       const durationMinutes = (target.timeMs - start.timeMs) / 60_000;
       if (!(durationMinutes > 0)) continue;
-
       const rise = target.temperature - start.temperature;
       cycles.push({
-        targetTemperature,
-        startTemperature: start.temperature,
-        startTime: start.timestamp,
-        reachedTemperature: target.temperature,
-        reachedTime: target.timestamp,
-        durationMinutes,
-        rise,
-        rateCPerMinute: rise / durationMinutes,
-        complete: true,
+        type: start.temperature <= fullHeatMaxStartTemperature ? "full" : "reheat",
+        targetTemperature, startTemperature: start.temperature, startTime: start.timestamp,
+        reachedTemperature: target.temperature, reachedTime: target.timestamp,
+        durationMinutes, rise, rateCPerMinute: rise / durationMinutes, complete: true,
       });
     }
   }
-
   return cycles;
+}
+
+export function summarizeSaunaHeating(cycles = [], { minimumFullCyclesForAverage = 2 } = {}) {
+  const full = cycles.filter((cycle) => cycle.complete && cycle.type === "full");
+  const reheats = cycles.filter((cycle) => cycle.complete && cycle.type === "reheat");
+  const durations = full.map((cycle) => cycle.durationMinutes).filter(Number.isFinite);
+  const rates = full.map((cycle) => cycle.rateCPerMinute).filter(Number.isFinite);
+  const enoughData = durations.length >= minimumFullCyclesForAverage;
+  return {
+    fullCycles: full.length,
+    reheatCycles: reheats.length,
+    enoughData,
+    averageDurationMinutes: enoughData ? durations.reduce((a, b) => a + b, 0) / durations.length : null,
+    averageRateCPerMinute: enoughData && rates.length ? rates.reduce((a, b) => a + b, 0) / rates.length : null,
+    lastFullCycle: full.at(-1) ?? null,
+    lastReheatCycle: reheats.at(-1) ?? null,
+  };
 }
 
 export function analyzeSaunaHeating(samples = [], options = {}) {
   return findSaunaHeatingCycles(samples, options).at(-1) ?? null;
 }
 
-export function estimateMinutesToTarget(
-  samples = [],
-  {
-    targetTemperature = 85,
-    windowMinutes = 15,
-    minimumRate = 0.05,
-    maxGapMinutes = 5,
-  } = {}
-) {
+export function estimateMinutesToTarget(samples = [], {
+  targetTemperature = 85, windowMinutes = 15, minimumRate = 0.05, maxGapMinutes = 5,
+} = {}) {
   const segments = splitContinuous(numericPoints(samples), maxGapMinutes);
   const points = segments.at(-1) ?? [];
   if (points.length < 2) return null;
-
   const current = points.at(-1);
   if (current.temperature >= targetTemperature) {
     return { currentTemperature: current.temperature, targetTemperature, minutesRemaining: 0, rateCPerMinute: null };
   }
-
   const cutoff = current.timeMs - windowMinutes * 60_000;
   const recent = points.filter((point) => point.timeMs >= cutoff);
   if (recent.length < 2) return null;
-
   const first = recent[0];
   const elapsedMinutes = (current.timeMs - first.timeMs) / 60_000;
   if (!(elapsedMinutes > 0)) return null;
-
   const rate = (current.temperature - first.temperature) / elapsedMinutes;
   if (rate < minimumRate) return null;
-
-  return {
-    currentTemperature: current.temperature,
-    targetTemperature,
-    rateCPerMinute: rate,
-    minutesRemaining: (targetTemperature - current.temperature) / rate,
-  };
+  return { currentTemperature: current.temperature, targetTemperature, rateCPerMinute: rate, minutesRemaining: (targetTemperature - current.temperature) / rate };
 }

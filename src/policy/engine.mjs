@@ -17,13 +17,27 @@ export function evaluatePolicy(proposal, policy = {}) {
   }
 
   const key = proposal.policyKey || proposal.action;
-  const level = policy[key] || AUTONOMY_LEVELS.SUGGEST;
+  const entry = policy.entities?.[key] ?? policy[key];
+  const level =
+    typeof entry === "string"
+      ? entry
+      : entry?.level || policy.default || AUTONOMY_LEVELS.SUGGEST;
+
+  const service = proposal.args?.service;
+  const serviceAllowed =
+    !entry?.services ||
+    (typeof service === "string" && entry.services.includes(service));
 
   return {
     level,
-    allowed: level === AUTONOMY_LEVELS.AUTO_SAFE,
+    allowed:
+      level === AUTONOMY_LEVELS.AUTO_SAFE &&
+      serviceAllowed,
     requiresConfirmation: level === AUTONOMY_LEVELS.CONFIRM,
-    reason: `Policy level: ${level}`,
+    serviceAllowed,
+    reason: serviceAllowed
+      ? `Policy level: ${level}`
+      : `Service not allowed for ${key}: ${service || "unknown"}`,
   };
 }
 

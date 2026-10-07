@@ -32,6 +32,7 @@ import {
   ACTION_SOURCES,
   enforceActionSource,
 } from "../policy/engine.mjs";
+import { autonomyPolicy } from "../policy/config.mjs";
 
 const MAX_AGENT_STEPS = 10;
 
@@ -82,7 +83,7 @@ async function buildCurrentStateContext(userText) {
 
 export async function askHomeAssistant(
   userText,
-  { source = ACTION_SOURCES.USER_EXPLICIT, policy = {} } = {}
+  { source = ACTION_SOURCES.USER_EXPLICIT, policy = autonomyPolicy } = {}
 ) {
   startLearningSession(userText);
   const deviceContext = getDeviceMemoryText();

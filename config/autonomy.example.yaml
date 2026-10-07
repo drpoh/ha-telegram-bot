@@ -1,17 +1,23 @@
-# Example only. Runtime policy loading is not enabled yet.
-# Start with least privilege.
+# Runtime policy is implemented in src/policy/config.mjs.
+# This file documents the intended human-readable shape.
 
 default: suggest
 
-observe:
-  - sensor.*
-  - binary_sensor.*
+entities:
+  light.kukhnia_svet:
+    level: auto_safe
+    services:
+      - turn_on
+      - turn_off
 
-auto_safe: []
+  switch.vannaia_svet:
+    level: auto_safe
+    services:
+      - turn_on
+      - turn_off
 
-confirm:
-  - climate.*
-
-deny:
-  - lock.*
-  - alarm_control_panel.*
+  light.wled_gledopto:
+    level: auto_safe
+    services:
+      - turn_on
+      - turn_off

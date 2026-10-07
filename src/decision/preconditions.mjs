@@ -55,3 +55,29 @@ export async function checkActionPreconditions({ domain, service, entity_id, rea
 
   return { status: PRECONDITION_STATUS.READY, allowed: true, expectedState, entities };
 }
+
+export async function checkContextPreconditions(preconditions = [], { readState } = {}) {
+  if (!Array.isArray(preconditions) || preconditions.length === 0) {
+    return { status: PRECONDITION_STATUS.READY, allowed: true, conditions: [] };
+  }
+  if (typeof readState !== "function") {
+    return { status: PRECONDITION_STATUS.BLOCKED, allowed: false, conditions: [] };
+  }
+
+  const conditions = [];
+  for (const condition of preconditions) {
+    const entityId = String(condition?.entity_id || "").trim();
+    const expected = condition?.state;
+    let state = null;
+    try {
+      state = entityId ? extractState(await readState(entityId)) : null;
+    } catch {
+      state = null;
+    }
+    const freshness = state !== null ? FRESHNESS.LIVE : FRESHNESS.UNKNOWN;
+    conditions.push({ entityId, expected, state, freshness, matched: state !== null && state === expected });
+  }
+
+  const allowed = conditions.length === preconditions.length && conditions.every((item) => item.matched && item.freshness === FRESHNESS.LIVE);
+  return { status: allowed ? PRECONDITION_STATUS.READY : PRECONDITION_STATUS.BLOCKED, allowed, conditions };
+}

@@ -33,3 +33,23 @@ test("unsupported service is not approved", async () => {
   assert.equal(result.status, PRECONDITION_STATUS.UNSUPPORTED);
   assert.equal(result.allowed, false);
 });
+
+
+test("context preconditions require every fresh fact to match", async () => {
+  const { checkContextPreconditions } = await import("../src/decision/preconditions.mjs");
+  const result = await checkContextPreconditions([
+    { entity_id: "binary_sensor.presence", state: "off" },
+    { entity_id: "input_boolean.away", state: "on" },
+  ], { readState: async (id) => ({ state: id.endsWith("presence") ? "off" : "on" }) });
+  assert.equal(result.status, PRECONDITION_STATUS.READY);
+  assert.equal(result.allowed, true);
+});
+
+test("context precondition fails closed when a fact changed", async () => {
+  const { checkContextPreconditions } = await import("../src/decision/preconditions.mjs");
+  const result = await checkContextPreconditions([
+    { entity_id: "binary_sensor.presence", state: "off" },
+  ], { readState: async () => ({ state: "on" }) });
+  assert.equal(result.status, PRECONDITION_STATUS.BLOCKED);
+  assert.equal(result.allowed, false);
+});

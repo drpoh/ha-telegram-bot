@@ -36,7 +36,7 @@ import {
 import { autonomyPolicy } from "../policy/config.mjs";
 import { createPendingConfirmation } from "../decision/pending-confirmation.mjs";
 import { completeDecisionAudit, recordDecisionPrecondition, rememberDecisionAudit } from "../decision/audit.mjs";
-import { checkActionPreconditions } from "../decision/preconditions.mjs";
+import { checkActionPreconditions, checkContextPreconditions } from "../decision/preconditions.mjs";
 import { getOperationalContextForEntity } from "../memory/operational.mjs";
 import {
   getBehaviorCorrectionSignal,
@@ -260,10 +260,28 @@ export async function askHomeAssistant(
               source === ACTION_SOURCES.AUTONOMOUS &&
               call.name === "ha_call_service"
             ) {
-              precondition = await checkActionPreconditions({
+              const readState = (entityId) => callHA("ha_get_state", { entity_id: entityId });
+              const targetPrecondition = await checkActionPreconditions({
                 ...call.args,
-                readState: (entityId) => callHA("ha_get_state", { entity_id: entityId }),
+                readState,
               });
+              const contextPrecondition = targetPrecondition.allowed
+                ? await checkContextPreconditions(
+                    evaluatedShadow?.proposal?.preconditions,
+                    { readState }
+                  )
+                : null;
+              precondition = contextPrecondition?.allowed === false
+                ? {
+                    ...contextPrecondition,
+                    target: targetPrecondition,
+                    context: contextPrecondition,
+                  }
+                : {
+                    ...targetPrecondition,
+                    target: targetPrecondition,
+                    context: contextPrecondition,
+                  };
               if (decisionAudit?.id) {
                 recordDecisionPrecondition(decisionAudit.id, precondition);
               }

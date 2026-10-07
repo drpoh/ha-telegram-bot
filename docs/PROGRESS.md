@@ -45,7 +45,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 | Operational memory | 🟡 Early | 25% | Controlled-device/outcome foundations exist |
 | Current HA state context | 🟡 In progress | 65% | Known-device read requests prefetch one bounded live state into v3 context; broader relevant-state context remains |
 | Post-action verification | 🟡 Early | 20% | Needs deterministic verify-after-action pipeline |
-| Shadow / Suggest mode | ⬜ Planned | 0% | Next major autonomy stage |
+| Shadow / Suggest mode | 🟡 In progress | 40% | State-changing HA service proposals are evaluated/logged in shadow; v2 user-command execution is unchanged |
 | AUTO_SAFE autonomy | ⬜ Planned | 0% | Enable only after shadow-mode validation |
 | Manual-override learning | ⬜ Planned | 0% | Detect quick user reversal as negative feedback |
 | Additional history analyzers | ⬜ Planned | 0% | Sauna is the first supported subject |
@@ -61,10 +61,12 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 - A known-device state question prefetches exactly one live `ha_get_state`, performs no search/history call, and reuses that state in the AI context without a duplicate state request.
 - Control commands are excluded from state prefetch so normal actions do not gain an unnecessary read call.
 - Decision Engine deterministically maps proposals through Policy Engine to observe/suggest/approve/confirm/deny outcomes; it has no MCP execution access.
+- State-changing `ha_call_service` proposals now pass through a shadow evaluator before the existing v2 execution path; shadow records what policy would decide but never executes an action itself.
+- Live read-only regression produced one bounded `ha_get_state`, zero service calls and zero shadow proposals.
 
 ## Test status
 
-**48 / 48 tests passing**
+**52 / 52 tests passing**
 
 Current automated coverage includes:
 

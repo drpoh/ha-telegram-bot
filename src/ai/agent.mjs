@@ -24,6 +24,10 @@ import { finalizeLearning } from "../learning/learner.mjs";
 import { isAiHistoryTool, callAiHistoryTool } from "../history/tools.mjs";
 import { resolveKnownDevice } from "../home/entity-resolver.mjs";
 import { buildHomeContext, renderHomeContext } from "../context/builder.mjs";
+import {
+  shadowEvaluateToolCall,
+  logShadowDecision,
+} from "../decision/shadow.mjs";
 
 const MAX_AGENT_STEPS = 10;
 
@@ -140,6 +144,17 @@ export async function askHomeAssistant(userText) {
             call.args || {}
           );
         } else {
+          const shadow = shadowEvaluateToolCall(
+            call.name,
+            call.args || {},
+            {},
+            {
+              reason: `User request: ${userText}`,
+              evidence: [userText],
+            }
+          );
+          logShadowDecision(shadow);
+
           result = await callHA(
             call.name,
             call.args || {}

@@ -35,6 +35,7 @@ import {
 } from "../policy/engine.mjs";
 import { autonomyPolicy } from "../policy/config.mjs";
 import { createPendingConfirmation } from "../decision/pending-confirmation.mjs";
+import { rememberDecisionAudit } from "../decision/audit.mjs";
 import { getOperationalContextForEntity } from "../memory/operational.mjs";
 import {
   getBehaviorCorrectionSignal,
@@ -197,6 +198,14 @@ export async function askHomeAssistant(
           const enforcement = evaluatedShadow
             ? enforceActionSource(evaluatedShadow, source)
             : { authorized: true };
+
+          if (evaluatedShadow) {
+            rememberDecisionAudit({
+              shadow: evaluatedShadow,
+              source,
+              authorized: enforcement.authorized,
+            });
+          }
 
           if (!enforcement.authorized) {
             console.log("POLICY BLOCK →", {

@@ -1,6 +1,7 @@
 import { isMcpConnected } from "../mcp/client.mjs";
 import { getQueueStatus } from "../utils/queue.mjs";
 import { getBehaviorAuditSnapshot } from "../learning/corrections.mjs";
+import { getDecisionAuditSummary } from "../decision/audit.mjs";
 
 function formatUptime(seconds) {
   const days = Math.floor(seconds / 86400);
@@ -26,5 +27,6 @@ export function getHealthStatus() {
     behavioral: {
       corrections: getBehaviorAuditSnapshot(),
     },
+    decisions: getDecisionAuditSummary(),
   };
 }

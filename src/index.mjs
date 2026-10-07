@@ -5,6 +5,7 @@ import { loadConversationHistory } from "./memory/conversation.mjs";
 import { loadPendingConfirmations } from "./decision/pending-confirmation.mjs";
 import { loadOperationalMemory } from "./memory/operational.mjs";
 import { loadBehaviorCorrections } from "./learning/corrections.mjs";
+import { loadDecisionAudit } from "./decision/audit.mjs";
 import { connectMcp, closeMcp } from "./mcp/client.mjs";
 import {
   startTelegram,
@@ -50,6 +51,7 @@ loadConversationHistory();
 loadPendingConfirmations();
 loadOperationalMemory();
 loadBehaviorCorrections();
+loadDecisionAudit();
 
 await connectMcp();
 

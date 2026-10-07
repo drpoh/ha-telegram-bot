@@ -38,7 +38,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 | Safe AI history tool | ✅ Done | 100% | AI uses `ai_history_summary`; raw history is not exposed directly |
 | MCP history logging | ✅ Done | 100% | Large history logs reduced from ~39,000 to 178 lines in live test |
 | Policy Engine | 🟡 In progress | 45% | OBSERVE / SUGGEST / AUTO_SAFE / CONFIRM / DENY foundation exists |
-| Decision Engine | 🟡 Foundation | 20% | Proposal types exist; full decision flow not yet wired |
+| Decision Engine | 🟡 In progress | 45% | Deterministic proposal → policy → outcome engine implemented; runtime action interception remains |
 | Conversation memory | ✅ Existing | 100% | Reused from v2 |
 | Device/semantic memory | 🟡 In progress | 65% | Existing device memory reused; v3 semantic expansion remains |
 | Behavioral memory | 🟡 Early | 25% | Learning infrastructure exists; correction learning remains |
@@ -60,10 +60,11 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 - History logging was reduced by roughly 220× without changing analysis results.
 - A known-device state question prefetches exactly one live `ha_get_state`, performs no search/history call, and reuses that state in the AI context without a duplicate state request.
 - Control commands are excluded from state prefetch so normal actions do not gain an unnecessary read call.
+- Decision Engine deterministically maps proposals through Policy Engine to observe/suggest/approve/confirm/deny outcomes; it has no MCP execution access.
 
 ## Test status
 
-**43 / 43 tests passing**
+**48 / 48 tests passing**
 
 Current automated coverage includes:
 

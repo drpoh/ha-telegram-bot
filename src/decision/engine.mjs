@@ -10,6 +10,10 @@ export const DECISION_OUTCOMES = Object.freeze({
 });
 
 function outcomeForPolicy(result) {
+  if (result.level === AUTONOMY_LEVELS.AUTO_SAFE && result.allowed !== true) {
+    return DECISION_OUTCOMES.DENY;
+  }
+
   switch (result.level) {
     case AUTONOMY_LEVELS.AUTO_SAFE:
       return DECISION_OUTCOMES.APPROVE;

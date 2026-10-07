@@ -53,3 +53,22 @@ test("auto_safe can be approved by policy but does not execute by itself", () =>
   assert.equal(decision.executable, true);
   assert.equal(decision.policy.allowed, true);
 });
+
+test("auto_safe denies services outside the entity allowlist", () => {
+  const decision = decide(
+    { action: "light.toggle", policyKey: "light.hall" },
+    {
+      entities: {
+        "light.hall": {
+          level: "auto_safe",
+          services: ["turn_on", "turn_off"],
+        },
+      },
+    }
+  );
+
+  assert.equal(decision.policy.level, "auto_safe");
+  assert.equal(decision.policy.allowed, false);
+  assert.equal(decision.outcome, DECISION_OUTCOMES.DENY);
+  assert.equal(decision.executable, false);
+});

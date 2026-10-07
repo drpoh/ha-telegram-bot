@@ -46,10 +46,16 @@ export function enforceActionSource(
   source = ACTION_SOURCES.AUTONOMOUS
 ) {
   if (source === ACTION_SOURCES.USER_EXPLICIT) {
+    const blockedByPolicy =
+      decision?.outcome === "confirm" ||
+      decision?.outcome === "deny";
+
     return {
-      authorized: true,
+      authorized: !blockedByPolicy,
       source,
-      reason: "Explicit user command",
+      reason: blockedByPolicy
+        ? `Explicit user command blocked by policy: ${decision.outcome}`
+        : "Explicit user command",
     };
   }
 

@@ -13,6 +13,9 @@
 - wildcards require special care
 - permissions never expand through learning alone
 - every autonomous action is logged and verified
+- confirm/deny policy is enforced before execution for explicit requests
+- confirmations are scoped, one-time, exact-action, and time-limited
+- verification never retries a state-changing service; stale telemetry remains pending
 - user override reduces confidence for similar future decisions
 
 ## Initial rollout

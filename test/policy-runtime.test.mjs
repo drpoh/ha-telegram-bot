@@ -27,6 +27,35 @@ test("explicit user command preserves existing execution path", () => {
   assert.equal(gate.source, ACTION_SOURCES.USER_EXPLICIT);
 });
 
+test("explicit user command respects confirm policy", () => {
+  const gate = enforceActionSource(
+    decision({ "light.hall": "confirm" }),
+    ACTION_SOURCES.USER_EXPLICIT
+  );
+
+  assert.equal(gate.authorized, false);
+  assert.match(gate.reason, /confirm/);
+});
+
+test("explicit user command respects deny policy", () => {
+  const gate = enforceActionSource(
+    decision({ "light.hall": "deny" }),
+    ACTION_SOURCES.USER_EXPLICIT
+  );
+
+  assert.equal(gate.authorized, false);
+  assert.match(gate.reason, /deny/);
+});
+
+test("explicit auto-safe command remains authorized", () => {
+  const gate = enforceActionSource(
+    decision({ "light.hall": "auto_safe" }),
+    ACTION_SOURCES.USER_EXPLICIT
+  );
+
+  assert.equal(gate.authorized, true);
+});
+
 test("autonomous action defaults to blocked suggest", () => {
   const gate = enforceActionSource(
     decision(),

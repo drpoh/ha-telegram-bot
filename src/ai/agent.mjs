@@ -33,6 +33,7 @@ import {
   enforceActionSource,
 } from "../policy/engine.mjs";
 import { autonomyPolicy } from "../policy/config.mjs";
+import { createPendingConfirmation } from "../decision/pending-confirmation.mjs";
 
 const MAX_AGENT_STEPS = 10;
 
@@ -83,7 +84,11 @@ async function buildCurrentStateContext(userText) {
 
 export async function askHomeAssistant(
   userText,
-  { source = ACTION_SOURCES.USER_EXPLICIT, policy = autonomyPolicy } = {}
+  {
+    source = ACTION_SOURCES.USER_EXPLICIT,
+    policy = autonomyPolicy,
+    actor = null,
+  } = {}
 ) {
   startLearningSession(userText);
   const deviceContext = getDeviceMemoryText();
@@ -174,14 +179,39 @@ export async function askHomeAssistant(
               entity_id: shadow?.proposal?.args?.entity_id,
               outcome: shadow?.outcome,
             });
+
+            let pendingConfirmation = null;
+            if (
+              shadow?.outcome === "confirm" &&
+              actor?.userId != null &&
+              actor?.chatId != null
+            ) {
+              pendingConfirmation = createPendingConfirmation({
+                userId: actor.userId,
+                chatId: actor.chatId,
+                action: {
+                  name: call.name,
+                  args: call.args || {},
+                },
+              });
+            }
+
             result = {
               blocked: true,
               outcome: shadow?.outcome,
               reason: enforcement.reason,
               policy: shadow?.policy,
+              pending_confirmation: pendingConfirmation
+                ? {
+                    token: pendingConfirmation.token,
+                    expiresAt: pendingConfirmation.expiresAt,
+                  }
+                : null,
               user_message:
                 shadow?.outcome === "confirm"
-                  ? "Действие не выполнено: требуется подтверждение."
+                  ? pendingConfirmation
+                    ? "Действие не выполнено. Подтвердите: да или отмена."
+                    : "Действие не выполнено: требуется подтверждение."
                   : shadow?.outcome === "suggest"
                     ? "Действие не выполнено: оно доступно только как предложение."
                     : shadow?.outcome === "deny"

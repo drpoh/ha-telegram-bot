@@ -1,7 +1,11 @@
 import { Telegraf } from "telegraf";
 
 import { config } from "../config/env.mjs";
-import { queueHomeAssistantRequest } from "../utils/queue.mjs";
+import {
+  cancelQueuedConfirmation,
+  queueConfirmedAction,
+  queueHomeAssistantRequest,
+} from "../utils/queue.mjs";
 import { getAIStatus } from "../ai/router.mjs";
 import {
   clearConversationHistory,
@@ -14,6 +18,7 @@ import {
 import {
   clearControlledMemory,
 } from "../memory/controlled.mjs";
+import { clearPendingConfirmations } from "../decision/pending-confirmation.mjs";
 
 import { getHealthStatus } from "../status/health.mjs";
 
@@ -88,6 +93,7 @@ bot.command("status", async (ctx) => {
     clearConversationHistory();
     clearDeviceMemory();
     clearControlledMemory();
+    clearPendingConfirmations();
 
     console.log("Memory → cleared");
 
@@ -116,8 +122,41 @@ bot.command("status", async (ctx) => {
     try {
       await ctx.sendChatAction("typing");
 
-      const answer =
-        await queueHomeAssistantRequest(text);
+      const actor = {
+        userId: ctx.from.id,
+        chatId: ctx.chat.id,
+      };
+      const normalized = text.toLowerCase().trim();
+
+      if (/^(да|подтверждаю|подтвердить)$/.test(normalized)) {
+        const confirmation = await queueConfirmedAction(actor);
+        await ctx.reply(
+          confirmation.status === "executed"
+            ? "✅ Подтверждённое действие выполнено и проверено."
+            : confirmation.status === "accepted"
+              ? "✅ Команда принята Home Assistant; отдельная проверка состояния для этого действия пока не поддерживается."
+              : confirmation.status === "pending"
+                ? "⏳ Команда принята, но Home Assistant ещё не подтвердил новое состояние."
+                : confirmation.status === "failed" || confirmation.status === "error"
+                  ? "❌ Подтверждённое действие не удалось выполнить."
+                  : "ℹ️ Нет активного подтверждения или оно уже истекло."
+        );
+        return;
+      }
+
+      if (/^(нет|отмена|отменить)$/.test(normalized)) {
+        const cancelled = cancelQueuedConfirmation(actor);
+        await ctx.reply(
+          cancelled
+            ? "❎ Действие отменено."
+            : "ℹ️ Нет активного действия для отмены."
+        );
+        return;
+      }
+
+      const answer = await queueHomeAssistantRequest(text, {
+        actor,
+      });
 
       await ctx.reply(answer);
     } catch (error) {

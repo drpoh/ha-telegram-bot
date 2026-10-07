@@ -1,6 +1,10 @@
 import { getMcpClient } from "./client.mjs";
 import { updateDeviceMemory, getDeviceMemory } from "../memory/devices.mjs";
 import { rememberLearningSearch, rememberLearningControl } from "../learning/session.mjs";
+import {
+  expectedStateForService,
+  verifyActionState,
+} from "../decision/verifier.mjs";
 
 function logMcpResult(name, result) {
   const content = result?.structuredContent ?? result;
@@ -29,12 +33,12 @@ function logMcpResult(name, result) {
   console.log(`MCP ← ${name}`, JSON.stringify(content, null, 2));
 }
 
-export async function callHA(name, args = {}) {
+export async function callHA(name, args = {}, { mcpClient = null } = {}) {
   console.log(`MCP → ${name}`, args);
 
-  const mcp = getMcpClient();
+  const mcp = mcpClient ?? getMcpClient();
 
-  const result = await mcp.callTool({
+  let result = await mcp.callTool({
     name,
     arguments: args,
   });
@@ -72,8 +76,7 @@ export async function callHA(name, args = {}) {
 
   if (
     name === "ha_call_service" &&
-    args?.entity_id &&
-    result?.structuredContent?.success === true
+    args?.entity_id
   ) {
     const entityIds = Array.isArray(args.entity_id)
       ? args.entity_id
@@ -81,9 +84,39 @@ export async function callHA(name, args = {}) {
           .split(",")
           .map((id) => id.trim())
           .filter(Boolean);
+    const expectedState = expectedStateForService(args.domain, args.service);
 
-    for (const entityId of entityIds) {
-      rememberLearningControl(entityId);
+    if (entityIds.length === 1 && expectedState) {
+      const verification = await verifyActionState({
+        serviceResult: result,
+        entityId: entityIds[0],
+        expectedState,
+        readState: (entityId) =>
+          mcp.callTool({
+            name: "ha_get_state",
+            arguments: { entity_id: entityId },
+          }),
+        attempts: 3,
+        intervalMs: 250,
+      });
+
+      result = {
+        ...result,
+        verification,
+      };
+
+      console.log("VERIFY →", {
+        entity_id: entityIds[0],
+        expected: expectedState,
+        observed: verification.observedState,
+        status: verification.status,
+      });
+    }
+
+    if (result?.structuredContent?.success === true) {
+      for (const entityId of entityIds) {
+        rememberLearningControl(entityId);
+      }
     }
   }
 

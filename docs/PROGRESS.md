@@ -4,7 +4,7 @@
 
 ## Overall status
 
-**Foundation progress: ~45%**
+**Foundation progress: ~60%**
 
 The project is evolving the working v2 bot into a safe, context-aware Home AI Agent without rebuilding the existing system.
 
@@ -37,14 +37,14 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 | Sauna History Analyzer | ✅ Done | 100% | Full heats and reheats classified separately |
 | Safe AI history tool | ✅ Done | 100% | AI uses `ai_history_summary`; raw history is not exposed directly |
 | MCP history logging | ✅ Done | 100% | Large history logs reduced from ~39,000 to 178 lines in live test |
-| Policy Engine | 🟡 In progress | 70% | Runtime source gate added: explicit user commands preserve v2; autonomous actions are policy-enforced |
-| Decision Engine | 🟡 In progress | 60% | Deterministic proposal → policy → runtime source enforcement is wired; confirmation flow remains |
+| Policy Engine | 🟡 In progress | 85% | Explicit commands preserve v2 by default, while explicit confirm/deny policies now block before execution; autonomous actions remain policy-enforced |
+| Decision Engine | 🟡 In progress | 80% | Deterministic proposal → policy → source enforcement is wired; one-time scoped confirmation flow is implemented |
 | Conversation memory | ✅ Existing | 100% | Reused from v2 |
 | Device/semantic memory | 🟡 In progress | 65% | Existing device memory reused; v3 semantic expansion remains |
 | Behavioral memory | 🟡 Early | 25% | Learning infrastructure exists; correction learning remains |
 | Operational memory | 🟡 Early | 25% | Controlled-device/outcome foundations exist |
 | Current HA state context | 🟡 In progress | 65% | Known-device read requests prefetch one bounded live state into v3 context; broader relevant-state context remains |
-| Post-action verification | 🟡 Early | 20% | Needs deterministic verify-after-action pipeline |
+| Post-action verification | 🟡 In progress | 75% | Deterministic single-entity light/switch turn_on/turn_off verification is wired with bounded polling and pending/failed states |
 | Shadow / Suggest mode | 🟡 In progress | 40% | State-changing HA service proposals are evaluated/logged in shadow; v2 user-command execution is unchanged |
 | AUTO_SAFE autonomy | 🟡 In progress | 55% | Strict kitchen/living-room allowlist wired; live kitchen autonomous actuation and restore verified |
 | Manual-override learning | ⬜ Planned | 0% | Detect quick user reversal as negative feedback |
@@ -67,10 +67,14 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 - Live autonomous regression proposed `light.turn_off` for the kitchen, produced one shadow decision and one policy block, and made zero `ha_call_service` calls; the device was not changed.
 - Strict AUTO_SAFE allowlist now permits only `turn_on` / `turn_off` for kitchen `light.kukhnia_svet` and living-room lights `light.liustra`, `light.podsvetka`, `light.podsvetka_2`; bathroom/sauna are back to default `suggest`, and unlisted services such as `toggle` are blocked.
 - Live AUTO_SAFE smoke test verified the kitchen end to end: initial `on` → autonomous `turn_off` → verified `off` → restored `on` → verified `on`.
+- CONFIRM pending actions are scoped to user+chat, carry an exact one-time token, expire after TTL, and execute the stored tool name/arguments rather than regenerated LLM output.
+- Explicit user commands remain backward-compatible for normal `suggest` policy, but explicit `confirm` and `deny` policies now stop execution before the HA tool call.
+- Post-action verifier performs bounded state reads without retrying the state-changing service; `confirmed`, `pending`, and `failed` are distinguished.
+- Live verifier test on `light.kukhnia_svet` succeeded: `off` → `on` confirmed in one read → restored `off` confirmed in one read. The verifier also handled an HA-MCP service warning where the subsequent state read already showed the correct restored state.
 
 ## Test status
 
-**63 / 63 tests passing**
+**83 / 83 tests passing**
 
 Current automated coverage includes:
 
@@ -103,14 +107,12 @@ Security-sensitive or high-impact actions remain confirmation/deny candidates.
 
 ## Next milestones
 
-1. Commit and protect the 41/41 history-tool test baseline.
-2. Verify a normal non-history HA query does not invoke history.
-3. Expand current-state context.
-4. Connect Decision Engine proposals to Policy Engine decisions.
-5. Add post-action verification.
-6. Introduce shadow/suggest mode and collect decision quality data.
-7. Add behavioral learning from manual corrections.
-8. Enable a very small explicit AUTO_SAFE allowlist only after validation.
+1. Persist pending confirmations so a bot/process restart cannot lose a required approval.
+2. Extend verification to multi-entity actions and additional deterministic service types.
+3. Record action/verification outcomes in operational memory.
+4. Expand current-state context only where it improves decisions without excessive HA reads.
+5. Add behavioral learning from manual corrections and quick reversals.
+6. Continue shadow/suggest evaluation before expanding the existing AUTO_SAFE allowlist.
 
 ## Definition of v3 success
 

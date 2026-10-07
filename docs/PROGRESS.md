@@ -37,8 +37,8 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 | Sauna History Analyzer | ✅ Done | 100% | Full heats and reheats classified separately |
 | Safe AI history tool | ✅ Done | 100% | AI uses `ai_history_summary`; raw history is not exposed directly |
 | MCP history logging | ✅ Done | 100% | Large history logs reduced from ~39,000 to 178 lines in live test |
-| Policy Engine | 🟡 In progress | 45% | OBSERVE / SUGGEST / AUTO_SAFE / CONFIRM / DENY foundation exists |
-| Decision Engine | 🟡 In progress | 45% | Deterministic proposal → policy → outcome engine implemented; runtime action interception remains |
+| Policy Engine | 🟡 In progress | 70% | Runtime source gate added: explicit user commands preserve v2; autonomous actions are policy-enforced |
+| Decision Engine | 🟡 In progress | 60% | Deterministic proposal → policy → runtime source enforcement is wired; confirmation flow remains |
 | Conversation memory | ✅ Existing | 100% | Reused from v2 |
 | Device/semantic memory | 🟡 In progress | 65% | Existing device memory reused; v3 semantic expansion remains |
 | Behavioral memory | 🟡 Early | 25% | Learning infrastructure exists; correction learning remains |
@@ -63,10 +63,12 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 - Decision Engine deterministically maps proposals through Policy Engine to observe/suggest/approve/confirm/deny outcomes; it has no MCP execution access.
 - State-changing `ha_call_service` proposals now pass through a shadow evaluator before the existing v2 execution path; shadow records what policy would decide but never executes an action itself.
 - Live read-only regression produced one bounded `ha_get_state`, zero service calls and zero shadow proposals.
+- Runtime action source is explicit: current user requests default to `user_explicit`; future proactive calls must opt into `autonomous`.
+- Live autonomous regression proposed `light.turn_off` for the kitchen, produced one shadow decision and one policy block, and made zero `ha_call_service` calls; the device was not changed.
 
 ## Test status
 
-**52 / 52 tests passing**
+**57 / 57 tests passing**
 
 Current automated coverage includes:
 

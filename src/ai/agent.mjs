@@ -28,6 +28,10 @@ import {
   shadowEvaluateToolCall,
   logShadowDecision,
 } from "../decision/shadow.mjs";
+import {
+  ACTION_SOURCES,
+  enforceActionSource,
+} from "../policy/engine.mjs";
 
 const MAX_AGENT_STEPS = 10;
 
@@ -76,7 +80,10 @@ async function buildCurrentStateContext(userText) {
   }
 }
 
-export async function askHomeAssistant(userText) {
+export async function askHomeAssistant(
+  userText,
+  { source = ACTION_SOURCES.USER_EXPLICIT, policy = {} } = {}
+) {
   startLearningSession(userText);
   const deviceContext = getDeviceMemoryText();
   const controlledContext = getLastControlledText();
@@ -147,7 +154,7 @@ export async function askHomeAssistant(userText) {
           const shadow = shadowEvaluateToolCall(
             call.name,
             call.args || {},
-            {},
+            policy,
             {
               reason: `User request: ${userText}`,
               evidence: [userText],
@@ -155,17 +162,45 @@ export async function askHomeAssistant(userText) {
           );
           logShadowDecision(shadow);
 
-          result = await callHA(
-            call.name,
-            call.args || {}
-          );
+          const enforcement = shadow
+            ? enforceActionSource(shadow, source)
+            : { authorized: true };
+
+          if (!enforcement.authorized) {
+            console.log("POLICY BLOCK →", {
+              source,
+              action: shadow?.proposal?.action,
+              entity_id: shadow?.proposal?.args?.entity_id,
+              outcome: shadow?.outcome,
+            });
+            result = {
+              blocked: true,
+              outcome: shadow?.outcome,
+              reason: enforcement.reason,
+              policy: shadow?.policy,
+              user_message:
+                shadow?.outcome === "confirm"
+                  ? "Действие не выполнено: требуется подтверждение."
+                  : shadow?.outcome === "suggest"
+                    ? "Действие не выполнено: оно доступно только как предложение."
+                    : shadow?.outcome === "deny"
+                      ? "Действие запрещено политикой."
+                      : "Действие не выполнено.",
+            };
+          } else {
+            result = await callHA(
+              call.name,
+              call.args || {}
+            );
+          }
         }
         
         if (
           call.name === "ha_call_service" &&
           call.args?.domain &&
           call.args?.entity_id &&
-          !result?.isError
+          !result?.isError &&
+          !result?.blocked
         ) {
           const entities =
             controlledByDomain.get(call.args.domain) || [];

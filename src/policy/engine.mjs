@@ -1,3 +1,5 @@
+import { classifyRisk } from "./risk.mjs";
+
 export const AUTONOMY_LEVELS = Object.freeze({
   OBSERVE: "observe",
   SUGGEST: "suggest",
@@ -24,6 +26,8 @@ export function evaluatePolicy(proposal, policy = {}) {
       : entry?.level || policy.default || AUTONOMY_LEVELS.SUGGEST;
 
   const service = proposal.args?.service;
+  const domain = proposal.args?.domain || proposal.action?.split(".")?.[0];
+  const risk = classifyRisk({ domain, service, stateChanging: proposal.action !== null, riskOverride: entry?.risk });
   const serviceAllowed =
     !entry?.services ||
     (typeof service === "string" && entry.services.includes(service));
@@ -35,6 +39,7 @@ export function evaluatePolicy(proposal, policy = {}) {
       serviceAllowed,
     requiresConfirmation: level === AUTONOMY_LEVELS.CONFIRM,
     serviceAllowed,
+    risk,
     preconditions: Array.isArray(entry?.preconditions)
       ? structuredClone(entry.preconditions)
       : [],

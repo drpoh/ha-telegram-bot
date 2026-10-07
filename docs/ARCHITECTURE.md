@@ -2,6 +2,8 @@
 
 v3 evolves the existing v2 Telegram + AI + HA-MCP agent without replacing its working core.
 
+The project is intended to become a reusable Home Assistant agent for other users. The maintainer's home is a reference/test deployment, not the product model. Core logic must avoid installation-specific entity IDs, room names, language assumptions and device brands; deployment-specific policy, entity mappings and preferences belong in configuration.
+
 ## Flow
 Input (Telegram/voice/API)
 -> Conversation Agent

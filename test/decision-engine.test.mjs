@@ -72,3 +72,22 @@ test("auto_safe denies services outside the entity allowlist", () => {
   assert.equal(decision.outcome, DECISION_OUTCOMES.DENY);
   assert.equal(decision.executable, false);
 });
+
+
+test("risk class is independent from autonomy level", () => {
+  const decision = decide(
+    { action: "light.turn_on", policyKey: "light.hall", args: { domain: "light", service: "turn_on" } },
+    { "light.hall": "suggest" }
+  );
+  assert.equal(decision.policy.risk, "R1");
+  assert.equal(decision.outcome, DECISION_OUTCOMES.SUGGEST);
+});
+
+test("entity policy can override generic risk without changing autonomy", () => {
+  const decision = decide(
+    { action: "switch.turn_on", policyKey: "switch.harmless", args: { domain: "switch", service: "turn_on" } },
+    { entities: { "switch.harmless": { level: "suggest", risk: "R1" } } }
+  );
+  assert.equal(decision.policy.risk, "R1");
+  assert.equal(decision.executable, false);
+});

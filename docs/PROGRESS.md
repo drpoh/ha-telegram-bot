@@ -84,7 +84,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 
 ## Test status
 
-**120 / 120 tests passing**
+**127 / 127 tests passing**
 
 Current automated coverage includes:
 
@@ -118,10 +118,11 @@ Security-sensitive or high-impact actions remain confirmation/deny candidates.
 ## Next milestones
 
 1. Implement context freshness and deterministic preconditions for state-changing autonomous actions.
-2. Add R0-R4 risk classification independently from autonomy permissions.
+2. Complete R0-R4 risk classification independently from autonomy permissions; generic domain/service defaults are implemented with conservative unknown-device handling and configurable overrides.
 3. Add action idempotency/deduplication and deterministic autonomy rate/cooldown budgets.
 4. Continue shadow/suggest evaluation and verified decision audit before expanding the existing AUTO_SAFE allowlist.
 5. Extend verification only where service outcomes can be modeled deterministically without unsafe assumptions.
+6. Productize configuration before public release: move maintainer-specific entity IDs, room mappings and preferences out of tracked core defaults; ship generic examples/schema plus per-installation local configuration and migration guidance.
 
 ## Post-v3 sustainability and monetization
 

@@ -5,11 +5,15 @@ export const autonomyPolicy = Object.freeze({
       level: "auto_safe",
       services: Object.freeze(["turn_on", "turn_off"]),
     }),
-    "switch.vannaia_svet": Object.freeze({
+    "light.liustra": Object.freeze({
       level: "auto_safe",
       services: Object.freeze(["turn_on", "turn_off"]),
     }),
-    "light.wled_gledopto": Object.freeze({
+    "light.podsvetka": Object.freeze({
+      level: "auto_safe",
+      services: Object.freeze(["turn_on", "turn_off"]),
+    }),
+    "light.podsvetka_2": Object.freeze({
       level: "auto_safe",
       services: Object.freeze(["turn_on", "turn_off"]),
     }),

@@ -25,17 +25,38 @@ test("allowlisted kitchen light permits autonomous turn_on", () => {
   assert.equal(result.executable, true);
 });
 
-test("allowlisted bathroom switch permits autonomous turn_off", () => {
+test("allowlisted living room chandelier permits autonomous turn_off", () => {
   const result = decide(
-    proposal("switch.vannaia_svet", "turn_off"),
+    proposal("light.liustra", "turn_off"),
     autonomyPolicy
   );
   assert.equal(result.executable, true);
 });
 
-test("allowlisted WLED rejects unlisted toggle service", () => {
+test("living room accent lights permit autonomous turn_on", () => {
+  for (const entityId of ["light.podsvetka", "light.podsvetka_2"]) {
+    const result = decide(
+      proposal(entityId, "turn_on"),
+      autonomyPolicy
+    );
+    assert.equal(result.executable, true);
+  }
+});
+
+test("bathroom and sauna are no longer auto_safe", () => {
+  for (const entityId of ["switch.vannaia_svet", "light.wled_gledopto"]) {
+    const result = decide(
+      proposal(entityId, "turn_off"),
+      autonomyPolicy
+    );
+    assert.equal(result.outcome, "suggest");
+    assert.equal(result.executable, false);
+  }
+});
+
+test("allowlisted living room light rejects unlisted toggle service", () => {
   const result = decide(
-    proposal("light.wled_gledopto", "toggle"),
+    proposal("light.liustra", "toggle"),
     autonomyPolicy
   );
   assert.equal(result.executable, false);

@@ -10,13 +10,19 @@ entities:
       - turn_on
       - turn_off
 
-  switch.vannaia_svet:
+  light.liustra:
     level: auto_safe
     services:
       - turn_on
       - turn_off
 
-  light.wled_gledopto:
+  light.podsvetka:
+    level: auto_safe
+    services:
+      - turn_on
+      - turn_off
+
+  light.podsvetka_2:
     level: auto_safe
     services:
       - turn_on

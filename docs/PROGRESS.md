@@ -65,11 +65,11 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 - Live read-only regression produced one bounded `ha_get_state`, zero service calls and zero shadow proposals.
 - Runtime action source is explicit: current user requests default to `user_explicit`; future proactive calls must opt into `autonomous`.
 - Live autonomous regression proposed `light.turn_off` for the kitchen, produced one shadow decision and one policy block, and made zero `ha_call_service` calls; the device was not changed.
-- Strict AUTO_SAFE allowlist now permits only `turn_on` / `turn_off` for `light.kukhnia_svet`, `switch.vannaia_svet`, and `light.wled_gledopto`; all unknown entities remain `suggest`, and unlisted services such as `toggle` are blocked.
+- Strict AUTO_SAFE allowlist now permits only `turn_on` / `turn_off` for kitchen `light.kukhnia_svet` and living-room lights `light.liustra`, `light.podsvetka`, `light.podsvetka_2`; bathroom/sauna are back to default `suggest`, and unlisted services such as `toggle` are blocked.
 
 ## Test status
 
-**61 / 61 tests passing**
+**63 / 63 tests passing**
 
 Current automated coverage includes:
 

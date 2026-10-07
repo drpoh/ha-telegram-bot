@@ -2,6 +2,33 @@ import { getMcpClient } from "./client.mjs";
 import { updateDeviceMemory, getDeviceMemory } from "../memory/devices.mjs";
 import { rememberLearningSearch, rememberLearningControl } from "../learning/session.mjs";
 
+function logMcpResult(name, result) {
+  const content = result?.structuredContent ?? result;
+
+  if (name === "ha_get_history") {
+    const data = content?.data ?? content ?? {};
+    const entities = Array.isArray(data?.entities) ? data.entities : [];
+    const records = entities.reduce(
+      (sum, entity) => sum + (entity.states?.length ?? entity.statistics?.length ?? 0),
+      0
+    );
+    const first = entities[0] ?? {};
+
+    console.log("MCP ← ha_get_history", {
+      entities: entities.length,
+      records,
+      total_count: first.total_count ?? null,
+      offset: first.offset ?? null,
+      has_more: first.has_more ?? false,
+      next_offset: first.next_offset ?? null,
+      period: first.period ?? data?.period ?? null,
+    });
+    return;
+  }
+
+  console.log(`MCP ← ${name}`, JSON.stringify(content, null, 2));
+}
+
 export async function callHA(name, args = {}) {
   console.log(`MCP → ${name}`, args);
 
@@ -11,7 +38,7 @@ export async function callHA(name, args = {}) {
     name,
     arguments: args,
   });
-  console.log(`MCP ← ${name}`, JSON.stringify(result?.structuredContent ?? result, null, 2));
+  logMcpResult(name, result);
 
 
   if (name === "ha_search") {

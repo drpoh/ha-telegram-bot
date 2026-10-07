@@ -12,6 +12,28 @@
       "основного света на кухне"
     ]
   },
+  "living_room_backlight": {
+    "name": "Гостиная подсветка",
+    "entity_id": "light.podsvetka",
+    "domain": "light",
+    "aliases": [
+      "гостиная подсветка",
+      "гостиную подсветку",
+      "подсветка гостиной",
+      "подсветку гостиной",
+      "подсветку в гостиной"
+    ]
+  },
+  "living_room_spot": {
+    "name": "Гостиная спот",
+    "entity_id": "light.podsvetka_2",
+    "domain": "light",
+    "aliases": [
+      "гостиная спот",
+      "спот в гостиной",
+      "спот гостиной"
+    ]
+  },
   "sauna_temperature": {
     "name": "Температура сауны",
     "entity_id": "sensor.sauna_te_sauna_temperature",

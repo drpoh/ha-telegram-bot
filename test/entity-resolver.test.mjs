@@ -30,6 +30,20 @@ test("resolves kitchen light state phrase", () => {
   );
 });
 
+test("resolves living room backlight separately", () => {
+  const device = resolveKnownDevice("Включи гостиную подсветку");
+
+  assert.ok(device);
+  assert.equal(device.entity_id, "light.podsvetka");
+});
+
+test("resolves living room spot separately", () => {
+  const device = resolveKnownDevice("Выключи гостиная спот");
+
+  assert.ok(device);
+  assert.equal(device.entity_id, "light.podsvetka_2");
+});
+
 test("unknown device returns null", () => {
   const device = resolveKnownDevice(
     "Включи свет на Марсе"

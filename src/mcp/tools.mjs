@@ -62,6 +62,53 @@ export const tools = [
         },
       },
       {
+        name: "ha_get_history",
+        description:
+          "Получить ограниченную историю или долгосрочную статистику сущности Home Assistant. Используй history для недавних изменений состояния, statistics для долгосрочных числовых трендов.",
+        parameters: {
+          type: "OBJECT",
+          properties: {
+            entity_ids: {
+              type: "STRING",
+              description: "Точный entity_id. Для AI-запросов предпочитай одну сущность за раз.",
+            },
+            source: {
+              type: "STRING",
+              enum: ["history", "statistics"],
+              description: "history = недавние состояния; statistics = агрегированная долгосрочная статистика.",
+            },
+            start_time: {
+              type: "STRING",
+              description: "ISO datetime или относительное время: 24h, 7d, 30d.",
+            },
+            end_time: {
+              type: "STRING",
+              description: "Необязательное конечное время ISO.",
+            },
+            period: {
+              type: "STRING",
+              enum: ["5minute", "hour", "day", "week", "month", "year"],
+              description: "Период агрегации только для statistics.",
+            },
+            statistic_types: {
+              type: "ARRAY",
+              items: { type: "STRING" },
+              description: "Для statistics: mean, min, max, sum, state, change.",
+            },
+            limit: {
+              type: "INTEGER",
+              description: "Максимум записей; используй минимально достаточное значение.",
+            },
+            order: {
+              type: "STRING",
+              enum: ["asc", "desc"],
+              description: "Порядок history; обычно asc для анализа.",
+            },
+          },
+          required: ["entity_ids"],
+        },
+      },
+      {
         name: "ha_get_overview",
         description: "Получить общий обзор Home Assistant.",
         parameters: {

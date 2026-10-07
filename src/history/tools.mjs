@@ -22,11 +22,12 @@ function saunaFacts(summary) {
   return facts;
 }
 
-export async function callAiHistoryTool(name, args = {}) {
+export async function callAiHistoryTool(name, args = {}, dependencies = {}) {
   if (!isAiHistoryTool(name)) throw new Error(`Unknown AI history tool: ${name}`);
   if (args.subject !== "sauna") throw new Error(`Unsupported history subject: ${args.subject}`);
 
-  const history = await fetchEntityHistory(SAUNA_TEMPERATURE_ENTITY, {
+  const fetchHistory = dependencies.fetchEntityHistory ?? fetchEntityHistory;
+  const history = await fetchHistory(SAUNA_TEMPERATURE_ENTITY, {
     startTime: args.start_time || "7d",
     limit: 1000,
     allPages: true,

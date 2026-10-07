@@ -19,6 +19,7 @@ import {
   clearControlledMemory,
 } from "../memory/controlled.mjs";
 import { clearPendingConfirmations } from "../decision/pending-confirmation.mjs";
+import { getDecisionAudit, getDecisionAuditSummary } from "../decision/audit.mjs";
 
 import { getHealthStatus } from "../status/health.mjs";
 import {
@@ -61,6 +62,33 @@ bot.command("status", async (ctx) => {
     `PID: ${status.pid}`
   );
 });
+
+  bot.command("decisions", async (ctx) => {
+    if (!isAllowed(ctx)) return;
+
+    const summary = getDecisionAuditSummary();
+    const items = getDecisionAudit(10);
+
+    const header =
+      "🧭 Decision audit\n\n" +
+      `Total: ${summary.total} | authorized: ${summary.authorized}\n` +
+      `approve: ${summary.approve} | suggest: ${summary.suggest} | confirm: ${summary.confirm} | deny: ${summary.deny}`;
+
+    if (!items.length) {
+      await ctx.reply(header + "\n\nРешений пока нет.");
+      return;
+    }
+
+    const lines = items.map((item) => {
+      const mark = item.authorized ? "✅" : "⏸️";
+      const entity = Array.isArray(item.entity_id)
+        ? item.entity_id.join(",")
+        : item.entity_id || "-";
+      return `${mark} ${item.outcome} | ${item.action} | ${entity} | ${item.source}`;
+    });
+
+    await ctx.reply(header + "\n\nПоследние решения:\n" + lines.join("\n"));
+  });
 
   bot.command("behavior", async (ctx) => {
     if (!isAllowed(ctx)) return;

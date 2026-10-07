@@ -21,6 +21,7 @@ import { rememberControlledMany } from "../memory/controlled.mjs";
 import { startLearningSession } from "../learning/session.mjs";
 import { getLastControlledText } from "../memory/controlled.mjs";
 import { finalizeLearning } from "../learning/learner.mjs";
+import { isAiHistoryTool, callAiHistoryTool } from "../history/tools.mjs";
 
 const MAX_AGENT_STEPS = 10;
 
@@ -82,7 +83,9 @@ export async function askHomeAssistant(userText) {
       let result;
 
       try {
-        if (isAiSceneTool(call.name)) {
+        if (isAiHistoryTool(call.name)) {
+          result = await callAiHistoryTool(call.name, call.args || {});
+        } else if (isAiSceneTool(call.name)) {
           result = await callAiSceneTool(
             call.name,
             call.args || {}

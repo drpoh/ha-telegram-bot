@@ -304,3 +304,5 @@ Regression checkpoint after positive ledger-bound fixture and concurrent confirm
 
 - Added `test/v3-ledger-inflight-invalidation.test.mjs` with deliberately blocked mock HA area discovery. While read-only authorization is unresolved, the fixture cancels the token, replaces the actor's request, or advances past expiry. Once discovery resolves, the dispatcher detects invalidated consent and makes **zero mock writes**. Focused test suite **3/3 passed**, commit `aab58b8`.
 - This tests cancellation before commit, not cancellation of an already-dispatched HA service call. Real integrations still need trusted ingress/policy, bounded read timeouts and shutdown handling. Gate B remains OPEN.
+
+Full regression after in-flight consent invalidation fixture: **56 isolated test files, 283 assertions passed, 0 failed**, `npm test` exit 0 on Raspberry Pi. Gate B remains OPEN pending verified trusted Telegram ingestion and operator-controlled policy source.

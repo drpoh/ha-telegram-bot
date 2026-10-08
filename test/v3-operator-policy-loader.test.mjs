@@ -26,3 +26,27 @@ test("local policy rejects invalid location symlink and writable grants",async()
   assert.equal((await readV3PolicyFile({directory:root,filename:"policy.json"})).ok,false);
  }finally{rmSync(root,{recursive:true,force:true});}
 });
+
+test("reject group/world writable policy directory and recover after securing it",async()=>{
+ const root=mkdtempSync(join(tmpdir(),"v3-policy-"));
+ try{
+  writeFileSync(join(root,"policy.json"),JSON.stringify({version:1,default:"deny",entities:{}}),{mode:0o600});
+  chmodSync(root,0o777);
+  const rejected=await readV3PolicyFile({directory:root,filename:"policy.json"});
+  assert.equal(rejected.ok,false);
+  assert.equal(rejected.reason,"unsafe_directory");
+  chmodSync(root,0o700);
+  assert.equal((await readV3PolicyFile({directory:root,filename:"policy.json"})).ok,true);
+ }finally{rmSync(root,{recursive:true,force:true});}
+});
+test("reject symlinked policy directory and oversized policy",async()=>{
+ const root=mkdtempSync(join(tmpdir(),"v3-policy-"));
+ const link=root+"-link";
+ try{
+  symlinkSync(root,link);
+  writeFileSync(join(root,"policy.json"),JSON.stringify({version:1,default:"deny",entities:{}}),{mode:0o600});
+  assert.equal((await readV3PolicyFile({directory:link,filename:"policy.json"})).ok,false);
+  writeFileSync(join(root,"policy.json"),"x".repeat(65537),{mode:0o600});
+  assert.equal((await readV3PolicyFile({directory:root,filename:"policy.json"})).ok,false);
+ }finally{rmSync(link,{force:true});rmSync(root,{recursive:true,force:true});}
+});

@@ -357,3 +357,9 @@ Full Raspberry Pi regression after isolated Assist ingress fixture: **62 isolate
 - OPEN: authoritative live HA satellite device/area mapping and completeness validation; private trusted input adapter and actual operator-approved target policy. None of these fixture results establish production control permission. No live HA operations.
 
 Full regression after voice preflight completion and satellite-area reference stage start: **64 isolated test files, 298 passing assertions, 0 failures**, `npm test` exit 0 on Raspberry Pi. Gate B still OPEN until actual trusted HA device/area mapping and independently approved policy are integrated; no HA actuation.
+
+## 2026-10-08 — Satellite registry freshness and identity reference
+
+- Added isolated `src/decision/v3-satellite-registry-binding.mjs`, comparing explicitly reviewed satellite-area mapping with a synthetic registry snapshot. Requires complete, successful, non-partial, fresh snapshot and exactly one matching available/active device whose area matches reviewed configuration. No HA calls or control performed.
+- Added `test/v3-satellite-registry-binding.test.mjs` for correct match and negative cases (stale, partial, missing, duplicated, moved, unavailable, disabled, missing device ID). First test run revealed an incorrect stale-fixture timestamp (not actually >30s old); corrected. **2/2 focused passed** (`44a0e41`, `673c2cb`, `cc040e0`).
+- Next: prove snapshot provenance/registry completeness using read-only HA adapter, verify stable device identity and fail closed on missing registry capabilities. Reviewed map plus snapshot remains **reference evidence**, never execution authorization. Gate B remains OPEN.

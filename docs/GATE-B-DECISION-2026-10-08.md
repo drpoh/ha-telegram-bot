@@ -22,3 +22,7 @@ See `docs/GATE-B-HOME-LIGHTING-REVIEW.md`. The preserved October 8 preliminary d
 ## Direct HA registry follow-up
 
 Read-only SSH to `homeassistant.local` confirmed readable core device/entity/area registry snapshots, with 293 devices, 2,901 entities and 17 areas. A room-by-room comparison found a previously omitted separate `koridor_1_etazh` area and unclassified light-like switches in sauna, kitchen and corridor. See `docs/GATE-B-HOME-LIGHTING-REVIEW.md` for sanitized entity IDs and owner questions. No live grant or authorization inferred.
+
+## HA-MCP live-state readback checkpoint
+
+A standalone read-only MCP connection checked 17 exact light/switch entities in four areas, with three unavailable entities (`light.sauna_sauna_te_sauna_status_led`, `light.svet`, `light.sonoff_1000d78a79`). See `docs/GATE-B-HOME-LIGHTING-REVIEW.md`. This improves evidence freshness but does not automatically approve whole-room grants or settle the user's intended lighting semantics.

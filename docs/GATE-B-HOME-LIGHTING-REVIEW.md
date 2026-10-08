@@ -40,3 +40,14 @@ Access method: read-only copy of Home Assistant's `.storage/core.device_registry
 - **First-floor corridor (`koridor_1_etazh`) is a distinct HA area:** `light.koridor_1_etazh`, `light.koridor_1_etazh_2`, `switch.koridor_1_etazh`; there are hidden/disabled Sonoff utility switches. This area was omitted from the earlier 3-area review. Do not collapse it into `koridor` automatically. **No grant.**
 
 Required next: owner decision on lighting switches, status LEDs, oven light, `light.svet`, Sonoff entities, the split between two corridor areas, and bathroom-versus-sauna semantics. Capture fresh HA states as a separate read-only step before any actual rollout. **Gate B owner-home approval pending**.
+
+## Live read-only state cross-check — 2026-10-08 (HA-MCP)
+
+A separate read-only HA-MCP session queried 17 exact entity IDs with `ha_get_state`. These are instantaneous states, **not** evidence of physical function, room-scene membership or owner approval.
+
+- Sauna: `light.wled_gledopto=on`; `switch.parilka_potolok=off`, `switch.vannaia_svet=off`; `light.louder_esp32_s3_louder_esp32_s3_led=off`, `light.sauna_m5stack_echo_status_led=on`, `light.sauna_sauna_te_sauna_status_led=unavailable`.
+- Kitchen: `light.dukhovka_light=off`, `light.kukhnia_svet_3=off`, `light.podsvetka_kukhnia=off`, `switch.kukhnia_kukhnia_svet=off`; `light.svet=unavailable`.
+- Corridor: `light.koridor=off`, `light.koridor_2=off`; `light.sonoff_1000d78a79=unavailable`.
+- First-floor corridor: `light.koridor_1_etazh=off`, `light.koridor_1_etazh_2=off`, `switch.koridor_1_etazh=off`.
+
+Three unavailable entities require independent handling. No states were changed. The audit remains **PENDING OWNER REVIEW** and all whole-room grants remain denied.

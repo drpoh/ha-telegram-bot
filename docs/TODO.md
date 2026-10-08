@@ -33,3 +33,5 @@ At session end: record completed work, failed/unfinished steps, test results, co
 A task can be marked done only with a file/commit reference, verification evidence and any remaining caveat. Local-only work is marked *not pushed*. Do not imply that passing unit tests proves production safety.
 
 - [ ] **P0 — entity rename lifecycle (Gate B).** Implement read-only HA entity-registry snapshots and compare `platform + unique_id + domain`; core proposal module `src/home/entity-rename-audit.mjs` and isolated tests added. Next: authoritative registry adapter with completeness/freshness checks, impacted configuration dependency report, reviewed migration transaction and rollback. Never silently remap or actuate devices.
+
+- [ ] **P0 availability independence:** Before deploying v3, demonstrate that stopping the agent/Raspberry Pi and disconnecting AI/MCP does not interrupt native Home Assistant, Zigbee2MQTT, existing automations, dashboards or local device control. No automatic replay of stale writes after reconnection. Acceptance test requires owner-approved maintenance window. See `docs/ADR-HA-INDEPENDENCE.md`.

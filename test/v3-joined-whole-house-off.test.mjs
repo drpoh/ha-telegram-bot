@@ -12,7 +12,7 @@ test("joined Telegram provenance and approved group scope dispatch exactly once"
   clock:()=>1000000,telegramIngress:createV3TelegramIngressFixture({allowedUserId:55}),
   policy:{entities:{}},configPath:"/unused",
   readTool:async()=>{throw Error("no other reads");},
-  wholeHouseOff:{enabled:true,reviewedMembers:members,readGroup:async()=>({
+  wholeHouseOff:{enabled:true,policy:{default:"deny",entities:{"light.ves_svet":{level:"confirm",services:["turn_off"]}}},reviewedMembers:members,readGroup:async()=>({
    entity_id:"light.ves_svet",platform:"group",attributes:{entity_id:members},
   })},
   simulateWrite:async(name,args)=>{
@@ -35,7 +35,7 @@ test("missing group approval and changes in membership fail closed",async()=>{
   const chain=createIsolatedV3JoinedChain({
    clock:()=>1000000,telegramIngress:createV3TelegramIngressFixture({allowedUserId:55}),
    policy:{entities:{}},configPath:"/unused",readTool:async()=>{},
-   wholeHouseOff:{enabled,reviewedMembers:members,readGroup:async()=>({
+   wholeHouseOff:{enabled,policy:{default:"deny",entities:{"light.ves_svet":{level:"confirm",services:["turn_off"]}}},reviewedMembers:members,readGroup:async()=>({
     entity_id:"light.ves_svet",platform:"group",
     attributes:{entity_id:[...members.slice(1),"light.unapproved"]},
    })},simulateWrite:async()=>writes++,
@@ -54,7 +54,7 @@ test("concurrent confirmations and cancellation during membership lookup never r
  const chain=createIsolatedV3JoinedChain({
   clock:()=>1000000,telegramIngress:createV3TelegramIngressFixture({allowedUserId:55}),
   policy:{entities:{}},configPath:"/unused",readTool:async()=>{},
-  wholeHouseOff:{enabled:true,reviewedMembers:members,readGroup:async()=>readWait},
+  wholeHouseOff:{enabled:true,policy:{default:"deny",entities:{"light.ves_svet":{level:"confirm",services:["turn_off"]}}},reviewedMembers:members,readGroup:async()=>readWait},
   simulateWrite:async()=>{writes++;return {success:true};},
  });
  const issued=chain.issueFromTransport({ctx,action});
@@ -69,7 +69,7 @@ test("nonaccepted mock write is a failure, never reported as executed",async()=>
  const chain=createIsolatedV3JoinedChain({
   clock:()=>1000000,telegramIngress:createV3TelegramIngressFixture({allowedUserId:55}),
   policy:{entities:{}},configPath:"/unused",readTool:async()=>{},
-  wholeHouseOff:{enabled:true,reviewedMembers:members,readGroup:async()=>({
+  wholeHouseOff:{enabled:true,policy:{default:"deny",entities:{"light.ves_svet":{level:"confirm",services:["turn_off"]}}},reviewedMembers:members,readGroup:async()=>({
    entity_id:"light.ves_svet",platform:"group",attributes:{entity_id:members},
   })},
   simulateWrite:async()=>({success:false,error:"rejected"}),
@@ -77,4 +77,18 @@ test("nonaccepted mock write is a failure, never reported as executed",async()=>
  const issued=chain.issueFromTransport({ctx,action});
  assert.equal((await chain.confirm({...issued.actor,token:issued.token})).status,"failed");
  assert.equal((await chain.confirm({...issued.actor,token:issued.token})).status,"missing");
+});
+
+test("whole-house path refuses enabled flag without explicit narrow policy",()=>{
+ for(const policy of [undefined,{}, {default:"deny",entities:{}},
+  {default:"deny",entities:{"light.ves_svet":{level:"confirm",services:["turn_on","turn_off"]}}}]){
+  const chain=createIsolatedV3JoinedChain({
+   clock:()=>1000000,telegramIngress:createV3TelegramIngressFixture({allowedUserId:55}),
+   policy:{entities:{}},configPath:"/unused",readTool:async()=>{},
+   wholeHouseOff:{enabled:true,policy,reviewedMembers:members,readGroup:async()=>({
+    entity_id:"light.ves_svet",platform:"group",attributes:{entity_id:members}})},
+   simulateWrite:async()=>{throw Error("never write");},
+  });
+  assert.equal(chain.issueFromTransport({ctx,action}).status,"denied");
+ }
 });

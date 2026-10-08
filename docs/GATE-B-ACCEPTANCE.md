@@ -109,3 +109,7 @@ Integrated the previously separate whole-house OFF simulation into `createIsolat
 ## 2026-10-08 — Joined whole-house cancellation and failure results
 
 Added an adversarial joined-path test where confirmation is in flight during asynchronous group lookup, another confirmation races it, and cancellation occurs before lookup completes. No simulated write occurs. The mock write adapter also now rejects explicitly unsuccessful service results rather than marking them simulated. Focused whole-house tests 6/6; isolated regression **73 files, 323 passing assertions, 0 failed, exit 0**. This remains an offline fixture, not a protected operator-approved production command; Gate B OPEN.
+
+## 2026-10-08 — Explicit offline group grant requirement
+
+The joined whole-house-off fixture now requires a separate exact deny-default policy entry for `light.ves_svet` at `level=confirm`, with only `turn_off` in `services`. An enabled flag and owner's intent/scope agreement do not suffice, and no broader grant is accepted. This fixture policy is NOT yet the independently pinned operator-approved production policy. Focused 5/5, full isolated suite **73 files, 324 passed assertions, 0 failed, exit 0**. Gate B OPEN.

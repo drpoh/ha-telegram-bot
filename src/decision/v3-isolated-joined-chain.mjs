@@ -19,7 +19,14 @@ export function createIsolatedV3JoinedChain({policy,configPath,readTool,simulate
  const issueFromTransport=typeof telegramIngress==="function"?
   telegramIngress({issueVerified:input=>issueTrusted(issueCapability,input)}):null;
  const dispatch=createLedgerBoundMockDispatcher({ledger,policy,configPath,readTool,simulateWrite});
- const whole=wholeHouseOff?.enabled===true ? createV3WholeHouseOffMock({
+ // Explicit fixture policy is mandatory; scope approval alone cannot grant
+ // the group an execution path. Never fall back to legacy auto-safe grants.
+ const groupGrant=wholeHouseOff?.policy?.entities?.["light.ves_svet"];
+ const groupPolicyValid=wholeHouseOff?.policy?.default==="deny" &&
+  groupGrant?.level==="confirm" &&
+  Array.isArray(groupGrant.services) &&
+  groupGrant.services.length===1 && groupGrant.services[0]==="turn_off";
+ const whole=wholeHouseOff?.enabled===true && groupPolicyValid ? createV3WholeHouseOffMock({
   readGroup:wholeHouseOff.readGroup,reviewedMembers:wholeHouseOff.reviewedMembers,
   simulateWrite,now:clock,
  }):null;

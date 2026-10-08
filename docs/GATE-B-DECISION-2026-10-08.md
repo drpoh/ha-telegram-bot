@@ -15,3 +15,6 @@
 4. **Combined policy provenance and joined audit/fault gate:** prove invalidation on policy/registry mutation and complete audit evidence through the exact joined path, including race conditions.
 
 Until these are met: **Gate B OPEN**, no production v3 action. Do not infer approval from 317 passing mock assertions. Gate C/D deployment does not start.
+
+## Owner-home classification review prepared
+See `docs/GATE-B-HOME-LIGHTING-REVIEW.md`. The preserved October 8 preliminary data covers three areas but includes unresolved switch/light classifications and is not an authoritative current full registry. Therefore no policy approval, broad light-scene grant or live-control authorization can be inferred.

@@ -347,3 +347,5 @@ Full regression checkpoint for the voice-first channel intent fixture: **61 isol
 
 - Added `src/decision/v3-isolated-assist-adapter.mjs` and `test/v3-isolated-assist-adapter.test.mjs` as offline fixtures, **2/2 targeted tests passed**. An allowlisted satellite can produce a normalized device-only command with `authorization: not_granted`; unknown satellites, impersonated speakers, and unverified high-risk identity fail closed.
 - The satellite allowlist is fixture-local, not an authenticated connection to HA Assist. It does not confer user identity, execution permission, or an approved autonomy policy. Shared policy/room classification and trusted source binding remain Gate B blockers. No ESPHome or live HA changes.
+
+Full Raspberry Pi regression after isolated Assist ingress fixture: **62 isolated test files, 294 passing assertions, 0 failures**, `npm test` exit 0. Gate B remains OPEN: neither authenticated Assist transport nor policy-bound execution/confirmed voice identity is implemented.

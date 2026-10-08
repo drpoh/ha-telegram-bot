@@ -44,3 +44,11 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [ ] **Gate D:** bounded rollout, audited controls, backups, rollbacks and monitoring after owner approval.
 - [ ] **Gate E:** voice/Assist on the same policy and authorization stack.
 - [ ] **Documentation hygiene:** keep strategy, TODO, PROGRESS and WORKLOG consistent; never infer operational readiness from passing mock tests or quote an overall readiness percentage.
+
+## Voice-first reprioritization (owner approved 2026-10-08)
+
+- [ ] **P0 Gate B:** Integrate channel-neutral command provenance, source trust and strict action scope with shared policy, reviewed local configuration and confirmation; no channel may assert its own privilege.
+- [ ] **P0 Gate B:** Add read-only simulated Atom Echo / Assist adapter and test unverified speaker, replay, reclassification and dangerous action rejection.
+- [ ] **P1:** Design user-safe voice confirmation with explicit scope, short TTL and no unsafe command replay; require identity verification for sensitive operations.
+- [ ] **P2 deferred:** Live Telegram v3 transport wiring. Preserve existing mock adapter and v2 operational service; avoid Telegram-specific assumptions in shared decision code.
+- [ ] **P2 after shared engine:** Reuse engine from HA Assist with no production HA side effects until gates and approval.

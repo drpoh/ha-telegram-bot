@@ -342,3 +342,8 @@ Full regression checkpoint for Telegram-to-ledger mock issuer: **59 isolated fil
 Full regression for channel-neutral request envelope: **60 isolated test files, 290 assertions passed, 0 failed**, `npm test` exit 0 on Raspberry Pi. Gate B remains OPEN; normalizer is a pure reference module and does not establish authenticated transport or production voice control.
 
 Full regression checkpoint for the voice-first channel intent fixture: **61 isolated files, 292 passed assertions, 0 failures**, `npm test` exit 0 on Raspberry Pi. Gate B remains OPEN pending authenticated input adapters, common reviewed policy and authorization binding.
+
+## 2026-10-08 — Isolated Assist voice satellite ingress
+
+- Added `src/decision/v3-isolated-assist-adapter.mjs` and `test/v3-isolated-assist-adapter.test.mjs` as offline fixtures, **2/2 targeted tests passed**. An allowlisted satellite can produce a normalized device-only command with `authorization: not_granted`; unknown satellites, impersonated speakers, and unverified high-risk identity fail closed.
+- The satellite allowlist is fixture-local, not an authenticated connection to HA Assist. It does not confer user identity, execution permission, or an approved autonomy policy. Shared policy/room classification and trusted source binding remain Gate B blockers. No ESPHome or live HA changes.

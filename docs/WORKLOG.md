@@ -183,3 +183,10 @@ Expanded explicit room-wide parser to recognize «все лампы» and «вс
 - Added `src/backup/fixture-sqlite.mjs`, test-only SQLite consistent `.backup` within an explicit sandbox, integrity checks, SHA-256 and schema version manifest, no overwrite/outside-path/symlinked-source. `test/fixture-backup.test.mjs` tests these invariants with disposable SQLite files. Commits `e55bf0d`, `6cb2798`, `ef1241d`.
 - Focused **1/1** and standard `npm test` **45 files, 252 assertions, 0 failed**, exit 0. Real production DB not backed up, no restore/schedule/encryption/remote storage; existing bot and HA unchanged.
 - Next: sandbox-only restore rehearsal and hardened manifest checks. Production backup/restore, secret handling and automated schedules require separate owner approval. Gate B remains open.
+
+## 2026-10-08 — Sandbox-only SQLite restore verification
+
+- Added sandbox-only `restoreFixtureSqlite` to `src/backup/fixture-sqlite.mjs`, rejecting mismatched/corrupt backup manifests, schema newer than caller-supported ceiling, existing destination, symlink, and outside-sandbox target. Fixture restore copies a SQLite snapshot to a disposable empty filename and rechecks manifest/integrity.
+- Added tests for sample row round-trip, schema compatibility rejection, corrupted manifest, existing target, symlink and path escape. Focused **2/2** passed, full `npm test` **45 isolated files / 253 passing assertions / 0 failures** (exit 0). Commits `6910572`, `e399e9d`.
+- This utility is NOT production-ready: directory race attacks, multi-file state consistency, encryption, retention, off-device backups, and secrets are out of scope. No live restore, real HA actuation or production bot restart.
+- Next: audited backup/restore specification and fixture coverage for WAL/live writer behavior and restore failure rollback, then resume Gate B trusted policy-source work.

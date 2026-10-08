@@ -49,3 +49,16 @@ test('non-room request remains unchanged',async()=>{
  const r=await guard({userText:'Выключи свет в ванной',toolName:'ha_call_service',args,callTool:async()=>{throw Error('should not read')}});
  assert.equal(r.status,'not_applicable');
 });
+
+test('alternate explicit plural lights resolve area',()=>{
+ assert.equal(extractRoomWideLightQuery('Выключи все лампы в Комната'),'комната');
+ assert.equal(extractRoomWideLightQuery('Включи все светильники в Комната'),'комната');
+});
+test('unparsed room-wide intent is blocked without MCP calls',async()=>{
+ const calls=[];const callTool=async(name)=>{calls.push(name);throw Error('no read needed')};
+ for(const userText of ['Выключи весь свет на кухне','Погаси весь свет в гостиной','Выключи всё освещение в комнате']){
+  const r=await guard({userText,toolName:'ha_call_service',args,callTool});
+  assert.equal(r.allowed,false,userText);assert.equal(r.status,'unresolved_room_wide_intent');
+ }
+ assert.deepEqual(calls,[]);
+});

@@ -318,3 +318,5 @@ Full regression after in-flight consent invalidation fixture: **56 isolated test
 - Reviewed live v2 `src/telegram/bot.mjs`: its authorization compares `ctx.from.id` with configured user and uses `ctx.message.text` and `ctx.chat.id`. No v3 integration performed.
 - Added isolated `src/decision/v3-telegram-intent.mjs` to validate actor/chat/message consistency and reject untrusted/malformed, forwarded, slash or empty text. New tests passed **2/2**, and the separate v3 fail-closed policy test passed **1/1** (commits `4781477`, `5d429a0`).
 - Telegram transport authenticity still depends on trusted Telegraf ingress; this pure adapter alone does not authenticate arbitrary caller objects. It is not connected to the v3 ledger issuer. Gate B remains OPEN.
+
+Full regression for isolated Telegram envelope and deny-by-default policy source: **58 isolated files, 286 passing assertions, zero failures**, `npm test` exit 0 on Raspberry Pi. Trusted ingestion-to-ledger wiring remains an open Gate B blocker; no HA changes performed.

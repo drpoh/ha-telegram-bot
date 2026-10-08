@@ -248,3 +248,9 @@ Full regression for Gate C timeout/cancel checkpoint: **49 isolated files, 266 a
 - Next: trusted HA registry snapshot adapter, dependency impact report for policy/memory/reviewed config and a human-approved migration strategy. Live HA was not modified.
 
 Entity rename audit regression checkpoint: **50 isolated test files, 269 assertions passed, 0 failed**, `npm test` exit 0 on Raspberry Pi. This read-only detector is not yet connected to live HA registry collection, nor may its proposals modify policy/memory/classification without review.
+
+## 2026-10-08 — HA lifecycle independence guard (isolated)
+
+- Reviewed `src/mcp/client.mjs`, `src/mcp/executor.mjs`, `src/policy/risk.mjs`: AI client is separate but the generic MCP executor is capable of arbitrary tool invocations, so risk classification alone is **not** a hard lifecycle deny rule.
+- Added pure isolated `src/decision/ha-independence-guard.mjs` to refuse HA/supervisor lifecycle services, generic stop/restart/shutdown/reload, and known integration reloads. `test/ha-independence-guard.test.mjs` verifies forbidden and ordinary benign tool calls. Focused **2/2 passed**. Commits `982a1fa`, `fdf20cc`.
+- This guard is **not yet wired into the production executor**. Next required work: make hard-deny enforcement unavoidable at the v3 call boundary; independently verify no critical HA automations rely on the bot; test HA continuing while optional AI/MCP is stopped (owner-approved live maintenance only). No HA stop, service restart or live actuation was performed.

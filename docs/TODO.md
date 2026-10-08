@@ -1,6 +1,6 @@
 # TODO — Open work register
 
-Updated: 2026-10-08. Branch: `feature/v3-home-agent`. Latest checkpoint prior to this session: `615372f`.
+Updated: 2026-10-08. Branch: `feature/v3-home-agent`. Latest pushed checkpoint before this session: `6e55836`.
 
 ## Working agreement
 At session start: read `docs/home-agent-v3-strategy.md`, this TODO, `docs/WORKLOG.md`, current `git status`, and the most recent tests. Choose the next task from confirmed blockers.
@@ -9,7 +9,7 @@ At session end: record completed work, failed/unfinished steps, test results, co
 
 ## Open tasks
 - [ ] **P0 — Gate B: connect trusted area evidence to the running agent path.** `src/decision/engine.mjs` accepts optional areaEvidence, but `src/ai/agent.mjs` does not supply it. Preserve independent policy, scope, preconditions and budgets. Do not deploy before end-to-end tests.
-- [ ] **P0 — Gate B: prevent unsafe area resolution.** Review substring matching in `src/home/area-resolver.mjs`; resolve authoritative HA ID/name and ambiguity deterministically. Test Russian variants and misleading multi-room requests.
+- [ ] **P0 — Gate B: prevent unsafe area resolution.** Added strict, pure exact-ID/name resolver for future actions with tests. Next: integrate with live authoritative HA area lookup; the existing substring-based resolver used by scenes remains unchanged and must be reviewed before migration.
 - [x] **P0 — Gate B: refuse unclassified `light.*` entities.** Generic read-only discovery now requires an explicit, complete partition of light IDs into selected and excluded classes; unclassified or overlapping IDs fail closed. Wiring a trusted per-installation classification source remains open below.
 - [ ] **P0 — Gate B: trusted lighting classification source.** Live HA read-only inventory obtained for sauna, kitchen and corridor, with pending review saved locally in ignored `data/lighting-inventory-review-2026-10-08.json`. Review undecided switches and lights; only then create approved local config and integrate with discovery. No room-wide actuation until reviewed.
 - [ ] **P0 — Gate B: mixed-domain and unavailable scope.** Whole-room light + switch requests must never silently execute a subset; unknown/unavailable members block pending an explicit partial-execution policy.

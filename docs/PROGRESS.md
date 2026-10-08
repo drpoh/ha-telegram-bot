@@ -87,7 +87,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 
 ## Test status
 
-**Historical checkpoint: 137 / 137. Latest verified full run: 203 / 203 (2026-10-08, local classification loader).**
+**Historical checkpoint: 137 / 137. Latest verified full run: 210 / 210 (2026-10-08, strict area resolver).**
 
 Current automated coverage includes:
 

@@ -62,3 +62,5 @@ Never commit API keys, Telegram tokens or private MCP URLs.
 ## License
 
 MIT
+
+Reference-only Raspberry Pi resource and repository snapshot: [docs/raspberry-pi-reference-2026-10-08.md](docs/raspberry-pi-reference-2026-10-08.md). This is informational and does not authorize deployment.

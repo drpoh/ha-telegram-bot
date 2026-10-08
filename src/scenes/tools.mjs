@@ -1,8 +1,5 @@
-import { captureAiScene } from "./capture.mjs";
-import { runAiScene } from "./manager.mjs";
 import {
   listAiScenes,
-  deleteAiScene,
 } from "./store.mjs";
 import { resolveArea } from "../home/area-resolver.mjs";
 
@@ -33,36 +30,15 @@ export async function callAiSceneTool(
 ) {
   console.log(`AI Scene → ${name}`, args);
 
-  if (name === "ai_scene_capture") {
-    return captureAiScene(
-      args.name,
-      args.area
-    );
-  }
-
-  if (name === "ai_scene_run") {
-    // Fail closed until every stored scene action is independently scoped,
-    // authorized, precondition-checked and verified by the shared agent gate.
-    // The current scene manager calls ha_call_service directly and bypasses it.
+  if (name === "ai_scene_capture" || name === "ai_scene_run" || name === "ai_scene_delete") {
+    // Scene mutations and playback require an independent trusted area scope,
+    // per-action policy, and explicit authorization. Never use the direct
+    // scene manager path to bypass the shared agent safety checks.
     return {
       success: false,
       blocked: true,
-      outcome: "scene_execution_not_authorized",
-      user_message: "Запуск AI-сцены временно недоступен: проверка полномочий для каждого действия сцены ещё не подключена.",
-    };
-    const area = await resolveRequiredArea(
-      args.area
-    );
-
-    const result = await runAiScene(
-      args.name,
-      area.area_id
-    );
-
-    return {
-      ...result,
-      area_id: area.area_id,
-      area_name: area.name,
+      outcome: "scene_operation_not_authorized",
+      user_message: "Операция с AI-сценой временно недоступна до подключения безопасной проверки действий.",
     };
   }
 
@@ -81,25 +57,6 @@ export async function callAiSceneTool(
         name: scene.name,
         entities: scene.entities.length,
       })),
-    };
-  }
-
-  if (name === "ai_scene_delete") {
-    const area = await resolveRequiredArea(
-      args.area
-    );
-
-    const deleted = deleteAiScene(
-      args.name,
-      area.area_id
-    );
-
-    return {
-      success: deleted,
-      deleted,
-      name: args.name,
-      area_id: area.area_id,
-      area_name: area.name,
     };
   }
 

@@ -4,7 +4,7 @@
 
 ## Overall status
 
-**Foundation progress: ~82%**
+**Status: Gate B BLOCKED — no validated overall readiness percentage**
 
 The project is evolving the working v2 bot into a safe, context-aware Home AI Agent without rebuilding the existing system.
 
@@ -146,3 +146,18 @@ v3 is complete when the assistant can understand natural home requests and make 
 ---
 
 Last broader status review: 2026-10-07. See TODO.md and WORKLOG.md for current 2026-10-08 work.
+
+## 2026-10-08 — Authoritative status correction
+
+**Do not use the historical 82% foundation estimate above or prior conversational ~92% values as current readiness scores.** There is no validated overall readiness metric.
+
+- Gate A: isolated discovery groundwork and tests available; no universal production acceptance.
+- **Gate B: OPEN / BLOCKING.** Trusted user-text/actor/token ↔ exact action ↔ reviewed policy ↔ authoritative room/entity scope not yet joined end-to-end. Actual per-home mapping still requires approval.
+- Gate C: isolated mock execution, readback, timeout and race fixtures exist; production acceptance OPEN.
+- Gate D: NOT STARTED. The working v2 service remains running separately; no approved deployment.
+- Gate E: NOT STARTED (planned shared Assist engine).
+- Independent HA availability: architectural ADR accepted, live stop/disconnection test not yet performed.
+- Rename lifecycle: read-only fixture detector implemented, trusted registry snapshots and migration pending.
+- Latest verified full regression at this checkpoint: **54 isolated test files, 277 passing assertions, zero failures**. This does not prove production safety.
+
+Next priority: integrate trusted provenance with the isolated dispatcher, maintain deny-by-default MCP boundary and avoid HA actuation until all gates and owner sign-off.

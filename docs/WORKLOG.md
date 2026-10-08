@@ -373,3 +373,9 @@ Full regression checkpoint for synthetic satellite registry identity: **65 isola
 - **Not a live HA registry adapter or authenticated read-only transport.** Snapshot `success` and `complete` still originate with the injected provider; production adapter must prove registry completeness and device identity. Gate B remains OPEN. No HA service call or restart.
 
 Full regression after the isolated bounded registry acquisition stage: **66 isolated test files, 302 passing assertions, 0 failures**, full `npm test` exit 0 on Raspberry Pi. Gate B remains OPEN; actual HA device-registry read adapter, provenance guarantees, stable identity and owner-reviewed policy are outstanding.
+
+## 2026-10-08 — Satellite registry provenance capability checkpoint
+
+- Inspected v3 exposed MCP tools and registry reader; generic `ha_search`/`ha_get_overview` cannot prove complete authoritative device registry membership, stable IDs, or device area assignment. Do **not** adapt entity search as if it were a device registry.
+- Added `src/decision/v3-registry-capability-guard.mjs` with `test/v3-registry-capability-guard.test.mjs`, **2/2 focused passing** (commits `525039e`, `eca22cc`). Requires explicit claims for dedicated authenticated read-only device registry snapshot, completeness, stable device IDs and area IDs. Even a claimed supported capability remains **adapter-review-only**, not execution permission.
+- Gate B blocker: implement/inspect an actual read-only HA device registry interface with provenance and completeness, then isolated tests for malformed/partial/stale snapshots before enabling channel-to-area decisions. No HA actions or v2 modifications.

@@ -46,7 +46,7 @@ export async function checkActionPreconditions({ domain, service, entity_id, rea
     });
   }
 
-  if (entities.some((item) => item.freshness !== FRESHNESS.LIVE)) {
+  if (entities.some((item) => item.freshness !== FRESHNESS.LIVE || item.state === "unavailable" || item.state === "unknown")) {
     return { status: PRECONDITION_STATUS.BLOCKED, allowed: false, expectedState, entities };
   }
   if (entities.every((item) => item.state === expectedState)) {

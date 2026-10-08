@@ -269,8 +269,8 @@ export async function askHomeAssistant(
           } else {
             let precondition = null;
             if (
-              source === ACTION_SOURCES.AUTONOMOUS &&
-              call.name === "ha_call_service"
+              call.name === "ha_call_service" &&
+              ["turn_on", "turn_off"].includes(call.args?.service)
             ) {
               const readState = (entityId) => callHA("ha_get_state", { entity_id: entityId });
               const targetPrecondition = await checkActionPreconditions({
@@ -338,6 +338,7 @@ export async function askHomeAssistant(
 
             if (
               call.name === "ha_call_service" &&
+              result?.blocked !== true &&
               result?.isError !== true &&
               result?.structuredContent?.success !== false
             ) {

@@ -53,3 +53,15 @@ test("context precondition fails closed when a fact changed", async () => {
   assert.equal(result.status, PRECONDITION_STATUS.BLOCKED);
   assert.equal(result.allowed, false);
 });
+
+test("blocks unavailable state even when state read succeeds", async () => {
+  const result = await checkActionPreconditions({ domain: "light", service: "turn_off", entity_id: "light.test", readState: async () => ({ state: "unavailable" }) });
+  assert.equal(result.status, PRECONDITION_STATUS.BLOCKED);
+  assert.equal(result.allowed, false);
+});
+
+test("blocks unknown state even when state read succeeds", async () => {
+  const result = await checkActionPreconditions({ domain: "light", service: "turn_on", entity_id: "light.test", readState: async () => ({ state: "unknown" }) });
+  assert.equal(result.status, PRECONDITION_STATUS.BLOCKED);
+  assert.equal(result.allowed, false);
+});

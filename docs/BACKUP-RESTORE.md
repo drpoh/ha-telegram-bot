@@ -55,3 +55,9 @@ A future backup command should produce a versioned manifest so database/schema c
 - Focused test **1/1 passed**; full Raspberry Pi standard `npm test`: **45 files / 252 passed / 0 failed**, exit 0.
 - No scheduled backups, encryption, off-device copy, private `.env` handling, live restore command, or production integration. This is an isolated proof of concept; do not use it as a production backup solution. Owner approval required before any real backup of private files or restore.
 - Next: independent manifest validation, security hardening against directory replacement/races, schema compatibility tests and sandbox-only restore rehearsal; then separately design encryption, retention and off-device replication.
+
+## 2026-10-08 — Sandbox-only SQLite restore rehearsal
+
+- Added `restoreFixtureSqlite` in `src/backup/fixture-sqlite.mjs`. Before copying into a disposable sandbox destination, it requires a supported manifest schema version (`maxSchemaVersion`), matching SHA-256/byte length, SQLite integrity and exact sandbox containment. Existing targets (including symlinks) are rejected; restored copy is verified after copying.
+- `test/fixture-backup.test.mjs` now covers isolated restore of a sample row, older schema ceiling, corrupt checksum, outside-sandbox destination and an existing file/symlink. Focused test **2/2 passed**.
+- **Prototype security caveat:** filesystem path checks and creation are not a race-free sandbox; restoring adversarially controlled directories requires directory-descriptor/openat hardening. This is a test fixture only, not a production restore utility. Encryption, remote copies, private files, transactional multi-file restores and scheduled jobs remain unimplemented.

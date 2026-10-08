@@ -33,7 +33,7 @@ class LightingReviewCard extends HTMLElement {
       <ha-card><div class="inner">
         <h2>Поиск и проверка светильников</h2>
         <div class="subtitle">Текущее состояние из Home Assistant · каталог реестра для выбора устройства</div>
-        <label for="filter">Поиск</label><input id="filter" placeholder="Название или идентификатор"/>
+        <button id="refresh">↻ Обновить список устройств</button><div id="count" class="subtitle"></div><label for="filter">Поиск</label><input id="filter" placeholder="Название или идентификатор"/>
         <label for="device">Светильник</label><select id="device"></select>
         <div class="info"><div id="name" class="name"></div><div id="id" class="meta"></div><div id="meta" class="meta"></div><div id="state" class="state"></div></div>
         <div class="buttons"><button class="primary" id="on">Включить</button><button id="off">Выключить</button></div>
@@ -55,17 +55,39 @@ class LightingReviewCard extends HTMLElement {
     root.getElementById("identify").addEventListener("click",()=>this._identify());
     root.getElementById("stop").addEventListener("click",()=>{this._blinkStop=true;});
     root.getElementById("save").addEventListener("click",()=>this._saveReview());
-    fetch("/local/lighting-commissioning/catalog.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("catalog");return r.json();}).then(v=>{
-      this._catalog=Array.isArray(v.entities)?v.entities.filter(x=>typeof x.entity_id==="string"&&x.entity_id.startsWith("light.")):[];
-      this._options();this._render();
-    }).catch(()=>{this._catalog=[];this._options();this._render();root.getElementById("result").textContent="Каталог временно недоступен.";});
+    root.getElementById("refresh").addEventListener("click",()=>this._refresh());
+    this._refresh();
   }
   set hass(hass){this._hass=hass;if(this._initialized)this._render();}
+  async _refresh(){
+    if(this._busy)return;
+    const r=this._root;
+    r.getElementById("refresh").disabled=true;
+    const old=this._selected;
+    try {
+      const response=await fetch("/local/lighting-commissioning/catalog.json?t="+Date.now(),{cache:"no-store"});
+      if(!response.ok)throw Error("snapshot_unavailable");
+      const data=await response.json();
+      const registry=Array.isArray(data.entities)?data.entities.filter(x=>typeof x.entity_id==="string"&&/^light\.[a-z0-9_]+$/.test(x.entity_id)):[];
+      const byId=new Map(registry.map(x=>[x.entity_id,x]));
+      for(const [id,v] of Object.entries(this._hass?.states||{})){
+        if(/^light\.[a-z0-9_]+$/.test(id)&&!byId.has(id))byId.set(id,{entity_id:id,name:v.attributes?.friendly_name||id,platform:"live_only",area_id:null,disabled:false});
+      }
+      this._catalog=[...byId.values()].sort((a,b)=>a.entity_id.localeCompare(b.entity_id));
+      this._selected=old;
+      this._options();
+      r.getElementById("count").textContent=this._catalog.length+" световых сущностей · обновлено сейчас (текущие состояния HA, каталог — снимок реестра)";
+      r.getElementById("result").textContent="Список обновлён. Доступность устройств определяется текущим состоянием HA.";
+    }catch {
+      r.getElementById("result").textContent="Не удалось обновить снимок каталога. Состояния HA по-прежнему доступны.";
+      this._options();
+    }finally{r.getElementById("refresh").disabled=false;}
+  }
   _options(){
     const sel=this._root.getElementById("device"),old=this._selected;
     const query=this._root.getElementById("filter").value.trim().toLocaleLowerCase("ru-RU");
-    const available=this._catalog.filter(x=>(x.entity_id+" "+x.name).toLocaleLowerCase("ru-RU").includes(query));
-    if(!this._catalog.length)available.push({entity_id:"light.koridor_2",name:"Подсветка коридора"});
+    const available=this._catalog.filter(x=>(x.entity_id+" "+x.name+" "+(x.area_id||"")).toLocaleLowerCase("ru-RU").includes(query));
+    if(!this._catalog.length && this._hass?.states?.["light.koridor_2"])available.push({entity_id:"light.koridor_2",name:"Подсветка коридора"});
     sel.replaceChildren();
     for(const item of available){
       const option=document.createElement("option");option.value=item.entity_id;option.textContent=item.name+" · "+item.entity_id;sel.appendChild(option);
@@ -85,7 +107,7 @@ class LightingReviewCard extends HTMLElement {
     r.getElementById("state").textContent="Состояние: "+({on:"Включён",off:"Выключен",unavailable:"Недоступен",unknown:"Неизвестен"}[value]||value);
     const authorized=this._eligible(entry,state) && !this._busy;
     r.getElementById("policy").textContent=authorized
-      ?"Разрешено ручное управление этим светильником с подтверждением каждого действия. Массовые команды и автоматическое мигание отключены."
+      ?"Доступно ручное управление выбранным светильником с подтверждением. Мигание ограничено проверенной подсветкой коридора."
       :"Только просмотр: устройство недоступно, не подтверждено как обычный светильник либо исключено из безопасного управления.";
     r.getElementById("on").disabled=!authorized;
     r.getElementById("off").disabled=!authorized;
@@ -97,7 +119,7 @@ class LightingReviewCard extends HTMLElement {
   _eligible(entry,state){
     if(!entry || entry.disabled || !state || !["on","off"].includes(state.state))return false;
     const id=entry.entity_id,platform=entry.platform;
-    if(platform==="browser_mod"||platform==="group"||platform==="bambu_lab"||platform==="smartthings")return false;
+    if(platform==="browser_mod"||platform==="group"||platform==="bambu_lab"||platform==="smartthings"||platform==="live_only")return false;
     if(platform==="esphome" || /(?:status_led|_screen)$/.test(id))return false;
     if(id==="light.ves_svet_2")return false;
     return true;

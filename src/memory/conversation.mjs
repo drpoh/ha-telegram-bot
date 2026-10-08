@@ -2,7 +2,7 @@ import { execFileSync } from "node:child_process";
 import { resolve } from "node:path";
 
 const MAX_HISTORY_MESSAGES = 40;
-const DB_PATH = resolve("data/bot.db");
+const DB_PATH = resolve(process.env.HA_BOT_DB_PATH || "data/bot.db");
 
 const conversationHistory = [];
 

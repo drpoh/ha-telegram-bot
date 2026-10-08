@@ -74,3 +74,32 @@ test("HA-MCP inventory and state faults fail closed without any service calls",a
   assert.equal(x.calls.includes("ha_call_service"),false);
  });
 });
+
+test("slow HA read invalidates scene evidence without actions",async()=>{
+ await fixture(async x=>{
+  let ms=1000;
+  const callTool=async(name,args)=>{
+   const response=await x.callTool(name,args);
+   if(name==="ha_get_state") ms+=6001;
+   return response;
+  };
+  const result=await verifyScenePlan({
+   scene:scene(["light.room"]),areaQuery:"Комната",
+   configPath:x.configPath,callTool,now:()=>ms,maxReadDurationMs:5000,
+  });
+  assert.equal(result.ok,false);
+  assert.deepEqual(result.actions,[]);
+  assert.equal(x.calls.includes("ha_call_service"),false);
+ });
+});
+test("unchanged but old last_changed does not imply stale read",async()=>{
+ await fixture(async x=>{
+  const callTool=async(name,args)=>{
+   const result=await x.callTool(name,args);
+   if(name==="ha_get_state") result.structuredContent.data.last_changed="2020-01-01T00:00:00+00:00";
+   return result;
+  };
+  const result=await verifyScenePlan({scene:scene(["light.room"]),areaQuery:"Комната",configPath:x.configPath,callTool});
+  assert.equal(result.ok,true);
+ });
+});

@@ -230,3 +230,5 @@ Expanded explicit room-wide parser to recognize «все лампы» and «вс
 - Added mock-only races in `test/gate-c-confirmation-faults.test.mjs` for six concurrent confirmations, authorization exceptions/denials, and expiry during slow policy evaluation. Exactly one simulated service call in the concurrency case, none after authorization refusal or expiry. Focused 4/4 tests pass.
 - An initial 30-ms expiry fixture triggered the equally safe `missing` branch before the policy check; refined it to distinguish expiry *during* the authorizer. Commits `db5f86c`, `e4f95ae`. No new HA service integration or real device action.
 - Further Gate C work remains: strict timeouts for hung policy/MCP calls, cancellation semantics, immutable request/policy provenance, audit events and cross-process confirmation safety. Full regression result to be recorded separately.
+
+Gate C extended checkpoint: full standard `npm test` succeeded on Raspberry Pi — **49 isolated files, 264 assertions passed, 0 failed, exit 0**. Remaining P0 limitations unchanged: no trusted production policy provenance or signed-off device mapping; mock-only tests do not authorize deployment.

@@ -28,3 +28,10 @@ test('truncated inventory blocks before state reads',async()=>{
 test('wrong area fails closed',async()=>assert.equal((await discoverAreaLights({areaId:'living_room',callTool:mock({wrongArea:true}).callTool})).allowed,false));
 test('unavailable state fails closed',async()=>assert.equal((await discoverAreaLights({areaId:'living_room',callTool:mock({unavailable:true}).callTool})).allowed,false));
 test('MCP failure fails closed',async()=>assert.equal((await discoverAreaLights({areaId:'living_room',callTool:mock({error:true}).callTool})).status,'discovery_failed'));
+
+test('HA-MCP display area name is accepted only when supplied by trusted area resolution',async()=>{
+ const {callTool}=mock();
+ const wrapped=async(name,args)=>{const r=await callTool(name,args);if(name==='ha_search')return {structuredContent:{...r.structuredContent,entities:r.structuredContent.entities.map(e=>({...e,area:'Гостиная'}))}};return r;};
+ assert.equal((await discoverAreaLights({areaId:'living_room',areaName:'Гостиная',callTool:wrapped})).allowed,true);
+ assert.equal((await discoverAreaLights({areaId:'living_room',callTool:wrapped})).allowed,false);
+});

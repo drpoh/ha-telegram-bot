@@ -1,7 +1,7 @@
 import { validateAreaLightScope } from './area-scope.mjs';
 
 // Read-only discovery. No service calls, authorization or execution here.
-export async function discoverAreaLights({ areaId, callTool, maxEntities = 100 } = {}) {
+export async function discoverAreaLights({ areaId, areaName, callTool, maxEntities = 100 } = {}) {
   if (!areaId || typeof callTool !== 'function') return { allowed: false, status: 'invalid_discovery_request' };
   try {
     const searchResult = await callTool('ha_search', {
@@ -26,7 +26,7 @@ export async function discoverAreaLights({ areaId, callTool, maxEntities = 100 }
       if (state?.entity_id !== entity.entity_id) return { allowed: false, status: 'state_unverified' };
       states.push(state);
     }
-    return validateAreaLightScope({ areaId, searchResult, states, requestedIds: data.entities.map(e => e.entity_id) });
+    return validateAreaLightScope({ areaId, areaName, searchResult, states, requestedIds: data.entities.map(e => e.entity_id) });
   } catch {
     return { allowed: false, status: 'discovery_failed' };
   }

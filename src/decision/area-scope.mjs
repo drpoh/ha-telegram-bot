@@ -1,6 +1,6 @@
 // Pure validation for a future read-only HA area discovery step.
 // Never use unverified LLM-supplied area membership to authorize a service call.
-export function validateAreaLightScope({ areaId, searchResult, states = [], requestedIds = [] } = {}) {
+export function validateAreaLightScope({ areaId, areaName, searchResult, states = [], requestedIds = [] } = {}) {
   const data = searchResult?.structuredContent ?? searchResult;
   if (!areaId || !data || data.success === false || data.partial === true ||
       data.entity_has_more !== false || !Number.isInteger(data.entity_total_matches)) {
@@ -11,7 +11,9 @@ export function validateAreaLightScope({ areaId, searchResult, states = [], requ
     return { allowed: false, status: 'incomplete_area_inventory' };
   }
   const ids = entities.map(e => e?.entity_id);
-  if (new Set(ids).size !== ids.length || entities.some(e => !e?.entity_id?.startsWith('light.') || e.domain !== 'light' || e.area !== areaId)) {
+  const normalizeArea = value => String(value || '').trim().toLocaleLowerCase();
+  const acceptedArea = new Set([areaId, areaName].filter(Boolean).map(normalizeArea));
+  if (new Set(ids).size !== ids.length || entities.some(e => !e?.entity_id?.startsWith('light.') || e.domain !== 'light' || !acceptedArea.has(normalizeArea(e.area)))) {
     return { allowed: false, status: 'area_membership_unverified' };
   }
   const stateMap = new Map(states.map(s => [s?.entity_id, s]));

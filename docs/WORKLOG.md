@@ -150,3 +150,10 @@ Expanded explicit room-wide parser to recognize «все лампы» and «вс
 - Focused `scene-live-plan` tests **6/6 passed**, including slow read and old `last_changed`. Commits `74080e1`, `8c42141` pushed. No HA actuation or production restart.
 - Full standard `npm test`: **244/245 passed, 1 failed**, `test/learner.test.mjs` SQLite `database is locked` while parallel tests share `data/bot.db`. Independent sequential `node --test --test-concurrency=1 test/*.test.mjs`: **245/245 passed**, exit 0. Do not report default parallel full suite as green.
 - Next P1: isolate test databases, preserve production SQLite integrity and make normal `npm test` stable; then add isolated policy/confirmation harness. Gate B and real site lighting classification remain open.
+
+## 2026-10-08 — SQLite test database isolation
+
+- Audited shared `data/bot.db` paths in database, learned-devices and conversation modules. Added explicit `HA_BOT_DB_PATH` override; normal production launches retain existing default path.
+- Added `scripts/run-isolated-tests.mjs`: reads **schema only** from existing SQLite DB, creates fresh temporary independent SQLite DB for each test file, runs up to three test-file processes concurrently with their own `HA_BOT_DB_PATH`, and deletes temporary files after run. Skips SQLite internal `sqlite_sequence` schema statement. No production DB writes from the isolated test launcher.
+- Updated npm test to use the isolated runner after syntax checks. Initial launcher test failed due to SQLite reserved internal table and was corrected. Isolated runner: **43 files / 245 passed / 0 failed**. Normal **`npm test` completed with exit 0**, 43 files / 245 passed / 0 failed. No bot restart or HA actuation.
+- Caveat: test runner still reads the existing DB schema at startup; later improve to a committed test schema fixture so tests also function without any access to production DB. Future: isolated policy/confirmation/execution mock harness; Gate B remains open.

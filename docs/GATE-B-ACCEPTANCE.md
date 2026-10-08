@@ -7,7 +7,7 @@
 |---|---|---|
 | Channel-neutral original request, identity and consent ledger | Pure envelope + channel/Telegram ledgers and fixtures | PARTIAL: no authenticated production ingress |
 | Exact action ↔ permission ↔ original intent, no self-authorization | Tool boundary, trusted area and mock dispatcher | PARTIAL: components not a single trusted live chain |
-| Independently reviewed per-home policy | Deny-all default, strict operator policy schema | BLOCKED: operator policy file and protected loader absent |
+| Independently reviewed per-home policy | Deny-all default, strict operator policy schema | PARTIAL: strict offline loader exists; no approved home policy or protected production provenance |
 | Live complete read-only HA room/device evidence | Strict area reading fixtures, satellite snapshot completeness guard | BLOCKED: authoritative device registry capability unverified |
 | Replay/cancel/expiry/race fail closed | Ledger mock tests and in-flight invalidation | ISOLATED PASS; needs joined chain regression |
 | Audit trail at every decision and failure | Existing decision audit and worklog | PARTIAL: verify joined path evidence |
@@ -24,8 +24,16 @@ No overall readiness percentage is warranted.
 
 ## 2026-10-08 — Verified MCP client interface
 
-Read-only source inspection of `src/mcp/client.mjs` and `src/mcp/tools.mjs` confirms the runtime uses a generic MCP client and exposes `ha_search`, `ha_get_state` and `ha_get_overview` to the model. These do not prove full device-registry membership, stable device IDs and device-to-area mapping. Current production-ready registry adapter remains **unsupported**; do not substitute entity searches. Local operator policy loader and approval remain open. No HA state changes were attempted.
+Read-only source inspection of `src/mcp/client.mjs` and `src/mcp/tools.mjs` confirms the runtime uses a generic MCP client and exposes `ha_search`, `ha_get_state` and `ha_get_overview` to the model. These do not prove full device-registry membership, stable device IDs and device-to-area mapping. Current production-ready registry adapter remains **unsupported**; do not substitute entity searches. Local loader exists in isolation; production-grade provenance, owner approval and integrated enforcement remain open. No HA state changes were attempted.
 
 ## 2026-10-08 — Local policy loader checkpoint
 
 A constrained offline JSON loader now validates filenames, canonical directory containment, symlink rejection, unsafe writable file modes, file size and strict policy schema. Focused 2/2 passed. It returns `parsed_not_operator_approved`, never grants execution; permissions still require owner's separate review and trusted process control. Full directory ownership/TOCTOU defenses and operator authorization still require security review before production.
+
+## 2026-10-08 — Gate B reconciliation and next security checkpoint
+
+Verified branch `feature/v3-home-agent` at `b0075fa` (308-assertion documentation checkpoint). The offline policy parser/loader is implemented; this does **not** approve any entity, grant a live capability, close Gate B, or authorize deployment. The loader currently canonicalizes the configured root and target, checks basename/containment, rejects symlink final paths and group/world-writable target files, caps size to 64 KiB, and validates a deny-default light-only `confirm` schema.
+
+**Outstanding security checks before claiming trusted provenance:** verify trusted root and every parent component ownership and write permissions; prevent filesystem swap/TOCTOU between checks and file open (descriptor-based open/fstat where supported); treat file contents as unapproved even after parsing; require out-of-band owner approval of exact policy digest/version and trusted identity; ensure any policy mutation revokes pending authorization; prohibit LLM/Telegram/Assist-supplied paths, privilege levels or grants. Reject missing, stale, changed or ambiguous sources. Make no automatic fallback to v2 allowlists.
+
+**Next isolated regression gate:** add fault cases for writable parent directories, final path replacement races, symlinked directory components, directory changes between validation and read, malformed JSON, unknown keys, oversized files, invalid entity/service entries, empty grants and identity mismatches. Only then design a common channel-neutral envelope + reviewed policy + complete registry-backed scope + confirmation + single-use dispatcher proof. Agent/HA/Telegram restart, live actuation, and gate acceptance remain prohibited without explicit approval.

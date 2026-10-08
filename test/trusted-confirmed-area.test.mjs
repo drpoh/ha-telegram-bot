@@ -20,13 +20,16 @@ test("trusted area confirmation resolves local review and HA inventory, not mode
   };
   const base={action,expectedAction:structuredClone(action),actor:{userId:2,chatId:3},
    policy:{entities:{"light.fixture":{level:"confirm",services:["turn_on"]}}},
-   areaQuery:"Комната",configPath,callTool,allowedEntityIds:["light.attacker"]};
+   userText:"Включи весь свет в Комната",areaQuery:"Комната",configPath,callTool,allowedEntityIds:["light.attacker"]};
   const ok=await authorizeConfirmedAreaLight(base);
   assert.equal(ok.allowed,true);
   assert.equal(calls.includes("ha_call_service"),false);
   for(const change of [
    {configPath:join(root,"missing.json")},
    {areaQuery:"Неизвестная"},
+   {userText:"Выключи весь свет в Комната"},
+   {userText:"Включи весь свет в Кухня"},
+   {userText:"Включи свет"},
    {action:{...action,args:{...action.args,entity_id:"light.attacker"}}},
    {callTool:async(name,args)=>{
     const value=await callTool(name,args);

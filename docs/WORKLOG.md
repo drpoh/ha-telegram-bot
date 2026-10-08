@@ -297,3 +297,5 @@ Full regression checkpoint after approved strategy correction and ledger-bound f
 - Expanded `test/v3-ledger-bound-mock.test.mjs` with a successful single-light synthetic area fixture, actor/token-scoped ledger authorization, two concurrent confirmations, replay rejection, cancellation and exact readback. Only one simulated write occurs. Focused **3/3 passed**.
 - First assertion required second concurrent request to report `missing`, but valid alternative denial was `denied` when first request already changed the state; corrected to assert the invariant (one verified result, no second write). Commits `f1649be`, `b9d98db`.
 - Gate B remains OPEN: only mock execution has been tested, while Telegram ingress ownership and operator-approved policy/classification provenance, cancellation during live lookup and real read-only acceptance still need proof. No physical HA action taken.
+
+Regression checkpoint after positive ledger-bound fixture and concurrent confirmation testing: **55 test files, 280 passing assertions, zero failed**, full `npm test` exit 0 on Raspberry Pi. Gate B remains OPEN pending trusted policy/Telegram ingress and in-flight cancellation tests.

@@ -1,0 +1,16 @@
+import {readFileSync} from 'node:fs';
+import {Telegraf} from 'telegraf';
+const base='/home/drpoh/.config/rs-home-ai-v3/';
+const token=readFileSync(base+'telegram-token','utf8').trim();
+const userId=Number(readFileSync(base+'allowed-user-id','utf8').trim());
+if(!/^\d+:[A-Za-z0-9_-]{30,}$/.test(token)||!Number.isSafeInteger(userId)||userId<=0)throw Error('invalid_private_pilot_config');
+const bot=new Telegraf(token);
+const allow=ctx=>ctx.chat?.type==='private'&&ctx.chat?.id===userId&&ctx.from?.id===userId;
+bot.start(ctx=>allow(ctx)?ctx.reply('RS Home AI v3: изолированный режим. Управление Home Assistant выключено.'):undefined);
+bot.command('status',ctx=>allow(ctx)?ctx.reply('RS Home AI v3: Telegram подключён. Режим read-only. Команды устройствам заблокированы.'):undefined);
+bot.on('message',ctx=>allow(ctx)?ctx.reply('Пока доступно только /status. Управление освещением ещё не активировано.'):undefined);
+bot.catch(e=>console.error('telegram_handler_error',e?.name||'Error'));
+process.once('SIGTERM',()=>bot.stop('SIGTERM'));
+process.once('SIGINT',()=>bot.stop('SIGINT'));
+await bot.launch({dropPendingUpdates:true});
+console.log('RS_HOME_AI_V3_READONLY_READY');

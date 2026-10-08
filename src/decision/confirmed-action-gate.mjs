@@ -29,7 +29,16 @@ export async function authorizeConfirmedAction({
  // a previous consent as permission for a changed/denied/autonomous action.
  if(p.level!==AUTONOMY_LEVELS.CONFIRM || p.serviceAllowed!==true)
    return denied("policy_not_confirmable");
- const pre=await checkActionPreconditions({...action.args,readState});
+ const strictReadState=async(entityId)=>{
+  if(typeof readState!=="function") throw Error("Missing state reader");
+  const response=await readState(entityId);
+  const content=response?.structuredContent ?? response;
+  const data=content?.data ?? content;
+  if(data?.entity_id!==entityId || !["on","off"].includes(data?.state))
+    throw Error("Unverified state identity");
+  return {data:{entity_id:data.entity_id,state:data.state}};
+ };
+ const pre=await checkActionPreconditions({...action.args,readState:strictReadState});
  if(pre.status!==PRECONDITION_STATUS.READY || pre.allowed!==true)
    return denied("preconditions_not_ready");
  return {allowed:true,status:"authorized_pre_execution_only"};

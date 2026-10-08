@@ -259,3 +259,5 @@ Entity rename audit regression checkpoint: **50 isolated test files, 269 asserti
 
 - Added `src/decision/v3-tool-boundary.mjs` deny-by-default allowlist: named read-only tools and single `light.turn_on/turn_off` with exact single entity target. Rejects all other tools including `ha_config_*` and lifecycle operations. Writes additionally require an explicit authorization flag from a separate gate. Tests `test/v3-tool-boundary.test.mjs` (3/3 focused passed). Commits `a5e9c55`, `f7d15c3`.
 - **Critical:** The boolean `authorized` input is not a trustworthy authorization credential by itself; callers cannot be allowed to self-assert it. This module is a reference perimeter only, **not yet wired to the production or v3 execution pathway**. Before deployment, use an unforgeable actor/token-scoped gate and centralized guarded dispatcher, plus trusted policy and device classification. No HA action was executed.
+
+Full regression checkpoint for v3 MCP tool perimeter: **52 isolated test files, 274 assertions passed, 0 failures**, `npm test` exit 0 on Raspberry Pi. Reference guard remains offline and requires trusted centralized integration before any real writes.

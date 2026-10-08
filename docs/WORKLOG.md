@@ -190,3 +190,11 @@ Expanded explicit room-wide parser to recognize «все лампы» and «вс
 - Added tests for sample row round-trip, schema compatibility rejection, corrupted manifest, existing target, symlink and path escape. Focused **2/2** passed, full `npm test` **45 isolated files / 253 passing assertions / 0 failures** (exit 0). Commits `6910572`, `e399e9d`.
 - This utility is NOT production-ready: directory race attacks, multi-file state consistency, encryption, retention, off-device backups, and secrets are out of scope. No live restore, real HA actuation or production bot restart.
 - Next: audited backup/restore specification and fixture coverage for WAL/live writer behavior and restore failure rollback, then resume Gate B trusted policy-source work.
+
+
+## 2026-10-08 — Completed sandbox WAL / failed-backup cleanup stage
+
+- Updated `src/backup/fixture-sqlite.mjs` to reserve snapshot destinations exclusively and clean incomplete backup files after failure (commit `8bdc287`).
+- Added `test/fixture-backup.test.mjs` regression with a live uncommitted SQLite WAL writer, before/after committed snapshot checks and corrupted-source cleanup (commit `b8ba15e`).
+- Focused tests **4/4**, full standard `npm test` **45 files / 255 assertions / 0 failures**, exit 0. Only ephemeral fixture SQLite databases were modified. No live backup, HA control or production restart.
+- This **sandbox substage** is complete. Production-ready backup/restore is a separate open task. Continue Gate B with trustworthy policy scope inputs and isolated authorization tests; do not enable real actions without explicit approval.

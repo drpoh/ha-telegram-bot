@@ -306,3 +306,9 @@ Regression checkpoint after positive ledger-bound fixture and concurrent confirm
 - This tests cancellation before commit, not cancellation of an already-dispatched HA service call. Real integrations still need trusted ingress/policy, bounded read timeouts and shutdown handling. Gate B remains OPEN.
 
 Full regression after in-flight consent invalidation fixture: **56 isolated test files, 283 assertions passed, 0 failed**, `npm test` exit 0 on Raspberry Pi. Gate B remains OPEN pending verified trusted Telegram ingestion and operator-controlled policy source.
+
+## 2026-10-08 — Gate B policy origin
+
+- The v2 policy contains existing auto_safe grants. These are not evidence of consent for v3.
+- Created fail-closed `src/decision/v3-trusted-policy-source.mjs` and `test/v3-trusted-policy-source.test.mjs`; isolated **1/1 passed** (`5851cb2`). Default v3 grants remain empty.
+- Pending: operator-reviewed config loader, trusted Telegram event ingress, and binding to the isolated dispatcher. No production deployment.

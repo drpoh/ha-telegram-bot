@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {clearPendingConfirmations,createPendingConfirmation} from "../src/decision/pending-confirmation.mjs";
+import {clearPendingConfirmations,createPendingConfirmation,cancelPendingConfirmation} from "../src/decision/pending-confirmation.mjs";
 import {queueConfirmedAction} from "../src/utils/queue.mjs";
 import {verifyConfirmedLightResult} from "../src/decision/confirmed-result-verification.mjs";
 
@@ -59,4 +59,29 @@ test("Gate C: expired confirmation cannot execute after delayed authorization",a
  assert.equal(result.status,"expired");
  assert.equal(writes,0);
  assert.ok(created.token);
+});
+
+test("Gate C: hung authorization times out without service execution",async()=>{
+ createPendingConfirmation({...actor,action});
+ let writes=0;
+ const result=await queueConfirmedAction(actor,{
+  authorize:()=>new Promise(()=>{}),authorizationTimeoutMs:60,
+  execute:async()=>{writes++;},
+ });
+ assert.equal(result.status,"authorization_denied");
+ assert.equal(writes,0);
+});
+test("Gate C: cancellation during policy evaluation prevents execution",async()=>{
+ createPendingConfirmation({...actor,action});
+ let release;
+ const authorize=()=>new Promise(resolve=>{release=()=>resolve(true);});
+ let writes=0;
+ const request=queueConfirmedAction(actor,{authorize,execute:async()=>{writes++;}});
+ // Queue begins asynchronously: wait for authorization to become active.
+ for(let i=0;i<100 && !release;i++)await new Promise(resolve=>setTimeout(resolve,5));
+ assert.equal(typeof release,"function");
+ assert.equal(cancelPendingConfirmation(actor),true);
+ release();
+ assert.equal((await request).status,"expired");
+ assert.equal(writes,0);
 });

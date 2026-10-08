@@ -20,3 +20,9 @@ Use `systemctl --user status rs-home-ai-v3.service` from an ordinary interactive
 
 ## Safety
 V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned private operator policy, and fresh registry validation. If V3 is stopped or fails, HA Green and v2 continue independently. Do not copy secrets or put private MCP path in logs/docs. Physical reboot testing was not performed when this service was installed.
+
+## Real resilience test — 2026-10-08
+- Installed private v3 dependencies with `npm ci --omit=dev --ignore-scripts`; shared v2 `node_modules` symlink was removed.
+- Restarted only the v3 systemd user service: active; v2 systemd service remained active.
+- Terminated the supervised v3 Node process with SIGKILL. After the configured restart delay, systemd showed `ActiveState=active`, a new MainPID and `NRestarts=1`; v2 service remained active.
+- Full Raspberry Pi host reboot remains untested until separately authorized because it interrupts other running services.

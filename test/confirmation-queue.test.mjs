@@ -36,7 +36,7 @@ test("confirmed queue executes exact stored action only once", async () => {
     };
   };
 
-  const first = await queueConfirmedAction(actor, { execute });
+  const first = await queueConfirmedAction(actor, { execute, authorize: async () => true });
   const second = await queueConfirmedAction(actor, { execute });
 
   assert.equal(first.status, "executed");
@@ -73,4 +73,18 @@ test("confirmation for another actor cannot execute stored action", async () => 
 
   assert.equal(result.status, "missing");
   assert.equal(calls, 0);
+});
+
+test("confirmation never executes without an independent authorization gate",async()=>{
+ const actor={userId:51,chatId:52};
+ createPendingConfirmation({...actor,action:{name:"ha_call_service",args:{domain:"light",service:"turn_on",entity_id:"light.test"}}});
+ let executed=0;
+ const execute=async()=>{executed++;};
+ const missing=await queueConfirmedAction(actor,{execute});
+ assert.equal(missing.status,"authorization_unavailable");
+ const rejected=await queueConfirmedAction(actor,{execute,authorize:async()=>false});
+ assert.equal(rejected.status,"authorization_denied");
+ const exception=await queueConfirmedAction(actor,{execute,authorize:async()=>{throw Error("policy offline");}});
+ assert.equal(exception.status,"authorization_denied");
+ assert.equal(executed,0);
 });

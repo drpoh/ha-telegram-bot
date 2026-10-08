@@ -198,3 +198,10 @@ Expanded explicit room-wide parser to recognize «все лампы» and «вс
 - Added `test/fixture-backup.test.mjs` regression with a live uncommitted SQLite WAL writer, before/after committed snapshot checks and corrupted-source cleanup (commit `b8ba15e`).
 - Focused tests **4/4**, full standard `npm test` **45 files / 255 assertions / 0 failures**, exit 0. Only ephemeral fixture SQLite databases were modified. No live backup, HA control or production restart.
 - This **sandbox substage** is complete. Production-ready backup/restore is a separate open task. Continue Gate B with trustworthy policy scope inputs and isolated authorization tests; do not enable real actions without explicit approval.
+
+## 2026-10-08 — Trusted read-only scope before isolated confirmed action
+
+- Added `src/decision/trusted-confirmed-area.mjs` as a **test/reference wrapper** around `authorizeConfirmedAction`: strict HA room identity, independently reviewed local lighting classification, complete HA-MCP inventory, and fresh state read now derive the one permitted target. Supplied `allowedEntityIds` from model/caller is ignored. Reject mismatched action target, unconfigured/missing room, partial HA inventory, MCP failures, and expired collection.
+- Only supports a **single eligible light in the verified area** and exact confirmed action. It is NOT yet wired into the live bot or generic multi-light confirmation. This avoids silently allowing partial area control or caller-provided lists. The local operator-approved real-house classification is still absent.
+- Focused tests **5/5 passed**; standard full `npm test`: **46 isolated files / 256 passing assertions / 0 failed**, exit 0. Commits `dbb4819`, `33afe50`.
+- Next Gate B: trusted policy source and user request scope binding (not just caller-supplied areaQuery), comprehensive agent simulation and action verification. Gate C and deployment remain blocked. No HA actuation or production restart.

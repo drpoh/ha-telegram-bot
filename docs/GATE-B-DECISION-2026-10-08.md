@@ -18,3 +18,7 @@ Until these are met: **Gate B OPEN**, no production v3 action. Do not infer appr
 
 ## Owner-home classification review prepared
 See `docs/GATE-B-HOME-LIGHTING-REVIEW.md`. The preserved October 8 preliminary data covers three areas but includes unresolved switch/light classifications and is not an authoritative current full registry. Therefore no policy approval, broad light-scene grant or live-control authorization can be inferred.
+
+## Direct HA registry follow-up
+
+Read-only SSH to `homeassistant.local` confirmed readable core device/entity/area registry snapshots, with 293 devices, 2,901 entities and 17 areas. A room-by-room comparison found a previously omitted separate `koridor_1_etazh` area and unclassified light-like switches in sauna, kitchen and corridor. See `docs/GATE-B-HOME-LIGHTING-REVIEW.md` for sanitized entity IDs and owner questions. No live grant or authorization inferred.

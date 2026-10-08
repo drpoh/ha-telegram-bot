@@ -108,3 +108,10 @@ Expanded explicit room-wide parser to recognize «все лампы» and «вс
 - Focused guard suite **10/10 pass**; complete Raspberry Pi `npm test` **233/233 pass**, zero failures; source runtime v2 untouched.
 - Commit `848789b` contains the tests. Still pending: full agent/confirmation integration tests, scene tool-path audit, operator-approved local lighting classification, and Gate C controlled fault injection.
 - No real HA actuation or runtime restart. Next: isolated agent-path policy/confirmation harness; inspect scene tools that bypass the main HA service guard before declaring Gate B complete.
+
+## 2026-10-08 — Gate B AI scene execution bypass containment
+
+- Audited `src/ai/agent.mjs` and scene tool path. `ai_scene_run` directly delegated to `runAiScene`, whose manager calls `ha_call_service` without the agent's request-scope, area, policy, precondition, autonomy-budget and audit checks. Scene capture/list/delete need a separate authorization review as well.
+- Fail-closed containment: `src/scenes/tools.mjs` now blocks `ai_scene_run` before area resolution and actuation, pending a shared per-action policy/verification path. This intentionally disables AI scene runs **in the v3 branch only**; existing v2 runtime not restarted.
+- Added isolated regression in `test/ai-scenes.test.mjs`: 6/6 focused scene tests passed. Raspberry Pi full `npm test`: **234/234 passed**, 0 failed. Commits `71bf304`, `d5abb60` pushed; no real HA actuation.
+- Not complete: no end-to-end full-agent confirmation harness; no scene action validation / transactional partial-failure policy; no reviewed lighting map. No deployment authorization. Next implement staged scene plan + independent authorization for each service call before re-enabling execution.

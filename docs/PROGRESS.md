@@ -87,7 +87,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 
 ## Test status
 
-**Historical checkpoint: 137 / 137. Latest verified full run: 210 / 210 (2026-10-08, strict area resolver).**
+**Historical checkpoint: 137 / 137. Latest verified full run: 217 / 217 (2026-10-08, live strict HA area lookup).**
 
 Current automated coverage includes:
 

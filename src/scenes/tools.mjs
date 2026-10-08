@@ -41,6 +41,15 @@ export async function callAiSceneTool(
   }
 
   if (name === "ai_scene_run") {
+    // Fail closed until every stored scene action is independently scoped,
+    // authorized, precondition-checked and verified by the shared agent gate.
+    // The current scene manager calls ha_call_service directly and bypasses it.
+    return {
+      success: false,
+      blocked: true,
+      outcome: "scene_execution_not_authorized",
+      user_message: "Запуск AI-сцены временно недоступен: проверка полномочий для каждого действия сцены ещё не подключена.",
+    };
     const area = await resolveRequiredArea(
       args.area
     );

@@ -26,3 +26,40 @@ test("transport fixture authorizes only allowlisted, coherent Telegram update",(
  assert.equal(writes,0);
  assert.equal(reads,0);
 });
+
+
+test("trusted Telegram fixture joins token, mock scope, and single-use readback",async()=>{
+ const {mkdtempSync,writeFileSync,rmSync}=await import("node:fs");
+ const {tmpdir}=await import("node:os");
+ const {join}=await import("node:path");
+ const root=mkdtempSync(join(tmpdir(),"gateb-telegram-"));
+ try{
+  const path=join(root,"reviewed.json");
+  writeFileSync(path,JSON.stringify({version:1,areas:[{
+   area_id:"room",area_name:"Комната",light_ids:["light.fixture"],
+   excluded_light_ids:[],switch_light_ids:[],
+  }]}));
+  let state="off",writes=0;
+  const readTool=async(name,args)=>{
+   if(name==="ha_list_floors_areas")return {structuredContent:{success:true,floors:[{
+    areas:[{area_id:"room",name:"Комната"}]}],unassigned_areas:[]}};
+   if(name==="ha_search")return {structuredContent:{success:true,partial:false,
+    entity_has_more:false,entity_total_matches:args.domain_filter==="light"?1:0,
+    entities:args.domain_filter==="light"?[{entity_id:"light.fixture",domain:"light",area:"Комната"}]:[]}};
+   if(name==="ha_get_state")return {structuredContent:{data:{entity_id:args.entity_id,state}}};
+   throw Error("unexpected read");
+  };
+  const chain=createIsolatedV3JoinedChain({
+   telegramIngress:createV3TelegramIngressFixture({allowedUserId:55}),
+   clock:()=>1000000,policy:{entities:{"light.fixture":{level:"confirm",services:["turn_on"]}}},
+   configPath:path,readTool,
+   simulateWrite:async(name,args)=>{writes++;state="on";return {structuredContent:{success:true}};},
+  });
+  const issued=chain.issueFromTransport({ctx,action});
+  assert.equal(issued.status,"pending");
+  assert.equal((await chain.confirm({userId:77,chatId:66,token:issued.token})).status,"missing");
+  assert.equal((await chain.confirm({...issued.actor,token:issued.token})).status,"verified");
+  assert.equal((await chain.confirm({...issued.actor,token:issued.token})).status,"missing");
+  assert.equal(writes,1);
+ }finally{rmSync(root,{recursive:true,force:true});}
+});

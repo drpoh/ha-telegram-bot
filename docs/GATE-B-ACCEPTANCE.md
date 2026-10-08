@@ -93,3 +93,7 @@ The joined offline chain's public `issue()` now fails closed regardless of any c
 Added an **offline-only** Telegram ingress adapter factory that extracts the user ID, chat ID, original text and timestamp from a coherent Telegram context, checks the allowlisted user, and rejects mismatched message/chat identities, bot commands, stale timestamps and mismatched requested service. Additional model-supplied `actorId` and `authenticated` parameters are not accepted as authority. The adapter must only be called inside a transport-authenticated Telegraf handler; arbitrary objects resembling Telegram updates can be forged by an untrusted caller, so this is **not** production identity verification.
 
 Focused test 1/1; isolated suite **71 files, 316 passing assertions, 0 failed, exit 0**, with no live Telegram integration or HA writes. Gate B OPEN pending trusted integration boundaries, operator approval and registry completeness.
+
+## 2026-10-08 — Gate B final adjudication checkpoint
+
+Integrated synthetic Telegram ingress -> action/actor ledger -> trusted-light area mock -> one-shot confirmation -> simulated MCP write -> state readback. Test 2/2 in Telegram fixture; isolated suite **71 files, 317 passing assertions, zero failed, exit 0**. Formal itemized decision: `docs/GATE-B-DECISION-2026-10-08.md`. **Owner-home Gate B NOT ACCEPTED**: no approved real-home policy or complete read-only device registry provenance; mock Telegram context is forgeable outside the trusted handler; combined source/audit fault gates remain. Do not switch production.

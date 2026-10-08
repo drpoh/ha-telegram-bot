@@ -18,7 +18,9 @@ input,select{box-sizing:border-box;width:100%;padding:9px;border-radius:8px;bord
 <h2>Идентификация светильника</h2>
 <p class="warning"><strong>Учебный режим:</strong> эта страница не вызывает сервисы Home Assistant и не переключает реальные устройства.</p>
 <label for="entity">Проверяемая сущность</label>
-<input id="entity" value="light.koridor_2" readonly>
+<select id="entity"><option value="light.koridor_2">light.koridor_2 — кандидат</option></select>
+<p class="muted" id="catalogStatus">Загрузка снимка реестра…</p>
+<p class="muted" id="deviceInfo">Интеграция и помещение: ожидают загрузки</p>
 <label for="room">Помещение (после физической проверки)</label>
 <select id="room"><option value="">Не подтверждено</option><option value="koridor">Коридор</option><option value="koridor_1_etazh">Коридор 1 этаж</option><option value="other">Другое / уточнить</option></select>
 <label for="name">Описание светильника</label>
@@ -34,15 +36,39 @@ input,select{box-sizing:border-box;width:100%;padding:9px;border-radius:8px;bord
 "use strict";
 const $=id=>document.getElementById(id);
 let timer=null,started=0,finished=false;
+let inventory=[];
+fetch("/local/lighting-commissioning/catalog.json",{cache:"no-store"})
+ .then(r=>{if(!r.ok)throw Error("catalog_unavailable");return r.json();})
+ .then(data=>{
+   if(!Array.isArray(data.entities))throw Error("invalid_catalog");
+   inventory=data.entities.filter(v=>typeof v.entity_id==="string" && v.entity_id.startsWith("light."));
+   const select=$("entity");select.replaceChildren();
+   for(const item of inventory){
+    const option=document.createElement("option");
+    option.value=item.entity_id;
+    option.textContent=item.entity_id+" — "+item.name+(item.disabled?" (отключён)":"");
+    select.appendChild(option);
+   }
+   select.value="light.koridor_2";
+   $("catalogStatus").textContent="Снимок реестра от "+data.generated_at+" · "+inventory.length+" сущностей. Состояния и доступность не обновляются автоматически.";
+   showSelected();
+ }).catch(()=>$("catalogStatus").textContent="Снимок не загружен. Доступен только исходный кандидат.");
+const showSelected=()=>{
+ const v=inventory.find(x=>x.entity_id===$("entity").value);
+ $("deviceInfo").textContent=v?"Интеграция: "+v.platform+" · область: "+(v.area_id||"не задана")+" · отключён: "+(v.disabled?"да":"нет"):"Данные реестра недоступны";
+ finished=false;$("approve").disabled=true;
+ $("start").disabled=$("entity").value!=="light.koridor_2";
+};
+$("entity").addEventListener("change",showSelected);
 const finish=(msg)=>{
  if(timer!==null){clearInterval(timer);timer=null;}
  $("lamp").textContent="○";$("status").textContent=msg;
- $("start").disabled=false;$("stop").disabled=true;$("approve").disabled=!finished;
+ $("start").disabled=false;$("stop").disabled=true;$("approve").disabled=!finished;$("entity").disabled=false;
 };
 $("start").addEventListener("click",()=>{
- if(timer!==null)return;
+ if(timer!==null || $("entity").value!=="light.koridor_2")return;
  finished=false;started=performance.now();
- $("start").disabled=true;$("stop").disabled=false;$("approve").disabled=true;
+ $("start").disabled=true;$("stop").disabled=false;$("approve").disabled=true;$("entity").disabled=true;
  $("status").textContent="Демо идентификации — 0/8 с";
  let step=-1;
  const tick=()=>{
@@ -60,7 +86,7 @@ $("approve").addEventListener("click",()=>{
  if(!finished || !["koridor","koridor_1_etazh","other"].includes($("room").value) || !$("name").value.trim()){
   $("status").textContent="Выбери помещение и заполни описание.";return;
  }
- const record={entityId:"light.koridor_2",room:$("room").value,name:$("name").value.trim(),reviewMode:"browser_demo_only",confirmedAt:new Date().toISOString()};
+ const record={entityId:$("entity").value,room:$("room").value,name:$("name").value.trim(),reviewMode:"browser_demo_only",confirmedAt:new Date().toISOString()};
  try{localStorage.setItem("ha-lighting-review-demo-v1",JSON.stringify(record));
   $("record").textContent="Локальная запись сохранена: "+record.entityId+" — "+record.name+" ("+record.room+"). НЕ передано в HA/AI.";
   $("approve").disabled=true;

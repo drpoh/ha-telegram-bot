@@ -117,3 +117,15 @@ test("HA scene cannot be confused with AI scene", () => {
     false
   );
 });
+
+
+test("AI scene execution is blocked before area resolution or HA actuation", async () => {
+  const { callAiSceneTool } = await import("../src/scenes/tools.mjs");
+  const result = await callAiSceneTool("ai_scene_run", {
+    name: "__must_not_execute__",
+    area: "__unresolved_area__",
+  });
+  assert.equal(result.success, false);
+  assert.equal(result.blocked, true);
+  assert.equal(result.outcome, "scene_execution_not_authorized");
+});

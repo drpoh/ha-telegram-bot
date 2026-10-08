@@ -39,6 +39,7 @@ import { createPendingConfirmation } from "../decision/pending-confirmation.mjs"
 import { completeDecisionAudit, failDecisionAudit, recordDecisionPrecondition, rememberDecisionAudit } from "../decision/audit.mjs";
 import { checkActionPreconditions, checkContextPreconditions } from "../decision/preconditions.mjs";
 import { traceDecision } from "../decision/trace.mjs";
+import { checkRequestScope } from "../decision/request-scope.mjs";
 import { getOperationalContextForEntity } from "../memory/operational.mjs";
 import {
   getBehaviorCorrectionSignal,
@@ -109,6 +110,7 @@ export async function askHomeAssistant(
   const deviceContext = getDeviceMemoryText();
   const controlledContext = getLastControlledText();
   const knownDeviceContext = getKnownDeviceContext(userText);
+  const requestDevice = resolveKnownDevice(userText);
   const homeContext = await buildCurrentStateContext(userText);
   const contents = [
     ...getConversationHistory(),
@@ -203,11 +205,13 @@ export async function askHomeAssistant(
             ? enforceActionSource(evaluatedShadow, source)
             : { authorized: true };
 
+          const scope = checkRequestScope({ userText, device: requestDevice, toolName: call.name, args: call.args });
+          const authorized = enforcement.authorized && scope.allowed;
           const decisionAudit = evaluatedShadow
             ? rememberDecisionAudit({
                 shadow: evaluatedShadow,
                 source,
-                authorized: enforcement.authorized,
+                authorized,
               })
             : null;
           activeDecisionAuditId = decisionAudit?.id || null;
@@ -220,7 +224,7 @@ export async function askHomeAssistant(
             outcome: evaluatedShadow?.outcome,
           });
 
-          if (!enforcement.authorized) {
+          if (!authorized) {
             console.log("POLICY BLOCK →", {
               source,
               action: evaluatedShadow?.proposal?.action,
@@ -230,6 +234,7 @@ export async function askHomeAssistant(
 
             let pendingConfirmation = null;
             if (
+              scope.allowed &&
               evaluatedShadow?.outcome === "confirm" &&
               actor?.userId != null &&
               actor?.chatId != null
@@ -246,8 +251,8 @@ export async function askHomeAssistant(
 
             result = {
               blocked: true,
-              outcome: evaluatedShadow?.outcome,
-              reason: enforcement.reason,
+              outcome: scope.allowed ? evaluatedShadow?.outcome : "request_scope_blocked",
+              reason: scope.allowed ? enforcement.reason : "Tool target exceeds the known single-device request",
               policy: evaluatedShadow?.policy,
               pending_confirmation: pendingConfirmation
                 ? {
@@ -256,6 +261,7 @@ export async function askHomeAssistant(
                   }
                 : null,
               user_message:
+                !scope.allowed ? "Действие не выполнено: устройство не соответствует исходному запросу." :
                 evaluatedShadow?.outcome === "confirm"
                   ? pendingConfirmation
                     ? "Действие не выполнено. Подтвердите: да или отмена."

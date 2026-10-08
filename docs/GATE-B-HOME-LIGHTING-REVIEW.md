@@ -54,3 +54,7 @@ Three unavailable entities require independent handling. No states were changed.
 
 ## 2026-10-08 — Identity of existing Whole House Light group
 Read-only HA registry identifies light.ves_svet as platform group, entry e0715de4e60cf2dee9336666fec1c17b, area dom. The similarly named light.ves_svet_2 belongs to platform yandex_station. Current HA state of light.ves_svet lists 14 members; preserve the group unchanged. Its membership is observational evidence and not a v3 write grant. Owner review of home-wide scope, unavailable members, and change detection is still required. No HA write executed.
+
+## 2026-10-08 — Owner-approved natural-language scope for whole-house OFF
+
+The owner explicitly defined: **«Выключи весь свет» without a room means the entire existing Home Assistant group `light.ves_svet`**, currently containing 14 light members. Do **not** substitute `light.ves_svet_2` (Yandex Station), a room-specific subset, or an inferred list. Group membership remains maintained by Home Assistant; any detected change must prompt revalidation. This authorizes the intended *scope* only, **not** an immediately executable v3 permission, nor turn-on, nor exemption from consent, policy or verification gates. No HA service was called.

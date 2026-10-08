@@ -26,3 +26,6 @@ Read-only SSH to `homeassistant.local` confirmed readable core device/entity/are
 ## HA-MCP live-state readback checkpoint
 
 A standalone read-only MCP connection checked 17 exact light/switch entities in four areas, with three unavailable entities (`light.sauna_sauna_te_sauna_status_led`, `light.svet`, `light.sonoff_1000d78a79`). See `docs/GATE-B-HOME-LIGHTING-REVIEW.md`. This improves evidence freshness but does not automatically approve whole-room grants or settle the user's intended lighting semantics.
+
+## Owner scope decision
+Owner approved interpreting unqualified «Выключи весь свет» as all current members of `light.ves_svet` (14 at review time); `light.ves_svet_2` must not be substituted. This is intent/scope approval only; production write capability and broader Gate B acceptance remain withheld.

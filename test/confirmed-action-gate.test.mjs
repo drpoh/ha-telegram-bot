@@ -37,3 +37,15 @@ test("missing or unavailable live preconditions block",async()=>{
   assert.equal(r.allowed,false);
  }
 });
+
+test("state reply must identify the exact requested HA entity",async()=>{
+ for(const response of [
+  {structuredContent:{data:{entity_id:"light.other",state:"off"}}},
+  {structuredContent:{data:{state:"off"}}},
+  {structuredContent:{data:{entity_id:"light.test",state:"unknown"}}},
+  {structuredContent:{data:{entity_id:"light.test",state:"unavailable"}}},
+ ]) {
+  const result=await authorizeConfirmedAction(input({readState:async()=>response}));
+  assert.equal(result.allowed,false,JSON.stringify(response));
+ }
+});

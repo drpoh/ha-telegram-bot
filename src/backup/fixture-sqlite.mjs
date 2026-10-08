@@ -18,11 +18,13 @@ export function backupFixtureSqlite({source,destination,sandboxRoot}={}){
  if(!sandboxRoot || !source || !destination) throw Error("missing_sandbox_paths");
  const src=within(sandboxRoot,source),dest=within(sandboxRoot,destination);
  if(src===dest || realpathSync(src)!==src || statSync(src).isFile()!==true) throw Error("invalid_source");
- try{statSync(dest);throw Error("destination_exists");}catch(e){if(e.code!=="ENOENT")throw e;}
+ try{const fd=openSync(dest,"wx",0o600);closeSync(fd);}catch(e){if(e.code==="EEXIST")throw Error("destination_exists");throw e;}
+ try {
  if(sqlite(src,"PRAGMA integrity_check;")!=="ok")throw Error("source_integrity_failed");
  const escaped=dest.replaceAll("'","''");
  execFileSync("sqlite3",[src,`.backup '${escaped}'`],{encoding:"utf8"});
  if(sqlite(dest,"PRAGMA integrity_check;")!=="ok")throw Error("backup_integrity_failed");
+ } catch(error) { unlinkSync(dest); throw error; }
  const bytes=readFileSync(dest);
  return {format_version:1,sha256:createHash("sha256").update(bytes).digest("hex"),
    size_bytes:bytes.length,schema_version:Number(sqlite(dest,"PRAGMA user_version;"))};

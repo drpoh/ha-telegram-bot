@@ -2,7 +2,7 @@ import { execFileSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
-const DEFAULT_DB_PATH = resolve("data/bot.db");
+const DEFAULT_DB_PATH = resolve(process.env.HA_BOT_DB_PATH || "data/bot.db");
 
 function runSql(sql, dbPath = DEFAULT_DB_PATH) {
   mkdirSync(dirname(dbPath), { recursive: true });

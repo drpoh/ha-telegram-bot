@@ -39,7 +39,7 @@ class LightingReviewCard extends HTMLElement {
         <div class="buttons"><button class="primary" id="on">Включить</button><button id="off">Выключить</button></div>
         <div class="buttons"><button id="identify">Идентифицировать · 8 с</button><button id="stop" disabled>Стоп</button></div>
         <label for="zone">Зона / помещение</label>
-        <select id="zone"><option value="">Выбрать зону</option><option value="kukhnia">Кухня</option><option value="koridor">Коридор</option><option value="koridor_1_etazh">Коридор 1 этаж</option><option value="sauna">Ванная и сауна</option><option value="gostinaia">Гостиная</option><option value="tambur">Тамбур</option><option value="spalnia">Спальня</option><option value="other">Другая зона</option></select>
+        <select id="zone"><option value="">Загрузка зон…</option></select>
         <label for="description">Описание и назначение</label>
         <input id="description" maxlength="120" placeholder="Например: LED-подсветка потолка"/>
         <button id="save">Сохранить предварительную регистрацию</button>
@@ -56,15 +56,33 @@ class LightingReviewCard extends HTMLElement {
     root.getElementById("stop").addEventListener("click",()=>{this._blinkStop=true;});
     root.getElementById("save").addEventListener("click",()=>this._saveReview());
     root.getElementById("refresh").addEventListener("click",()=>this._refresh());
+    this._loadAreas();
     this._refresh();
   }
   set hass(hass){this._hass=hass;if(this._initialized)this._render();}
+  async _loadAreas(){
+    try{
+      const r=await fetch("/local/lighting-commissioning/areas.json?t="+Date.now(),{cache:"no-store"});
+      if(!r.ok)throw Error("areas_unavailable");
+      const data=await r.json();
+      if(!Array.isArray(data.areas))throw Error("invalid_areas");
+      const select=this._root.getElementById("zone");
+      select.replaceChildren();
+      const empty=document.createElement("option");empty.value="";empty.textContent="Выбрать зону";select.appendChild(empty);
+      for(const area of data.areas){
+        if(typeof area.id!=="string"||typeof area.name!=="string")continue;
+        const o=document.createElement("option");o.value=area.id;o.textContent=area.name;select.appendChild(o);
+      }
+      this._loadReview();
+    }catch{this._root.getElementById("registration").textContent="Не удалось загрузить зоны Home Assistant.";}
+  }
   async _refresh(){
     if(this._busy)return;
     const r=this._root;
     r.getElementById("refresh").disabled=true;
     const old=this._selected;
     try {
+      await this._loadAreas();
       const response=await fetch("/local/lighting-commissioning/catalog.json?t="+Date.now(),{cache:"no-store"});
       if(!response.ok)throw Error("snapshot_unavailable");
       const data=await response.json();

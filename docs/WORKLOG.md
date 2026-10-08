@@ -2,6 +2,14 @@
 
 Purpose: durable chronological handoff between ChatGPT sessions and devices. Current tasks live in `docs/TODO.md`; safety gates in `docs/home-agent-v3-strategy.md`. Broader historical progress is in `docs/PROGRESS.md`.
 
+## 2026-10-08 — repository hygiene checkpoint
+
+- Preserved both potentially actuating living-room smoke scripts under `scripts/manual/`; imports adjusted, and two explicit opt-in checks added. Syntax checked. **Not executed**.
+- Archived accidental `tatus --short` ANSI git-diff output to ignored `data/local-archive/accidental-git-diff-output.txt`. No data destroyed.
+- Reviewed syntax of existing standalone audit modules; no audit collection was executed.
+- Linked README to task register, project log, safety strategy and manual scripts.
+- Next: resolve exact room identity and lighting classification before wiring generalized area operations into the live AI agent.
+
 ## 2026-10-08 — v3 area safety and project continuity
 
 Repository: `drpoh/ha-telegram-bot`; branch: `feature/v3-home-agent`.

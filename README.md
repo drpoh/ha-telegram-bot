@@ -34,6 +34,16 @@ Start:
 
     npm start
 
+## Development status and handoff
+
+- [Current open tasks](docs/TODO.md)
+- [Session worklog](docs/WORKLOG.md)
+- [v3 strategy and release gates](docs/home-agent-v3-strategy.md)
+- [Longer-term progress](docs/PROGRESS.md)
+- [Manual smoke tests](scripts/manual/README.md) — **may operate real Home Assistant devices**
+
+The v3 feature branch is not a production release. Do not deploy simply because unit tests pass.
+
 ## Development
 
 Syntax check:

@@ -87,7 +87,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 
 ## Test status
 
-**137 / 137 tests passing**
+**Historical checkpoint: 137 / 137. Latest verified full run before repository cleanup: 195 / 195 (2026-10-08).**
 
 Current automated coverage includes:
 
@@ -145,4 +145,4 @@ v3 is complete when the assistant can understand natural home requests and make 
 
 ---
 
-Last updated: 2026-10-07
+Last broader status review: 2026-10-07. See TODO.md and WORKLOG.md for current 2026-10-08 work.

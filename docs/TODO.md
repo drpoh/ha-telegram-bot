@@ -18,12 +18,12 @@ At session end: record completed work, failed/unfinished steps, test results, co
 - [ ] **P1 — refresh `docs/PROGRESS.md` and README.** Previous progress report dated 2026-10-07 says 137 tests; most recent full run was 195/195.
 - [ ] **P2 — Gate E: reuse shared engine in Assist/voice, no parallel authorization system.**
 
-## Untracked files — unresolved ownership/content
-Do not stage, remove, modify or reset until separately reviewed:
-- `smoke-living-room-auto-safe.mjs`
-- `smoke-living-room-isolation.mjs`
-- `src/audit/collector.mjs` and `src/audit/collector-v2.mjs`
-- `tatus --short` (literal filename; determine purpose before touching)
+## Recovered files and review
+
+- [x] Move live-actuating smoke scripts into `scripts/manual/`. They require explicit approval and isolation before execution.
+- [x] Archive accidental terminal diff locally in ignored `data/local-archive/`; not part of Git.
+- [ ] Review standalone audit collectors `src/audit/collector.mjs` and `src/audit/collector-v2.mjs` for compatible read-only APIs and coverage before deploying or scheduling them. Source files preserved.
+- [ ] Review manual smoke scripts end-to-end and validate their restore behavior in controlled conditions. A dual opt-in guard is now present, but the scripts have not been live-tested.
 
 ## Completion criteria
 A task can be marked done only with a file/commit reference, verification evidence and any remaining caveat. Local-only work is marked *not pushed*. Do not imply that passing unit tests proves production safety.

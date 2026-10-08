@@ -143,3 +143,10 @@ Expanded explicit room-wide parser to recognize «все лампы» and «вс
 - Each scenario is expected to return an entirely rejected plan with zero actions, and test fixtures allow no `ha_call_service` calls. Focused scene-live tests **4/4 passed**; full Raspberry Pi `npm test` **243/243 passed**, 0 failures. Commit `74a9906` pushed.
 - No real HA actuation or v2 restart. Stale timestamp validation and comprehensive mixed-domain scenarios still require their own deterministic tests; fixture test success does not approve the local lighting map or scene execution.
 - Next: verify freshness semantics and test full agent policy/confirmation path in isolation before any deployment. Gate B remains open.
+
+## 2026-10-08 — Scene evidence collection time bound, flaky SQLite tests
+
+- Added bounded elapsed-time verification to `src/scenes/live-plan.mjs` (default 5s, configurable 0–30s): a slow read cannot yield an accepted read-only scene plan. This is NOT a deadline for future action execution, nor validation of HA `last_changed`: an unchanged entity may be stable for days. The first and final time checks fail closed with zero planned actions.
+- Focused `scene-live-plan` tests **6/6 passed**, including slow read and old `last_changed`. Commits `74080e1`, `8c42141` pushed. No HA actuation or production restart.
+- Full standard `npm test`: **244/245 passed, 1 failed**, `test/learner.test.mjs` SQLite `database is locked` while parallel tests share `data/bot.db`. Independent sequential `node --test --test-concurrency=1 test/*.test.mjs`: **245/245 passed**, exit 0. Do not report default parallel full suite as green.
+- Next P1: isolate test databases, preserve production SQLite integrity and make normal `npm test` stable; then add isolated policy/confirmation harness. Gate B and real site lighting classification remain open.

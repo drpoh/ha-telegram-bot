@@ -1,12 +1,10 @@
-import {readdirSync,mkdtempSync,rmSync} from "node:fs";
-import {join,resolve} from "node:path";
+import {readdirSync,mkdtempSync,rmSync,readFileSync} from "node:fs";
+import {join} from "node:path";
 import {tmpdir} from "node:os";
 import {execFileSync,spawn} from "node:child_process";
 
 const files=readdirSync("test").filter(f=>f.endsWith(".test.mjs")).sort();
-const source=resolve("data/bot.db");
-const schema=execFileSync("sqlite3",["-readonly",source,".schema"],{encoding:"utf8"})
- .split("\n").filter(line=>!line.includes("CREATE TABLE sqlite_sequence")).join("\n");
+const schema=readFileSync("test/fixtures/bot-schema.sql","utf8");
 if(!schema.includes("CREATE TABLE")) throw Error("SQLite schema unavailable");
 const root=mkdtempSync(join(tmpdir(),"ha-bot-test-"));
 let next=0,failed=0,passed=0;

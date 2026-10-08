@@ -127,5 +127,18 @@ test("AI scene execution is blocked before area resolution or HA actuation", asy
   });
   assert.equal(result.success, false);
   assert.equal(result.blocked, true);
-  assert.equal(result.outcome, "scene_execution_not_authorized");
+  assert.equal(result.outcome, "scene_operation_not_authorized");
+});
+
+test("AI scene create and delete fail closed without modifying stored scenes", async () => {
+ const { callAiSceneTool } = await import("../src/scenes/tools.mjs");
+ const name = "__AI_SCENE_MUTATION_GUARD__";
+ const area = "__test_living_room__";
+ deleteAiScene(name, area);
+ for (const tool of ["ai_scene_capture", "ai_scene_delete"]) {
+  const result = await callAiSceneTool(tool, { name, area });
+  assert.equal(result.blocked, true, tool);
+  assert.equal(result.outcome, "scene_operation_not_authorized", tool);
+ }
+ assert.equal(getAiScene(name, area), null);
 });

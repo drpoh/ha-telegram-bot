@@ -381,3 +381,9 @@ Full regression after the isolated bounded registry acquisition stage: **66 isol
 - Gate B blocker: implement/inspect an actual read-only HA device registry interface with provenance and completeness, then isolated tests for malformed/partial/stale snapshots before enabling channel-to-area decisions. No HA actions or v2 modifications.
 
 Full regression after satellite registry capability guard: **67 isolated test files, 304 passing assertions, zero failed**, `npm test` exit 0 on Raspberry Pi. Gate B still OPEN; no actual authenticated HA device registry source has been connected.
+
+## 2026-10-08 — Requested Gate B closure assessment
+
+- Gate B **cannot honestly be marked complete**: the installed MCP capabilities have not established an authenticated, complete HA device registry, the private home mapping/policy has not been operator approved, and a trusted joined caller-to-action chain is not deployed or verified.
+- Added `src/decision/v3-operator-policy-schema.mjs` and focused `test/v3-operator-policy-schema.test.mjs` (**2/2 pass**): versioned deny-by-default policy schema only allows exact `light.*` confirmation for `turn_on`/`turn_off`, rejects extra grants/fields/unknown services, and returns **schema-valid-only, not operator-approved**. Commits `e880c58`, `f392a52`.
+- Added `docs/GATE-B-ACCEPTANCE.md` documenting evidence, outstanding blockers and permissible sequence. No HA actions, private config changes or production restart.

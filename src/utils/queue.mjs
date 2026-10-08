@@ -41,7 +41,7 @@ export function queueHomeAssistantRequest(userText, options = {}) {
 
 export function queueConfirmedAction(
   { userId, chatId },
-  { execute = callHA, authorize = null } = {}
+  { execute = callHA, authorize = null, authorizationTimeoutMs = 3000 } = {}
 ) {
   return enqueue("confirmed pending action", async () => {
     const pending = peekPendingConfirmation({ userId, chatId });
@@ -52,8 +52,15 @@ export function queueConfirmedAction(
     // Until the gate is wired, fail closed without consuming or executing it.
     if (typeof authorize !== "function") return { status: "authorization_unavailable" };
     let authorized = false;
-    try { authorized = (await authorize(pending.action, { userId, chatId })) === true; }
-    catch { authorized = false; }
+    if (!Number.isFinite(authorizationTimeoutMs) || authorizationTimeoutMs <= 0 || authorizationTimeoutMs > 30000) return { status: "authorization_denied" };
+    let timeoutId;
+    try {
+      authorized = (await Promise.race([
+        Promise.resolve().then(() => authorize(pending.action, { userId, chatId })),
+        new Promise(resolve => { timeoutId = setTimeout(() => resolve(false), authorizationTimeoutMs); }),
+      ])) === true;
+    } catch { authorized = false; }
+    finally { clearTimeout(timeoutId); }
     if (!authorized) return { status: "authorization_denied" };
 
     const consumed = consumePendingConfirmation({

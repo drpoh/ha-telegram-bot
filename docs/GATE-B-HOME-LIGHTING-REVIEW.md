@@ -58,3 +58,9 @@ Read-only HA registry identifies light.ves_svet as platform group, entry e0715de
 ## 2026-10-08 — Owner-approved natural-language scope for whole-house OFF
 
 The owner explicitly defined: **«Выключи весь свет» without a room means the entire existing Home Assistant group `light.ves_svet`**, currently containing 14 light members. Do **not** substitute `light.ves_svet_2` (Yandex Station), a room-specific subset, or an inferred list. Group membership remains maintained by Home Assistant; any detected change must prompt revalidation. This authorizes the intended *scope* only, **not** an immediately executable v3 permission, nor turn-on, nor exemption from consent, policy or verification gates. No HA service was called.
+
+## Post-dashboard cleanup: refreshed authoritative map (2026-10-08)
+
+After the owner manually renamed/assigned devices and removed the temporary commissioning dashboard, read-only copies of HA entity, device and area registries were inspected again. Counts: 2,901 entities, 293 devices, 17 areas, 57 `light.*` entries. Effective area was determined using entity `area_id` first, then device `area_id`. Distribution across light entities: Kitchen 11; first-floor corridor 6; living room 6; corridor 5; bathroom/sauna 5; home 2; office 1; bedroom 1; no effective area 20. Full private registry payload is *not committed*.
+
+`light.koridor_2` inherits the `koridor` device area; the owner identified it physically as the corridor accent light. `light.ves_svet` remains the HA Group in area `dom`; do not substitute the Yandex `light.ves_svet_2` (also inherits `dom`). Its 14 member IDs were checked separately via read-only HA-MCP; do not infer live write authorization from membership. No real HA services were called, and no HA registry names/areas were modified. This new inventory invalidates assumptions based only on entity-level area IDs. Gate B production authorization remains DENY pending policy and transport verification.

@@ -17,6 +17,6 @@ test("stale partial changed duplicated and unavailable satellite scope denied",(
   {devices:[{...device,available:false}]},
   {devices:[{...device,disabled:true}]},
   {devices:[{...device,deviceId:""}]},
- ])assert.equal(verify({snapshot:{...snapshot,...altered}}).allowed,false);
+ ])assert.equal(verify({snapshot:{...snapshot,...altered},now:altered.capturedAt===1?50000:1010}).allowed,false);
  assert.equal(verify({satelliteId:"unknown"}).allowed,false);
 });

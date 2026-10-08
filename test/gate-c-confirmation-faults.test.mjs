@@ -51,10 +51,10 @@ test("Gate C: authorization outage and denial do not call executor",async()=>{
  assert.equal(writes,0);
 });
 test("Gate C: expired confirmation cannot execute after delayed authorization",async()=>{
- const created=createPendingConfirmation({...actor,action,ttlMs:30});
+ const created=createPendingConfirmation({...actor,action,ttlMs:1000});
  let writes=0;
  const execute=async()=>{writes++;};
- const authorize=async()=>{await new Promise(resolve=>setTimeout(resolve,65));return true;};
+ const authorize=async()=>{await new Promise(resolve=>setTimeout(resolve,1300));return true;};
  const result=await queueConfirmedAction(actor,{authorize,execute});
  assert.equal(result.status,"expired");
  assert.equal(writes,0);

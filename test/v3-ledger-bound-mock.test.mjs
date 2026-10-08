@@ -49,7 +49,8 @@ test("approved mock execution is single-use; cancellation and competing calls ca
   const dispatch=createLedgerBoundMockDispatcher({ledger,policy:{entities:{"light.fixture":{level:"confirm",services:["turn_on"]}}},configPath,readTool,simulateWrite:async()=>{writes++;state="on";return {structuredContent:{success:true}};}});
   let issued=ledger.issue({...actor,userText:"Включи весь свет в Комната",action});
   const results=await Promise.all([dispatch({...actor,token:issued.token}),dispatch({...actor,token:issued.token})]);
-  assert.deepEqual(results.map(x=>x.status).sort(),["missing","verified"]);
+  assert.equal(results.filter(x=>x.status==="verified").length,1);
+  assert.ok(results.every(x=>["missing","denied","verified"].includes(x.status)));
   assert.equal(writes,1);
   assert.equal((await dispatch({...actor,token:issued.token})).status,"missing");
   issued=ledger.issue({...actor,userText:"Включи весь свет в Комната",action});

@@ -246,3 +246,5 @@ Full regression for Gate C timeout/cancel checkpoint: **49 isolated files, 266 a
 - Added pure read-only `src/home/entity-rename-audit.mjs` to detect changed `entity_id` using exact `platform + unique_id` with preserved domain. No fuzzy matching, no automatic changes; ambiguous/missing identities produce unresolved findings.
 - Added isolated `test/entity-rename-audit.test.mjs`: stable identity yields review-only proposal, friendly name-only change is ignored, wrong domain/identity and duplicates fail closed. Focused tests **3/3 passed**; commits `46db7d5`, `1d99506`.
 - Next: trusted HA registry snapshot adapter, dependency impact report for policy/memory/reviewed config and a human-approved migration strategy. Live HA was not modified.
+
+Entity rename audit regression checkpoint: **50 isolated test files, 269 assertions passed, 0 failed**, `npm test` exit 0 on Raspberry Pi. This read-only detector is not yet connected to live HA registry collection, nor may its proposals modify policy/memory/classification without review.

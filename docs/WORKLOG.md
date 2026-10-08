@@ -340,3 +340,5 @@ Full regression checkpoint for Telegram-to-ledger mock issuer: **59 isolated fil
 - This is not a trusted device ingress, not an execution authorization and not production persistence; a caller with access to the fixture issuer can still fabricate metadata. Next: channel-neutral restricted authority/low-risk authorization bound to trusted ingress and reviewed policy; do not connect to live HA.
 
 Full regression for channel-neutral request envelope: **60 isolated test files, 290 assertions passed, 0 failed**, `npm test` exit 0 on Raspberry Pi. Gate B remains OPEN; normalizer is a pure reference module and does not establish authenticated transport or production voice control.
+
+Full regression checkpoint for the voice-first channel intent fixture: **61 isolated files, 292 passed assertions, 0 failures**, `npm test` exit 0 on Raspberry Pi. Gate B remains OPEN pending authenticated input adapters, common reviewed policy and authorization binding.

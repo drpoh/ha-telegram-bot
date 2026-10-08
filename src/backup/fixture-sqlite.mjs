@@ -1,6 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { readFileSync, statSync, realpathSync } from "node:fs";
+import { readFileSync, statSync, realpathSync, copyFileSync, openSync, closeSync, unlinkSync } from "node:fs";
 import { resolve, dirname, sep } from "node:path";
 
 // Explicit sandbox boundary: no production database or arbitrary restore targets.
@@ -35,4 +35,26 @@ export function verifyFixtureBackup({file,sandboxRoot,manifest}={}){
   return sqlite(path,"PRAGMA integrity_check;")==="ok" &&
    Number(sqlite(path,"PRAGMA user_version;"))===manifest.schema_version;
  }catch{return false;}
+}
+
+export function restoreFixtureSqlite({backup,destination,sandboxRoot,manifest,maxSchemaVersion}={}){
+ if(!backup || !destination || !sandboxRoot || !Number.isSafeInteger(maxSchemaVersion) || maxSchemaVersion<0)
+  throw Error("invalid_restore_request");
+ const src=within(sandboxRoot,backup),dest=within(sandboxRoot,destination);
+ if(src===dest || realpathSync(src)!==src || !statSync(src).isFile())throw Error("invalid_backup_source");
+ if(!Number.isSafeInteger(manifest?.schema_version) || manifest.schema_version<0 ||
+    manifest.schema_version>maxSchemaVersion)throw Error("incompatible_schema");
+ if(!verifyFixtureBackup({file:src,sandboxRoot,manifest}))throw Error("backup_verification_failed");
+ // Atomic exclusive creation avoids overwriting any existing destination,
+ // including symlinks. Restore remains strictly a disposable fixture operation.
+ const fd=openSync(dest,"wx",0o600);
+ closeSync(fd);
+ try{
+  copyFileSync(src,dest);
+  if(!verifyFixtureBackup({file:dest,sandboxRoot,manifest}))throw Error("restored_copy_invalid");
+  return {restored:true,schema_version:manifest.schema_version};
+ }catch(error){
+  unlinkSync(dest);
+  throw error;
+ }
 }

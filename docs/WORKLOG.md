@@ -333,3 +333,8 @@ Full regression checkpoint for Telegram-to-ledger mock issuer: **59 isolated fil
 - Owner approved deferring production Telegram-specific integration; shared authorization and provenance remain mandatory. Added `src/decision/v3-command-envelope.mjs`, `test/v3-command-envelope.test.mjs`; focused **2/2 passed**. Commits `5300fad`, `c2711a0`.
 - The pure reference envelope distinguishes authenticated Telegram transport from device-only voice/Assist and denies claimed voice user identity. It is NOT authentication or verified device provenance; adapters must be reviewed before trusting metadata. The low-risk check is only a preliminary eligibility gate and does not authorize HA execution.
 - Next: join normalized sources to common policy and ledger without assuming Telegram actor/chat identity. Gate B remains OPEN. No v2 or HA changes.
+
+## 2026-10-08 — Voice-first shared channel intent fixture
+
+- Added isolated `src/decision/v3-channel-intent-ledger.mjs`, `test/v3-channel-intent-ledger.test.mjs`. The ledger scopes proposals to source/channel identity, binds original command and action snapshot, and invalidates replaced/cancelled/expired/replayed tokens; device-only Assist is never treated as an authenticated human identity. Together with envelope tests **4/4 focused passed**. Commits `7ed8d43`, `0dc46f6`.
+- This is not a trusted device ingress, not an execution authorization and not production persistence; a caller with access to the fixture issuer can still fabricate metadata. Next: channel-neutral restricted authority/low-risk authorization bound to trusted ingress and reviewed policy; do not connect to live HA.

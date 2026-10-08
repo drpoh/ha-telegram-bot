@@ -325,3 +325,5 @@ Full regression for isolated Telegram envelope and deny-by-default policy source
 
 - Added isolated `src/decision/v3-mock-telegram-issuer.mjs` joining a validated Telegram-like event envelope to the v3 actor/token-scoped intent ledger. Stores exact original text and action snapshot, rejects malformed actor/chat and disallowed MCP candidates. `test/v3-mock-telegram-issuer.test.mjs`: **2/2 focused passed**; commits `0ea8cf1`, `d78ae33`.
 - **Security caveat:** This is NOT authentication or trusted ingress. Any caller possessing the fixture issuer can pass a fabricated object and request a candidate. Only the real trusted Telegraf transport handler may hold the issuer reference; protected policy and original action validation must independently authorize before any service execution. Do not connect to production v2 or HA.
+
+Full regression checkpoint for Telegram-to-ledger mock issuer: **59 isolated files, 288 passing assertions, 0 failed**, `npm test` exit 0 on Raspberry Pi. Gate B remains OPEN because event authenticity must be enforced by the trusted live transport boundary and the separately reviewed policy loader remains unimplemented.

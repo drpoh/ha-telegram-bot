@@ -320,3 +320,8 @@ Full regression after in-flight consent invalidation fixture: **56 isolated test
 - Telegram transport authenticity still depends on trusted Telegraf ingress; this pure adapter alone does not authenticate arbitrary caller objects. It is not connected to the v3 ledger issuer. Gate B remains OPEN.
 
 Full regression for isolated Telegram envelope and deny-by-default policy source: **58 isolated files, 286 passing assertions, zero failures**, `npm test` exit 0 on Raspberry Pi. Trusted ingestion-to-ledger wiring remains an open Gate B blocker; no HA changes performed.
+
+## 2026-10-08 — Gate B fixture Telegram ingress to intent ledger
+
+- Added isolated `src/decision/v3-mock-telegram-issuer.mjs` joining a validated Telegram-like event envelope to the v3 actor/token-scoped intent ledger. Stores exact original text and action snapshot, rejects malformed actor/chat and disallowed MCP candidates. `test/v3-mock-telegram-issuer.test.mjs`: **2/2 focused passed**; commits `0ea8cf1`, `d78ae33`.
+- **Security caveat:** This is NOT authentication or trusted ingress. Any caller possessing the fixture issuer can pass a fabricated object and request a candidate. Only the real trusted Telegraf transport handler may hold the issuer reference; protected policy and original action validation must independently authorize before any service execution. Do not connect to production v2 or HA.

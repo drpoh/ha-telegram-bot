@@ -157,3 +157,10 @@ Expanded explicit room-wide parser to recognize «все лампы» and «вс
 - Added `scripts/run-isolated-tests.mjs`: reads **schema only** from existing SQLite DB, creates fresh temporary independent SQLite DB for each test file, runs up to three test-file processes concurrently with their own `HA_BOT_DB_PATH`, and deletes temporary files after run. Skips SQLite internal `sqlite_sequence` schema statement. No production DB writes from the isolated test launcher.
 - Updated npm test to use the isolated runner after syntax checks. Initial launcher test failed due to SQLite reserved internal table and was corrected. Isolated runner: **43 files / 245 passed / 0 failed**. Normal **`npm test` completed with exit 0**, 43 files / 245 passed / 0 failed. No bot restart or HA actuation.
 - Caveat: test runner still reads the existing DB schema at startup; later improve to a committed test schema fixture so tests also function without any access to production DB. Future: isolated policy/confirmation/execution mock harness; Gate B remains open.
+
+## 2026-10-08 — Confirmation execution fail-closed audit
+
+- Found `queueConfirmedAction` in `src/utils/queue.mjs` previously consumed a stored confirmation and executed `callHA` without rechecking policy/scope. Confirmation is consent, not authorization.
+- Required explicit asynchronous `authorize(action,actor) === true` before consuming or executing a confirmation. No gate, rejected policy or policy exception returns a blocked status and makes **zero calls** to the executor. The existing Telegram bot caller does not yet supply this independent gate: confirmed actions therefore remain intentionally unavailable in v3 until full shared authorization integration.
+- Added regression tests for missing/denied/throwing authorization. Focused 3/3 passed; standard `npm test`: **43 files, 246 assertions passed, 0 failed**, exit 0. Code/test commits `8b6ca56`, `f0603de` pushed.
+- Important remaining work: wire real policy + scope + preconditions to confirmation execution; verify outcome & audit in an isolated harness; do not re-enable actuation before reviews. No production v2 restart or real HA actuation.

@@ -87,3 +87,9 @@ The isolated joined chain now rejects a candidate action at issuance when origin
 ## 2026-10-08 — Isolated ingress issuance boundary
 
 The joined offline chain's public `issue()` now fails closed regardless of any caller-provided `authenticated:true`, actor, or source fields. An injected transport-owned `telegramIngress` factory alone receives the private `issueVerified` closure and can expose `issueFromTransport`. In tests the injected adapter is deliberately synthetic; **this is not proof of real Telegram authenticity**. No live transport or service writer is connected and the module must not enter production with a caller-controlled ingress factory. Joined focused tests 3/3; full isolated tests 70 files, 315 assertions, 0 failures, exit 0. Gate B OPEN pending actual trusted transport validation and approved local policy/registry provenance.
+
+## 2026-10-08 — Telegram transport ingress fixture
+
+Added an **offline-only** Telegram ingress adapter factory that extracts the user ID, chat ID, original text and timestamp from a coherent Telegram context, checks the allowlisted user, and rejects mismatched message/chat identities, bot commands, stale timestamps and mismatched requested service. Additional model-supplied `actorId` and `authenticated` parameters are not accepted as authority. The adapter must only be called inside a transport-authenticated Telegraf handler; arbitrary objects resembling Telegram updates can be forged by an untrusted caller, so this is **not** production identity verification.
+
+Focused test 1/1; isolated suite **71 files, 316 passing assertions, 0 failed, exit 0**, with no live Telegram integration or HA writes. Gate B OPEN pending trusted integration boundaries, operator approval and registry completeness.

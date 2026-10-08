@@ -338,3 +338,5 @@ Full regression checkpoint for Telegram-to-ledger mock issuer: **59 isolated fil
 
 - Added isolated `src/decision/v3-channel-intent-ledger.mjs`, `test/v3-channel-intent-ledger.test.mjs`. The ledger scopes proposals to source/channel identity, binds original command and action snapshot, and invalidates replaced/cancelled/expired/replayed tokens; device-only Assist is never treated as an authenticated human identity. Together with envelope tests **4/4 focused passed**. Commits `7ed8d43`, `0dc46f6`.
 - This is not a trusted device ingress, not an execution authorization and not production persistence; a caller with access to the fixture issuer can still fabricate metadata. Next: channel-neutral restricted authority/low-risk authorization bound to trusted ingress and reviewed policy; do not connect to live HA.
+
+Full regression for channel-neutral request envelope: **60 isolated test files, 290 assertions passed, 0 failed**, `npm test` exit 0 on Raspberry Pi. Gate B remains OPEN; normalizer is a pure reference module and does not establish authenticated transport or production voice control.

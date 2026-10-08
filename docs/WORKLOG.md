@@ -269,3 +269,9 @@ Full regression checkpoint for v3 MCP tool perimeter: **52 isolated test files, 
 - **NOT production-ready:** `trustedPolicy`, `originalUserText`, `areaQuery`, and `simulatedService` are still constructor-supplied; constructor provenance must be anchored to trusted operator config + immutable actor/token record. Do not replace simulatedService with HA `ha_call_service` or connect dispatcher to live Telegram. Production also needs deny-by-default runtime network and tool boundaries, audit trails and owner-approved staged rollout.
 
 Full regression after mock-only centralized v3 dispatcher: **53 isolated test files, 275 assertions passed, 0 failed**, `npm test` exit 0 on Raspberry Pi. Production integration and immutable provenance remain open.
+
+## 2026-10-08 — Immutable-intent reference ledger
+
+- Added isolated `src/decision/v3-intent-ledger.mjs`: actor/chat-scoped unpredictable token, deep-copied original request and exact action, 60s max expiry, replacement invalidation, cancellation and single consume. AI model does not receive authority to create trusted records in the intended architecture.
+- Added `test/v3-intent-ledger.test.mjs` for mutation resistance, cross-actor denial, replay rejection, expiry, replacement and cancellation. Focused **2/2 passed**. Commits `1f0d932`, `579a887`.
+- **Not yet integrated** with the mock dispatcher or trusted Telegram ingress. Constructor/issuer authority, persistence across restarts, crash consistency, independently reviewed policy provenance, logging and replay isolation remain blocking. No real service calls or restart performed.

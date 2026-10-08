@@ -40,6 +40,7 @@ import { completeDecisionAudit, failDecisionAudit, recordDecisionPrecondition, r
 import { checkActionPreconditions, checkContextPreconditions } from "../decision/preconditions.mjs";
 import { traceDecision } from "../decision/trace.mjs";
 import { checkRequestScope } from "../decision/request-scope.mjs";
+import { checkBathroomLightAction } from "../decision/bathroom-light-guard.mjs";
 import { getOperationalContextForEntity } from "../memory/operational.mjs";
 import {
   getBehaviorCorrectionSignal,
@@ -206,7 +207,13 @@ export async function askHomeAssistant(
             : { authorized: true };
 
           const scope = checkRequestScope({ userText, device: requestDevice, devices: Object.values(getKnownDevices()), toolName: call.name, args: call.args });
-          const authorized = enforcement.authorized && scope.allowed;
+          const bathroomGuard = scope.allowed
+            ? await checkBathroomLightAction({
+                userText, toolName: call.name, args: call.args || {},
+                callTool: (name, args) => callHA(name, args),
+              })
+            : { allowed: false, status: "request_scope_blocked" };
+          const authorized = enforcement.authorized && scope.allowed && bathroomGuard.allowed;
           const decisionAudit = evaluatedShadow
             ? rememberDecisionAudit({
                 shadow: evaluatedShadow,
@@ -235,6 +242,7 @@ export async function askHomeAssistant(
             let pendingConfirmation = null;
             if (
               scope.allowed &&
+              bathroomGuard.allowed &&
               evaluatedShadow?.outcome === "confirm" &&
               actor?.userId != null &&
               actor?.chatId != null
@@ -251,8 +259,8 @@ export async function askHomeAssistant(
 
             result = {
               blocked: true,
-              outcome: scope.allowed ? evaluatedShadow?.outcome : "request_scope_blocked",
-              reason: scope.allowed ? enforcement.reason : "Tool target exceeds the known single-device request",
+              outcome: !scope.allowed ? "request_scope_blocked" : !bathroomGuard.allowed ? "bathroom_scope_blocked" : evaluatedShadow?.outcome,
+              reason: !scope.allowed ? "Tool target exceeds the known single-device request" : !bathroomGuard.allowed ? bathroomGuard.status : enforcement.reason,
               policy: evaluatedShadow?.policy,
               pending_confirmation: pendingConfirmation
                 ? {
@@ -264,6 +272,7 @@ export async function askHomeAssistant(
                 !scope.allowed ? (scope.status === "multi_target_unresolved"
                   ? "Групповая команда не выполнена: состав устройств ещё не подтверждён. Укажите одно устройство или помещение за раз."
                   : "Действие не выполнено: устройство не соответствует исходному запросу.") :
+                !bathroomGuard.allowed ? "Действие не выполнено: свет ванной или его принадлежность помещению не подтверждены." :
                 evaluatedShadow?.outcome === "confirm"
                   ? pendingConfirmation
                     ? "Действие не выполнено. Подтвердите: да или отмена."

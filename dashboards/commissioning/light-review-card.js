@@ -8,6 +8,7 @@ class LightingReviewCard extends HTMLElement {
     this._initialized=true;
     this._selected="light.koridor_2";
     this._catalog=[];
+    this._busy=false;
     const root=this.attachShadow({mode:"open"});
     root.innerHTML=`
       <style>
@@ -35,7 +36,7 @@ class LightingReviewCard extends HTMLElement {
         <label for="device">Светильник</label><select id="device"></select>
         <div class="info"><div id="name" class="name"></div><div id="id" class="meta"></div><div id="meta" class="meta"></div><div id="state" class="state"></div></div>
         <div class="buttons"><button class="primary" id="on">Включить</button><button id="off">Выключить</button></div>
-        <div class="notice" id="policy">Ручное управление только подсветкой коридора (light.koridor_2), с подтверждением. Автоматическое мигание отключено.</div>
+        <div class="notice" id="policy">Управление доступно для обычных светильников. Группы, индикаторы, экраны, приборы и недоступные устройства исключаются.</div>
         <div id="result" class="subtitle" role="status" aria-live="polite"></div>
       </div></ha-card>`;
     this._root=root;
@@ -71,17 +72,29 @@ class LightingReviewCard extends HTMLElement {
     r.getElementById("meta").textContent=entry?("Интеграция: "+(entry.platform||"не указана")+" · область: "+(entry.area_id||"не задана")):"";
     const value=state?.state??"не найден";
     r.getElementById("state").textContent="Состояние: "+({on:"Включён",off:"Выключен",unavailable:"Недоступен",unknown:"Неизвестен"}[value]||value);
-    const authorized=id==="light.koridor_2" && (value==="on"||value==="off") && !entry?.disabled && !this._busy;
+    const authorized=this._eligible(entry,state) && !this._busy;
+    r.getElementById("policy").textContent=authorized
+      ?"Разрешено ручное управление этим светильником с подтверждением каждого действия. Массовые команды и автоматическое мигание отключены."
+      :"Только просмотр: устройство недоступно, не подтверждено как обычный светильник либо исключено из безопасного управления.";
     r.getElementById("on").disabled=!authorized;
     r.getElementById("off").disabled=!authorized;
   }
+  _eligible(entry,state){
+    if(!entry || entry.disabled || !state || !["on","off"].includes(state.state))return false;
+    const id=entry.entity_id,platform=entry.platform;
+    if(platform==="browser_mod"||platform==="group"||platform==="bambu_lab"||platform==="smartthings")return false;
+    if(platform==="esphome" || /(?:status_led|_screen)$/.test(id))return false;
+    if(id==="light.ves_svet_2")return false;
+    return true;
+  }
   async _operate(service){
     const id=this._selected;
-    if(this._busy||id!=="light.koridor_2"||!["on","off"].includes(this._hass?.states?.[id]?.state))return;
-    if(!window.confirm((service==="turn_on"?"Включить":"Выключить")+" подсветку коридора?"))return;
+    const entry=this._catalog.find(x=>x.entity_id===id);
+    if(this._busy||!["turn_on","turn_off"].includes(service)||!this._eligible(entry,this._hass?.states?.[id]))return;
+    if(!window.confirm((service==="turn_on"?"Включить":"Выключить")+" выбранный светильник: "+id+"?"))return;
     this._busy=true;this._render();
     try{
-      await this._hass.callService("light",service,{entity_id:"light.koridor_2"});
+      await this._hass.callService("light",service,{entity_id:id});
       this._root.getElementById("result").textContent="Команда отправлена. Проверяй фактическое состояние светильника.";
     }catch(e){this._root.getElementById("result").textContent="Ошибка управления: "+String(e?.message||e);}
     finally{this._busy=false;this._render();}

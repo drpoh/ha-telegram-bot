@@ -15,7 +15,7 @@ export async function authorizeConfirmedAreaLight({
     !Number.isFinite(maxEvidenceDurationMs) || maxEvidenceDurationMs<=0 || maxEvidenceDurationMs>30000)
    return deny("untrusted_scope_request");
  const requested=extractRoomWideLightQuery(userText);
- if(!requested || requested!==areaQuery) return deny("request_area_mismatch");
+ if(!requested || requested!==areaQuery.toLocaleLowerCase("ru-RU").replace(/ё/g,"е").trim()) return deny("request_area_mismatch");
  const words=String(userText).toLocaleLowerCase("ru-RU").replace(/ё/g,"е").trim();
  const intent= /^(?:включи|включить)\s/.test(words) ? "turn_on" : /^(?:выключи|выключить)\s/.test(words) ? "turn_off" : null;
  if(!intent || intent!==action?.args?.service) return deny("request_action_mismatch");

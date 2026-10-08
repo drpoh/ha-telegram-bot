@@ -22,7 +22,7 @@ import { startLearningSession } from "../learning/session.mjs";
 import { getLastControlledText } from "../memory/controlled.mjs";
 import { finalizeLearning } from "../learning/learner.mjs";
 import { isAiHistoryTool, callAiHistoryTool } from "../history/tools.mjs";
-import { resolveKnownDevice } from "../home/entity-resolver.mjs";
+import { resolveKnownDevice, getKnownDevices } from "../home/entity-resolver.mjs";
 import { buildHomeContext, renderHomeContext } from "../context/builder.mjs";
 import {
   shadowEvaluateToolCall,
@@ -205,7 +205,7 @@ export async function askHomeAssistant(
             ? enforceActionSource(evaluatedShadow, source)
             : { authorized: true };
 
-          const scope = checkRequestScope({ userText, device: requestDevice, toolName: call.name, args: call.args });
+          const scope = checkRequestScope({ userText, device: requestDevice, devices: Object.values(getKnownDevices()), toolName: call.name, args: call.args });
           const authorized = enforcement.authorized && scope.allowed;
           const decisionAudit = evaluatedShadow
             ? rememberDecisionAudit({

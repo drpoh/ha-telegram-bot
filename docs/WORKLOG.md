@@ -2,6 +2,13 @@
 
 Purpose: durable chronological handoff between ChatGPT sessions and devices. Current tasks live in `docs/TODO.md`; safety gates in `docs/home-agent-v3-strategy.md`. Broader historical progress is in `docs/PROGRESS.md`.
 
+## 2026-10-08 — generic light classification safety
+
+- Changed `src/decision/area-target-discovery.mjs`: `lightIds` and `excludedLightIds` must form an explicit, disjoint and complete partition of discovered `light.*` entities. All unclassified IDs fail closed, and excluded indicators never enter selected targets.
+- Added tests for unclassified lights, excluded status LEDs, and overlapping classification.
+- Remaining: supply a trusted per-installation classification map; do not accept arbitrary classifications from AI.
+- No Home Assistant service calls and no production restart. Full suite: 198/198 passed, 0 failed. Commit: see latest Git log.
+
 ## 2026-10-08 — repository hygiene checkpoint
 
 - Preserved both potentially actuating living-room smoke scripts under `scripts/manual/`; imports adjusted, and two explicit opt-in checks added. Syntax checked. **Not executed**.

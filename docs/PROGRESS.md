@@ -87,7 +87,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 
 ## Test status
 
-**Historical checkpoint: 137 / 137. Latest verified full run before repository cleanup: 195 / 195 (2026-10-08).**
+**Historical checkpoint: 137 / 137. Latest verified full run: 198 / 198 (2026-10-08, generic light classification).**
 
 Current automated coverage includes:
 

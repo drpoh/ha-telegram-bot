@@ -3,11 +3,15 @@ const DOMAINS = ['light', 'switch'];
 const own = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 
 export async function discoverAreaTargets({
-  areaId, areaName, callTool, switchLightIds = [], maxEntities = 100,
+  areaId, areaName, callTool, lightIds = [], excludedLightIds = [], switchLightIds = [], maxEntities = 100,
 } = {}) {
   if (typeof areaId !== 'string' || !areaId.trim() ||
       typeof areaName !== 'string' || !areaName.trim() ||
-      typeof callTool !== 'function' || !Array.isArray(switchLightIds) ||
+      typeof callTool !== 'function' || !Array.isArray(lightIds) || !Array.isArray(excludedLightIds) ||
+      !lightIds.every(id => typeof id === 'string' && id.startsWith('light.')) ||
+      !excludedLightIds.every(id => typeof id === 'string' && id.startsWith('light.')) ||
+      new Set([...lightIds, ...excludedLightIds]).size !== lightIds.length + excludedLightIds.length ||
+      !Array.isArray(switchLightIds) ||
       !switchLightIds.every(id => typeof id === 'string' && id.startsWith('switch.')) ||
       new Set(switchLightIds).size !== switchLightIds.length ||
       !Number.isInteger(maxEntities) || maxEntities < 1 || maxEntities > 100) {
@@ -36,7 +40,12 @@ export async function discoverAreaTargets({
     const ids = all.map(e => e.entity_id);
     if (new Set(ids).size !== ids.length) return { allowed: false, status: 'duplicate_entities' };
     if (switchLightIds.some(id => !ids.includes(id))) return { allowed: false, status: 'switch_not_in_area' };
-    const selected = all.filter(e => e.domain === 'light' || switchLightIds.includes(e.entity_id));
+    const discoveredLights = all.filter(e => e.domain === 'light').map(e => e.entity_id);
+    if (discoveredLights.length !== lightIds.length + excludedLightIds.length ||
+        discoveredLights.some(id => !lightIds.includes(id) && !excludedLightIds.includes(id))) {
+      return { allowed: false, status: 'unclassified_lights' };
+    }
+    const selected = all.filter(e => lightIds.includes(e.entity_id) || switchLightIds.includes(e.entity_id));
     if (!selected.length) return { allowed: false, status: 'no_light_targets' };
     const available = [];
     const unavailable = [];

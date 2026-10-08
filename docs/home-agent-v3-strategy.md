@@ -32,3 +32,13 @@ Telegram/Assist → AI interpretation → resolved entity/area scope → policy 
 
 ## Rollout
 Do not restart production or actuate Home Assistant during Gates A/B. Keep all new generic discovery behind a read-only API until integration tests pass.
+
+## 2026-10-08 — Approved gate sequencing and hard release criteria
+
+Owner approved the audit recommendation: **no overall percentage of production readiness**. Report separately test evidence, gate completion, and live acceptance. Gate B remains OPEN even with passing isolated tests; Gate C fault fixtures are not production acceptance.
+
+Gate B may close only after an end-to-end isolated caller chain derives actor/chat/token, original user text, exact action and reviewed policy from trusted sources; demonstrates invalidated/replayed/cancelled/expired confirmations fail closed; validates complete live *read-only* scope and entity identity; rejects dangerous or unknown MCP tools; and produces audit evidence. No AI-supplied authorization flags.
+
+Next Gate C: fault and race analysis in the complete execution chain. Gate D: staged deployment/rollback **after explicit owner approval** and proof that Home Assistant Green is operationally independent of the AI/Raspberry Pi. Gate E: Assist reuses the same engine. No live HA actuation or service changes in Gates A/B.
+
+Scope freeze until Gate B closes: no expanded autonomy or extra integrations. Entity renames, production backups and independent HA runtime acceptance stay tracked as separate safety/deployment prerequisites. See `docs/ADR-HA-INDEPENDENCE.md`.

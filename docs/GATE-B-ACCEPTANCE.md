@@ -97,3 +97,7 @@ Focused test 1/1; isolated suite **71 files, 316 passing assertions, 0 failed, e
 ## 2026-10-08 — Gate B final adjudication checkpoint
 
 Integrated synthetic Telegram ingress -> action/actor ledger -> trusted-light area mock -> one-shot confirmation -> simulated MCP write -> state readback. Test 2/2 in Telegram fixture; isolated suite **71 files, 317 passing assertions, zero failed, exit 0**. Formal itemized decision: `docs/GATE-B-DECISION-2026-10-08.md`. **Owner-home Gate B NOT ACCEPTED**: no approved real-home policy or complete read-only device registry provenance; mock Telegram context is forgeable outside the trusted handler; combined source/audit fault gates remain. Do not switch production.
+
+## 2026-10-08 — Whole-house off, isolated mock
+
+Added `v3-whole-house-off-mock.mjs` as a separate offline-only single-use proof of owner-defined «Выключи весь свет» target `light.ves_svet`. A candidate requires an exact utterance, one-shot actor-bound token, exact 14-member reviewed list equality and group identity `light.ves_svet` with platform `group` before an injected **mock writer** runs. Yandex `light.ves_svet_2`, member replacement, duplicates, cancellation, actor mismatch and replay fail closed. This module is **not connected to the joined production path**, has no actual transport verification, does not automatically load a protected reviewed-members list and provides no live grant. Full isolated suite: **72 files, 319 passing assertions, 0 failed files**. Gate B stays OPEN.

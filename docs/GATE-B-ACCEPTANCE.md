@@ -113,3 +113,7 @@ Added an adversarial joined-path test where confirmation is in flight during asy
 ## 2026-10-08 — Explicit offline group grant requirement
 
 The joined whole-house-off fixture now requires a separate exact deny-default policy entry for `light.ves_svet` at `level=confirm`, with only `turn_off` in `services`. An enabled flag and owner's intent/scope agreement do not suffice, and no broader grant is accepted. This fixture policy is NOT yet the independently pinned operator-approved production policy. Focused 5/5, full isolated suite **73 files, 324 passed assertions, 0 failed, exit 0**. Gate B OPEN.
+
+## 2026-10-08 — Digest-pinned whole-house policy preflight
+
+An offline preflight now checks a pinned SHA-256 of a protected policy JSON file, requiring exactly `light.ves_svet: confirm/turn_off` and denying missing, altered or overbroad policy. Crucially even a valid candidate returns `ready:false / owner_approval_required`; a parsed file is **never** silently elevated to owner approval or wired into a real writer. Focused test 1/1; full isolated suite **74 files, 325 passing assertions, 0 failed, exit 0**. Gate B OPEN pending independent operator approval and actual trusted transport provenance.

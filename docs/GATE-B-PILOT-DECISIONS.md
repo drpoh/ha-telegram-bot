@@ -17,3 +17,7 @@ Owner selected: local offline policy approval on Raspberry Pi; Telegram single-c
 - Owner selected one room but **has not specified which room**. Do not pick it from historical data.
 - After room selection, refresh complete registry evidence; review lights **and lighting-like switches**, physical function, disabled/unavailable state, room identity, plus exact per-action permissions. Group `light.ves_svet` remains excluded from pilot.
 - Current release decision: **Gate B OPEN; production writes DENIED**. Voice/Atom Echo optional after secured Telegram pilot.
+
+## Live pilot consent scope
+
+Owner explicitly approved enabling real lighting control for the **kitchen pilot** after the prior read-only phase. This consent does not approve arbitrary devices, other rooms, broad group control, bypassing Gate B technical requirements, or changing/restarting v2. The initial policy remains deny-all while the independent v3 Telegram transport, operator-reviewed local policy, complete live registry scope, confirmation and audit boundary are implemented. Do not activate real MCP writes before validation; review individual kitchen targets and test a narrowly scoped command first.

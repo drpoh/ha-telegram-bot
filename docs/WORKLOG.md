@@ -349,3 +349,9 @@ Full regression checkpoint for the voice-first channel intent fixture: **61 isol
 - The satellite allowlist is fixture-local, not an authenticated connection to HA Assist. It does not confer user identity, execution permission, or an approved autonomy policy. Shared policy/room classification and trusted source binding remain Gate B blockers. No ESPHome or live HA changes.
 
 Full Raspberry Pi regression after isolated Assist ingress fixture: **62 isolated test files, 294 passing assertions, 0 failures**, `npm test` exit 0. Gate B remains OPEN: neither authenticated Assist transport nor policy-bound execution/confirmed voice identity is implemented.
+
+## 2026-10-08 — Gate B shared Assist preflight and next stage start
+
+- Finished offline Assist-to-common-tool-boundary preflight: `src/decision/v3-assist-decision-fixture.mjs` and tests, **2/2 focused pass**. Voice commands remain `review` only, never authorized HA writes; claimed room, unknown targets, high-risk and forbidden tools fail closed. Commits `70fa417`, `6fc176d`.
+- Began next stage with `src/decision/v3-satellite-area-fixture.mjs`: only explicitly reviewed satellite-to-area references, no inferred membership or authorizations. Tests reject duplicate, unreviewed, malformed and overridden mapping; combined focused tests **4/4 pass**. Commits `22f2252`, `58e2500`.
+- OPEN: authoritative live HA satellite device/area mapping and completeness validation; private trusted input adapter and actual operator-approved target policy. None of these fixture results establish production control permission. No live HA operations.

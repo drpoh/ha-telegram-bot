@@ -65,3 +65,9 @@ Verification: loader-specific 5/5 passed; isolated suite 69 test files, 311 asse
 The offline loader now walks parent directory components, rejects symlink components, unsafe writable ancestors, and ancestors not owned by root or the current process UID. It permits root-owned sticky directories (e.g. /tmp) for isolated tests; that exception is not a substitute for protected private policy storage. The file and immediate directory retain their stricter checks. Validation is path-based and remains subject to directory replacement races; no production authorization follows from this check.
 
 Focused regression: 6/6 tests passed. Entire isolated suite: **69 files, 312 passing assertions, 0 failed, exit 0**. Gate B OPEN, no live HA writes.
+
+## 2026-10-08 — Post-read source identity recheck
+
+The offline policy loader now re-stats the final policy path, verifies its device/inode against the opened file, re-resolves the policy directory, and rechecks every recorded ancestor device/inode after reading. Detected substitutions fail closed. This is defense-in-depth only: pathname checks can still be bypassed by a swap-and-restore race, so descriptor-relative directory traversal or another independently reviewed source-integrity mechanism remains mandatory before live approval.
+
+Focused regression: 6/6; full isolated suite: 69 files, 312 assertions passing, 0 failed, exit 0. No HA actuation or production changes. Gate B OPEN.

@@ -15,6 +15,7 @@ export async function readV3PolicyFile({directory,filename,expectedSha256}={}){
   // Every ancestor must be a real directory and not writable by other users.
   // The filesystem root can be root-owned; other ancestors may be root- or
   // process-owned. No symlink or group/world-writable parent is accepted.
+  const ancestorSnapshots=[];
   let ancestor=dirname(directory);
   while(true){
    const info=await lstat(ancestor);
@@ -23,6 +24,7 @@ export async function readV3PolicyFile({directory,filename,expectedSha256}={}){
       ((info.mode&0o022)!==0 && !protectedStickyRoot) ||
       (info.uid!==0 && info.uid!==process.getuid()))
     return deny("unsafe_ancestor");
+   ancestorSnapshots.push({path:ancestor,dev:info.dev,ino:info.ino});
    const parent=dirname(ancestor);
    if(parent===ancestor)break;
    ancestor=parent;
@@ -48,7 +50,23 @@ export async function readV3PolicyFile({directory,filename,expectedSha256}={}){
   // descriptor provenance and must not authorize production grants.
   const after=await handle.stat();
   const directoryAfter=await lstat(directory);
-  if(after.dev!==stat.dev || after.ino!==stat.ino || after.size!==stat.size ||
+  // Re-resolve the filename and checked ancestry after read. Reject swaps
+  // even when an attacker replaces a file with another valid policy.
+  const finalPathStat=await lstat(expected);
+  const finalRoot=await realpath(directory);
+  let ancestorsStable=true;
+  for(const snapshot of ancestorSnapshots){
+   const current=await lstat(snapshot.path);
+   if(!current.isDirectory() || current.isSymbolicLink() ||
+      current.dev!==snapshot.dev || current.ino!==snapshot.ino){
+    ancestorsStable=false;
+    break;
+   }
+  }
+  if(!ancestorsStable || finalRoot!==root ||
+     !finalPathStat.isFile() || finalPathStat.isSymbolicLink() ||
+     finalPathStat.dev!==stat.dev || finalPathStat.ino!==stat.ino ||
+     after.dev!==stat.dev || after.ino!==stat.ino || after.size!==stat.size ||
      after.mtimeMs!==stat.mtimeMs || !directoryAfter.isDirectory() ||
      directoryAfter.dev!==rootStat.dev || directoryAfter.ino!==rootStat.ino ||
      (directoryAfter.mode&0o022)!==0)

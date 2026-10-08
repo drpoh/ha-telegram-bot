@@ -83,3 +83,7 @@ Focused joined tests: 3/3. Entire suite: **70 files, 315 passed assertions, 0 fa
 ## 2026-10-08 — Issuance-time command/action agreement
 
 The isolated joined chain now rejects a candidate action at issuance when original Russian light-on/off intent does not match its requested service. In particular, a user-requested turn-on can no longer create a pending turn-off confirmation. It remains a test-only ingress with caller-provided transport authentication, **not production proof of identity**. Focused joined tests 3/3; isolated suite 70 files, 315 passing assertions, no failed files, exit 0. No HA writes. Gate B OPEN.
+
+## 2026-10-08 — Isolated ingress issuance boundary
+
+The joined offline chain's public `issue()` now fails closed regardless of any caller-provided `authenticated:true`, actor, or source fields. An injected transport-owned `telegramIngress` factory alone receives the private `issueVerified` closure and can expose `issueFromTransport`. In tests the injected adapter is deliberately synthetic; **this is not proof of real Telegram authenticity**. No live transport or service writer is connected and the module must not enter production with a caller-controlled ingress factory. Joined focused tests 3/3; full isolated tests 70 files, 315 assertions, 0 failures, exit 0. Gate B OPEN pending actual trusted transport validation and approved local policy/registry provenance.

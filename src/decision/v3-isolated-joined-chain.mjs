@@ -6,11 +6,25 @@ import {extractRoomWideLightQuery} from "./agent-area-guard.mjs";
 
 // Offline test-only adapter. Trusted caller supplies transport-authenticated
 // actor, not model-generated identity. No real MCP write client is imported.
-export function createIsolatedV3JoinedChain({policy,configPath,readTool,simulateWrite,clock=Date.now}={}){
+export function createIsolatedV3JoinedChain({policy,configPath,readTool,simulateWrite,clock=Date.now,telegramIngress}={}){
  const ledger=createV3IntentLedger({clock});
+ // Only an injected, trusted transport adapter can supply identity. The
+ // command/model-facing issue() method accepts NO authentication flags.
+ const issueCapability=Symbol("trusted_transport");
+ const issueTrusted=(proof,input)=>{
+  if(proof!==issueCapability)return {status:"denied",reason:"untrusted_transport"};
+  return issueVerified(input);
+ };
+ const issueFromTransport=typeof telegramIngress==="function"?
+  telegramIngress({issueVerified:input=>issueTrusted(issueCapability,input)}):null;
  const dispatch=createLedgerBoundMockDispatcher({ledger,policy,configPath,readTool,simulateWrite});
  return Object.freeze({
-  issue({source,sourceId,actorId,authenticated,text,issuedAt,action,ttlMs}={}){
+  issue(){return {status:"denied",reason:"untrusted_transport"};},
+  issueFromTransport:issueFromTransport || (()=>({status:"denied",reason:"transport_unavailable"})),
+  confirm:({userId,chatId,token}={})=>dispatch({userId,chatId,token}),
+  cancel:({userId,chatId}={})=>ledger.cancel({userId,chatId}),
+ });
+ function issueVerified({source,sourceId,actorId,authenticated,text,issuedAt,action,ttlMs}={}){
    const normalized=normalizeV3Command({source,sourceId,actorId,authenticated,text,issuedAt});
    if(!normalized.accepted)return {status:"denied",reason:normalized.reason};
    const command=normalized.command;
@@ -31,8 +45,5 @@ export function createIsolatedV3JoinedChain({policy,configPath,readTool,simulate
    return {status:"pending",actor,...ledger.issue({
     ...actor,userText:command.originalText,action,ttlMs,
    })};
-  },
-  confirm:({userId,chatId,token}={})=>dispatch({userId,chatId,token}),
-  cancel:({userId,chatId}={})=>ledger.cancel({userId,chatId}),
- });
+ }
 }

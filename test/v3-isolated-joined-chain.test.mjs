@@ -8,7 +8,7 @@ const request={source:"telegram",sourceId:"66",actorId:55,authenticated:true,
 function setup(){
  let writes=0,reads=0;
  const chain=createIsolatedV3JoinedChain({
-  clock:()=>1000,policy:{entities:{"light.fixture":{level:"confirm",services:["turn_on"]}}},
+  clock:()=>1000,telegramIngress:({issueVerified})=>input=>issueVerified(input),policy:{entities:{"light.fixture":{level:"confirm",services:["turn_on"]}}},
   configPath:"/missing_fixture",
   readTool:async()=>{reads++;throw Error("no live evidence");},
   simulateWrite:async()=>{writes++;return {structuredContent:{success:true}};},
@@ -25,12 +25,14 @@ test("joined ingress denies unauthenticated, spoofed, stale and dangerous comman
   {...request,action:{name:"ha_call_service",args:{domain:"homeassistant",service:"restart"}}},
   {...request,text:"Перезапусти Home Assistant"},
   {...request,action:{name:"ha_call_service",args:{domain:"light",service:"turn_off",entity_id:"light.fixture"}}},
- ])assert.equal(chain.issue(v).status,"denied");
+ ])assert.equal(chain.issueFromTransport(v).status,"denied");
  assert.deepEqual(counts(),{writes:0,reads:0});
+ assert.equal(chain.issue(request).status,"denied");
+ assert.equal(chain.issue({...request,authenticated:true}).reason,"untrusted_transport");
 });
 test("joined token requires matching actor, valid evidence, then blocks writes",async()=>{
  const {chain,counts}=setup();
- const issued=chain.issue(request);
+ const issued=chain.issueFromTransport(request);
  assert.equal(issued.status,"pending");
  assert.equal((await chain.confirm({userId:56,chatId:66,token:issued.token})).status,"missing");
  assert.equal((await chain.confirm({userId:55,chatId:66,token:issued.token})).status,"denied");
@@ -61,7 +63,7 @@ test("joined chain verifies one explicitly scoped mock action and denies replay"
    throw Error("unexpected_tool");
   };
   const chain=createIsolatedV3JoinedChain({
-   clock:()=>1000,configPath,readTool,
+   clock:()=>1000,configPath,readTool,telegramIngress:({issueVerified})=>input=>issueVerified(input),
    policy:{entities:{"light.fixture":{level:"confirm",services:["turn_on"]}}},
    simulateWrite:async(name,args)=>{
     assert.equal(name,"ha_call_service");
@@ -69,14 +71,14 @@ test("joined chain verifies one explicitly scoped mock action and denies replay"
     writes++;state="on";return {structuredContent:{success:true}};
    },
   });
-  const pending=chain.issue(request);
+  const pending=chain.issueFromTransport(request);
   assert.equal(pending.status,"pending");
   assert.equal((await chain.confirm({...pending.actor,token:pending.token})).status,"verified");
   assert.equal(writes,1);
   assert.equal((await chain.confirm({...pending.actor,token:pending.token})).status,"missing");
   assert.equal(writes,1);
-  const replaced=chain.issue(request);
-  const latest=chain.issue(request);
+  const replaced=chain.issueFromTransport(request);
+  const latest=chain.issueFromTransport(request);
   assert.equal((await chain.confirm({...replaced.actor,token:replaced.token})).status,"missing");
   chain.cancel(latest.actor);
   assert.equal((await chain.confirm({...latest.actor,token:latest.token})).status,"missing");

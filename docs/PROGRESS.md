@@ -87,7 +87,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 
 ## Test status
 
-**Historical checkpoint: 137 / 137. Latest verified full run: 198 / 198 (2026-10-08, generic light classification).**
+**Historical checkpoint: 137 / 137. Latest verified full run: 203 / 203 (2026-10-08, local classification loader).**
 
 Current automated coverage includes:
 

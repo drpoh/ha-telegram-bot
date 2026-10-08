@@ -20,8 +20,12 @@ export function createIsolatedV3JoinedChain({policy,configPath,readTool,simulate
     return {status:"denied",reason:"trusted_telegram_identity_required"};
    if(clock()-command.issuedAt>60000 || command.issuedAt>clock()+5000)
     return {status:"denied",reason:"stale_command"};
+   const intent=command.originalText.toLocaleLowerCase("ru-RU").replace(/ё/g,"е").trim();
+   const requestedService=/^(?:включи|включить)\s/.test(intent)?"turn_on":
+    /^(?:выключи|выключить)\s/.test(intent)?"turn_off":null;
    if(!extractRoomWideLightQuery(command.originalText) ||
-      !checkV3ToolBoundary(action).allowed)
+      !checkV3ToolBoundary(action).allowed ||
+      requestedService!==action?.args?.service)
     return {status:"denied",reason:"untrusted_action_scope"};
    const actor={userId:command.actorId,chatId:Number(command.sourceId)};
    return {status:"pending",actor,...ledger.issue({

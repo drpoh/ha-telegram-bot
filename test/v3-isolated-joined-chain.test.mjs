@@ -24,6 +24,7 @@ test("joined ingress denies unauthenticated, spoofed, stale and dangerous comman
   {...request,issuedAt:-100000},
   {...request,action:{name:"ha_call_service",args:{domain:"homeassistant",service:"restart"}}},
   {...request,text:"Перезапусти Home Assistant"},
+  {...request,action:{name:"ha_call_service",args:{domain:"light",service:"turn_off",entity_id:"light.fixture"}}},
  ])assert.equal(chain.issue(v).status,"denied");
  assert.deepEqual(counts(),{writes:0,reads:0});
 });

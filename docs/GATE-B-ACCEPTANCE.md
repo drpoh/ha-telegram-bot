@@ -79,3 +79,7 @@ Created `src/decision/v3-isolated-joined-chain.mjs` combining trusted-source env
 Focused joined tests: 3/3. Entire suite: **70 files, 315 passed assertions, 0 failed, exit 0** on Raspberry Pi 3, offline fixture environment.
 
 **Remaining Gate B acceptance blockers:** replace externally injected test policy with the owner-approved pinned and protected local policy; establish authoritative complete HA registry-backed scope; move source identity/actor issuance into a trusted authenticated channel adapter rather than accepting caller statements; test alternate-tool and concurrent races through this precise joined chain. Do not treat any mock as production authorization. Gate B remains OPEN.
+
+## 2026-10-08 — Issuance-time command/action agreement
+
+The isolated joined chain now rejects a candidate action at issuance when original Russian light-on/off intent does not match its requested service. In particular, a user-requested turn-on can no longer create a pending turn-off confirmation. It remains a test-only ingress with caller-provided transport authentication, **not production proof of identity**. Focused joined tests 3/3; isolated suite 70 files, 315 passing assertions, no failed files, exit 0. No HA writes. Gate B OPEN.

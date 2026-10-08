@@ -365,3 +365,9 @@ Full regression after voice preflight completion and satellite-area reference st
 - Next: prove snapshot provenance/registry completeness using read-only HA adapter, verify stable device identity and fail closed on missing registry capabilities. Reviewed map plus snapshot remains **reference evidence**, never execution authorization. Gate B remains OPEN.
 
 Full regression checkpoint for synthetic satellite registry identity: **65 isolated test files, 300 assertions passed, zero failed**, `npm test` exit 0 on Raspberry Pi. This is not a live authoritative HA registry adapter. Gate B remains OPEN.
+
+## 2026-10-08 — Satellite read-only registry acquisition fixture
+
+- Resumed from latest branch HEAD `dba7a76` (which already included `v3-satellite-registry-binding.mjs` and freshness/identity tests). Avoided duplicate implementation.
+- Added `src/decision/v3-satellite-registry-reader.mjs` and `test/v3-satellite-registry-reader.test.mjs`. The bounded injected read-only fixture rejects missing/partial/paginated/stale/duplicate/ambiguous/malformed inventory, offline read failures and timeouts, and strips extra input fields. Only complete fresh snapshots reach the separate reviewed mapping comparator. Targeted **2/2 passed** (`a03d03d`, `a500b9d`).
+- **Not a live HA registry adapter or authenticated read-only transport.** Snapshot `success` and `complete` still originate with the injected provider; production adapter must prove registry completeness and device identity. Gate B remains OPEN. No HA service call or restart.

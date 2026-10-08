@@ -7,7 +7,24 @@ import {createV3WholeHouseOffMock} from "./v3-whole-house-off-mock.mjs";
 
 // Offline test-only adapter. Trusted caller supplies transport-authenticated
 // actor, not model-generated identity. No real MCP write client is imported.
-export function createIsolatedV3JoinedChain({policy,configPath,readTool,simulateWrite,clock=Date.now,telegramIngress,wholeHouseOff,verifyRegistryAtDispatch}={}){
+export function createIsolatedV3JoinedChain({policy,configPath,readTool,simulateWrite,clock=Date.now,telegramIngress,wholeHouseOff,verifyRegistryAtDispatch,strictDispatchEvidence=false,verifyApprovalAtDispatch}={}){
+ // Strict mode is only an offline fixture; it never establishes live permissions.
+ // Missing either independent verification callback makes writes impossible.
+ const strictReady=!strictDispatchEvidence ||
+   (typeof verifyRegistryAtDispatch==="function" && typeof verifyApprovalAtDispatch==="function");
+ const unifiedGuard=async ({actor,action})=>{
+   if(!strictReady)return {valid:false};
+   if(typeof verifyRegistryAtDispatch==="function"){
+     const registry=await verifyRegistryAtDispatch({actor,action:structuredClone(action)});
+     if(registry?.valid!==true)return {valid:false};
+   }else if(strictDispatchEvidence)return {valid:false};
+   if(typeof verifyApprovalAtDispatch==="function"){
+     const approval=await verifyApprovalAtDispatch({actor,action:structuredClone(action)});
+     if(approval?.valid!==true)return {valid:false};
+   }else if(strictDispatchEvidence)return {valid:false};
+   return {valid:true};
+ };
+ const guard= strictDispatchEvidence || verifyRegistryAtDispatch!==undefined || verifyApprovalAtDispatch!==undefined ? unifiedGuard : undefined;
  const ledger=createV3IntentLedger({clock});
  // Only an injected, trusted transport adapter can supply identity. The
  // command/model-facing issue() method accepts NO authentication flags.
@@ -18,7 +35,7 @@ export function createIsolatedV3JoinedChain({policy,configPath,readTool,simulate
  };
  const issueFromTransport=typeof telegramIngress==="function"?
   telegramIngress({issueVerified:input=>issueTrusted(issueCapability,input)}):null;
- const dispatch=createLedgerBoundMockDispatcher({ledger,policy,configPath,readTool,simulateWrite,verifyRegistryAtDispatch});
+ const dispatch=createLedgerBoundMockDispatcher({ledger,policy,configPath,readTool,simulateWrite,verifyRegistryAtDispatch:guard});
  // Explicit fixture policy is mandatory; scope approval alone cannot grant
  // the group an execution path. Never fall back to legacy auto-safe grants.
  const groupGrant=wholeHouseOff?.policy?.entities?.["light.ves_svet"];
@@ -28,7 +45,7 @@ export function createIsolatedV3JoinedChain({policy,configPath,readTool,simulate
   groupGrant.services.length===1 && groupGrant.services[0]==="turn_off";
  const whole=wholeHouseOff?.enabled===true && groupPolicyValid ? createV3WholeHouseOffMock({
   readGroup:wholeHouseOff.readGroup,reviewedMembers:wholeHouseOff.reviewedMembers,
-  simulateWrite,now:clock,verifyRegistryAtDispatch,
+  simulateWrite,now:clock,verifyRegistryAtDispatch:guard,
  }):null;
  const wholeTokens=new Map();
  return Object.freeze({

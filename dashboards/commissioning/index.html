@@ -4,20 +4,20 @@
 <style>
 :root{color-scheme:light dark;font:16px system-ui,-apple-system,sans-serif}
 body{margin:0;padding:16px;background:transparent;color:CanvasText}
-section{padding:16px;border:1px solid #8886;border-radius:14px;max-width:700px}
-h2{font-size:1.15rem;margin:0 0 12px}p{line-height:1.45}
+section{padding:22px;border:1px solid #8886;border-radius:20px;max-width:760px;box-shadow:0 8px 25px #0002;background:color-mix(in srgb,Canvas 96%,#559aff 4%)}
+h2{font-size:1.35rem;margin:0 0 12px}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #378cfa}p{line-height:1.45}
 small,.muted{opacity:.75}button,input,select{font:inherit}
 button{padding:11px;border:1px solid #888;border-radius:10px;cursor:pointer}
 button:disabled{cursor:not-allowed;opacity:.4}
 nav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
 label{display:block;margin:12px 0 5px}
 input,select{box-sizing:border-box;width:100%;padding:9px;border-radius:8px;border:1px solid #888}
-#lamp{font-size:2rem;padding:12px}#status{font-weight:600}
-.warning{border-left:3px solid #d58c00;padding-left:10px}
+#lamp{font-size:2.7rem;text-align:center;padding:22px;background:#4688ee19;border-radius:14px;margin:14px 0}#status{font-weight:600}
+.warning{border-left:4px solid #d58c00;padding:12px;background:#d58c0018;border-radius:8px}#deviceInfo{padding:12px;border:1px solid #8885;border-radius:10px}#record{overflow-wrap:anywhere}
 </style></head><body><section>
 <h2>Идентификация светильника</h2>
 <p class="warning"><strong>Учебный режим:</strong> эта страница не вызывает сервисы Home Assistant и не переключает реальные устройства.</p>
-<label for="entity">Проверяемая сущность</label>
+<label for="search">Поиск по устройствам</label><input id="search" placeholder="Название, ID или интеграция"><label for="entity">Проверяемая сущность</label>
 <select id="entity"><option value="light.koridor_2">light.koridor_2 — кандидат</option></select>
 <p class="muted" id="catalogStatus">Загрузка снимка реестра…</p>
 <p class="muted" id="deviceInfo">Интеграция и помещение: ожидают загрузки</p>
@@ -29,14 +29,14 @@ input,select{box-sizing:border-box;width:100%;padding:9px;border-radius:8px;bord
 <div id="lamp" role="img" aria-label="Состояние имитации">○</div>
 <div id="status" role="status" aria-live="polite">Ожидает запуска</div>
 <nav><button id="start">Идентифицировать (демо)</button><button id="stop" disabled>Стоп</button><button id="approve" disabled>Подтвердить идентификацию</button></nav>
-<p class="muted" id="record">Подтверждения нет. Данные не отправляются в AI или Home Assistant.</p>
+<button id="export" disabled>Скачать запись для Raspberry Pi</button><p class="muted" id="record">Подтверждения нет. Данные не отправляются в AI или Home Assistant.</p>
 <small>Подтверждение сохраняется только в браузере этого устройства и не является разрешением AI на управление. Реальное мигание потребует отдельной интеграции и разрешения.</small>
 </section><script>
 (()=>{
 "use strict";
 const $=id=>document.getElementById(id);
 let timer=null,started=0,finished=false;
-let inventory=[];
+let inventory=[];let lastRecord=null;
 fetch("/local/lighting-commissioning/catalog.json",{cache:"no-store"})
  .then(r=>{if(!r.ok)throw Error("catalog_unavailable");return r.json();})
  .then(data=>{
@@ -60,6 +60,15 @@ const showSelected=()=>{
  $("start").disabled=$("entity").value!=="light.koridor_2";
 };
 $("entity").addEventListener("change",showSelected);
+$("search").addEventListener("input",()=>{
+ const q=$("search").value.toLocaleLowerCase("ru-RU").trim();
+ const select=$("entity"),current=select.value;select.replaceChildren();
+ for(const item of inventory.filter(v=>(v.entity_id+" "+v.name+" "+v.platform).toLocaleLowerCase("ru-RU").includes(q))){
+  const opt=document.createElement("option");opt.value=item.entity_id;opt.textContent=item.entity_id+" — "+item.name;select.appendChild(opt);
+ }
+ if([...select.options].some(o=>o.value===current))select.value=current;
+ showSelected();
+});
 const finish=(msg)=>{
  if(timer!==null){clearInterval(timer);timer=null;}
  $("lamp").textContent="○";$("status").textContent=msg;
@@ -87,15 +96,22 @@ $("approve").addEventListener("click",()=>{
   $("status").textContent="Выбери помещение и заполни описание.";return;
  }
  const record={entityId:$("entity").value,room:$("room").value,name:$("name").value.trim(),reviewMode:"browser_demo_only",confirmedAt:new Date().toISOString()};
- try{localStorage.setItem("ha-lighting-review-demo-v1",JSON.stringify(record));
+ try{localStorage.setItem("ha-lighting-review-demo-v1",JSON.stringify(record));lastRecord=record;$("export").disabled=false;
   $("record").textContent="Локальная запись сохранена: "+record.entityId+" — "+record.name+" ("+record.room+"). НЕ передано в HA/AI.";
   $("approve").disabled=true;
  }catch{$("status").textContent="Браузер запретил локальное сохранение.";}
 });
+$("export").addEventListener("click",()=>{
+ if(!lastRecord)return;
+ const blob=new Blob([JSON.stringify(lastRecord,null,2)],{type:"application/json"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+ a.download="lighting-review-"+lastRecord.entityId+".json";a.click();
+ setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+});
 try{
  const raw=localStorage.getItem("ha-lighting-review-demo-v1");
  if(raw){const data=JSON.parse(raw);if(data?.entityId==="light.koridor_2"){
-  $("record").textContent="Ранее сохранено в этом браузере: "+data.name+" ("+data.room+"). НЕ утверждено в HA/AI.";
+  lastRecord=data;$("export").disabled=false;$("record").textContent="Ранее сохранено в этом браузере: "+data.name+" ("+data.room+"). НЕ утверждено в HA/AI.";
  }}
 }catch{}
 })();

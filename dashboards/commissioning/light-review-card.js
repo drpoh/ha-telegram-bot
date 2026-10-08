@@ -9,6 +9,7 @@ class LightingReviewCard extends HTMLElement {
     this._selected="light.koridor_2";
     this._catalog=[];
     this._busy=false;
+    this._blinkStop=false;
     const root=this.attachShadow({mode:"open"});
     root.innerHTML=`
       <style>
@@ -36,14 +37,24 @@ class LightingReviewCard extends HTMLElement {
         <label for="device">Светильник</label><select id="device"></select>
         <div class="info"><div id="name" class="name"></div><div id="id" class="meta"></div><div id="meta" class="meta"></div><div id="state" class="state"></div></div>
         <div class="buttons"><button class="primary" id="on">Включить</button><button id="off">Выключить</button></div>
+        <div class="buttons"><button id="identify">Идентифицировать · 8 с</button><button id="stop" disabled>Стоп</button></div>
+        <label for="zone">Зона / помещение</label>
+        <select id="zone"><option value="">Выбрать зону</option><option value="kukhnia">Кухня</option><option value="koridor">Коридор</option><option value="koridor_1_etazh">Коридор 1 этаж</option><option value="sauna">Ванная и сауна</option><option value="gostinaia">Гостиная</option><option value="tambur">Тамбур</option><option value="spalnia">Спальня</option><option value="other">Другая зона</option></select>
+        <label for="description">Описание и назначение</label>
+        <input id="description" maxlength="120" placeholder="Например: LED-подсветка потолка"/>
+        <button id="save">Сохранить предварительную регистрацию</button>
+        <div id="registration" class="subtitle"></div>
         <div class="notice" id="policy">Управление доступно для обычных светильников. Группы, индикаторы, экраны, приборы и недоступные устройства исключаются.</div>
         <div id="result" class="subtitle" role="status" aria-live="polite"></div>
       </div></ha-card>`;
     this._root=root;
     root.getElementById("filter").addEventListener("input",()=>this._options());
-    root.getElementById("device").addEventListener("change",e=>{this._selected=e.target.value;this._render();});
+    root.getElementById("device").addEventListener("change",e=>{this._selected=e.target.value;this._loadReview();this._render();});
     root.getElementById("on").addEventListener("click",()=>this._operate("turn_on"));
     root.getElementById("off").addEventListener("click",()=>this._operate("turn_off"));
+    root.getElementById("identify").addEventListener("click",()=>this._identify());
+    root.getElementById("stop").addEventListener("click",()=>{this._blinkStop=true;});
+    root.getElementById("save").addEventListener("click",()=>this._saveReview());
     fetch("/local/lighting-commissioning/catalog.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("catalog");return r.json();}).then(v=>{
       this._catalog=Array.isArray(v.entities)?v.entities.filter(x=>typeof x.entity_id==="string"&&x.entity_id.startsWith("light.")):[];
       this._options();this._render();
@@ -61,7 +72,7 @@ class LightingReviewCard extends HTMLElement {
     }
     if(available.some(x=>x.entity_id===old))sel.value=old;
     this._selected=sel.value||"";
-    this._render();
+    this._loadReview();this._render();
   }
   _render(){
     const r=this._root;if(!r)return;
@@ -78,6 +89,10 @@ class LightingReviewCard extends HTMLElement {
       :"Только просмотр: устройство недоступно, не подтверждено как обычный светильник либо исключено из безопасного управления.";
     r.getElementById("on").disabled=!authorized;
     r.getElementById("off").disabled=!authorized;
+    r.getElementById("identify").disabled=!authorized || id!=="light.koridor_2";
+    r.getElementById("stop").disabled=!this._busy;
+    r.getElementById("device").disabled=this._busy;
+    r.getElementById("filter").disabled=this._busy;
   }
   _eligible(entry,state){
     if(!entry || entry.disabled || !state || !["on","off"].includes(state.state))return false;
@@ -99,7 +114,56 @@ class LightingReviewCard extends HTMLElement {
     }catch(e){this._root.getElementById("result").textContent="Ошибка управления: "+String(e?.message||e);}
     finally{this._busy=false;this._render();}
   }
-  getCardSize(){return 5;}
+  _loadReview(){
+    const id=this._selected,r=this._root;
+    let record=null;
+    try{record=JSON.parse(localStorage.getItem("ha-commissioning-review-"+id)||"null");}catch{}
+    r.getElementById("zone").value=record?.zone||"";
+    r.getElementById("description").value=record?.description||"";
+    r.getElementById("registration").textContent=record?"Сохранено в этом браузере · ожидает физической проверки и импорта в Pi":"Ещё не зарегистрировано";
+  }
+  _saveReview(){
+    const id=this._selected,zone=this._root.getElementById("zone").value;
+    const description=this._root.getElementById("description").value.trim();
+    if(!this._catalog.some(x=>x.entity_id===id)||!zone||!description){
+      this._root.getElementById("registration").textContent="Выбери устройство, зону и заполни описание.";return;
+    }
+    try{
+      localStorage.setItem("ha-commissioning-review-"+id,JSON.stringify({
+        entityId:id,zone,description,reviewMode:"manual_browser_review",
+        ai_authorized:false,physical_verified:false,savedAt:new Date().toISOString()
+      }));
+      this._root.getElementById("registration").textContent="Сохранено в браузере. Пока не передано в Pi и не изменяет Home Assistant.";
+    }catch{this._root.getElementById("registration").textContent="Не удалось сохранить в браузере.";}
+  }
+  async _identify(){
+    const id=this._selected,entry=this._catalog.find(x=>x.entity_id===id);
+    // First real commissioning trial is explicitly restricted to the tested corridor light.
+    if(this._busy||id!=="light.koridor_2"||!this._eligible(entry,this._hass?.states?.[id]))return;
+    const initial=this._hass.states[id].state;
+    if(!window.confirm("Мигать подсветкой коридора light.koridor_2 до 8 секунд? Это физически переключит свет. Исходное состояние будет восстановлено по возможности."))return;
+    this._busy=true;this._blinkStop=false;this._render();
+    const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+    const start=Date.now();
+    let previous=initial;
+    try{
+      for(let i=0;i<4;i++){
+        if(this._blinkStop||Date.now()-start>=8000)break;
+        const next=previous==="on"?"off":"on";
+        await this._hass.callService("light",next==="on"?"turn_on":"turn_off",{entity_id:id});
+        previous=next;
+        await wait(Math.min(2000,Math.max(0,8000-(Date.now()-start))));
+      }
+    }catch(e){this._root.getElementById("result").textContent="Сбой теста: "+String(e?.message||e);}
+    finally{
+      try{
+        await this._hass.callService("light",initial==="on"?"turn_on":"turn_off",{entity_id:id});
+        this._root.getElementById("result").textContent="Проверка завершена; команда восстановления исходного состояния отправлена. Проверь свет физически.";
+      }catch{this._root.getElementById("result").textContent="ВНИМАНИЕ: восстановление состояния не удалось. Проверь свет вручную.";}
+      this._busy=false;this._blinkStop=false;this._render();
+    }
+  }
+  getCardSize(){return 9;}
 }
 if(!customElements.get("lighting-review-card"))customElements.define("lighting-review-card",LightingReviewCard);
 window.customCards=window.customCards||[];

@@ -177,3 +177,9 @@ Expanded explicit room-wide parser to recognize «все лампы» and «вс
 - Hardened isolated `confirmed-action-gate.mjs`: mocked/live read-only precondition replies must report **exact expected entity_id**, valid `on/off` state, otherwise no authorization. Avoid trusting a bare state from a different or anonymous device. It is still not connected to live Telegram execution.
 - Added four hostile state-response cases (foreign identity, missing identity, unknown/unavailable state). Focused confirmation gate + queue tests **8/8 passed**; full standard `npm test`: **44 isolated files, 251 assertions passed, 0 failed**, exit 0. Code commits `66e6590`, `ac94cda` pushed.
 - Outstanding before critical authorization: derive `allowedEntityIds` from independently reviewed HA scope rather than supplied arrays, apply time-bounded re-verification and audit at execution, ensure policy configuration is trusted, test actor/token expiry and malicious LLM paths end-to-end, perform Gate C failure injection, and obtain operator sign-off on HA lighting classification. Production v2 unchanged; real HA control not invoked.
+
+## 2026-10-08 — Sandbox-only backup proof of concept
+
+- Added `src/backup/fixture-sqlite.mjs`, test-only SQLite consistent `.backup` within an explicit sandbox, integrity checks, SHA-256 and schema version manifest, no overwrite/outside-path/symlinked-source. `test/fixture-backup.test.mjs` tests these invariants with disposable SQLite files. Commits `e55bf0d`, `6cb2798`, `ef1241d`.
+- Focused **1/1** and standard `npm test` **45 files, 252 assertions, 0 failed**, exit 0. Real production DB not backed up, no restore/schedule/encryption/remote storage; existing bot and HA unchanged.
+- Next: sandbox-only restore rehearsal and hardened manifest checks. Production backup/restore, secret handling and automated schedules require separate owner approval. Gate B remains open.

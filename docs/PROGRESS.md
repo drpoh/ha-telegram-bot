@@ -87,7 +87,7 @@ OBSERVE → REASON → DECIDE → POLICY CHECK → ACT → VERIFY → REMEMBER
 
 ## Test status
 
-**Historical checkpoint: 137 / 137. Latest verified full run: 223 / 223 (2026-10-08, read-only verified area lighting chain).**
+**Historical checkpoint: 137 / 137. Latest verified full run: 228 / 228 (2026-10-08, agent area guard integration).**
 
 Current automated coverage includes:
 

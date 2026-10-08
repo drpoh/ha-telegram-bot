@@ -40,6 +40,8 @@ import { completeDecisionAudit, failDecisionAudit, recordDecisionPrecondition, r
 import { checkActionPreconditions, checkContextPreconditions } from "../decision/preconditions.mjs";
 import { traceDecision } from "../decision/trace.mjs";
 import { checkRequestScope } from "../decision/request-scope.mjs";
+import { checkAgentAreaLightScope } from "../decision/agent-area-guard.mjs";
+import { fileURLToPath } from "node:url";
 import { checkBathroomLightAction } from "../decision/bathroom-light-guard.mjs";
 import { getOperationalContextForEntity } from "../memory/operational.mjs";
 import {
@@ -47,6 +49,7 @@ import {
   observeBehaviorAction,
 } from "../learning/corrections.mjs";
 
+const LOCAL_LIGHTING_MAP = fileURLToPath(new URL("../../config/lighting-classification.local.json", import.meta.url));
 const MAX_AGENT_STEPS = 10;
 
 export function shouldObserveBehaviorAction(source, verificationStatus) {
@@ -213,7 +216,14 @@ export async function askHomeAssistant(
                 callTool: (name, args) => callHA(name, args),
               })
             : { allowed: false, status: "request_scope_blocked" };
-          const authorized = enforcement.authorized && scope.allowed && bathroomGuard.allowed;
+          const areaGuard = scope.allowed && bathroomGuard.allowed
+            ? await checkAgentAreaLightScope({
+                userText, toolName: call.name, args: call.args || {},
+                configPath: LOCAL_LIGHTING_MAP,
+                callTool: (name, args) => callHA(name, args),
+              })
+            : { allowed: false, status: "previous_scope_blocked" };
+          const authorized = enforcement.authorized && scope.allowed && bathroomGuard.allowed && areaGuard.allowed;
           const decisionAudit = evaluatedShadow
             ? rememberDecisionAudit({
                 shadow: evaluatedShadow,
@@ -243,6 +253,7 @@ export async function askHomeAssistant(
             if (
               scope.allowed &&
               bathroomGuard.allowed &&
+              areaGuard.allowed &&
               evaluatedShadow?.outcome === "confirm" &&
               actor?.userId != null &&
               actor?.chatId != null
@@ -259,8 +270,8 @@ export async function askHomeAssistant(
 
             result = {
               blocked: true,
-              outcome: !scope.allowed ? "request_scope_blocked" : !bathroomGuard.allowed ? "bathroom_scope_blocked" : evaluatedShadow?.outcome,
-              reason: !scope.allowed ? "Tool target exceeds the known single-device request" : !bathroomGuard.allowed ? bathroomGuard.status : enforcement.reason,
+              outcome: !scope.allowed ? "request_scope_blocked" : !bathroomGuard.allowed ? "bathroom_scope_blocked" : !areaGuard.allowed ? "area_scope_blocked" : evaluatedShadow?.outcome,
+              reason: !scope.allowed ? "Tool target exceeds the known single-device request" : !bathroomGuard.allowed ? bathroomGuard.status : !areaGuard.allowed ? areaGuard.status : enforcement.reason,
               policy: evaluatedShadow?.policy,
               pending_confirmation: pendingConfirmation
                 ? {
@@ -273,6 +284,7 @@ export async function askHomeAssistant(
                   ? "Групповая команда не выполнена: состав устройств ещё не подтверждён. Укажите одно устройство или помещение за раз."
                   : "Действие не выполнено: устройство не соответствует исходному запросу.") :
                 !bathroomGuard.allowed ? "Действие не выполнено: свет ванной или его принадлежность помещению не подтверждены." :
+                !areaGuard.allowed ? "Групповое управление светом заблокировано: состав помещения или разрешённые устройства не подтверждены." :
                 evaluatedShadow?.outcome === "confirm"
                   ? pendingConfirmation
                     ? "Действие не выполнено. Подтвердите: да или отмена."

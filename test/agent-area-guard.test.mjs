@@ -75,3 +75,13 @@ test('unresolved plural and mixed-device requests fail closed without MCP calls'
  }
  assert.deepEqual(calls,[]);
 });
+
+test('whole-home lighting requests do not fall through to single-entity actions',async()=>{
+ const calls=[];
+ const callTool=async(name)=>{calls.push(name);throw Error('unexpected read')};
+ for(const userText of ['Погаси свет везде','Выключи освещение во всей квартире','Выключи по всему дому свет']){
+  const r=await guard({userText,toolName:'ha_call_service',args,callTool});
+  assert.deepEqual([r.allowed,r.status],[false,'unresolved_room_wide_intent'],userText);
+ }
+ assert.deepEqual(calls,[]);
+});

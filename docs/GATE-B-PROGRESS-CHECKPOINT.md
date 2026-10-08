@@ -18,3 +18,7 @@ Keep Home Assistant Green and the existing Telegram bot v2 fully autonomous/func
 
 ## Decision and next concrete step
 **Gate B OPEN — no live v3 actions.** Next implement isolated current-registry-snapshot normalization and change-digest verification, with tests for Browser Mod removals, changed names, effective area inheritance, and whole-house group member mutation. Preserve fail-closed behavior; do not grant on a successful offline test. Continue trusted ingress and owner policy review only after these regressions are stable.
+
+## Registry drift proof — offline implementation
+
+Added pure `v3-registry-drift-check.mjs` to normalize `light.*` entity registry identity (name, platform, disabled flag), effective area with device inheritance, and exact HA Group `light.ves_svet` membership into a deterministic SHA-256 evidence fingerprint. Snapshot verification denies missing expected pins, changes in names/areas/availability exclusions, removals of display-only Browser Mod pseudo-lights, and group member changes; missing device references, duplicate lights, invalid area IDs, wrong group platform and incomplete inputs fail closed. **This is not wired to a live authorization path and never returns a grant.** The module currently expects caller-supplied registry arrays and separate group members: verifying trusted authenticated acquisition, freshness and independent approvals is still required before production use.

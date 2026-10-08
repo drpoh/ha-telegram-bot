@@ -5,7 +5,8 @@ import {execFileSync,spawn} from "node:child_process";
 
 const files=readdirSync("test").filter(f=>f.endsWith(".test.mjs")).sort();
 const source=resolve("data/bot.db");
-const schema=execFileSync("sqlite3",["-readonly",source,".schema"],{encoding:"utf8"});
+const schema=execFileSync("sqlite3",["-readonly",source,".schema"],{encoding:"utf8"})
+ .split("\n").filter(line=>!line.includes("CREATE TABLE sqlite_sequence")).join("\n");
 if(!schema.includes("CREATE TABLE")) throw Error("SQLite schema unavailable");
 const root=mkdtempSync(join(tmpdir(),"ha-bot-test-"));
 let next=0,failed=0,passed=0;

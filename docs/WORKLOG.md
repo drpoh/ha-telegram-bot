@@ -232,3 +232,9 @@ Expanded explicit room-wide parser to recognize «все лампы» and «вс
 - Further Gate C work remains: strict timeouts for hung policy/MCP calls, cancellation semantics, immutable request/policy provenance, audit events and cross-process confirmation safety. Full regression result to be recorded separately.
 
 Gate C extended checkpoint: full standard `npm test` succeeded on Raspberry Pi — **49 isolated files, 264 assertions passed, 0 failed, exit 0**. Remaining P0 limitations unchanged: no trusted production policy provenance or signed-off device mapping; mock-only tests do not authorize deployment.
+
+## 2026-10-08 — Gate C timeout and cancellation protections
+
+- `queueConfirmedAction` now bounds the asynchronous authorizer with a 3000-ms default timeout (configurable up to 30000 ms in isolated tests); exceptions/timeout are fail-closed and do not call the executor. Commit `ec9c86c`.
+- Expanded Gate C regression: unresolved promise fails closed; cancellation during authorization causes the final token consumption to fail, with **zero writes**. Focused test suite 6/6 passed. Commit `7473204`.
+- **Security caveat:** `Promise.race` times out the queue's wait, **not** the underlying HA-MCP request. The production integration must use cancellable requests/AbortSignal, bounded network calls and trusted actor-specific provenance. No production v2 restart and no real HA service action. Complete full-suite result to be recorded after test run.

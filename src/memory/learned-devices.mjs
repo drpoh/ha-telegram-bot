@@ -1,7 +1,7 @@
 import { execFileSync } from "node:child_process";
 import { resolve } from "node:path";
 
-const DB_PATH = resolve("data/bot.db");
+const DB_PATH = resolve(process.env.HA_BOT_DB_PATH || "data/bot.db");
 
 function sqlString(value) {
   if (value === null || value === undefined) {

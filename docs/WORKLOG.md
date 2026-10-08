@@ -115,3 +115,9 @@ Expanded explicit room-wide parser to recognize «все лампы» and «вс
 - Fail-closed containment: `src/scenes/tools.mjs` now blocks `ai_scene_run` before area resolution and actuation, pending a shared per-action policy/verification path. This intentionally disables AI scene runs **in the v3 branch only**; existing v2 runtime not restarted.
 - Added isolated regression in `test/ai-scenes.test.mjs`: 6/6 focused scene tests passed. Raspberry Pi full `npm test`: **234/234 passed**, 0 failed. Commits `71bf304`, `d5abb60` pushed; no real HA actuation.
 - Not complete: no end-to-end full-agent confirmation harness; no scene action validation / transactional partial-failure policy; no reviewed lighting map. No deployment authorization. Next implement staged scene plan + independent authorization for each service call before re-enabling execution.
+
+## 2026-10-08 — Scene mutation authorization containment
+
+- Audited `ai_scene_capture` and `ai_scene_delete`: these are persistent scene mutations outside the agent's common authorization pathway. In the v3 branch, `src/scenes/tools.mjs` now fails closed for capture, run and delete; list remains read-only. Deleted unreachable playback code and imports from the dispatch module. Existing storage/manager source preserved for later reviewed design.
+- Test added for capture/delete blocking, plus existing run-block test. Focused scene suite **7/7**, full Raspberry Pi `npm test` **235/235**, 0 failures. Code commits `8fce3fc`, `745e0d4` pushed. No runtime restart, no HA actuation; currently deployed v2 unchanged.
+- Next: design a pure read-only scene action planner with exact scope validation; ensure every future execution is mediated by shared Policy Engine, preconditions, confirmation, verify and audit. Review whether read-only scene list uses a permissive area resolver before v3 deployment. Actual home lighting mapping remains unapproved. Gate B remains open.

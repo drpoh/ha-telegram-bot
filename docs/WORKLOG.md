@@ -212,3 +212,9 @@ Expanded explicit room-wide parser to recognize «все лампы» and «вс
 - Added malicious/mismatched request fixtures. First focused test exposed an expected case difference (`Комната` vs `комната`); corrected exact case-insensitive comparison. Focused test **1/1 passes** after fix. Code commits `4d0d9ff`, `5ac64ba`, `23e69b4`.
 - This does NOT establish cryptographic provenance of `userText` or `policy`; they must be bound to immutable actor-specific confirmation records by the eventual production integration. The module is still sandbox-only, and no live actuation or production restart occurred.
 - Next gate: isolated verification contract and actor-scoped queue integration; test failures/pending service response and HA state readback. Never treat a returned `success:true` as verified state.
+
+## 2026-10-08 — Start isolated post-service verification stage
+
+- Added `src/decision/confirmed-result-verification.mjs` (test-only): a successful HA-MCP service response is insufficient; require explicit `success:true`, exact entity identity and readback of expected on/off state. Errors, stale state, wrong/missing identity and failed read are never marked verified.
+- Added `test/confirmed-result-verification.test.mjs` with positive and negative mocked cases. Focused **1/1 passed**; standard `npm test` **47 isolated files / 257 assertions passed / 0 failed**, exit 0. Commits `e0cc84a`, `8027e34`.
+- This starts the next Gate B/C isolated verification stage; not connected to live queue. User-text/area fixture stage previously passed 256/256. Still pending immutable actor/token binding to original request and independently trusted policy configuration before production permission. No HA actuation or service restart.

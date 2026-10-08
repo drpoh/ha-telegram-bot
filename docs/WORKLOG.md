@@ -275,3 +275,5 @@ Full regression after mock-only centralized v3 dispatcher: **53 isolated test fi
 - Added isolated `src/decision/v3-intent-ledger.mjs`: actor/chat-scoped unpredictable token, deep-copied original request and exact action, 60s max expiry, replacement invalidation, cancellation and single consume. AI model does not receive authority to create trusted records in the intended architecture.
 - Added `test/v3-intent-ledger.test.mjs` for mutation resistance, cross-actor denial, replay rejection, expiry, replacement and cancellation. Focused **2/2 passed**. Commits `1f0d932`, `579a887`.
 - **Not yet integrated** with the mock dispatcher or trusted Telegram ingress. Constructor/issuer authority, persistence across restarts, crash consistency, independently reviewed policy provenance, logging and replay isolation remain blocking. No real service calls or restart performed.
+
+Regression checkpoint for isolated v3 intent ledger: **54 test files, 277 assertions passed, 0 failed**, full `npm test` exit 0 on Raspberry Pi. Production state and HA remain unchanged.

@@ -36,7 +36,9 @@ export function createV3WholeHouseOffMock({readGroup,simulateWrite,reviewedMembe
    if(consumed.action?.args?.entity_id!==TARGET || consumed.action?.args?.service!=="turn_off")
     return {status:"denied",reason:"action_changed"};
    try{
-    await simulateWrite("ha_call_service",{...consumed.action.args});
+    const result=await simulateWrite("ha_call_service",{...consumed.action.args});
+    if(result?.success!==true && result?.structuredContent?.success!==true)
+     return {status:"failed",reason:"mock_write_not_accepted"};
     return {status:"simulated",memberCount:members.length};
    }catch{return {status:"failed"};}
   },

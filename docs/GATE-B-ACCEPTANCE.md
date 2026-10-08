@@ -105,3 +105,7 @@ Added `v3-whole-house-off-mock.mjs` as a separate offline-only single-use proof 
 ## 2026-10-08 — Whole-house OFF joined to offline ingress
 
 Integrated the previously separate whole-house OFF simulation into `createIsolatedV3JoinedChain` behind an explicit **test-only** `wholeHouseOff.enabled` dependency. An authenticated synthetic Telegram ingress must provide the original «Выключи весь свет» message; the requested action must address precisely `light.ves_svet` with `light.turn_off`. Confirmation is actor/token-bound, checks exact reviewed 14-member membership before a simulated write, denies Yandex `light.ves_svet_2`, changes, missing fixture consent and replay. This is not a production-ready approval loader, does not validate actual Telegram transport authenticity, and is not connected to live MCP writes or working bot. Full isolated suite: **73 files, 321 passing assertions, zero failed, exit 0**. Gate B remains OPEN.
+
+## 2026-10-08 — Joined whole-house cancellation and failure results
+
+Added an adversarial joined-path test where confirmation is in flight during asynchronous group lookup, another confirmation races it, and cancellation occurs before lookup completes. No simulated write occurs. The mock write adapter also now rejects explicitly unsuccessful service results rather than marking them simulated. Focused whole-house tests 6/6; isolated regression **73 files, 323 passing assertions, 0 failed, exit 0**. This remains an offline fixture, not a protected operator-approved production command; Gate B OPEN.

@@ -10,7 +10,7 @@ test("whole house off targets exact Home Assistant group only once",async()=>{
   simulateWrite:async(name,args)=>{
    assert.equal(name,"ha_call_service");
    assert.deepEqual(args,{domain:"light",service:"turn_off",entity_id:"light.ves_svet"});
-   writes++;
+   writes++;return {success:true};
   },
  });
  const issued=mock.issue({...actor,text:"Выключи весь свет"});

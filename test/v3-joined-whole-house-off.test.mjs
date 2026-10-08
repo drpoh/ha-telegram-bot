@@ -46,3 +46,35 @@ test("missing group approval and changes in membership fail closed",async()=>{
   assert.equal(writes,0);
  }
 });
+
+
+test("concurrent confirmations and cancellation during membership lookup never replay",async()=>{
+ let writes=0,resolveRead;
+ const readWait=new Promise(resolve=>{resolveRead=resolve;});
+ const chain=createIsolatedV3JoinedChain({
+  clock:()=>1000000,telegramIngress:createV3TelegramIngressFixture({allowedUserId:55}),
+  policy:{entities:{}},configPath:"/unused",readTool:async()=>{},
+  wholeHouseOff:{enabled:true,reviewedMembers:members,readGroup:async()=>readWait},
+  simulateWrite:async()=>{writes++;return {success:true};},
+ });
+ const issued=chain.issueFromTransport({ctx,action});
+ const first=chain.confirm({...issued.actor,token:issued.token});
+ assert.equal((await chain.confirm({...issued.actor,token:issued.token})).status,"missing");
+ assert.equal(chain.cancel(issued.actor),true);
+ resolveRead({entity_id:"light.ves_svet",platform:"group",attributes:{entity_id:members}});
+ assert.equal((await first).status,"missing");
+ assert.equal(writes,0);
+});
+test("nonaccepted mock write is a failure, never reported as executed",async()=>{
+ const chain=createIsolatedV3JoinedChain({
+  clock:()=>1000000,telegramIngress:createV3TelegramIngressFixture({allowedUserId:55}),
+  policy:{entities:{}},configPath:"/unused",readTool:async()=>{},
+  wholeHouseOff:{enabled:true,reviewedMembers:members,readGroup:async()=>({
+   entity_id:"light.ves_svet",platform:"group",attributes:{entity_id:members},
+  })},
+  simulateWrite:async()=>({success:false,error:"rejected"}),
+ });
+ const issued=chain.issueFromTransport({ctx,action});
+ assert.equal((await chain.confirm({...issued.actor,token:issued.token})).status,"failed");
+ assert.equal((await chain.confirm({...issued.actor,token:issued.token})).status,"missing");
+});

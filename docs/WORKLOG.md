@@ -291,3 +291,9 @@ Regression checkpoint for isolated v3 intent ledger: **54 test files, 277 assert
 - **Still OPEN:** trusted Telegram ingress as the only ledger issuer, approved policy source/configuration, positive read-only HA discovery fixture, tested in-flight cancellation/race, single-use authorization atomically across process crashes, and production gate wiring. Do not authorize live HA actuation.
 
 Full regression checkpoint after approved strategy correction and ledger-bound fixture: **55 isolated files, 279 assertions passed, 0 failures**, `npm test` exit 0 on Raspberry Pi. Gate B stays OPEN: the new fixture has negative tests only; trusted ingestion, positive scoped fixture and concurrency/cancellation tests still required.
+
+## 2026-10-08 — Gate B ledger-bound successful mock execution
+
+- Expanded `test/v3-ledger-bound-mock.test.mjs` with a successful single-light synthetic area fixture, actor/token-scoped ledger authorization, two concurrent confirmations, replay rejection, cancellation and exact readback. Only one simulated write occurs. Focused **3/3 passed**.
+- First assertion required second concurrent request to report `missing`, but valid alternative denial was `denied` when first request already changed the state; corrected to assert the invariant (one verified result, no second write). Commits `f1649be`, `b9d98db`.
+- Gate B remains OPEN: only mock execution has been tested, while Telegram ingress ownership and operator-approved policy/classification provenance, cancellation during live lookup and real read-only acceptance still need proof. No physical HA action taken.

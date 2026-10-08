@@ -53,3 +53,9 @@ Remaining: verify reproducibility on a truly clean dependency installation/CI ru
 ## 2026-10-08 — Explicit offline test environment
 
 The isolated test runner now constructs a minimal child-process environment rather than copying `process.env`. It supplies placeholder Telegram and Gemini credentials, a loopback MCP URL at an unreachable port, isolated HOME/TMPDIR and a fresh schema-only SQLite database per test file. Raspberry Pi 3 / Node 20.19.2 isolated run: **69 files, 310 passing assertions, 0 failed, exit 0**. It still relies on existing installed npm modules; clean-install/CI reproducibility remains unverified. No production deployment, live HA actions or authorization grants. Gate B OPEN.
+
+## 2026-10-08 — Offline policy content digest
+
+The offline loader now optionally accepts a caller-supplied lowercase SHA-256 digest and compares it to the exact bytes read from its opened file descriptor using timing-safe comparison. It exposes the observed SHA-256 for subsequent out-of-band owner review. Invalid or mismatched digests fail closed. **Digest matching is not approval** and the caller may not source the expected digest from an LLM, Telegram or Assist message. No production path uses this as a grant.
+
+Verification: loader-specific 5/5 passed; isolated suite 69 test files, 311 assertions passed, 0 failed files, exit 0, dummy credentials and unreachable MCP. Remaining: trusted approved digest store, parent directory and directory-swap defenses, owner identity and authorization linkage. Gate B OPEN.

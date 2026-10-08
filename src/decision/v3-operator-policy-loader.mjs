@@ -1,10 +1,11 @@
 import {realpath,lstat,open} from "node:fs/promises";
 import {constants} from "node:fs";
+import {createHash,timingSafeEqual} from "node:crypto";
 import {isAbsolute,resolve,relative,sep} from "node:path";
 import {validateV3OperatorPolicy} from "./v3-operator-policy-schema.mjs";
 
 // Offline only. Parsing a policy file never authorizes it for execution.
-export async function readV3PolicyFile({directory,filename}={}){
+export async function readV3PolicyFile({directory,filename,expectedSha256}={}){
  const deny=(reason)=>({ok:false,reason,policy:{default:"deny",entities:{}}});
  if(typeof directory!=="string" || !isAbsolute(directory) ||
     typeof filename!=="string" || !/^[a-z0-9][a-z0-9_.-]{0,80}\.json$/.test(filename))
@@ -37,9 +38,16 @@ export async function readV3PolicyFile({directory,filename}={}){
      directoryAfter.dev!==rootStat.dev || directoryAfter.ino!==rootStat.ino ||
      (directoryAfter.mode&0o022)!==0)
    return deny("source_changed");
+  const digest=createHash("sha256").update(bytes).digest();
+  if(expectedSha256!==undefined){
+   if(typeof expectedSha256!=="string" || !/^[a-f0-9]{64}$/.test(expectedSha256))
+    return deny("invalid_digest");
+   if(!timingSafeEqual(digest,Buffer.from(expectedSha256,"hex")))
+    return deny("digest_mismatch");
+  }
   const checked=validateV3OperatorPolicy(JSON.parse(bytes.toString("utf8")));
   if(!checked.valid)return deny(checked.reason);
-  return {ok:true,policy:checked.policy,status:"parsed_not_operator_approved"};
+  return {ok:true,policy:checked.policy,sha256:digest.toString("hex"),status:"parsed_not_operator_approved"};
  }catch{return deny("unreadable_or_invalid");}
  finally{if(handle)await handle.close();}
 }

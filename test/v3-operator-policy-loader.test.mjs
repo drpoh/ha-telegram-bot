@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {mkdtempSync,writeFileSync,symlinkSync,chmodSync,rmSync} from "node:fs";
 import {tmpdir} from "node:os";
+import {createHash} from "node:crypto";
 import {join} from "node:path";
 import {readV3PolicyFile} from "../src/decision/v3-operator-policy-loader.mjs";
 test("local v3 policy loads as parsed but not authorized",async()=>{
@@ -49,4 +50,21 @@ test("reject symlinked policy directory and oversized policy",async()=>{
   writeFileSync(join(root,"policy.json"),"x".repeat(65537),{mode:0o600});
   assert.equal((await readV3PolicyFile({directory:root,filename:"policy.json"})).ok,false);
  }finally{rmSync(link,{force:true});rmSync(root,{recursive:true,force:true});}
+});
+
+test("policy content digest pins exact file bytes but never authorizes",async()=>{
+ const root=mkdtempSync(join(tmpdir(),"v3-policy-"));
+ const bytes=JSON.stringify({version:1,default:"deny",entities:{}});
+ try{
+  writeFileSync(join(root,"policy.json"),bytes,{mode:0o600});
+  const hash=createHash("sha256").update(bytes).digest("hex");
+  const ok=await readV3PolicyFile({directory:root,filename:"policy.json",expectedSha256:hash});
+  assert.equal(ok.ok,true);
+  assert.equal(ok.sha256,hash);
+  assert.equal(ok.status,"parsed_not_operator_approved");
+  assert.equal((await readV3PolicyFile({directory:root,filename:"policy.json",expectedSha256:"0".repeat(64)})).reason,"digest_mismatch");
+  assert.equal((await readV3PolicyFile({directory:root,filename:"policy.json",expectedSha256:"BAD"})).reason,"invalid_digest");
+  writeFileSync(join(root,"policy.json"),bytes+" ",{mode:0o600});
+  assert.equal((await readV3PolicyFile({directory:root,filename:"policy.json",expectedSha256:hash})).reason,"digest_mismatch");
+ }finally{rmSync(root,{recursive:true,force:true});}
 });

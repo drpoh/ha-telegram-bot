@@ -205,3 +205,10 @@ Expanded explicit room-wide parser to recognize «все лампы» and «вс
 - Only supports a **single eligible light in the verified area** and exact confirmed action. It is NOT yet wired into the live bot or generic multi-light confirmation. This avoids silently allowing partial area control or caller-provided lists. The local operator-approved real-house classification is still absent.
 - Focused tests **5/5 passed**; standard full `npm test`: **46 isolated files / 256 passing assertions / 0 failed**, exit 0. Commits `dbb4819`, `33afe50`.
 - Next Gate B: trusted policy source and user request scope binding (not just caller-supplied areaQuery), comprehensive agent simulation and action verification. Gate C and deployment remain blocked. No HA actuation or production restart.
+
+## 2026-10-08 — Bind trusted room light confirmation to explicit user text
+
+- Hardened isolated `trusted-confirmed-area.mjs`: requires the original explicit Russian room-wide light request, exactly matching normalized area name and on/off service. Modified room, reversed service or ambiguous/missing request fails closed before HA-MCP reads. Read-only classification and scope rules remain independent.
+- Added malicious/mismatched request fixtures. First focused test exposed an expected case difference (`Комната` vs `комната`); corrected exact case-insensitive comparison. Focused test **1/1 passes** after fix. Code commits `4d0d9ff`, `5ac64ba`, `23e69b4`.
+- This does NOT establish cryptographic provenance of `userText` or `policy`; they must be bound to immutable actor-specific confirmation records by the eventual production integration. The module is still sandbox-only, and no live actuation or production restart occurred.
+- Next gate: isolated verification contract and actor-scoped queue integration; test failures/pending service response and HA state readback. Never treat a returned `success:true` as verified state.

@@ -1,0 +1,33 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {createLightIdentifyController} from "../src/commissioning/light-identify-controller.mjs";
+const opts={entityId:"light.koridor_2",state:"off",capabilities:["turn_on","turn_off"],nowMs:100};
+test("offline light identify issues bounded sequential steps then restore",()=>{
+ const c=createLightIdentifyController();
+ assert.equal(c.start(opts).reason,"approval_required");
+ assert.equal(c.start({...opts,approved:true}).status,"running");
+ assert.equal(c.start({...opts,approved:true}).reason,"busy");
+ assert.equal(c.poll({nowMs:100}).command.desiredState,"on");
+ assert.equal(c.poll({nowMs:150}).status,"waiting");
+ assert.equal(c.poll({nowMs:2100}).command.desiredState,"off");
+ assert.equal(c.poll({nowMs:4100}).command.desiredState,"on");
+ assert.equal(c.poll({nowMs:6100}).command.desiredState,"off");
+ const r=c.poll({nowMs:8100});
+ assert.equal(r.status,"restore_required");
+ assert.deepEqual(r.command,{entityId:"light.koridor_2",desiredState:"off"});
+ assert.equal(c.poll({nowMs:9000}).reason,"not_running");
+ assert.equal(c.finishRestore({succeeded:true}).status,"restored");
+ assert.equal(c.status().status,"idle");
+});
+test("stop, late poll, and failure require restoration before new run",()=>{
+ const c=createLightIdentifyController();
+ assert.equal(c.start({...opts,approved:true}).ok,true);
+ assert.equal(c.stop().status,"restore_required");
+ assert.equal(c.start({...opts,approved:true}).reason,"busy");
+ assert.equal(c.finishRestore({succeeded:false}).status,"restore_unverified");
+ assert.equal(c.start({...opts,approved:true}).ok,true);
+ assert.equal(c.poll({nowMs:7000}).reason,"missed_schedule");
+ assert.equal(c.finishRestore({succeeded:true}).ok,true);
+ assert.equal(c.start({...opts,approved:true}).ok,true);
+ assert.equal(c.fail().status,"restore_required");
+});

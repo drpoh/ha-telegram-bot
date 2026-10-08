@@ -12,3 +12,7 @@ Never directly overwrite `/config/.storage/lovelace*` or require HA restart. Con
 ## Identification plan (offline prototype)
 
 Pure offline candidate `src/commissioning/light-identify-plan.mjs` plans 2-second toggles for `light.koridor_2` up to 10 seconds, including a final best-effort restore instruction. It never executes a service call, has no timer or stop controller, and is not embedded in the dashboard. A real executor requires operator consent, verified capabilities, exclusive locking, cancellation and failure-safe restoration. Full isolated regression: 75 files, 327 passing assertions, 0 failures.
+
+## Offline identification state machine
+
+Added `src/commissioning/light-identify-controller.mjs`, a pure state machine with no HA client, no actual timers, no auto-executor and no production authorization. It models one exclusive pending identification session for `light.koridor_2`, explicit operator approval parameter, 2-second alternating command descriptions, maximum 10-second deadline, fail/stop transitions requiring a restoration instruction, and no catch-up toggles after scheduling stalls. Restoration is **best effort only**; real timers, authenticated controls, device readback and power-failure recovery are NOT implemented. Existing dashboard remains unchanged. Full isolated suite: 76 test files, 329 passing assertions, 0 failed.

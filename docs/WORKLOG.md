@@ -240,3 +240,9 @@ Gate C extended checkpoint: full standard `npm test` succeeded on Raspberry Pi â
 - **Security caveat:** `Promise.race` times out the queue's wait, **not** the underlying HA-MCP request. The production integration must use cancellable requests/AbortSignal, bounded network calls and trusted actor-specific provenance. No production v2 restart and no real HA service action. Complete full-suite result to be recorded after test run.
 
 Full regression for Gate C timeout/cancel checkpoint: **49 isolated files, 266 assertions passed, zero failed; exit 0** on Raspberry Pi. The production integration remains disabled and no real HA service execution was performed.
+
+## 2026-10-08 â€” Entity rename audit started
+
+- Added pure read-only `src/home/entity-rename-audit.mjs` to detect changed `entity_id` using exact `platform + unique_id` with preserved domain. No fuzzy matching, no automatic changes; ambiguous/missing identities produce unresolved findings.
+- Added isolated `test/entity-rename-audit.test.mjs`: stable identity yields review-only proposal, friendly name-only change is ignored, wrong domain/identity and duplicates fail closed. Focused tests **3/3 passed**; commits `46db7d5`, `1d99506`.
+- Next: trusted HA registry snapshot adapter, dependency impact report for policy/memory/reviewed config and a human-approved migration strategy. Live HA was not modified.

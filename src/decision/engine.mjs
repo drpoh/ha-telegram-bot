@@ -1,4 +1,5 @@
 import { createProposal } from "./types.mjs";
+import { checkVerifiedAreaDecision } from "./verified-area-decision.mjs";
 import { AUTONOMY_LEVELS, evaluatePolicy } from "../policy/engine.mjs";
 
 export const DECISION_OUTCOMES = Object.freeze({
@@ -29,15 +30,24 @@ function outcomeForPolicy(result) {
   }
 }
 
-export function decide(proposalInput = {}, policy = {}) {
+export function decide(proposalInput = {}, policy = {}, { areaEvidence = null } = {}) {
   const proposal = createProposal(proposalInput);
   const policyResult = evaluatePolicy(proposal, policy);
+  const areaScope = areaEvidence === null
+    ? { allowed: true, status: "not_applicable" }
+    : checkVerifiedAreaDecision({
+        ...areaEvidence,
+        toolName: proposal.action,
+        args: proposal.args,
+      });
 
   return {
     proposal,
     policy: policyResult,
-    outcome: outcomeForPolicy(policyResult),
+    areaScope,
+    outcome: areaScope.allowed ? outcomeForPolicy(policyResult) : DECISION_OUTCOMES.DENY,
     executable:
+      areaScope.allowed === true &&
       policyResult.allowed === true &&
       outcomeForPolicy(policyResult) === DECISION_OUTCOMES.APPROVE,
     decidedAt: new Date().toISOString(),

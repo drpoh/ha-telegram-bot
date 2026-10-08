@@ -261,7 +261,9 @@ export async function askHomeAssistant(
                   }
                 : null,
               user_message:
-                !scope.allowed ? "Действие не выполнено: устройство не соответствует исходному запросу." :
+                !scope.allowed ? (scope.status === "multi_target_unresolved"
+                  ? "Групповая команда не выполнена: состав устройств ещё не подтверждён. Укажите одно устройство или помещение за раз."
+                  : "Действие не выполнено: устройство не соответствует исходному запросу.") :
                 evaluatedShadow?.outcome === "confirm"
                   ? pendingConfirmation
                     ? "Действие не выполнено. Подтвердите: да или отмена."

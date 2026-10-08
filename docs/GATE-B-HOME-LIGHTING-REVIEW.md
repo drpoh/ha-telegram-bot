@@ -51,3 +51,6 @@ A separate read-only HA-MCP session queried 17 exact entity IDs with `ha_get_sta
 - First-floor corridor: `light.koridor_1_etazh=off`, `light.koridor_1_etazh_2=off`, `switch.koridor_1_etazh=off`.
 
 Three unavailable entities require independent handling. No states were changed. The audit remains **PENDING OWNER REVIEW** and all whole-room grants remain denied.
+
+## 2026-10-08 — Identity of existing Whole House Light group
+Read-only HA registry identifies light.ves_svet as platform group, entry e0715de4e60cf2dee9336666fec1c17b, area dom. The similarly named light.ves_svet_2 belongs to platform yandex_station. Current HA state of light.ves_svet lists 14 members; preserve the group unchanged. Its membership is observational evidence and not a v3 write grant. Owner review of home-wide scope, unavailable members, and change detection is still required. No HA write executed.

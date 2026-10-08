@@ -136,3 +136,10 @@ Expanded explicit room-wide parser to recognize «все лампы» and «вс
 - Isolated regression `test/scene-live-plan.test.mjs`: 3/3 pass; complete Raspberry Pi `npm test`: **242/242 passed**, 0 failed. Commits `3654982`, `b6b1630` pushed; no HA actuation or v2 restart.
 - Remaining: fixture testing for stale, partial, unavailable, mixed inventories; actual reviewed local mapping must be approved. Plan verification does not constitute execution authorization, and there is no rollout permission.
 - Next: broaden deterministic error/fault-injection tests and integrate common policy/precondition/verification only in isolated harness.
+
+## 2026-10-08 — Scene read-only HA-MCP fault injection
+
+- Added eight simulated failure scenarios to `test/scene-live-plan.test.mjs`: partial inventory, pagination, inconsistent total count, cross-area result, unclassified light, unavailable state, mismatched state entity, and thrown HA-MCP read error.
+- Each scenario is expected to return an entirely rejected plan with zero actions, and test fixtures allow no `ha_call_service` calls. Focused scene-live tests **4/4 passed**; full Raspberry Pi `npm test` **243/243 passed**, 0 failures. Commit `74a9906` pushed.
+- No real HA actuation or v2 restart. Stale timestamp validation and comprehensive mixed-domain scenarios still require their own deterministic tests; fixture test success does not approve the local lighting map or scene execution.
+- Next: verify freshness semantics and test full agent policy/confirmation path in isolation before any deployment. Gate B remains open.

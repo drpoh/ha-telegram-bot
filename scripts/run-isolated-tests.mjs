@@ -7,6 +7,18 @@ const files=readdirSync("test").filter(f=>f.endsWith(".test.mjs")).sort();
 const schema=readFileSync("test/fixtures/bot-schema.sql","utf8");
 if(!schema.includes("CREATE TABLE")) throw Error("SQLite schema unavailable");
 const root=mkdtempSync(join(tmpdir(),"ha-bot-test-"));
+// No production keys or inherited MCP endpoints enter isolated test processes.
+const testEnv={
+ PATH:process.env.PATH || "/usr/bin:/bin",
+ HOME:root,
+ TMPDIR:root,
+ LANG:"C.UTF-8",
+ TELEGRAM_BOT_TOKEN:"offline-test-token",
+ TELEGRAM_ALLOWED_USER_ID:"123456",
+ GEMINI_API_KEY:"offline-test-key",
+ MCP_URL:"http://127.0.0.1:1/mcp",
+ HTTP_PORT:"0",
+};
 let next=0,failed=0,passed=0;
 try{
  const jobs=Array.from({length:3},async()=>{
@@ -17,7 +29,7 @@ try{
    execFileSync("sqlite3",[db],{input:schema,encoding:"utf8"});
    const output=await new Promise((done)=>{
     const child=spawn(process.execPath,["--test",join("test",file)],{
-     env:{...process.env,HA_BOT_DB_PATH:db},stdio:["ignore","pipe","pipe"],
+     env:{...testEnv,HA_BOT_DB_PATH:db},stdio:["ignore","pipe","pipe"],
     });
     let text="";
     child.stdout.on("data",chunk=>text+=chunk);

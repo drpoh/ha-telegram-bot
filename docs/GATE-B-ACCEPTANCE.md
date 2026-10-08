@@ -49,3 +49,7 @@ The test harness's dependency on a production SQLite schema and required dummy e
 The test runner no longer reads the local production `data/bot.db` schema. Its schema-only source is the committed `test/fixtures/bot-schema.sql`, with `ai_scene_entities.scene_id` referencing the current `ai_scenes` table (the local historical database exposed `ai_scenes_old`). Every test file still gets a fresh temporary database and it is removed after the run. On Raspberry Pi 3, Node 20.19.2, using dummy environment variables, unreachable loopback MCP URL and the existing dependency installation, the isolated suite returned **69 test files, 310 passing assertions, zero failed files, exit 0**. No production credentials or HA writes were used.
 
 Remaining: verify reproducibility on a truly clean dependency installation/CI runner, and separate the fixture from any future production schema evolution. Gate B stays OPEN.
+
+## 2026-10-08 — Explicit offline test environment
+
+The isolated test runner now constructs a minimal child-process environment rather than copying `process.env`. It supplies placeholder Telegram and Gemini credentials, a loopback MCP URL at an unreachable port, isolated HOME/TMPDIR and a fresh schema-only SQLite database per test file. Raspberry Pi 3 / Node 20.19.2 isolated run: **69 files, 310 passing assertions, 0 failed, exit 0**. It still relies on existing installed npm modules; clean-install/CI reproducibility remains unverified. No production deployment, live HA actions or authorization grants. Gate B OPEN.

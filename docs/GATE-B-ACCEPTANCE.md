@@ -21,3 +21,7 @@
 5. Re-evaluate Gate B. Gate C and production rollout remain separately gated; live tests and production service changes require explicit consent.
 
 No overall readiness percentage is warranted.
+
+## 2026-10-08 — Verified MCP client interface
+
+Read-only source inspection of `src/mcp/client.mjs` and `src/mcp/tools.mjs` confirms the runtime uses a generic MCP client and exposes `ha_search`, `ha_get_state` and `ha_get_overview` to the model. These do not prove full device-registry membership, stable device IDs and device-to-area mapping. Current production-ready registry adapter remains **unsupported**; do not substitute entity searches. Local operator policy loader and approval remain open. No HA state changes were attempted.

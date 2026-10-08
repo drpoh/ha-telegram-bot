@@ -389,3 +389,8 @@ Full regression after satellite registry capability guard: **67 isolated test fi
 - Added `docs/GATE-B-ACCEPTANCE.md` documenting evidence, outstanding blockers and permissible sequence. No HA actions, private config changes or production restart.
 
 Full regression after strict operator policy schema and Gate B acceptance checklist: **68 isolated files, 306 passing assertions, 0 failed**, `npm test` exit 0 on Raspberry Pi. Gate B remains OPEN due to unresolved trusted HA registry and operator-reviewed live policy; closing it based solely on unit tests would violate documented release conditions.
+
+## 2026-10-08 — Local policy loader fixture
+
+- Created `src/decision/v3-operator-policy-loader.mjs` with local JSON schema and filesystem checks; added `test/v3-operator-policy-loader.test.mjs` (2/2 focused pass), commits `0d77cb9`, `7c0d37f`.
+- This is a test-only loader, not yet a complete secure operator approval pipeline. File ownership and path-race robustness, trusted caller binding, and device-registry provenance remain open. Gate B stays OPEN.

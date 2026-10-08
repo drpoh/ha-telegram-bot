@@ -128,3 +128,11 @@ Expanded explicit room-wide parser to recognize «все лампы» and «вс
 - Added `test/scene-planner.test.mjs`: focused **4/4 passed**; Raspberry Pi full `npm test` **239/239 passed**, zero failures. Source/test commits `052e53f` and `fac667d` pushed.
 - This planner does NOT independently establish live HA area membership, freshness, policy authorization, confirmed consent, verification or execution safety. It is not wired to the running agent; all scene mutations and execution remain blocked in v3. No HA state-changing calls or runtime restart.
 - Next: integrate authoritative read-only per-entity area evidence into scene planning, test stale/partial/mixed inventories, then route each proposed action via the shared authorization engine. Maintain fail-closed scene execution until verified.
+
+## 2026-10-08 — Read-only authoritative scene membership validation
+
+- Added `src/scenes/live-plan.mjs`: read-only chain through existing `verifyLiveAreaLighting` (live strict HA area identity, locally reviewed classification, HA inventory and states) followed by pure `planAiScene`; proposed scene light IDs must all belong to the verified allowlisted membership. On any failure return zero actions.
+- Intentionally reject all non-light scene members for now: generic domain membership and per-domain authorization are not established. No execution pathway is wired; scene capture/run/delete remain blocked in v3.
+- Isolated regression `test/scene-live-plan.test.mjs`: 3/3 pass; complete Raspberry Pi `npm test`: **242/242 passed**, 0 failed. Commits `3654982`, `b6b1630` pushed; no HA actuation or v2 restart.
+- Remaining: fixture testing for stale, partial, unavailable, mixed inventories; actual reviewed local mapping must be approved. Plan verification does not constitute execution authorization, and there is no rollout permission.
+- Next: broaden deterministic error/fault-injection tests and integrate common policy/precondition/verification only in isolated harness.

@@ -327,3 +327,9 @@ Full regression for isolated Telegram envelope and deny-by-default policy source
 - **Security caveat:** This is NOT authentication or trusted ingress. Any caller possessing the fixture issuer can pass a fabricated object and request a candidate. Only the real trusted Telegraf transport handler may hold the issuer reference; protected policy and original action validation must independently authorize before any service execution. Do not connect to production v2 or HA.
 
 Full regression checkpoint for Telegram-to-ledger mock issuer: **59 isolated files, 288 passing assertions, 0 failed**, `npm test` exit 0 on Raspberry Pi. Gate B remains OPEN because event authenticity must be enforced by the trusted live transport boundary and the separately reviewed policy loader remains unimplemented.
+
+## 2026-10-08 — Voice-first channel-neutral refocus
+
+- Owner approved deferring production Telegram-specific integration; shared authorization and provenance remain mandatory. Added `src/decision/v3-command-envelope.mjs`, `test/v3-command-envelope.test.mjs`; focused **2/2 passed**. Commits `5300fad`, `c2711a0`.
+- The pure reference envelope distinguishes authenticated Telegram transport from device-only voice/Assist and denies claimed voice user identity. It is NOT authentication or verified device provenance; adapters must be reviewed before trusting metadata. The low-risk check is only a preliminary eligibility gate and does not authorize HA execution.
+- Next: join normalized sources to common policy and ledger without assuming Telegram actor/chat identity. Gate B remains OPEN. No v2 or HA changes.

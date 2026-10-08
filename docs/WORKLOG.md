@@ -277,3 +277,9 @@ Full regression after mock-only centralized v3 dispatcher: **53 isolated test fi
 - **Not yet integrated** with the mock dispatcher or trusted Telegram ingress. Constructor/issuer authority, persistence across restarts, crash consistency, independently reviewed policy provenance, logging and replay isolation remain blocking. No real service calls or restart performed.
 
 Regression checkpoint for isolated v3 intent ledger: **54 test files, 277 assertions passed, 0 failed**, full `npm test` exit 0 on Raspberry Pi. Production state and HA remain unchanged.
+
+## 2026-10-08 — Provenance integration review
+
+- Inspected `v3-intent-ledger.mjs` and `v3-isolated-dispatcher.mjs`: they are not connected. Dispatcher receives `originalUserText` and `areaQuery` through its constructor rather than deriving them from an actor/token-scoped record. No production trust guarantee exists yet.
+- Required next safe integration: after read-only authorization, atomically consume exactly matching actor/chat/token record; derive area from original request; reject cancellation, replacement and expiry; mock executor only. Test concurrent confirmations and state readback. Do not connect production services.
+- Attempted to create the isolated module but repository write tool rejected the operation, so no executable code was added in this step.

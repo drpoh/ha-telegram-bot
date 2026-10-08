@@ -42,3 +42,7 @@ Gate B may close only after an end-to-end isolated caller chain derives actor/ch
 Next Gate C: fault and race analysis in the complete execution chain. Gate D: staged deployment/rollback **after explicit owner approval** and proof that Home Assistant Green is operationally independent of the AI/Raspberry Pi. Gate E: Assist reuses the same engine. No live HA actuation or service changes in Gates A/B.
 
 Scope freeze until Gate B closes: no expanded autonomy or extra integrations. Entity renames, production backups and independent HA runtime acceptance stay tracked as separate safety/deployment prerequisites. See `docs/ADR-HA-INDEPENDENCE.md`.
+
+## 2026-10-08 — Owner-approved channel-neutral engine
+
+Prioritize a shared command envelope and deterministic decision/policy/confirmation engine over Telegram-specific production integration. Telegram transport integration moves to a later adapter milestone; Atom Echo/ESPHome Assist and similar satellites become first-class planned channels. Each adapter must bind original text, device/channel provenance and any actually verified user identity, never promote speaker inference or device location to authenticated user identity. Voice/device-only inputs cannot authorize high-risk or identity-required actions. Safe low-risk candidates still require every independent policy/scope/precondition gate. Voice confirmations need their own reviewed protocol, not Telegram token assumptions. No HA actuation or production deployment until explicit owner approval; HA Green must remain independent of agent availability.

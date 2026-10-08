@@ -62,3 +62,16 @@ test('unparsed room-wide intent is blocked without MCP calls',async()=>{
  }
  assert.deepEqual(calls,[]);
 });
+
+test('unresolved plural and mixed-device requests fail closed without MCP calls',async()=>{
+ const calls=[];const callTool=async(name)=>{calls.push(name);throw Error('unexpected MCP read')};
+ for(const userText of ['Погаси лампы на кухне','Выключи лампы в комнате','Выключи все освещение в комнате','Выключи всю подсветку в комнате']){
+  const r=await guard({userText,toolName:'ha_call_service',args,callTool});
+  assert.deepEqual([r.allowed,r.status],[false,'unresolved_room_wide_intent'],userText);
+ }
+ for(const userText of ['Выключи свет и розетки в комнате','Выключи розетки и свет','Включи все лампы и вентилятор в комнате']){
+  const r=await guard({userText,toolName:'ha_call_service',args,callTool});
+  assert.deepEqual([r.allowed,r.status],[false,'mixed_device_intent'],userText);
+ }
+ assert.deepEqual(calls,[]);
+});

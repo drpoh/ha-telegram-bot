@@ -261,3 +261,9 @@ Entity rename audit regression checkpoint: **50 isolated test files, 269 asserti
 - **Critical:** The boolean `authorized` input is not a trustworthy authorization credential by itself; callers cannot be allowed to self-assert it. This module is a reference perimeter only, **not yet wired to the production or v3 execution pathway**. Before deployment, use an unforgeable actor/token-scoped gate and centralized guarded dispatcher, plus trusted policy and device classification. No HA action was executed.
 
 Full regression checkpoint for v3 MCP tool perimeter: **52 isolated test files, 274 assertions passed, 0 failures**, `npm test` exit 0 on Raspberry Pi. Reference guard remains offline and requires trusted centralized integration before any real writes.
+
+## 2026-10-08 — Reference centralized v3 dispatcher (mock execution only)
+
+- Added `src/decision/v3-isolated-dispatcher.mjs`, which composes pending confirmation, strict v3 tool allowlist, independent reviewed room + HA discovery, original user request matching, policy and state preconditions, mock service execution, and exact-state readback. No caller-provided `authorized` flag or model-provided entity allowlist is used as permission.
+- Added `test/v3-isolated-dispatcher.test.mjs` checking dangerous `homeassistant.restart` denial and a single verified simulated light action despite forged caller flags. Focused **1/1 passed**. Commits `4a99a18`, `3ba3adb`.
+- **NOT production-ready:** `trustedPolicy`, `originalUserText`, `areaQuery`, and `simulatedService` are still constructor-supplied; constructor provenance must be anchored to trusted operator config + immutable actor/token record. Do not replace simulatedService with HA `ha_call_service` or connect dispatcher to live Telegram. Production also needs deny-by-default runtime network and tool boundaries, audit trails and owner-approved staged rollout.

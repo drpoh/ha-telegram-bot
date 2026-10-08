@@ -48,3 +48,29 @@ test("unreviewed mapping and mismatched area fail closed",async()=>{
   assert.deepEqual(wrong.actions,[]);
  });
 });
+
+test("HA-MCP inventory and state faults fail closed without any service calls",async()=>{
+ await fixture(async x=>{
+  const baseline=x.callTool;
+  const faults=[
+   {label:"partial inventory",change:(name,args,result)=>name==="ha_search"&&args.domain_filter==="light"?{...result,structuredContent:{...result.structuredContent,partial:true}}:result},
+   {label:"pagination",change:(name,args,result)=>name==="ha_search"&&args.domain_filter==="light"?{...result,structuredContent:{...result.structuredContent,entity_has_more:true}}:result},
+   {label:"wrong total",change:(name,args,result)=>name==="ha_search"&&args.domain_filter==="light"?{...result,structuredContent:{...result.structuredContent,entity_total_matches:3}}:result},
+   {label:"cross-area",change:(name,args,result)=>name==="ha_search"&&args.domain_filter==="light"?{...result,structuredContent:{...result.structuredContent,entities:[{entity_id:"light.room",domain:"light",area:"Other"},{entity_id:"light.status",domain:"light",area:"Комната"}]}}:result},
+   {label:"unclassified light",change:(name,args,result)=>name==="ha_search"&&args.domain_filter==="light"?{...result,structuredContent:{...result.structuredContent,entities:[{entity_id:"light.room",domain:"light",area:"Комната"},{entity_id:"light.unexpected",domain:"light",area:"Комната"}]}}:result},
+   {label:"unavailable state",change:(name,args,result)=>name==="ha_get_state"?{structuredContent:{data:{entity_id:args.entity_id,state:"unavailable"}}}:result},
+   {label:"wrong state entity",change:(name,args,result)=>name==="ha_get_state"?{structuredContent:{data:{entity_id:"light.other",state:"off"}}}:result},
+   {label:"MCP exception",change:(name)=>{if(name==="ha_search")throw Error("MCP read failed");}},
+  ];
+  for(const fault of faults){
+   const callTool=async(name,args)=>{
+    const response=await baseline(name,args);
+    return fault.change(name,args,response);
+   };
+   const result=await verifyScenePlan({scene:scene(["light.room"]),areaQuery:"Комната",configPath:x.configPath,callTool});
+   assert.equal(result.ok,false,fault.label);
+   assert.deepEqual(result.actions,[],fault.label);
+  }
+  assert.equal(x.calls.includes("ha_call_service"),false);
+ });
+});

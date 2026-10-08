@@ -33,3 +33,12 @@ V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned
 - Desktop Commander Remote initially stayed offline after reboot: it had been running manually. Created separate user `desktop-commander-remote.service` (enabled with `Restart=always`, using the pinned cached package and Node 22 executable). Stopped the original manual agent, then confirmed Remote connection remained online through the new service; v2 and v3 stayed active.
 - Full reboot verification of the **new Desktop Commander service** has not yet been performed. Treat it as a remaining test, not a passed gate. Its cached `npx` executable path may need maintenance after npm cache cleanup.
 - Neither Home Assistant Green nor physical device entities were modified during these operations.
+
+## Night unattended read-only checks — 2026-10-08
+- After the 23:29:59 EEST host boot, `ha-telegram-bot.service`, `rs-home-ai-v3.service` and `desktop-commander-remote.service` all reported active. The last two were enabled; `drpoh` linger was enabled.
+- Remote Desktop Commander returned online and accepted new commands after detaching the manual process. No second host reboot had been done to verify its *boot-time* activation.
+- V3 isolated test suite: `npm test`, 92 test files, 360 assertions, 0 failed files. Log: `/tmp/rs-v3-night-tests.log` (transient local file).
+- Read-only HA-MCP `ha_get_state` for `light.led_kukhnia`: `off`, with `isError=false` and process exit code 0. No physical switching.
+- Private configuration permissions: directory 0700, Telegram token and private MCP URL 0600, Desktop Commander device credential file 0600.
+- Raspberry Pi system remained sufficiently available for read-only checks; v2 reported active during testing. No change to HA Green or v2 was made.
+- A separate later check is scheduled within the 5-hour unattended window. It should not be counted as passed until executed.

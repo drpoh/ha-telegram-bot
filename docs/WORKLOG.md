@@ -299,3 +299,8 @@ Full regression checkpoint after approved strategy correction and ledger-bound f
 - Gate B remains OPEN: only mock execution has been tested, while Telegram ingress ownership and operator-approved policy/classification provenance, cancellation during live lookup and real read-only acceptance still need proof. No physical HA action taken.
 
 Regression checkpoint after positive ledger-bound fixture and concurrent confirmation testing: **55 test files, 280 passing assertions, zero failed**, full `npm test` exit 0 on Raspberry Pi. Gate B remains OPEN pending trusted policy/Telegram ingress and in-flight cancellation tests.
+
+## 2026-10-08 — Gate B in-flight invalidation
+
+- Added `test/v3-ledger-inflight-invalidation.test.mjs` with deliberately blocked mock HA area discovery. While read-only authorization is unresolved, the fixture cancels the token, replaces the actor's request, or advances past expiry. Once discovery resolves, the dispatcher detects invalidated consent and makes **zero mock writes**. Focused test suite **3/3 passed**, commit `aab58b8`.
+- This tests cancellation before commit, not cancellation of an already-dispatched HA service call. Real integrations still need trusted ingress/policy, bounded read timeouts and shutdown handling. Gate B remains OPEN.

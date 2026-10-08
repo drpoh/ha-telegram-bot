@@ -283,3 +283,9 @@ Regression checkpoint for isolated v3 intent ledger: **54 test files, 277 assert
 - Inspected `v3-intent-ledger.mjs` and `v3-isolated-dispatcher.mjs`: they are not connected. Dispatcher receives `originalUserText` and `areaQuery` through its constructor rather than deriving them from an actor/token-scoped record. No production trust guarantee exists yet.
 - Required next safe integration: after read-only authorization, atomically consume exactly matching actor/chat/token record; derive area from original request; reject cancellation, replacement and expiry; mock executor only. Test concurrent confirmations and state readback. Do not connect production services.
 - Attempted to create the isolated module but repository write tool rejected the operation, so no executable code was added in this step.
+
+## 2026-10-08 — Strategy audit corrective actions approved and applied
+
+- Harmonized `docs/home-agent-v3-strategy.md`, `docs/TODO.md`, and `docs/PROGRESS.md`: Gate B is **blocking**, Gate C remains isolated, Gates D/E not started, overall percentage readiness withdrawn as not evidenced. Production must preserve independent Home Assistant Green availability.
+- Added reference-only `src/decision/v3-ledger-bound-mock.mjs`: the dispatcher derives actor-scoped original request and exact action from the private v3 ledger rather than accepting model-supplied text, targets, or authorization flags. `test/v3-ledger-bound-mock.test.mjs` verifies forged/unknown token and HA restart rejection without touching tools; focused **2/2 passed**. Commits `226f6f9`, `3889002`.
+- **Still OPEN:** trusted Telegram ingress as the only ledger issuer, approved policy source/configuration, positive read-only HA discovery fixture, tested in-flight cancellation/race, single-use authorization atomically across process crashes, and production gate wiring. Do not authorize live HA actuation.

@@ -71,3 +71,11 @@ Focused regression: 6/6 tests passed. Entire isolated suite: **69 files, 312 pas
 The offline policy loader now re-stats the final policy path, verifies its device/inode against the opened file, re-resolves the policy directory, and rechecks every recorded ancestor device/inode after reading. Detected substitutions fail closed. This is defense-in-depth only: pathname checks can still be bypassed by a swap-and-restore race, so descriptor-relative directory traversal or another independently reviewed source-integrity mechanism remains mandatory before live approval.
 
 Focused regression: 6/6; full isolated suite: 69 files, 312 assertions passing, 0 failed, exit 0. No HA actuation or production changes. Gate B OPEN.
+
+## 2026-10-08 — Minimal joined offline chain (priority acceleration)
+
+Created `src/decision/v3-isolated-joined-chain.mjs` combining trusted-source envelope validation, actor-bound intent issuance, original text/action storage, strict light-only tool perimeter, live-scope verification adapter, one-shot confirmation ledger and simulated readback. This module is **isolated only** and does not import any live service writer, cannot authorize an agent-supplied source identity, and is not wired into v2 or production v3. New tests reject unverified sources, actor mismatch, stale/unsafe commands, unverified live evidence, token replacement, cancellation and replay. A positive end-to-end mock runs exactly one simulated write with verified readback.
+
+Focused joined tests: 3/3. Entire suite: **70 files, 315 passed assertions, 0 failed, exit 0** on Raspberry Pi 3, offline fixture environment.
+
+**Remaining Gate B acceptance blockers:** replace externally injected test policy with the owner-approved pinned and protected local policy; establish authoritative complete HA registry-backed scope; move source identity/actor issuance into a trusted authenticated channel adapter rather than accepting caller statements; test alternate-tool and concurrent races through this precise joined chain. Do not treat any mock as production authorization. Gate B remains OPEN.

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {mkdtempSync,writeFileSync,symlinkSync,chmodSync,rmSync} from "node:fs";
+import {mkdtempSync,writeFileSync,symlinkSync,chmodSync,rmSync,mkdirSync} from "node:fs";
 import {tmpdir} from "node:os";
 import {createHash} from "node:crypto";
 import {join} from "node:path";
@@ -67,4 +67,20 @@ test("policy content digest pins exact file bytes but never authorizes",async()=
   writeFileSync(join(root,"policy.json"),bytes+" ",{mode:0o600});
   assert.equal((await readV3PolicyFile({directory:root,filename:"policy.json",expectedSha256:hash})).reason,"digest_mismatch");
  }finally{rmSync(root,{recursive:true,force:true});}
+});
+
+test("policy rejects writable or symlinked parent directory",async()=>{
+ const outer=mkdtempSync(join(tmpdir(),"v3-policy-parent-"));
+ const inner=join(outer,"trusted");
+ const alias=join(outer,"alias");
+ try{
+  mkdirSync(inner,{mode:0o700});
+  writeFileSync(join(inner,"policy.json"),JSON.stringify({version:1,default:"deny",entities:{}}),{mode:0o600});
+  assert.equal((await readV3PolicyFile({directory:inner,filename:"policy.json"})).ok,true);
+  chmodSync(outer,0o777);
+  assert.equal((await readV3PolicyFile({directory:inner,filename:"policy.json"})).reason,"unsafe_ancestor");
+  chmodSync(outer,0o700);
+  symlinkSync(inner,alias);
+  assert.equal((await readV3PolicyFile({directory:join(alias,"."),filename:"policy.json"})).ok,false);
+ }finally{rmSync(outer,{recursive:true,force:true});}
 });

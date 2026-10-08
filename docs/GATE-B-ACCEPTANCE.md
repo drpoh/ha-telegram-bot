@@ -59,3 +59,9 @@ The isolated test runner now constructs a minimal child-process environment rath
 The offline loader now optionally accepts a caller-supplied lowercase SHA-256 digest and compares it to the exact bytes read from its opened file descriptor using timing-safe comparison. It exposes the observed SHA-256 for subsequent out-of-band owner review. Invalid or mismatched digests fail closed. **Digest matching is not approval** and the caller may not source the expected digest from an LLM, Telegram or Assist message. No production path uses this as a grant.
 
 Verification: loader-specific 5/5 passed; isolated suite 69 test files, 311 assertions passed, 0 failed files, exit 0, dummy credentials and unreachable MCP. Remaining: trusted approved digest store, parent directory and directory-swap defenses, owner identity and authorization linkage. Gate B OPEN.
+
+## 2026-10-08 — Parent-directory permission checks
+
+The offline loader now walks parent directory components, rejects symlink components, unsafe writable ancestors, and ancestors not owned by root or the current process UID. It permits root-owned sticky directories (e.g. /tmp) for isolated tests; that exception is not a substitute for protected private policy storage. The file and immediate directory retain their stricter checks. Validation is path-based and remains subject to directory replacement races; no production authorization follows from this check.
+
+Focused regression: 6/6 tests passed. Entire isolated suite: **69 files, 312 passing assertions, 0 failed, exit 0**. Gate B OPEN, no live HA writes.

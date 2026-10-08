@@ -1,7 +1,7 @@
 import {realpath,lstat,open} from "node:fs/promises";
 import {constants} from "node:fs";
 import {createHash,timingSafeEqual} from "node:crypto";
-import {isAbsolute,resolve,relative,sep} from "node:path";
+import {isAbsolute,resolve,relative,sep,dirname} from "node:path";
 import {validateV3OperatorPolicy} from "./v3-operator-policy-schema.mjs";
 
 // Offline only. Parsing a policy file never authorizes it for execution.
@@ -12,6 +12,21 @@ export async function readV3PolicyFile({directory,filename,expectedSha256}={}){
   return deny("invalid_source");
  let handle;
  try{
+  // Every ancestor must be a real directory and not writable by other users.
+  // The filesystem root can be root-owned; other ancestors may be root- or
+  // process-owned. No symlink or group/world-writable parent is accepted.
+  let ancestor=dirname(directory);
+  while(true){
+   const info=await lstat(ancestor);
+   const protectedStickyRoot=info.uid===0 && (info.mode&0o1000)!==0;
+   if(!info.isDirectory() || info.isSymbolicLink() ||
+      ((info.mode&0o022)!==0 && !protectedStickyRoot) ||
+      (info.uid!==0 && info.uid!==process.getuid()))
+    return deny("unsafe_ancestor");
+   const parent=dirname(ancestor);
+   if(parent===ancestor)break;
+   ancestor=parent;
+  }
   const rootStat=await lstat(directory);
   if(!rootStat.isDirectory() || rootStat.isSymbolicLink() ||
      (rootStat.mode&0o022)!==0 || rootStat.uid!==process.getuid())

@@ -2,6 +2,14 @@
 
 Purpose: durable chronological handoff between ChatGPT sessions and devices. Current tasks live in `docs/TODO.md`; safety gates in `docs/home-agent-v3-strategy.md`. Broader historical progress is in `docs/PROGRESS.md`.
 
+## 2026-10-08 — read-only chained area lighting validation
+
+- Added `src/decision/live-area-lighting.mjs`: exact live HA area registry → local reviewed classification → complete HA discovery/state validation.
+- A new or unclassified light, unavailable member, missing reviewed configuration, partial inventory or ambiguous area stops discovery fail-closed.
+- Six focused tests passed; full `npm test`: **223/223 passed**, no `ha_call_service` calls, no production wiring or service restart.
+- Still blocked: real on-site lighting classification is pending operator review; do not use this result as permission to switch lights.
+- Next: design safe agent-side scope integration; retain all independent policy/precondition/budget gates.
+
 ## 2026-10-08 — strict live HA area lookup
 
 - Added `src/home/live-strict-area.mjs`: read-only `ha_list_floors_areas` lookup with fail-closed registry validation and exact/explicit-reviewed-alias matching.

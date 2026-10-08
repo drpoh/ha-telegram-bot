@@ -47,3 +47,11 @@ A future backup command should produce a versioned manifest so database/schema c
 **Acceptance criteria:** restore succeeds in an isolated directory; DB integrity check is `ok`; no secrets in Git/logs; negative tests reject corrupt archives/path traversal/wrong schema; backup/restore routines are idempotent where possible; runbook can recover after losing the Pi while Home Assistant Green remains untouched. Set RPO/RTO with the owner before activation.
 
 **Safety boundary:** this document introduces no backup job, no filesystem restore, no production service interruption and no HA actuation. Restoration into the live bot or HA requires separate explicit confirmation.
+
+## 2026-10-08 — Sandbox SQLite backup prototype (implemented, not production-ready)
+
+- `src/backup/fixture-sqlite.mjs` implements `backupFixtureSqlite` and `verifyFixtureBackup`, restricted to an explicitly supplied sandbox directory. It uses SQLite `.backup`, checks source/destination `PRAGMA integrity_check`, captures `user_version` and SHA-256/byte length in a manifest, and rejects overwrite, outside paths and symlinked sources.
+- `test/fixture-backup.test.mjs` uses a disposable database and covers valid snapshot, checksum validation, corruption, duplicate destination, directory escape and symlink rejection.
+- Focused test **1/1 passed**; full Raspberry Pi standard `npm test`: **45 files / 252 passed / 0 failed**, exit 0.
+- No scheduled backups, encryption, off-device copy, private `.env` handling, live restore command, or production integration. This is an isolated proof of concept; do not use it as a production backup solution. Owner approval required before any real backup of private files or restore.
+- Next: independent manifest validation, security hardening against directory replacement/races, schema compatibility tests and sandbox-only restore rehearsal; then separately design encryption, retention and off-device replication.

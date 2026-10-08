@@ -41,11 +41,20 @@ export function queueHomeAssistantRequest(userText, options = {}) {
 
 export function queueConfirmedAction(
   { userId, chatId },
-  { execute = callHA } = {}
+  { execute = callHA, authorize = null } = {}
 ) {
   return enqueue("confirmed pending action", async () => {
     const pending = peekPendingConfirmation({ userId, chatId });
     if (!pending) return { status: "missing" };
+
+    // Confirmation is consent, not an authorization grant. The stored action
+    // must pass the shared live policy/scope gate immediately before execution.
+    // Until the gate is wired, fail closed without consuming or executing it.
+    if (typeof authorize !== "function") return { status: "authorization_unavailable" };
+    let authorized = false;
+    try { authorized = (await authorize(pending.action, { userId, chatId })) === true; }
+    catch { authorized = false; }
+    if (!authorized) return { status: "authorization_denied" };
 
     const consumed = consumePendingConfirmation({
       userId,

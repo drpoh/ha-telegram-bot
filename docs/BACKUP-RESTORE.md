@@ -61,3 +61,13 @@ A future backup command should produce a versioned manifest so database/schema c
 - Added `restoreFixtureSqlite` in `src/backup/fixture-sqlite.mjs`. Before copying into a disposable sandbox destination, it requires a supported manifest schema version (`maxSchemaVersion`), matching SHA-256/byte length, SQLite integrity and exact sandbox containment. Existing targets (including symlinks) are rejected; restored copy is verified after copying.
 - `test/fixture-backup.test.mjs` now covers isolated restore of a sample row, older schema ceiling, corrupt checksum, outside-sandbox destination and an existing file/symlink. Focused test **2/2 passed**.
 - **Prototype security caveat:** filesystem path checks and creation are not a race-free sandbox; restoring adversarially controlled directories requires directory-descriptor/openat hardening. This is a test fixture only, not a production restore utility. Encryption, remote copies, private files, transactional multi-file restores and scheduled jobs remain unimplemented.
+
+
+## 2026-10-08 — WAL consistency and failed backup cleanup: fixture gate complete
+
+- The disposable SQLite fixture uses exclusive creation (`wx`) for the backup destination and removes its own incomplete output on failure. This prevents overwriting pre-existing files, including dangling symlinks, in ordinary single-process operation.
+- A live WAL writer regression maintains an **uncommitted transaction** while `.backup` runs. The first snapshot includes only committed data. After committing the writer, a second verified snapshot includes the new row. This demonstrates snapshot consistency for this fixture, not general disaster recovery.
+- A corrupted source fixture rejects the backup operation and the partial destination does not survive. The original source remains unchanged.
+- Focused fixture tests **4/4 passed**; standard full `npm test` on Raspberry Pi: **45 files, 255 assertions passed, 0 failed**, exit 0.
+- **Current substage complete:** sandbox-only snapshot, manifest/integrity validation, isolated restore, WAL writer and failure cleanup tests. **Production backup/restore remains NOT IMPLEMENTED.** Missing: race-free filesystem boundary enforcement, encrypted/off-device backup, recovery of private settings/secrets, retention/RPO/RTO, atomic multi-file restore, scheduled backups and operator-approved live restore.
+- Next work returns to Gate B trusted authorization; backup productionization is a separately tracked milestone requiring owner approval.

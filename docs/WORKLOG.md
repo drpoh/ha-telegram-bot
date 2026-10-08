@@ -94,3 +94,10 @@ Expanded explicit room-wide parser to recognize «все лампы» and «вс
 - Regression includes seven newly checked phrases in one isolated test; focused tests 8/8 and full `npm test` 231/231 passed, zero failed. `git diff --check` clean.
 - No HA actuation or v2 restart. Known remaining gaps: comprehensive natural-language intent coverage, operator-reviewed real lighting classification, mixed-domain execution design, staged deployment.
 - Next: strengthen cross-phrase and agent-path tests, inspect real-site light classification with operator review, then controlled Gate C.
+
+## 2026-10-08 — Whole-home lighting intent safety regression
+
+- Hardened `src/decision/agent-area-guard.mjs` against whole-home instructions such as «Погаси свет везде», «Выключи освещение во всей квартире», and «Выключи по всему дому свет». These now fail closed for state-changing proposals instead of falling through as `not_applicable`.
+- Added isolated test covering three phrases with zero MCP calls. Focused tests 9/9 passed; complete Raspberry Pi `npm test` 232/232 passed, 0 failed; `git diff --check` passed.
+- Code/test commits `be672c4`, `38fdd48` pushed and synced. No HA actuation, no production restart. Additional natural-language coverage and approved local room lighting classification still required for Gate B.
+- Next: test full agent path and mixed-domain/ambiguous requests without real control, review approved mapping with operator, then Gate C.

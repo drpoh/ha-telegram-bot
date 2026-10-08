@@ -17,7 +17,7 @@ function sqlite(db, query) {
 export function backupFixtureSqlite({source,destination,sandboxRoot}={}){
  if(!sandboxRoot || !source || !destination) throw Error("missing_sandbox_paths");
  const src=within(sandboxRoot,source),dest=within(sandboxRoot,destination);
- if(src===dest || statSync(src).isFile()!==true) throw Error("invalid_source");
+ if(src===dest || realpathSync(src)!==src || statSync(src).isFile()!==true) throw Error("invalid_source");
  try{statSync(dest);throw Error("destination_exists");}catch(e){if(e.code!=="ENOENT")throw e;}
  if(sqlite(src,"PRAGMA integrity_check;")!=="ok")throw Error("source_integrity_failed");
  const escaped=dest.replaceAll("'","''");

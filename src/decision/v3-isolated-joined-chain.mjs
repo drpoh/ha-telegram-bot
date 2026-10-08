@@ -7,7 +7,7 @@ import {createV3WholeHouseOffMock} from "./v3-whole-house-off-mock.mjs";
 
 // Offline test-only adapter. Trusted caller supplies transport-authenticated
 // actor, not model-generated identity. No real MCP write client is imported.
-export function createIsolatedV3JoinedChain({policy,configPath,readTool,simulateWrite,clock=Date.now,telegramIngress,wholeHouseOff}={}){
+export function createIsolatedV3JoinedChain({policy,configPath,readTool,simulateWrite,clock=Date.now,telegramIngress,wholeHouseOff,verifyRegistryAtDispatch}={}){
  const ledger=createV3IntentLedger({clock});
  // Only an injected, trusted transport adapter can supply identity. The
  // command/model-facing issue() method accepts NO authentication flags.
@@ -18,7 +18,7 @@ export function createIsolatedV3JoinedChain({policy,configPath,readTool,simulate
  };
  const issueFromTransport=typeof telegramIngress==="function"?
   telegramIngress({issueVerified:input=>issueTrusted(issueCapability,input)}):null;
- const dispatch=createLedgerBoundMockDispatcher({ledger,policy,configPath,readTool,simulateWrite});
+ const dispatch=createLedgerBoundMockDispatcher({ledger,policy,configPath,readTool,simulateWrite,verifyRegistryAtDispatch});
  // Explicit fixture policy is mandatory; scope approval alone cannot grant
  // the group an execution path. Never fall back to legacy auto-safe grants.
  const groupGrant=wholeHouseOff?.policy?.entities?.["light.ves_svet"];

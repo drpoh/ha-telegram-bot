@@ -28,7 +28,7 @@ export function createIsolatedV3JoinedChain({policy,configPath,readTool,simulate
   groupGrant.services.length===1 && groupGrant.services[0]==="turn_off";
  const whole=wholeHouseOff?.enabled===true && groupPolicyValid ? createV3WholeHouseOffMock({
   readGroup:wholeHouseOff.readGroup,reviewedMembers:wholeHouseOff.reviewedMembers,
-  simulateWrite,now:clock,
+  simulateWrite,now:clock,verifyRegistryAtDispatch,
  }):null;
  const wholeTokens=new Map();
  return Object.freeze({

@@ -4,7 +4,7 @@ import {createV3IntentLedger} from "./v3-intent-ledger.mjs";
 // Scope approval is distinct from production execution authorization.
 const TARGET="light.ves_svet";
 const TEXT="выключи весь свет";
-export function createV3WholeHouseOffMock({readGroup,simulateWrite,reviewedMembers,now=Date.now}={}){
+export function createV3WholeHouseOffMock({readGroup,simulateWrite,reviewedMembers,now=Date.now,verifyRegistryAtDispatch}={}){
  if(typeof readGroup!=="function" || typeof simulateWrite!=="function")
   throw Error("missing_mock_dependencies");
  if(!Array.isArray(reviewedMembers) || reviewedMembers.length!==14 ||
@@ -31,6 +31,13 @@ export function createV3WholeHouseOffMock({readGroup,simulateWrite,reviewedMembe
       !Array.isArray(members) || members.length!==14 ||
       members.some(id=>typeof id!=="string" || !/^light\.[a-z0-9_]+$/.test(id)) ||
       new Set(members).size!==members.length || members.some(id=>!approved.has(id)))return {status:"denied",reason:"untrusted_group_membership"};
+   if(verifyRegistryAtDispatch!==undefined){
+    if(typeof verifyRegistryAtDispatch!=="function")return {status:"denied",reason:"invalid_registry_guard"};
+    let evidence;
+    try{evidence=await verifyRegistryAtDispatch({actor:{userId,chatId},action:structuredClone(pending.action)});}
+    catch{return {status:"denied",reason:"registry_evidence_failed"};}
+    if(evidence?.valid!==true)return {status:"denied",reason:"registry_changed_or_unverified"};
+   }
    const consumed=ledger.consume(actor);
    if(!consumed)return {status:"missing"};
    if(consumed.action?.args?.entity_id!==TARGET || consumed.action?.args?.service!=="turn_off")

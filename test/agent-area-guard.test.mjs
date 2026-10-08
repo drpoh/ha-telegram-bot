@@ -85,3 +85,18 @@ test('whole-home lighting requests do not fall through to single-entity actions'
  }
  assert.deepEqual(calls,[]);
 });
+
+test('a verified room rejects partial, foreign, duplicate, or wrong-domain targets without actuation',async()=>{
+ await fixture(async ({configPath,callTool,calls})=>{
+  for(const proposed of [
+   {...args,entity_id:'light.other'},
+   {...args,entity_id:['light.room','light.room']},
+   {...args,domain:'switch',entity_id:'switch.room'},
+   {...args,service:'toggle'},
+  ]){
+   const r=await guard({userText:'Выключи весь свет в Комната',toolName:'ha_call_service',args:proposed,configPath,callTool});
+   assert.equal(r.allowed,false,JSON.stringify(proposed));
+  }
+  assert.equal(calls.some(c=>c.name==='ha_call_service'),false);
+ });
+});

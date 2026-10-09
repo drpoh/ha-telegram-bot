@@ -38,3 +38,8 @@ Next: inspect actual installed server capabilities and version using sanitized r
 - Each response must be an array with a bounded record count; duplicate/invalid identity, mismatching two-pass hashes, unknown entity device/area, missing child parent and parent cycles fail closed. A global timeout bounds the promise wait, but **does not cancel a request already in progress**; a production transport must enforce cancellation, payload byte size, connection concurrency and TLS/endpoint verification independently.
 - Even a stable result returns `ready:false`, `authorization:false` and `read_only_review`. Identical reads are not an atomic HA snapshot and do not prove the authenticated source. All Gate B live authorization and operator policy blockers remain open.
 - Focused tests use injected fixtures only, never a real Home Assistant. No running services modified.
+
+## Protected endpoint configuration preflight (2026-10-09)
+- Added `v3-ha-registry-endpoint-policy.mjs` as a **pure, offline configuration check**. It rejects plaintext `ws:`, URL credentials, query or fragment injection, incorrect WebSocket path, and missing operator configuration/protected-secret/TLS-pin declarations.
+- **Important:** caller-provided `tlsPinned:true` is a declaration, not cryptographic pin validation. Never accept model-provided flags as authorization or pass them unverified into a live transport. Real TLS verification, host/IP resolution, token permissions and endpoint ownership must be enforced by the transport and reviewed separately.
+- No HA connection or credentials are used. The accepted result is `configuration_review_only` with `authorization:false`.

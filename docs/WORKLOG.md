@@ -513,3 +513,8 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Focused `node --test test/v3-ha-registry-read-adapter.test.mjs test/v3-registry-double-read.test.mjs`: **5/5 passed, zero failures**.
 - Full `npm test` completed: **113 isolated files / 454 assertions passed / zero failed files**, exit **0**; log `/tmp/rs-v3-registry-read-adapter-full.log`. No production wiring, HA commands, policy grants or restarts.
 - Next: record full regression result, then commit/push; subsequently design authenticated source/pinned endpoint and validation of effective child-device areas, with explicit operator approval before live tests.
+
+## 2026-10-09 — Protected WebSocket endpoint preflight (offline)
+- Added a pure Gate B config preflight with fail-closed URL validation: wss-only, exact `/api/websocket`, no URL credentials/query/fragment, protected credential source and explicit operator/TLS-pin declarations.
+- Focused tests: **2/2 passed**, exit 0. This **does not implement real TLS certificate pinning** or authenticate an endpoint, and the flags are untrusted until transport verifies them independently. Full `npm test` NOT rerun for this small checkpoint.
+- No real HA network requests, service restarts or configuration changes. Gate B OPEN. Next: implement a bounded, independently authenticated transport with mocked WebSocket frames and verify token/host provenance, then full regression before promotion.

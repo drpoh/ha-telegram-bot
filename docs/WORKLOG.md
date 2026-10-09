@@ -495,3 +495,9 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Connected a separate Node MCP client to the configured server and invoked **only** `listTools()` (twice), returning 53 advertised tools and read-only input schemas. No `ha_device_registry_snapshot` exists. `ha_get_device` paginates devices, `ha_get_entity` resolves IDs, `ha_list_floors_areas` lists areas, and `ha_search` paginates search matches; none advertises cross-page atomic consistency / shared version binding.
 - Detailed source assessment in `docs/GATE-B-REGISTRY-SOURCE-REVIEW.md`. This is evidence of capability discovery, not evidence of complete authoritative live snapshot or permission to actuate. Gate B remains OPEN.
 - No source code or permission changes. Next: design version-consistent dedicated read-only registry collector with independent authenticated origin; negative-test pagination mutation, transient missing entries, and mismatched area/device relationships before deployment.
+
+## 2026-10-09 — Gate B offline paginated registry consistency fixture
+- Added `src/decision/v3-registry-page-consistency.mjs` and adversarial tests. Requires a consistent opaque generation token, exact counts/offsets/cursors, all records unique, and a final complete page; rejects drift and missing records.
+- Focused `node --test test/v3-registry-page-consistency.test.mjs`: 2/2 passed, exit 0. No full regression run yet at this checkpoint.
+- Limitation: an opaque generation string supplied by an untrusted caller is forgeable, and the installed HA-MCP does not currently prove this generation across pages. **Offline fixture only, authorization:false always.** No production integration or HA actuation. Gate B OPEN.
+- Next: identify a trusted HA snapshot/generation mechanism with verified transport and read-only credentials, then test real read faults and full regression before deployment.

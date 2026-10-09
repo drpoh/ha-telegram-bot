@@ -108,3 +108,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Official client selection metadata — 2026-10-09
 - Read-only npm metadata on Pi: home-assistant-js-websocket 9.7.1 Apache-2.0, ws 8.22.0 requiring Node >=10; current Node 20.19.2. Neither installed as a direct dependency. API/TLS/ARMv7 validation remains OPEN. See acceleration ADR.
+
+## Gate B combined offline vertical-slice fixture — 2026-10-09
+- New `test/v3-gate-b-vertical-slice.test.mjs` reuses existing ledger, mock dispatcher and read-only scope gates; 2/2 focused pass for actor/chat mismatch, forged/replayed token, tool substitution, scope drift and cancellation. Full regression **120 files / 473 assertions passed / zero failures**, exit 0; `/tmp/rs-v3-gate-b-vertical-full-20261009.log`. No live authorization; Gate B OPEN.

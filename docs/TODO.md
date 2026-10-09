@@ -77,3 +77,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [ ] Assemble **one isolated end-to-end Gate B harness** using existing provenance, intent ledger, isolated dispatcher, reviewed policy and authoritative scope adapters. Ensure actor mismatch, replay, expired confirmation, changed scope, tool substitution and bypass all deny.
 - [ ] Only after independent source/operator identity evidence, propose read-only integration with explicit approval. Gate B OPEN.
 - [ ] Adopt tiered CI; do not add GitHub Actions workflow before permission/secrets review.
+
+## Gate B integrated fixture checkpoint — 2026-10-09
+- [x] Add a combined **offline** ledger/actor/action/policy/scope/consumption test fixture reusing existing modules, with adversarial actor/chat/token/tool/scope/cancel cases.
+- [ ] Bind provenance from an independently authenticated channel ingress (not caller fields) and complete HA registry/approved policy before Gate B acceptance. Extend whole-chain expired/inflight/replacement and alternative-MCP fault matrix; existing unit fixtures alone do not close Gate B.

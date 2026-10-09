@@ -581,3 +581,8 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 ## 2026-10-09 — upstream transport package metadata preflight
 - On Pi ran `npm view` for `home-assistant-js-websocket` (9.7.1, Apache-2.0) and `ws` (8.22.0, Node >=10) plus `npm ls --depth=0` (neither directly installed). This validates only published metadata, not real trust guarantees.
 - Documentation updated; no dependencies installed, no tests of new runtime behavior, no HA connections, no actuation and no service restarts. Next: inspect package interfaces/security and build isolated end-to-end Gate B chain.
+
+## 2026-10-09 — Gate B vertical-slice adversarial integration fixture
+- Added `test/v3-gate-b-vertical-slice.test.mjs` combining existing in-memory original-intent ledger, reviewed local fixture policy, live-scope simulation, exact tool boundary, confirmation consumption and simulated write verification. No source policy or runtime paths changed.
+- Focused tests **2/2 pass**: correct actor/chat/token one-time use; reject actor/chat spoof, forged token, dangerous tool, changed scope and cancelled intent with zero writes. Existing separate in-flight invalidation tests remain in place.
+- Full project regression **120 files / 473 assertions passed / zero failed**, npm exit **0**; `/tmp/rs-v3-gate-b-vertical-full-20261009.log`. This is offline only; trusted Telegram/Assist provenance, installed HA registry source and approved local policy still missing. Gate B OPEN.

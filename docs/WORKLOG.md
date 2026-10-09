@@ -501,3 +501,9 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Focused `node --test test/v3-registry-page-consistency.test.mjs`: 2/2 passed, exit 0. No full regression run yet at this checkpoint.
 - Limitation: an opaque generation string supplied by an untrusted caller is forgeable, and the installed HA-MCP does not currently prove this generation across pages. **Offline fixture only, authorization:false always.** No production integration or HA actuation. Gate B OPEN.
 - Next: identify a trusted HA snapshot/generation mechanism with verified transport and read-only credentials, then test real read faults and full regression before deployment.
+
+## 2026-10-09 — Native HA registry WebSocket design review
+- Reviewed Home Assistant's upstream WebSocket registry list handlers (`config/entity_registry/list`, `config/device_registry/list`, `config/area_registry/list`) and 2026.9 child-device semantics. Proposed a dedicated transport-restricted read adapter; no live HA WebSocket call performed.
+- Added offline `v3-registry-double-read.mjs` and adversarial fixtures to reject detected entity/device/area drift and duplicate IDs. Focused tests: **2/2 passed**, exit 0. Full regression is NOT yet rerun.
+- The two-pass check provides only observed consistency, NOT atomicity or authentication. No live credentials, HA writes, deployments or policy changes. Gate B remains OPEN.
+- Next: source-specific read-only adapter, bounded transport checks and cross-registry child-device verification; full isolated regression before deployment.

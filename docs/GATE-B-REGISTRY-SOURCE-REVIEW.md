@@ -25,3 +25,10 @@ Next: inspect actual installed server capabilities and version using sanitized r
 - `ha_search` can enumerate entity-registry matches with pagination, `include_hidden=true`, but is a search surface; its schema does not guarantee all entities, stable membership, or consistency with device lists during concurrent HA mutations.
 - No advertised `ha_device_registry_snapshot` tool. A standalone dedicated source is still needed for Gate B evidence, or upstream must offer documented consistent snapshot semantics verified independently.
 - Do not interpret `ha_get_device`/`ha_search` pagination support as transactional completeness; mixed-time pages and registry mutation require explicit detection. Also require operator-controlled credentials and trusted endpoint binding.
+
+## Home Assistant native WebSocket alternative (2026-10-09)
+- Official Home Assistant Core exposes `config/entity_registry/list`, `config/device_registry/list` and `config/area_registry/list`, which directly list registry records. Unlike `ha_search`, these are not search result pages. See Home Assistant developer WebSocket documentation and current Core registry handlers.
+- **Important:** calls are three distinct operations; they do not constitute one atomic read across registries. Consider repeated two-pass read and canonical digest comparison to detect observed drift, but even identical passes do not prove that no mutation occurred between calls.
+- The 2026.9 device registry introduces child devices; a collector must retain parent/child relations and effective area semantics, not assume all devices have the same fields.
+- A future adapter must authenticate the configured Home Assistant WebSocket endpoint, protect the token outside model context, bound memory/time/record count, verify read-only request allowlist, and reject malformed cross-registry links. Do not expose generic WebSocket commands to AI.
+- Added offline-only `v3-registry-double-read.mjs` with two-pass stable digest checks. It never authorizes actions; source authenticity and snapshot atomicity remain unproven.

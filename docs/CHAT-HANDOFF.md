@@ -63,3 +63,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## Gate B offline page consistency checkpoint — 2026-10-09
 - Added `v3-registry-page-consistency.mjs` plus two focused passing tests; this is not an authenticated live collector and cannot authorize anything.
 - Installed HA-MCP lacks a demonstrated shared generation token for all registry pages; this remains the deployment blocker. See WORKLOG for detail.
+
+## Native HA WebSocket investigation — 2026-10-09
+- Upstream has direct registry list WebSocket commands for entities, devices and areas. Their separate calls are not an atomic cross-registry snapshot. See `docs/GATE-B-REGISTRY-SOURCE-REVIEW.md`.
+- Offline two-pass digest module passes 2/2 focused tests but is NOT transport authentication or HA authorization; full regression pending.

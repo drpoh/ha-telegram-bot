@@ -64,3 +64,7 @@ V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned
 ## Console autologin correction verified — 2026-10-09 05:10 EEST
 - Owner disabled the invalid `pi` autologin override by renaming it to `autologin.conf.disabled`. `systemctl cat getty@tty1` no longer includes the bad override. No new `pi` login failures observed after 05:09:33 at inspection.
 - v2, v3 and Desktop Commander services all remained active. `getty@tty1.service` currently reports `disabled` and `inactive`; interactive local tty1 availability is NOT confirmed and may require a separate privileged enable/start if desired. No effect on SSH was observed.
+
+## Local console restored — 2026-10-09 05:11 EEST
+- Owner ran privileged `systemctl enable --now getty@tty1.service` following removal of invalid `pi` autologin override. Verified `getty@tty1.service`: `enabled`, `active`, `NRestarts=0` and journal only shows clean startup at 05:11:16. v2, v3 and Desktop Commander remained active.
+- A subsequent full isolated test run for Gate C was started in `/tmp/rs-v3-gate-c-20261009.log`; record the final result only after process exit is observed, not while running. No live physical actuation was requested.

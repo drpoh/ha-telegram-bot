@@ -81,3 +81,11 @@ V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned
 - v2, v3 and Desktop Commander remained active. Existing physical scope remains one kitchen light with explicit per-action Telegram confirmation.
 - Still open: full post-install host reboot test of Desktop Commander and real outage semantics; no claim of exactly-once network writes. These require separate operational risk review before expanding write scope.
 - Full regression after adding four fault-injection assertions: `npm test` completed with exit code 0, 93 isolated test files, 364 passed assertions and 0 failed files. Log `/tmp/rs-v3-gate-c-new-tests.log`.
+
+## Gate D — read-only monitoring and rollback
+- Run `node scripts/gate-d-healthcheck.mjs` from the v3 checkout to inspect systemd health for v2, v3 and Remote. Output is minimal JSON without any HA credentials, endpoints or messages; exit 0 when all are active/enabled with a PID, exit 1 otherwise. This checks process state, not end-to-end Telegram or MCP functionality.
+- On 2026-10-09 05:25 EEST, all three units were active and enabled, with `NRestarts=0`; healthcheck exit code 0.
+- If v3 behaves unexpectedly, stop **only** its service: `systemctl --user stop rs-home-ai-v3.service`. To prevent automatic startup: `systemctl --user disable rs-home-ai-v3.service`. Do not stop v2, Zigbee2MQTT, HA-MCP or HA Green. Resuming requires operator review and `systemctl --user enable --now rs-home-ai-v3.service`.
+- To inspect state without disruption use `systemctl --user show rs-home-ai-v3.service -p ActiveState -p MainPID -p NRestarts`, and `systemctl is-active ha-telegram-bot.service`. The Remote user service is likewise independently controlled; it is not required for Home Assistant operation.
+- `journalctl --user` on this installation has returned `No journal files were found`; do not claim absence of errors from an empty journal. Persistent, access-controlled incident logging with safe redaction remains a Gate D requirement. Avoid logging tokens, MCP private paths or chat payloads.
+- Neither an unattended host reboot test of the new Remote service nor actual MCP network partition tests have been passed. Require a maintenance window and ensure local SSH recovery before a host reboot. No automatic replay of ambiguous writes.

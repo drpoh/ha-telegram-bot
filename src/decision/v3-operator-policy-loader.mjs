@@ -67,9 +67,12 @@ export async function readV3PolicyFile({directory,filename,expectedSha256}={}){
      !finalPathStat.isFile() || finalPathStat.isSymbolicLink() ||
      finalPathStat.dev!==stat.dev || finalPathStat.ino!==stat.ino ||
      after.dev!==stat.dev || after.ino!==stat.ino || after.size!==stat.size ||
-     after.mtimeMs!==stat.mtimeMs || !directoryAfter.isDirectory() ||
+     after.mtimeMs!==stat.mtimeMs || after.uid!==stat.uid ||
+     (after.mode&0o022)!==0 || finalPathStat.uid!==stat.uid ||
+     (finalPathStat.mode&0o022)!==0 ||
+     !directoryAfter.isDirectory() || directoryAfter.isSymbolicLink() ||
      directoryAfter.dev!==rootStat.dev || directoryAfter.ino!==rootStat.ino ||
-     (directoryAfter.mode&0o022)!==0)
+     directoryAfter.uid!==rootStat.uid || (directoryAfter.mode&0o022)!==0)
    return deny("source_changed");
   const digest=createHash("sha256").update(bytes).digest();
   if(expectedSha256!==undefined){

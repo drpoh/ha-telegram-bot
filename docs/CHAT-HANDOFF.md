@@ -145,3 +145,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## WSS loopback transport acceptance — 2026-10-09
 - On Pi, actual `ws@8.22.0` WSS loopback test with self-signed SAN localhost (temporary cert) passed untrusted rejection, explicit CA acceptance, wrong hostname rejection, `maxPayload` 4096-byte rejection, and `terminate()` (5/5). No HA or production contact. Full caveats and live prerequisites: `docs/GATE-B-WSS-ACCEPTANCE.md`. Real endpoint credentials/operator approval absent, Gate B OPEN.
+
+## Gate B timeout race checkpoint — 2026-10-09
+- Found and fixed late-result continuation after registry timeout; 11 focused tests pass. Full regression log: /tmp/rs-v3-gateb-late-read-full.log. Transport cancellation still required. Gate B OPEN.
+
+- Full isolated regression verified: 124 files / 486 passing assertions / 0 failures, exit 0.

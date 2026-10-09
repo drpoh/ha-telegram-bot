@@ -638,3 +638,8 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 ## 2026-10-09 — actual upstream WSS loopback validation
 - Used isolated ws 8.22.0 package, Node TLS/OpenSSL and an ephemeral localhost certificate. All five real loopback WSS cases passed: reject untrusted, accept explicitly trusted CA, reject wrong hostname, reject oversized frame via maxPayload, and force client termination. No HA or production connection.
 - Recorded precise limitations and operator-controlled live prerequisites in docs/GATE-B-WSS-ACCEPTANCE.md. Gate B remains OPEN pending actual HA origin and credentials and review.
+
+## 2026-10-09 — Gate B timeout race
+Late upstream responses previously resumed registry reads after timeout. Added expiration checks before/after awaited calls and two adversarial regressions. Focused 11/11 passed. Full regression in /tmp/rs-v3-gateb-late-read-full.log pending. No live HA control.
+
+- Full npm test PASSED: 124 files, 486 assertions, 0 failures, exit 0; /tmp/rs-v3-gateb-late-read-full.log.

@@ -66,3 +66,29 @@ test('oversized registry payload fails closed without sending later registry com
  assert.equal(calls,1);
  assert.equal((await inspectViaUpstreamConnection({connection,maxResponseBytes:1})).reason,'invalid_response_size_limit');
 });
+
+test('reconnect after several reads discards entire evidence and stops further requests',async()=>{
+ let calls=0;
+ const connection={connected:true,closeRequested:false,socket:{},async sendMessagePromise(){
+  calls++;if(calls===4){this.connected=false;this.socket={};}return [];
+ }};
+ const result=await inspectViaUpstreamConnection({connection});
+ assert.equal(result.ready,false);
+ assert.equal(result.authorization,false);
+ assert.equal(result.reason,'registry_transport_failure');
+ assert.equal(calls,4);
+});
+
+test('late upstream response after timeout cannot resume later registry reads',async()=>{
+ let calls=0,resolveFirst;
+ const connection={connected:true,closeRequested:false,socket:{},sendMessagePromise(){
+  calls++;return new Promise(resolve=>{if(calls===1)resolveFirst=resolve;});
+ }};
+ const result=await inspectViaUpstreamConnection({connection,timeoutMs:10});
+ assert.equal(result.ready,false);
+ assert.equal(result.authorization,false);
+ assert.equal(calls,1);
+ resolveFirst([]);
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(calls,1);
+});

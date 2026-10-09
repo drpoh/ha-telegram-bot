@@ -41,4 +41,15 @@ V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned
 - Read-only HA-MCP `ha_get_state` for `light.led_kukhnia`: `off`, with `isError=false` and process exit code 0. No physical switching.
 - Private configuration permissions: directory 0700, Telegram token and private MCP URL 0600, Desktop Commander device credential file 0600.
 - Raspberry Pi system remained sufficiently available for read-only checks; v2 reported active during testing. No change to HA Green or v2 was made.
-- A separate later check is scheduled within the 5-hour unattended window. It should not be counted as passed until executed.
+- A later read-only follow-up was completed on 2026-10-09; see the results below.
+
+## Follow-up health check — 2026-10-09 04:05 EEST
+- v2, v3 and Desktop Commander Remote: active/running and enabled; no service restarts since last start.
+- HA-MCP read-only state for `light.led_kukhnia`: `off`, `isError=false`, process exit 0. No physical switching.
+- Original `npm test` log: 92 test files, 360 passed assertions, 0 failed files. Original exit code was not recorded.
+- No warning-or-higher journal entries for these three services since the last Raspberry Pi boot.
+- Desktop Commander user unit passes systemd verification; full post-install host reboot remains untested.
+- Branch `feature/v3-home-agent` matched origin at the time of inspection.
+- OS issue: local console getty repeatedly attempts automatic login to missing user `pi`, generating thousands of error logs. Left unchanged pending review.
+- Existing whole-home rollout gates remain open. HA Green and v2 were not modified.
+- Independent repeat of `npm test` on 2026-10-09: 92 isolated test files, 360 passed assertions, 0 failed files; explicitly captured `NPM_TEST_EXIT=0` (exit 0). Local log: `/tmp/rs-v3-morning-tests.log`.

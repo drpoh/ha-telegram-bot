@@ -404,3 +404,11 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 ## 2026-10-09 — Three-environment design checkpoint
 - Owner requested future dev (development), stage (testing), prod (production). Added ADR and pure fail-closed environment contract. Dev is fixture-only, stage mock/read-only by default, prod deployment needs explicit review. Four focused tests passed. No live environment was deployed or reconfigured.
 - Next: validate environment boundaries in a separate mock executor and test cross-environment isolation; no live Home Assistant writes or production changes.
+
+## 2026-10-09 — Gate B synced source and focused regression
+
+- Fast-forwarded local `feature/v3-home-agent` from `b0075fa` to `29938c8` (101 commits), clean starting tree. No service restart, no HA MCP write, no live bot modification.
+- Ran focused Node tests for joined chain, strict gate, Telegram binding, registry invalidation, group confirmation and approval revocation: 6 test files, 15 assertions passed, zero failures, exit 0.
+- Existing isolated joined chain is present; no duplicate implementation was introduced. This is a focused regression only, not a full npm test or Gate B acceptance.
+- Gate B remains OPEN: protected owner-approved per-home policy, authoritative complete live registry, authenticated production transport binding and joined audit/fault acceptance are not established.
+- Next: design and test the operator-controlled trust boundary for policy/registry provenance using offline fixtures, then run full isolated regression. Do not deploy or expand device access without explicit approval.

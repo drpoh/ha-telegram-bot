@@ -450,3 +450,12 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 
 - All isolated tests after durable replay adapter: 108 files, 436 passing assertions, 0 failed files, exit 0 (116.17 seconds).
 - This is offline evidence only: production authentication, protected replay store, retention, multi-process admission and deployment authorization remain OPEN.
+
+## 2026-10-09 — Cross-chat handoff and PR #1 verification
+
+- Read `docs/CHAT-HANDOFF.md`, `AGENTS.md`, strategy, TODO and WORKLOG; checked Raspberry Pi `feature/v3-home-agent` matched GitHub and had a clean working tree at session start (`dd4c6e0`).
+- Cross-chat handoff committed and pushed as `dd4c6e0` in the prior work session. Treat this dated status as a pointer, never a claim of live production acceptance.
+- PR #1 Gate E snapshot hardening kept in separate draft branch, not merged or deployed. Its focused isolated tests ran on an independent temporary Git worktree: **11/11 passed, exit 0**. Existing main-branch focused tests: **9/9 passed, exit 0**.
+- Full PR `npm test` initiated in isolated temporary worktree; result **PENDING** at this checkpoint. Log `/tmp/rs-v3-pr-full-test.log`; inspect process/result before claiming success or removing the worktree. Tests began with slow sequential `node --check` on Pi 3.
+- Gate B general actuation and Gate E live Assist remain OPEN. No Home Assistant writes, service restarts, permission expansion or production changes.
+- Next exact action: obtain completed full PR test exit status, check PR diff against latest upstream, then update WORKLOG and handoff before considering merge. Do not merge without evidence and explicit review.

@@ -56,3 +56,13 @@ test('hung upstream registry read times out without advancing to another command
  assert.equal(result.reason,'registry_transport_failure');
  assert.equal(count,1);
 });
+
+test('oversized registry payload fails closed without sending later registry commands',async()=>{
+ let calls=0;
+ const connection={connected:true,closeRequested:false,socket:{},sendMessagePromise:async()=>{calls++;return [{name:'x'.repeat(2048)}];}};
+ const result=await inspectViaUpstreamConnection({connection,maxResponseBytes:1024});
+ assert.equal(result.authorization,false);
+ assert.equal(result.reason,'registry_transport_failure');
+ assert.equal(calls,1);
+ assert.equal((await inspectViaUpstreamConnection({connection,maxResponseBytes:1})).reason,'invalid_response_size_limit');
+});

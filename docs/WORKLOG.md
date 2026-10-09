@@ -552,7 +552,7 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Full regression PASSED: **119 test files / 467 assertions / 0 failed**, exit 0, log `/tmp/rs-v3-tls-fixture-full.log`. Next: actual server-side transport must independently verify TLS (not trust caller-provided booleans) and bound I/O/cancellation before real credentials or HA read requests.
 
 ## 2026-10-09 — dev/stage/prod storage boundary follow-up
-- Reused existing `src/ops/environment-isolation.mjs` and `docs/ADR-DEV-STAGE-PROD.md`; added nested/unsafe storage-path denial and a focused regression fixture. Focused environment suites: 9/9 passed, no HA writes, no service restart. Full suite pending.
+- Reused existing `src/ops/environment-isolation.mjs` and `docs/ADR-DEV-STAGE-PROD.md`; added nested/unsafe storage-path denial and a focused regression fixture. Focused environment suites: 9/9 passed, no HA writes, no service restart. Full suite **124 files / 484 assertions / 0 failures**, exit 0, 218.87s.
 - Three actual running environments are NOT deployed; v2 prod and v3 narrow pilot remain untouched. Next: real installed unit/resource inventory and operator-owned manifest template; do not create stage using live HA Green.
 
 ## 2026-10-09 — Environment inventory and full-regression checkpoint
@@ -630,3 +630,7 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 ## 2026-10-09 — upstream read timeout denial regression
 - Added a focused test to the existing upstream read bridge suite: a hanging registry request times out and no second request is issued. Focused 5/5 tests passed; full npm regression 124 files / 483 assertions / zero failures, exit 0, runtime 217.65 seconds.
 - This proves denial at the caller boundary, NOT cancellation of a pending network request or TLS provenance. No live HA credentials, connection, actuation, or service restart. Gate B OPEN.
+
+## 2026-10-09 — upstream registry payload-size post-receive bound
+- Expanded existing official-client bridge with a configurable 1 KiB–16 MiB post-receive JSON byte limit (default 2 MiB); payloads exceeding it fail closed before more registry requests. Focused tests 6/6 passed. Full suite **124 files / 484 assertions / 0 failures**, exit 0, 218.87s.
+- This is NOT a WebSocket frame limit and does not prevent a large frame from entering process memory; trusted ws `maxPayload` remains required before live use. No live HA connection or production changes.

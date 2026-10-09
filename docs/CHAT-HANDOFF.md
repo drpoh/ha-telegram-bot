@@ -139,3 +139,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Upstream read timeout regression — 2026-10-09
 - New hung-response test in `v3-ha-upstream-read-bridge.test.mjs`; focused 5/5, full `npm test` 124 files / 483 assertions / 0 failures, exit 0, 217.65s. Timeout fails closed and prevents next read, but does not kill the underlying pending socket. Gate B OPEN; no HA connection or service changes.
+
+## Offline registry response size check — 2026-10-09
+- Existing upstream read bridge now enforces a post-receive JSON-size limit, with oversized registry denial and no later read; focused 6/6 passed. Full suite **124 files / 484 assertions / 0 failures**, exit 0, 218.87s. Transport-level `maxPayload`, real TLS and operator policy still outstanding. Gate B OPEN.

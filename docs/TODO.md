@@ -111,3 +111,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## Gate B composition checkpoint — 2026-10-09
 - [x] Compose existing upstream registry bridge + joined Telegram confirmation + V3 reviewed policy into one isolated denial integration test.
 - [ ] Require independent HA TLS/registry provenance, owner-reviewed policy grants, authenticated live Telegram adapter and full approval before any real execution. Offline composed denial is not Gate B acceptance.
+
+## Gate B registry response limits — 2026-10-09
+- [x] Enforce post-receive JSON byte limit in injected official-client-shaped registry reader with oversized-response denial test.
+- [ ] Enforce actual WebSocket max frame size in the reviewed upstream socket configuration; post-receive checks alone cannot bound memory allocation.

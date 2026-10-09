@@ -674,3 +674,10 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Focused transport and joined adapter tests passed 11/11; full npm regression in /tmp/rs-v3-gateb-update-kind-full.log pending. This does not authenticate arbitrary caller-created ctx objects; still requires real trusted Telegraf handler and reviewed policy. No production changes. Gate B OPEN.
 
 - Full npm test PASS: 124 files, 492 assertions, zero failures, exit 0.
+
+## 2026-10-09 — Optional strict Telegram message provenance
+- Added `requireRawMessage` to isolated Telegram transport admission. When enabled, a synthetic `ctx.message` without `ctx.update.message` cannot issue a command; mismatches still deny. Legacy fixture default remains unchanged and no runtime service was rewired.
+- Focused admission tests 9/9 passed. This consistency check alone does NOT authenticate Telegram; actual provenance requires ownership of the Telegraf update processing path, durable replay and protected operator policy.
+- Full regression launched at `/tmp/rs-v3-gateb-strict-admission.log`; result pending. Gate B OPEN.
+
+- Full npm test PASSED: 124 files / 493 assertions / 0 failures, exit 0.

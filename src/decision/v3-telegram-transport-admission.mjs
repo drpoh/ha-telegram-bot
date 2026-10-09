@@ -1,9 +1,9 @@
 // Offline boundary component. The caller MUST be the actual trusted Telegraf handler.
 // It does not establish authenticity of an arbitrarily supplied context object.
-export function createTelegramTransportAdmission({allowedUserId,clock=Date.now,maxAgeMs=60000,maxSeen=2048,durableReplay}={}){
+export function createTelegramTransportAdmission({allowedUserId,clock=Date.now,maxAgeMs=60000,maxSeen=2048,durableReplay,requireRawMessage=false}={}){
  if(!Number.isSafeInteger(allowedUserId)||allowedUserId<=0||typeof clock!=="function"||
  !Number.isSafeInteger(maxAgeMs)||maxAgeMs<1||maxAgeMs>300000||
- !Number.isSafeInteger(maxSeen)||maxSeen<1||maxSeen>10000)throw Error("invalid_transport_config");
+ !Number.isSafeInteger(maxSeen)||maxSeen<1||maxSeen>10000||typeof requireRawMessage!=="boolean")throw Error("invalid_transport_config");
  const seen=new Set();
  const seenMessages=new Set();
  return Object.freeze({
@@ -19,6 +19,7 @@ export function createTelegramTransportAdmission({allowedUserId,clock=Date.now,m
      key!=="update_id" && key!=="message" && key!=="_"))
     return {accepted:false,reason:"unsupported_transport_update"};
    const raw=update?.message;
+   if(requireRawMessage && !raw)return {accepted:false,reason:"missing_raw_transport_message"};
    if(raw!==undefined && (raw?.message_id!==msg?.message_id ||
       raw?.from?.id!==from?.id || raw?.chat?.id!==chat?.id ||
       raw?.date!==msg?.date || raw?.text!==msg?.text))

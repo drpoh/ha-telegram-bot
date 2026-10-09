@@ -83,3 +83,12 @@ test("non-message Telegram update cannot be promoted to a text command",()=>{
   assert.equal(r.reason,"unsupported_transport_update");
  }
 });
+
+test("strict admission requires raw Telegram message and refuses synthetic-only context",()=>{
+ const strict=()=>createTelegramTransportAdmission({allowedUserId:55,clock:()=>1000000,requireRawMessage:true});
+ assert.equal(strict().inspect(fresh()).reason,"missing_raw_transport_message");
+ const valid=fresh();valid.update.message={...valid.message};
+ assert.equal(strict().inspect(valid).accepted,true);
+ const forged=fresh();forged.update.message={...forged.message,text:"Другая команда"};
+ assert.equal(strict().inspect(forged).reason,"inconsistent_transport_update");
+});

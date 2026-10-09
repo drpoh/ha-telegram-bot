@@ -173,3 +173,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Isolated transport admission rejects non-message Telegram update types mixed with synthetic ctx.message. Focused transport/adapter tests 11/11 pass. Full regression pending. Gate B OPEN pending trusted handler, HA origin and reviewed policy.
 
 - Full regression passed: 124 files / 492 assertions / 0 failures, exit 0.
+
+## Strict raw Telegram update preflight — 2026-10-09
+- Optional `requireRawMessage:true` on `createTelegramTransportAdmission` rejects contexts lacking original `update.message` and mismatched fields. Focused tests 9/9 passed; full test result pending in `/tmp/rs-v3-gateb-strict-admission.log`. Not production-wired; does not authenticate arbitrary input. Gate B OPEN.
+
+- Full regression PASSED 124 files / 493 assertions / 0 failures, exit 0.

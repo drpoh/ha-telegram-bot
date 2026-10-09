@@ -158,3 +158,8 @@ V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned
 - Live HA-MCP read-only `ha_get_entity(light.led_kukhnia)` had null entity `area_id` and a nonempty `device_id`. `ha_get_device` using that exact ID returned a `device` record, `area_id=kukhnia` and `entity_count=6`; no physical action was sent. Device response key is `device.device_id` (not `device.id`).
 - Added `v3-assist-device-area.mjs`: a narrow entity-to-device area verification fixture that checks exact linked device ID, entity availability flags and reviewed expected area; missing/conflicting membership fails closed. It returns registry binding evidence, **not authorization**.
 - Four focused tests passed. This does not authenticate voice provenance or prove full room inventory. A full regression and integration with live trusted adapters remain open.
+
+## Gate E targeted state inspection fixture — 2026-10-09
+- Added `v3-assist-target-state.mjs`, an isolated injected-callback path that validates the exact `ha_get_entity` response, exact linked `ha_get_device` identity and effective room, then calls only the injected `ha_get_state` reader for one `light.*` entity. Refuses mismatches, unknown/unavailable states and read exceptions; returns `authorization:false` even for observed state.
+- Five focused tests passed, verifying read order, no read after room mismatch, no cross-entity state reuse and fail-closed behavior. This is **not** a live Assist endpoint or fully authenticated transport; the injected read callbacks must be independently limited to read-only operations before production use. No HA control call was made.
+- Live production readiness and room-wide scope Gate B are still open. A full isolated test run after this change remains outstanding.

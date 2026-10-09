@@ -84,3 +84,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Gate B injected secret fixture — 2026-10-09
 - Pure fixture `v3-ha-registry-secret-boundary.mjs` tests secret validation/closure, 2/2 focused passed, but NOT production authentication or protection against malicious injected callbacks. No real secrets used. Full regression pending. Gate B OPEN.
+
+## Gate B secret-file guard — 2026-10-09
+- Added `v3-ha-registry-secret-file.mjs` permission/symlink/owner checks with 2/2 focused tests on temp fixtures. Not connected to live secrets; parent-directory security not audited. Full npm test not yet rerun. Gate B OPEN.

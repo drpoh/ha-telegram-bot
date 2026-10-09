@@ -535,3 +535,8 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Added an offline injectable `v3-ha-registry-secret-boundary.mjs` with an explicit `loadSecret`, `openSocket`, `performRead` contract. Validates fixture secret shape, does not return a token or live socket to its caller, and closes the injected socket after read handling.
 - Focused tests: 2/2 passed, exit 0. Full suite NOT run at this checkpoint.
 - **Not a security boundary for untrusted callbacks:** `performRead` receives the credential and must be supplied only by trusted deployment code. No actual credential file ACL verification, TLS identity or production secret source is implemented. Gate B remains OPEN. No live HA calls or service changes.
+
+## 2026-10-09 — Gate B local secret-file permission guard
+- Added standalone `v3-ha-registry-secret-file.mjs` with tests against temporary fixture files only. Requires absolute path, regular non-symlink file owned by intended UID, no group/other permissions, bounded size; opens with `O_NOFOLLOW`, verifies opened inode and closes descriptor.
+- Focused tests: 2/2 passed, exit 0. Full regression not yet rerun at this checkpoint.
+- Limitations: parent-directory traversal/ownership and path race resistance across ancestors have not been audited; secure deployment must constrain a fixed trusted path, reject attacker-writable ancestors and independently authenticate TLS/HA. Reading a token is not authorization. No real credentials accessed or services changed. Gate B OPEN.

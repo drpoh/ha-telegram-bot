@@ -54,3 +54,7 @@ Next: inspect actual installed server capabilities and version using sanitized r
 
 ## Offline credential-injection fixture
 - `v3-ha-registry-secret-boundary.mjs` shows a test-only dependency-injection lifecycle with validation and socket closure. Its trusted `performRead` callback receives the secret, so it is only safe when **all** callbacks are operator-controlled trusted code. It is not proof of protected file permission, TLS identity, or transport credential security.
+
+## Local protected secret file prototype
+- `v3-ha-registry-secret-file.mjs` reads only an absolute-path regular file, rejects symlinks, non-owner UID, group/other access and invalid size, and verifies the opened inode. It uses fixture-only tests and is not wired to HA.
+- This is not a completed production security audit: parent directory path components and attacker-writable ancestors must also be verified before allowing real credentials. TLS endpoint identity and secret privilege scoping remain separate blockers.

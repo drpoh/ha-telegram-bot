@@ -4,3 +4,5 @@ test('separate environment descriptors pass offline review only',()=>assert.equa
 test('same service, storage, port, telegram and HA endpoint blocked',()=>{for(const field of ['service','storage','port','telegramCredentialRef','haEndpointRef']){const arr=setup();arr[1][field]=arr[0][field];assert.equal(validate(arr).reason,`shared_${field}`);}});
 test('dev/stage live HA or writes blocked',()=>{const arr=setup();arr[1].haAccess='approved_live';assert.equal(validate(arr).valid,false);arr[1].haAccess='mock';arr[0].writeEnabled=true;assert.equal(validate(arr).reason,'nonprod_writes');});
 test('missing or duplicated environments blocked',()=>{assert.equal(validate(setup().slice(0,2)).valid,false);const arr=setup();arr[2].environment='stage';assert.equal(validate(arr).valid,false);});
+
+test('storage parent-child overlap and traversal are blocked',()=>{const arr=setup();arr[1].storage=arr[0].storage+'/stage';assert.equal(validate(arr).reason,'nested_storage');arr[1].storage='/isolated/../isolated/stage';assert.equal(validate(arr).reason,'unsafe_storage_path');});

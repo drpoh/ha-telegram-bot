@@ -550,3 +550,7 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Added `v3-ha-registry-tls-evidence.mjs` with constant-time certificate SHA-256 pin comparison, exact expected hostname, peer authorization flag validation. Focused 2/2 passing, exit 0.
 - **Only offline/mock peer evidence:** all peer fields are injected and forgeable. This is not a real TLS handshake, certificate chain verification, trusted channel attestation or production connector. Return authorization:false unconditionally; Gate B remains OPEN.
 - Full regression PASSED: **119 test files / 467 assertions / 0 failed**, exit 0, log `/tmp/rs-v3-tls-fixture-full.log`. Next: actual server-side transport must independently verify TLS (not trust caller-provided booleans) and bound I/O/cancellation before real credentials or HA read requests.
+
+## 2026-10-09 — dev/stage/prod storage boundary follow-up
+- Reused existing `src/ops/environment-isolation.mjs` and `docs/ADR-DEV-STAGE-PROD.md`; added nested/unsafe storage-path denial and a focused regression fixture. Focused environment suites: 9/9 passed, no HA writes, no service restart. Full suite pending.
+- Three actual running environments are NOT deployed; v2 prod and v3 narrow pilot remain untouched. Next: real installed unit/resource inventory and operator-owned manifest template; do not create stage using live HA Green.

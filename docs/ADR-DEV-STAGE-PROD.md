@@ -32,3 +32,7 @@ Keep the existing v2 production and current v3 pilot as-is. Build the shared app
 - `src/ops/environment-isolation.mjs` validates three separately operator-supplied redacted deployment descriptors: service identifier, private storage path, listener port, Telegram credential reference and HA endpoint reference must all differ between dev, stage and prod.
 - `dev` must declare fixture-only HA access, `stage` mock HA access; both must explicitly disable HA writes. `prod` declares approved-live intent but that alone confers **no execution rights**. This is a validation prototype, not runtime service wiring or a security boundary against a privileged host operator.
 - Eight focused checks across environment policy and isolation passed. No actual tokens or credentials are put in manifests. No real environment has been deployed or migrated.
+
+## Offline storage containment hardening — 2026-10-09
+- Environment descriptors now reject nonabsolute, non-normalized, root and nested storage directories. Merely differing path strings is insufficient: e.g. `/isolated/dev` and `/isolated/dev/stage` must not coexist as separate environments.
+- 9/9 focused boundary and isolation tests passed. This is lexical containment validation only: symlinks, actual filesystem ownership, mount points and runtime service permissions still require separate verification before deploying stage or prod.

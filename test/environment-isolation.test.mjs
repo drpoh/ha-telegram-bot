@@ -1,0 +1,6 @@
+import test from 'node:test';import assert from 'node:assert/strict';import{validateEnvironmentIsolation as validate}from'../src/ops/environment-isolation.mjs';
+const setup=()=>['dev','stage','prod'].map((environment,i)=>({environment,service:`rs-ai-${environment}`,storage:`/isolated/${environment}`,port:3100+i,telegramCredentialRef:`ref-${environment}`,haEndpointRef:`endpoint-${environment}`,haAccess:['fixture','mock','approved_live'][i],writeEnabled:false}));
+test('separate environment descriptors pass offline review only',()=>assert.equal(validate(setup()).status,'offline_manifest_validated_only'));
+test('same service, storage, port, telegram and HA endpoint blocked',()=>{for(const field of ['service','storage','port','telegramCredentialRef','haEndpointRef']){const arr=setup();arr[1][field]=arr[0][field];assert.equal(validate(arr).reason,`shared_${field}`);}});
+test('dev/stage live HA or writes blocked',()=>{const arr=setup();arr[1].haAccess='approved_live';assert.equal(validate(arr).valid,false);arr[1].haAccess='mock';arr[0].writeEnabled=true;assert.equal(validate(arr).reason,'nonprod_writes');});
+test('missing or duplicated environments blocked',()=>{assert.equal(validate(setup().slice(0,2)).valid,false);const arr=setup();arr[2].environment='stage';assert.equal(validate(arr).valid,false);});

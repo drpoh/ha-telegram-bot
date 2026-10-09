@@ -60,3 +60,8 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-09 — Future environment separation
 - [ ] Adopt `docs/ADR-DEV-STAGE-PROD.md` before any expanded live deployment. Separate dev/stage/prod endpoints, bot tokens, databases, replay stores, service names, permissions and release credentials. Do **not** deploy stage/prod changes until isolation and rollback are proven and owner approves.
 - [x] Pure `src/ops/environment-boundary.mjs` contract and four isolated tests added; **not wired to production**, not an authorization mechanism by itself.
+
+## 2026-10-09 — Environment separation follow-up
+- [x] Offline dev/stage/prod descriptor collision checks for service, storage, port, Telegram reference and HA endpoint reference; see `docs/ADR-DEV-STAGE-PROD.md`.
+- [ ] Before creating stage: choose distinct test bot credentials, service account/runtime data and mock HA instance, harden permissions, validate actual installed unit files and network isolation. Do not use live HA Green as stage.
+- [ ] Before promoting prod: immutable artifacts, stage acceptance, rollback/backup tests and explicit owner authorization; never repurpose the current v2 or v3 runtime automatically.

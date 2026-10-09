@@ -27,3 +27,8 @@ Promote immutable reviewed commit/artifact **dev → stage → prod**, never pro
 
 ## Decision
 Keep the existing v2 production and current v3 pilot as-is. Build the shared application with an explicit deployment-environment adapter and distinct operator-controlled configurations in a future rollout. Avoid immediately splitting Git into three long-lived branches; immutable promotion and environment-specific deployment config should precede branch strategy changes.
+
+## Offline isolation manifest checks — 2026-10-09
+- `src/ops/environment-isolation.mjs` validates three separately operator-supplied redacted deployment descriptors: service identifier, private storage path, listener port, Telegram credential reference and HA endpoint reference must all differ between dev, stage and prod.
+- `dev` must declare fixture-only HA access, `stage` mock HA access; both must explicitly disable HA writes. `prod` declares approved-live intent but that alone confers **no execution rights**. This is a validation prototype, not runtime service wiring or a security boundary against a privileged host operator.
+- Eight focused checks across environment policy and isolation passed. No actual tokens or credentials are put in manifests. No real environment has been deployed or migrated.

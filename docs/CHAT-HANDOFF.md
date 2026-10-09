@@ -123,3 +123,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Gate B official upstream Connection bridge — 2026-10-09
 - `v3-ha-upstream-read-bridge.mjs` composes an injected official-client-shaped `sendMessagePromise` with existing two-pass registry checker. 2/2 focused pass, full npm regression **122 files / 478 assertions passed / 0 failures**, exit 0, `/tmp/rs-v3-official-bridge-full-20261009.log`. No network or privileges; Gate B OPEN.
+
+## Official client reconnect isolation — 2026-10-09
+- `v3-ha-upstream-read-bridge.mjs` now denies disconnected/closing connections and rejects a socket change during registry read. Focused **4/4** passed; full regression **122 files / 480 assertions passed / 0 failures**, exit 0, `/tmp/rs-v3-upstream-reconnect-guard-full-20261009.log`. No HA reads, credentials or deployment; Gate B OPEN.

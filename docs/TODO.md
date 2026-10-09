@@ -94,3 +94,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## Gate B upstream connection reuse — 2026-10-09
 - [x] Reuse official HA JS client `Connection.sendMessagePromise` interface behind a tiny offline-only registry read bridge; no custom wire protocol and no HA connection.
 - [ ] Supply independent, operator-reviewed authenticated TLS connection and bounded transport lifecycle before allowing any live read-only registry use; no authorization based on registry contents alone.
+
+## Gate B upstream reconnect boundary — 2026-10-09
+- [x] Reject an offline registry read on upstream Connection disconnect/close/socket replacement without implementing custom reconnect logic.
+- [ ] Prove authenticated TLS provenance and actual cancellation/close behavior of the official client in an independently reviewed isolated transport fixture before accessing real HA.

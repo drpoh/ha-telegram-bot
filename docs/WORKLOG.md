@@ -566,3 +566,8 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Focused `node --test test/v3-ha-registry-ws-client.test.mjs`: 3/3 passed; `git diff --check` clean. Full regression: **119 isolated files / 468 assertions passed / zero failed**, `npm test` exit **0**, log `/tmp/rs-v3-ws-abort-full-20261009.log`.
 - This is *cooperative* cancellation only: the caller-provided socket can ignore the signal, and `socket.close()` is not currently independently bounded. There is no real WebSocket connector, trust anchor, TLS certificate validation, production credential access, deployment or HA actuation. Gate B remains OPEN.
 - Next: independently enforced network I/O and socket-close deadlines, actual TLS peer evidence from a trusted runtime, and read-only operator-approved integration before any real HA access.
+
+## 2026-10-09 — Gate B offline bounded socket cleanup
+- Mock-only `testRegistrySocket` now accepts a validated `closeTimeoutMs` (1–10000 ms) and bounds injected `socket.close()` in `finally`, including when an exchange ignores `AbortSignal`.
+- Focused transport tests: **5/5 passed**, `node --check` and `git diff --check` passed. Full `npm test`: **119 isolated files / 471 assertions passed / zero failed**, exit **0**, log `/tmp/rs-v3-bounded-close-full-20261009.log`.
+- Limitation: settling the caller does **not** prove that an uncooperative underlying I/O is terminated. A trusted future socket implementation must enforce its own transport abort/destroy and TLS identity before accepting real credentials. No HA operations, production service changes or deployments. Gate B remains OPEN.

@@ -97,3 +97,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## Gate B cooperative mock WebSocket cancellation — 2026-10-09
 - Latest offline change passes `AbortSignal` to injected `socket.exchange` and aborts on timeout; focused regression 3/3. Full suite **119 files / 468 assertions passed / 0 failures**, exit 0; log `/tmp/rs-v3-ws-abort-full-20261009.log`.
 - Mock socket can ignore abort and `close()` can hang; this does NOT supply real transport-layer I/O enforcement, TLS peer identity or production authorization. Gate B OPEN.
+
+## Gate B offline bounded WebSocket close — 2026-10-09
+- Added a bounded `closeTimeoutMs` to the injected mock transport and adversarial tests for hanging close, ignored abort and thrown close; focused 5/5 pass. Full regression **119 files / 471 assertions passed / 0 failed**, exit 0; `/tmp/rs-v3-bounded-close-full-20261009.log`.
+- Not a real transport kill switch, TLS provenance or authorization. Gate B still OPEN; do not deploy.

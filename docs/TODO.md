@@ -67,5 +67,6 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [ ] Before promoting prod: immutable artifacts, stage acceptance, rollback/backup tests and explicit owner authorization; never repurpose the current v2 or v3 runtime automatically.
 
 ## Gate B transport follow-up — 2026-10-09
-- [ ] Enforce cancellation and bounded socket close independently of cooperative mock `AbortSignal`; test uncooperative exchanges, late replies and close failures before real transport.
+- [x] Bound offline caller completion for uncooperative exchange and hanging/failed close (mock tests; does not guarantee underlying I/O termination).
+- [ ] Build trusted transport-layer destruction and late-reply isolation for actual sockets, with independent runtime TLS provenance and complete negative tests before live use.
 - [ ] Establish independently verified TLS peer/endpoint provenance with an approved read-only credential deployment; never accept injected claims as authorization.

@@ -3,10 +3,11 @@ import {createRegistryFrameSession} from './v3-ha-registry-ws-frames.mjs';
 // Offline transport harness: a caller supplies a trusted, already-connected
 // socket fixture. No DNS, TLS, token lookup, WebSocket construction or live HA.
 const allowed=new Set(['config/entity_registry/list','config/device_registry/list','config/area_registry/list']);
-export async function testRegistrySocket({socket,commands=[...allowed],token,timeoutMs=2000}={}){
+export async function testRegistrySocket({socket,commands=[...allowed],token,timeoutMs=2000,closeTimeoutMs=2000}={}){
  const deny=reason=>({ok:false,authorization:false,reason});
  if(!socket||typeof socket.exchange!=='function'||typeof socket.close!=='function'||
   typeof token!=='string'||!token||!Number.isSafeInteger(timeoutMs)||timeoutMs<1||timeoutMs>10000||
+  (!Number.isSafeInteger(closeTimeoutMs)||closeTimeoutMs<1||closeTimeoutMs>10000)||
   !Array.isArray(commands)||commands.some(c=>!allowed.has(c)))return deny('invalid_transport_configuration');
  const state=createRegistryFrameSession();
  const exchange=async frame=>{
@@ -34,5 +35,14 @@ export async function testRegistrySocket({socket,commands=[...allowed],token,tim
   }
   return {ok:true,authorization:false,status:'mock_transport_only',records:result};
  }catch{return deny('transport_disconnected_or_timeout');}
- finally{state.abort();try{await socket.close();}catch{/* deny reuse */}}
+ finally{
+  state.abort();
+  // A hostile/uncooperative fixture must not hold the caller indefinitely.
+  // This bound does not prove that the remote operation has physically stopped.
+  let timer;
+  try{await Promise.race([
+   Promise.resolve().then(()=>socket.close()),
+   new Promise(resolve=>{timer=setTimeout(resolve,closeTimeoutMs);})
+  ]);}catch{/* deny reuse */}finally{clearTimeout(timer);}
+ }
 }

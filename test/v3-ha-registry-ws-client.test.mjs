@@ -45,3 +45,27 @@ test('timed-out pending mock exchange receives abort before socket closure',asyn
  assert.equal(aborted,true);
  assert.equal(closed,true);
 });
+
+test('uncooperative exchange and hanging close are bounded and deny',async()=>{
+ let closeStarted=false;
+ const socket={
+  async exchange(frame){
+   if(frame===null)return JSON.stringify({type:'auth_required'});
+   if(JSON.parse(frame).type==='auth')return JSON.stringify({type:'auth_ok'});
+   return new Promise(()=>{}); // intentionally ignores AbortSignal
+  },
+  close(){closeStarted=true;return new Promise(()=>{});}
+ };
+ const begin=Date.now();
+ const result=await testRegistrySocket({socket,token:'fixture',timeoutMs:10,closeTimeoutMs:10});
+ assert.equal(result.ok,false);
+ assert.equal(result.authorization,false);
+ assert.equal(closeStarted,true);
+ assert.ok(Date.now()-begin<1000,'bounded despite uncooperative fixture');
+});
+test('failed close does not change read-only mock result or grant authorization',async()=>{
+ const socket=mock();socket.close=async()=>{throw Error('failed to close');};
+ const result=await testRegistrySocket({socket,token:'fixture',closeTimeoutMs:10});
+ assert.equal(result.authorization,false);
+ assert.equal(result.status,'mock_transport_only');
+});

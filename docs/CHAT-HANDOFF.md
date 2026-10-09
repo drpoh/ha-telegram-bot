@@ -51,3 +51,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - New dedicated registry source contract and three passing focused tests, **not production integrated**. Claims are not credentials or proof of transport authentication.
 - Full suite most recently recorded before this new module: 109 files / 443 assertions, zero failures. Do not claim the new module passed full regression until rerun.
 - Next: authoritative HA registry transport/source verification, protected owner approval, and independent actor-to-action binding. No real HA control.
+
+## Gate B source audit checkpoint — 2026-10-09
+- See `docs/GATE-B-REGISTRY-SOURCE-REVIEW.md`. Generic `ha_search` and `ha_get_overview` are insufficient as complete authoritative registry sources. No production transport source is accepted.
+- Focused source contract tests: 4/4 pass; full suite after this test-only documentation change remains not rerun. Gate B OPEN.

@@ -484,3 +484,9 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Focused `node --test test/v3-registry-source-contract.test.mjs`: **3/3 passed**, exit 0. Full project regression NOT run for this checkpoint.
 - Important limitation: source metadata can be forged; this pure contract does not authenticate transport or read HA, and returns `authorization:false` even on acceptance. Do not treat `accepted:true` as trusted provenance or allow control. Gate B OPEN.
 - Next: independently review actual HA-MCP capabilities and design a protected authenticated HA registry transport plus offline fault fixtures; run full regression before any merge/deployment.
+
+## 2026-10-09 — Gate B installed-client source audit
+- Read current repo and Pi Git status; inspected `src/mcp/tools.mjs`, registry reader/guard and related code. No validated dedicated authenticated complete HA registry reader is wired into the project. Generic `ha_search`/`ha_get_overview` cannot be used as authority.
+- Added `docs/GATE-B-REGISTRY-SOURCE-REVIEW.md` with exact acceptance prerequisites for an authenticated read-only source. Added negative fixture rejecting generic MCP tool kinds as purported registry source.
+- Focused suite: **4/4 passed**, exit 0; full npm regression not rerun in this checkpoint. No live HA API writes, service changes or production deployment.
+- Next: use sanitized read-only diagnostics to inspect installed HA-MCP registry API/version; implement only after actual source and operator policy provenance is independently verified. Gate B OPEN.

@@ -18,3 +18,11 @@ test('incomplete and ambiguous inventory metadata fail closed',()=>{
   assert.equal(assessRegistrySourceContract({source,snapshot:{...snapshot,...changed}}).accepted,false);
  }
 });
+
+test("generic MCP lookup and claimed trusted metadata do not establish an approved dedicated source",()=>{
+ for(const kind of ["ha_search","ha_get_overview","ha_config_get_entity","unreviewed_custom_adapter"]){
+  const r=assessRegistrySourceContract({source:{...source,kind},snapshot});
+  assert.equal(r.accepted,false);assert.equal(r.authorization,false);
+ }
+ assert.equal(assessRegistrySourceContract({source,snapshot:{...snapshot,has_more:true}}).authorization,false);
+});

@@ -15,3 +15,13 @@ test('rollback, replayed old version, mutation, and missing checkpoint deny',()=
  assert.equal(inspectApprovalRollback({candidate:{...c,record:{...record,version:2}},checkpoint}).reason,'record_replaced');
  assert.equal(inspectApprovalRollback({candidate:c}).valid,false);
 });
+
+test('malformed approval candidate fails closed without throwing',()=>{
+ const checkpoint={revision:2,recordSha256:hash(record)};
+ for(const bad of [undefined,null,false,0,'bad',[],{}]){
+  const result=inspectApprovalRollback({candidate:{revision:2,record:bad},checkpoint});
+  assert.equal(result.valid,false);
+  assert.equal(result.authorized,false);
+  assert.equal(result.reason,'invalid_rollback_evidence');
+ }
+});

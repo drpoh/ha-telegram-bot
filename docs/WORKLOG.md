@@ -426,3 +426,9 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Coverage run used fixture SQLite databases, dummy test credentials and unreachable loopback MCP; not production acceptance.
 - Registry collision fail-closed patch: commit `313ebff`. Policy post-read ownership/permissions revalidation: commit `7185d69`. Focused follow-up: 10/10 passed.
 - Gate B remains OPEN pending trusted channel ingress, protected owner-reviewed approval, authoritative complete live registry and live acceptance approvals. No service restart or HA write.
+
+## 2026-10-09 — Malformed rollback approval records fail closed
+
+- Strengthened offline rollback guard: absent, primitive, array and empty approval record inputs now return invalid evidence rather than throwing or being mistaken for a meaningful review candidate.
+- Added adversarial malformed-input tests. Focused approval revocation and rollback suites: 5/5 passed; git diff --check clean.
+- Still isolated only: no authenticated owner checkpoint, production authorization, MCP writer or live deployment. Gate B remains OPEN.

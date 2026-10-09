@@ -14,6 +14,8 @@ export function inspectApprovalRollback({candidate,checkpoint}={}){
     !Number.isSafeInteger(checkpoint.revision)||checkpoint.revision<1||
     !hex(checkpoint.recordSha256))
   return deny('invalid_rollback_evidence');
+ if(!candidate.record||typeof candidate.record!=='object'||Array.isArray(candidate.record)||Object.keys(candidate.record).length===0)
+  return deny('invalid_rollback_evidence');
  if(candidate.revision!==checkpoint.revision)return deny(candidate.revision<checkpoint.revision?'rollback_detected':'unreviewed_new_revision');
  const observed=digest(candidate.record);
  if(!timingSafeEqual(Buffer.from(observed,'hex'),Buffer.from(checkpoint.recordSha256,'hex')))

@@ -32,3 +32,9 @@ Next: inspect actual installed server capabilities and version using sanitized r
 - The 2026.9 device registry introduces child devices; a collector must retain parent/child relations and effective area semantics, not assume all devices have the same fields.
 - A future adapter must authenticate the configured Home Assistant WebSocket endpoint, protect the token outside model context, bound memory/time/record count, verify read-only request allowlist, and reject malformed cross-registry links. Do not expose generic WebSocket commands to AI.
 - Added offline-only `v3-registry-double-read.mjs` with two-pass stable digest checks. It never authorizes actions; source authenticity and snapshot atomicity remain unproven.
+
+## Offline bounded native WebSocket request adapter
+- Added `src/decision/v3-ha-registry-read-adapter.mjs`, injectable transport only. The only requests it constructs are `config/entity_registry/list`, `config/device_registry/list`, and `config/area_registry/list` (two passes). No URL, token, WebSocket client, AI transport or live HA access is present in the module.
+- Each response must be an array with a bounded record count; duplicate/invalid identity, mismatching two-pass hashes, unknown entity device/area, missing child parent and parent cycles fail closed. A global timeout bounds the promise wait, but **does not cancel a request already in progress**; a production transport must enforce cancellation, payload byte size, connection concurrency and TLS/endpoint verification independently.
+- Even a stable result returns `ready:false`, `authorization:false` and `read_only_review`. Identical reads are not an atomic HA snapshot and do not prove the authenticated source. All Gate B live authorization and operator policy blockers remain open.
+- Focused tests use injected fixtures only, never a real Home Assistant. No running services modified.

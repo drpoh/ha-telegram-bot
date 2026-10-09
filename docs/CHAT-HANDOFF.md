@@ -67,3 +67,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## Native HA WebSocket investigation — 2026-10-09
 - Upstream has direct registry list WebSocket commands for entities, devices and areas. Their separate calls are not an atomic cross-registry snapshot. See `docs/GATE-B-REGISTRY-SOURCE-REVIEW.md`.
 - Offline two-pass digest module passes 2/2 focused tests but is NOT transport authentication or HA authorization; full regression pending.
+
+## Bounded offline HA WebSocket read adapter — 2026-10-09
+- `src/decision/v3-ha-registry-read-adapter.mjs` constructs only the three native registry list commands, injectable fixture transport; verifies two passes and child/area links; **5/5 focused tests passed**. Full regression **113 files / 454 assertions passed / zero failed files**, npm exit 0; log `/tmp/rs-v3-registry-read-adapter-full.log`.
+- No live connector is wired or approved, `authorization:false` always. Gate B OPEN; full test outcome must be recorded before considering this milestone stable.

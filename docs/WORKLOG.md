@@ -507,3 +507,9 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Added offline `v3-registry-double-read.mjs` and adversarial fixtures to reject detected entity/device/area drift and duplicate IDs. Focused tests: **2/2 passed**, exit 0. Full regression is NOT yet rerun.
 - The two-pass check provides only observed consistency, NOT atomicity or authentication. No live credentials, HA writes, deployments or policy changes. Gate B remains OPEN.
 - Next: source-specific read-only adapter, bounded transport checks and cross-registry child-device verification; full isolated regression before deployment.
+
+## 2026-10-09 — Offline allowlisted HA WebSocket registry adapter
+- Implemented `src/decision/v3-ha-registry-read-adapter.mjs`: injected transport, fixed three read-only registry commands, bounded timeout/count, two-pass consistency and child/area/entity relationship checks. Does not open sockets or store credentials.
+- Focused `node --test test/v3-ha-registry-read-adapter.test.mjs test/v3-registry-double-read.test.mjs`: **5/5 passed, zero failures**.
+- Full `npm test` completed: **113 isolated files / 454 assertions passed / zero failed files**, exit **0**; log `/tmp/rs-v3-registry-read-adapter-full.log`. No production wiring, HA commands, policy grants or restarts.
+- Next: record full regression result, then commit/push; subsequently design authenticated source/pinned endpoint and validation of effective child-device areas, with explicit operator approval before live tests.

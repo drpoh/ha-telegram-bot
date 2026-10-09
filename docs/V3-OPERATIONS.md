@@ -53,3 +53,10 @@ V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned
 - OS issue: local console getty repeatedly attempts automatic login to missing user `pi`, generating thousands of error logs. Left unchanged pending review.
 - Existing whole-home rollout gates remain open. HA Green and v2 were not modified.
 - Independent repeat of `npm test` on 2026-10-09: 92 isolated test files, 360 passed assertions, 0 failed files; explicitly captured `NPM_TEST_EXIT=0` (exit 0). Local log: `/tmp/rs-v3-morning-tests.log`.
+
+## Post-overnight stabilization review — 2026-10-09
+- Confirmed root cause of Raspberry Pi console error: `/etc/systemd/system/getty@tty1.service.d/autologin.conf` sets `agetty --autologin pi`; `getent passwd pi` returns no user. `getty@tty1.service` showed thousands of restarts. Repair requires an authorized privileged edit, deferred; unrelated bot services were left unchanged.
+- Read-only HA-MCP `ha_get_state(light.led_kukhnia)` again returned `off` with `isError=false`; v2, v3 and Desktop Commander remained active. No HA configuration or device state was changed.
+- Focused standalone security tests passed: channel intent ledger, one-shot intent ledger, in-flight invalidation, kitchen MCP dispatch boundary, single target scope and registry capability guard.
+- A seventh standalone test (`gate-c-confirmation-faults`) failed to initialize because standalone execution omitted required synthetic `TELEGRAM_BOT_TOKEN`. It **did pass** as part of the full isolated suite (92 files, 360 assertions, zero failures), whose harness supplies isolated synthetic environment variables. A follow-up standalone attempt was blocked by remote tool policy; no attempt to bypass it was made. No product regression has been established from this isolated launch error.
+- Desktop Commander auto-start following an actual host reboot remains an unverified acceptance condition. Gate B authorizes only the previously approved single light with Telegram per-action confirmation; never expand physical scope without approval.

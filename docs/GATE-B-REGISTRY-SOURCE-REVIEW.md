@@ -51,3 +51,6 @@ Next: inspect actual installed server capabilities and version using sanitized r
 ## Injected offline WebSocket transport harness
 - `v3-ha-registry-ws-client.mjs` exercises simulated authentication and only the fixed three read-only registry-list operations against an injected mock socket. Requests are paired with response IDs, and timeout/disconnect/rejected auth close the fixture and deny.
 - This is not a deployable HA connection. It does not create or authenticate a WebSocket, verify TLS pinning, protect or load a real access token, verify remote source identity, or cancel hung underlying I/O. `auth_ok` from a mock is not cryptographic verification. No production usage until separately reviewed and authorized.
+
+## Offline credential-injection fixture
+- `v3-ha-registry-secret-boundary.mjs` shows a test-only dependency-injection lifecycle with validation and socket closure. Its trusted `performRead` callback receives the secret, so it is only safe when **all** callbacks are operator-controlled trusted code. It is not proof of protected file permission, TLS identity, or transport credential security.

@@ -438,3 +438,10 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Full regression for previous approval rollback patch: 108 test files, 432 assertions passed, zero failed files, exit 0 (287.88 seconds).
 - Isolated Telegram transport admission now rejects same chat/message with changed update ID and denies when replay cache reaches capacity instead of evicting still-relevant IDs. No persisted replay identity across restart; authenticated production ingress remains unavailable.
 - Focused tests: 8/8 passed, zero failures. Gate B remains OPEN; no live wiring, bot restart or HA control.
+
+## 2026-10-09 — Offline durable Telegram replay adapter
+
+- Previous full isolated runner passed 108 files / 434 assertions / zero failures, exit 0.
+- Extended isolated Telegram admission with optional injected durable claim store, reusing existing Assist replay fixture. Claims key off chat and message ID, not mutable update ID; storage failures reject before admission.
+- Offline restart and storage failure tests added. Focused suites 11/11 passed. No live transport integration; persistent replay storage provenance, concurrency, retention and owner approval remain open.
+- Gate B OPEN, no HA writes, production bot restart or authorization expansion.

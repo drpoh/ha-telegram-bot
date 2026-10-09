@@ -1,6 +1,6 @@
 // Offline boundary component. The caller MUST be the actual trusted Telegraf handler.
 // It does not establish authenticity of an arbitrarily supplied context object.
-export function createTelegramTransportAdmission({allowedUserId,clock=Date.now,maxAgeMs=60000,maxSeen=2048}={}){
+export function createTelegramTransportAdmission({allowedUserId,clock=Date.now,maxAgeMs=60000,maxSeen=2048,durableReplay}={}){
  if(!Number.isSafeInteger(allowedUserId)||allowedUserId<=0||typeof clock!=="function"||
  !Number.isSafeInteger(maxAgeMs)||maxAgeMs<1||maxAgeMs>300000||
  !Number.isSafeInteger(maxSeen)||maxSeen<1||maxSeen>10000)throw Error("invalid_transport_config");
@@ -27,6 +27,14 @@ export function createTelegramTransportAdmission({allowedUserId,clock=Date.now,m
    // Never evict replay protection while an admitted message remains fresh.
    // A full bounded cache rejects new traffic until the adapter is reset.
    if(seen.size>=maxSeen)return {accepted:false,reason:"replay_capacity_exhausted"};
+   if(durableReplay!==undefined){
+    if(typeof durableReplay?.claim!=="function")
+     return {accepted:false,reason:"replay_storage_unavailable"};
+    try{
+     const result=durableReplay.claim("telegram:"+String(chat.id)+":"+String(msg.message_id));
+     if(result?.accepted!==true)return {accepted:false,reason:result?.reason||"replay_storage_failed"};
+    }catch{return {accepted:false,reason:"replay_storage_failed"};}
+   }
    seen.add(key);
    seenMessages.add(messageKey);
    return {accepted:true,actorId:from.id,chatId:chat.id,text:msg.text,issuedAt:msg.date*1000,authorization:false};

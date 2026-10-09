@@ -1,4 +1,8 @@
 import test from "node:test";
+import {mkdtempSync,rmSync} from "node:fs";
+import {join} from "node:path";
+import {tmpdir} from "node:os";
+import {createDurableAssistReplay} from "../src/decision/v3-assist-durable-replay.mjs";
 import assert from "node:assert/strict";
 import {createTelegramTransportAdmission} from "../src/decision/v3-telegram-transport-admission.mjs";
 const fresh=()=>({update:{update_id:900},from:{id:55},chat:{id:55,type:"private"},message:{message_id:7,from:{id:55},chat:{id:55},date:1000,text:"Включи свет"}});
@@ -33,4 +37,26 @@ test("bounded replay memory fails closed rather than evicting prior IDs",()=>{
  const another=fresh();another.update.update_id=901;another.message.message_id=8;
  assert.equal(gate.inspect(another).reason,"replay_capacity_exhausted");
  assert.equal(gate.inspect(fresh()).reason,"duplicate_transport_message");
+});
+
+
+test("offline durable Telegram replay survives adapter restart and changed update ID",()=>{
+ const directory=mkdtempSync(join(tmpdir(),"telegram-replay-"));
+ try{
+  const create=()=>createTelegramTransportAdmission({
+   allowedUserId:55,clock:()=>1000000,
+   durableReplay:createDurableAssistReplay({directory}),
+  });
+  assert.equal(create().inspect(fresh()).accepted,true);
+  const forged=fresh();forged.update.update_id=999;
+  assert.equal(create().inspect(forged).reason,"replayed_event");
+  const freshMessage=fresh();freshMessage.update.update_id=1000;freshMessage.message.message_id=8;
+  assert.equal(create().inspect(freshMessage).accepted,true);
+ }finally{rmSync(directory,{recursive:true,force:true});}
+});
+test("offline durable replay storage failures fail closed",()=>{
+ const gate=createTelegramTransportAdmission({allowedUserId:55,clock:()=>1000000,durableReplay:{claim(){throw Error("unavailable")}}});
+ assert.equal(gate.inspect(fresh()).reason,"replay_storage_failed");
+ const malformed=createTelegramTransportAdmission({allowedUserId:55,clock:()=>1000000,durableReplay:{}});
+ assert.equal(malformed.inspect(fresh()).reason,"replay_storage_unavailable");
 });

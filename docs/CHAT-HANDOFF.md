@@ -158,3 +158,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Gate B simplification decision — 2026-10-09
 - Read `docs/ADR-GATE-B-MINIMAL-CLOSURE.md`: stop redundant custom socket micro-fixtures; prefer official `home-assistant-js-websocket`/`ws`, narrow registry bridge and one strict joined authorization chain. Focused 20/20 passed. No runtime change. Gate B OPEN until independently proven actual HA source + operator-reviewed V3 policy and authenticated ingress.
+
+## Gate B joined policy denial tests — 2026-10-09
+- Added two offline integration tests to v3-gate-b-registry-policy-composition: positive mock attestations cannot override default-deny policy and missing approval source denies. Focused 3/3 passed. Full regression pending. Gate B remains OPEN.
+
+- Full npm test PASS 124 files / 490 assertions / 0 failed.

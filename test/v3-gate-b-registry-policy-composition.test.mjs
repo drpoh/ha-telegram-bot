@@ -35,3 +35,37 @@ test('upstream registry read-only evidence cannot become authorization in strict
  assert.notEqual(denied.status,'verified');
  assert.equal(writes,0);
 });
+
+test('default-deny V3 policy blocks even positive mock registry and approval attestations',async()=>{
+ let writes=0;
+ const joined=createIsolatedV3JoinedChain({
+  telegramIngress:createV3TelegramJoinedAdapter({allowedUserId:55,clock:()=>1000000}),
+  clock:()=>1000000,strictDispatchEvidence:true,
+  policy:getV3ReviewedPolicy(),configPath:'/nonexistent-reviewed-policy',
+  verifyRegistryAtDispatch:async()=>({valid:true}),
+  verifyApprovalAtDispatch:async()=>({valid:true}),
+  readTool:async()=>[],simulateWrite:async()=>{writes++;return {success:true};},
+ });
+ const pending=joined.issueFromTransport({ctx:context,action:intent});
+ assert.equal(pending.status,'pending');
+ const first=await joined.confirm({...pending.actor,token:pending.token});
+ assert.notEqual(first.status,'verified');
+ const replay=await joined.confirm({...pending.actor,token:pending.token});
+ assert.notEqual(replay.status,'verified');
+ assert.equal(writes,0);
+});
+
+test('missing dispatch approval source denies before any mock write',async()=>{
+ let writes=0;
+ const joined=createIsolatedV3JoinedChain({
+  telegramIngress:createV3TelegramJoinedAdapter({allowedUserId:55,clock:()=>1000000}),
+  clock:()=>1000000,strictDispatchEvidence:true,
+  policy:getV3ReviewedPolicy(),configPath:'/nonexistent-reviewed-policy',
+  verifyRegistryAtDispatch:async()=>({valid:true}),
+  readTool:async()=>[],simulateWrite:async()=>{writes++;},
+ });
+ const pending=joined.issueFromTransport({ctx:context,action:intent});
+ assert.equal(pending.status,'pending');
+ assert.notEqual((await joined.confirm({...pending.actor,token:pending.token})).status,'verified');
+ assert.equal(writes,0);
+});

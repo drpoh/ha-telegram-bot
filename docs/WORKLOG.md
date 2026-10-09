@@ -655,3 +655,9 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Focused tests spanning composed registry/policy, upstream reader, joined chain and operator policy loader: **20/20 passed**, exit 0. Documentation-only source change, no full regression needed to assert no runtime mutation.
 - Gate B remains OPEN due to absent operator-reviewed approved V3 policy and lighting classification, independently verified actual TLS+credential source, trusted live ingress binding and acceptance evidence. No live HA access/actuation, unit restarts or privileges changed.
 - Next: implement the smallest connected stage fixture with independent provenance, then request operator-reviewed specific credentials/policy for live read-only acceptance only when isolated tests pass.
+
+## 2026-10-09 — minimal joined Gate B denial slice
+- Reused existing upstream registry bridge, Telegram joined adapter, intent ledger and default-deny V3 policy. Added negative integration fixtures: mock-positive scope and approval cannot override missing reviewed policy, replay cannot create writes, and absent approval verifier denies. Focused 3/3 passed, simulated writes 0.
+- Full regression running at this checkpoint. No live HA action or production service changes. Gate B OPEN pending independently verified ingress/source and owner policy.
+
+- Full npm test PASS: 124 test files, 490 passing assertions, 0 failed, exit 0.

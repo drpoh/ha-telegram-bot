@@ -689,3 +689,10 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Remaining blockers: trusted operator-controlled live ingress, authenticated TLS HA registry with protected separate credential, actual reviewed V3 policy and light/switch mapping, live read-only acceptance with owner approval, stage rollback evidence. Gate B remains OPEN.
 
 - Full npm test PASS: 124 files / 494 assertions / zero failed, exit 0.
+
+## 2026-10-09 — strict Telegram ingress durable replay restart acceptance
+- Tested the existing joined Telegram chain with strict raw-message requirement and durable replay backed by a temporary isolated directory. A previously admitted message with a different Telegram update ID is rejected after the adapter/chain is recreated. Focused joined adapter tests 5/5 passed.
+- Full `npm test` running at `/tmp/rs-v3-gateb-durable-replay-full.log`; record exact result before committing.
+- The durable store fixture is not installed in the running Telegraf service and does not authenticate user-provided contexts. Gate B remains OPEN pending operator-reviewed read-only HA source, approval policy, trusted ingress binding and live acceptance authorization. No HA calls/real messages/writes or service changes.
+
+- Full npm test PASS: 124 isolated files, 495 assertions, 0 failed, exit 0.

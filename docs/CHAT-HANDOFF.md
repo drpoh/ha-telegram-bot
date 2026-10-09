@@ -183,3 +183,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - `createV3TelegramJoinedAdapter` supports optional `requireRawMessage` and `durableReplay` forwarded to transport admission. Full offline joined test includes strict raw message, actor mismatch, area/light inventory, mock review assertions, confirmation, single mock actuation and verified mock state, replay denied; focused 4/4 pass. Full suite pending `/tmp/rs-v3-gateb-vertical-full.log`. Gate B NOT accepted for live use.
 
 - Full suite PASS: 124 test files / 494 assertions / 0 failures, exit 0.
+
+## Gate B durable Telegram replay across adapter recreation — 2026-10-09
+- New focused `v3-telegram-joined-adapter.test.mjs` fixture exercises strict ingress plus durable replay with a different update ID after chain recreation; 5/5 focused passed. Full regression pending `/tmp/rs-v3-gateb-durable-replay-full.log`. Does not wire production; Gate B OPEN.
+
+- Full npm regression 124 files / 495 passing assertions / 0 failures, exit 0.

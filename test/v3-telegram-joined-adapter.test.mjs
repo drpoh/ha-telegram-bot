@@ -82,3 +82,25 @@ test('strict joined Telegraf ingress requires raw event and binds confirmed acti
   assert.equal(writes,1);
  }finally{rmSync(dir,{recursive:true,force:true});}
 });
+
+test('strict joined adapter denies a replayed source message across adapter restart',async()=>{
+ const {mkdtempSync,rmSync}=await import('node:fs');
+ const {tmpdir}=await import('node:os');
+ const {join}=await import('node:path');
+ const {createDurableAssistReplay}=await import('../src/decision/v3-assist-durable-replay.mjs');
+ const dir=mkdtempSync(join(tmpdir(),'v3-joined-replay-'));
+ try{
+  const make=()=>createIsolatedV3JoinedChain({
+   telegramIngress:createV3TelegramJoinedAdapter({allowedUserId:55,clock:()=>1000000,
+    requireRawMessage:true,durableReplay:createDurableAssistReplay({directory:dir})}),
+   clock:()=>1000000,policy:{default:'deny',entities:{}},configPath:'/no-live-policy',
+   readTool:async()=>{throw Error('forbidden');},simulateWrite:async()=>{throw Error('forbidden');},
+  });
+  const raw=ctx();raw.update.message={...raw.message};
+  assert.equal(make().issueFromTransport({ctx:raw,action}).status,'pending');
+  const again=ctx();again.update.update_id=102;again.update.message={...again.message};
+  const rejected=make().issueFromTransport({ctx:again,action});
+  assert.equal(rejected.status,'denied');
+  assert.equal(rejected.reason,'replayed_event');
+ }finally{rmSync(dir,{recursive:true,force:true});}
+});

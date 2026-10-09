@@ -74,3 +74,9 @@ V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned
 - Focused test: 4/4 passed. All MCP calls are injected mocks: no HA-MCP network call or physical write is made by these tests.
 - Verified one-shot consent cannot replay a command after failure; no second MCP write is attempted from a duplicate confirmation, and an unavailable admission guard denies without calling MCP.
 - This is offline fault-injection evidence only, not proof of exactly-once delivery across a real network interruption; a real service write may have executed even when its response is lost. Never automatically retry an ambiguous write.
+
+## Gate C repeat acceptance checkpoint — 2026-10-09 05:23 EEST
+- Completed the repeat isolated suite: `npm test` reported 92 test files, 360 passing assertions, 0 failed files. Test process was no longer running when inspected. Log: `/tmp/rs-v3-gate-c-20261009.log`.
+- Independently re-ran `node --test test/v3-kitchen-mcp-faults.test.mjs`: 4 passed, 0 failed, shell exit 0. Includes offline MCP preflight outage, ambiguous write failure, readback timeout and policy checker outage; all mock-based and do not touch HA devices.
+- v2, v3 and Desktop Commander remained active. Existing physical scope remains one kitchen light with explicit per-action Telegram confirmation.
+- Still open: full post-install host reboot test of Desktop Commander and real outage semantics; no claim of exactly-once network writes. These require separate operational risk review before expanding write scope.

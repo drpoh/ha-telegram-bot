@@ -74,3 +74,12 @@ test("raw update and convenience fields must agree when both supplied",()=>{
   assert.equal(result.accepted,false);assert.equal(result.authorization,undefined);
  }
 });
+
+test("non-message Telegram update cannot be promoted to a text command",()=>{
+ for(const kind of ["callback_query","edited_message","channel_post","inline_query"]){
+  const ctx=fresh();ctx.update[kind]={id:"fixture"};
+  const r=createTelegramTransportAdmission({allowedUserId:55,clock:()=>1000000}).inspect(ctx);
+  assert.equal(r.accepted,false);
+  assert.equal(r.reason,"unsupported_transport_update");
+ }
+});

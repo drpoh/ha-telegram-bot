@@ -668,3 +668,9 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Gate B still OPEN: production handler ownership, reviewed V3 policy and authenticated HA origin remain separate blockers.
 
 - Full npm test PASS: 124 files, 491 assertions, 0 failures, exit 0.
+
+## 2026-10-09 — Gate B Telegram update type boundary
+- Enforced an explicit text-message-only Telegram update shape in the isolated transport admission. Callback queries, edited messages, channel posts and inline queries cannot be combined with synthetic ctx.message fields to obtain a command admission.
+- Focused transport and joined adapter tests passed 11/11; full npm regression in /tmp/rs-v3-gateb-update-kind-full.log pending. This does not authenticate arbitrary caller-created ctx objects; still requires real trusted Telegraf handler and reviewed policy. No production changes. Gate B OPEN.
+
+- Full npm test PASS: 124 files, 492 assertions, zero failures, exit 0.

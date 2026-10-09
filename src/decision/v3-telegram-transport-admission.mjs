@@ -12,7 +12,13 @@ export function createTelegramTransportAdmission({allowedUserId,clock=Date.now,m
    const updateId=ctx?.update?.update_id;
    // If a raw update is present, it must describe the same message as the
    // Telegraf convenience properties. This is consistency, NOT authentication.
-   const raw=ctx?.update?.message;
+   // A non-message Telegram update must not be reinterpreted as a user text
+   // command through synthetic Telegraf convenience fields.
+   const update=ctx?.update;
+   if(update && Object.keys(update).some(key=>
+     key!=="update_id" && key!=="message" && key!=="_"))
+    return {accepted:false,reason:"unsupported_transport_update"};
+   const raw=update?.message;
    if(raw!==undefined && (raw?.message_id!==msg?.message_id ||
       raw?.from?.id!==from?.id || raw?.chat?.id!==chat?.id ||
       raw?.date!==msg?.date || raw?.text!==msg?.text))

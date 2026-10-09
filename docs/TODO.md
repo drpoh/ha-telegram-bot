@@ -70,3 +70,10 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Bound offline caller completion for uncooperative exchange and hanging/failed close (mock tests; does not guarantee underlying I/O termination).
 - [ ] Build trusted transport-layer destruction and late-reply isolation for actual sockets, with independent runtime TLS provenance and complete negative tests before live use.
 - [ ] Establish independently verified TLS peer/endpoint provenance with an approved read-only credential deployment; never accept injected claims as authorization.
+
+## Gate B accelerated delivery plan — owner approved 2026-10-09
+- [x] Record vertical-slice / upstream-reuse / tiered-testing decision in `AGENTS.md` and `docs/ADR-GATE-B-ACCELERATION.md` (workflow only).
+- [ ] Assess official `home-assistant-js-websocket` and Node WebSocket transport compatibility/security/rollback; no runtime connection or new credentials yet.
+- [ ] Assemble **one isolated end-to-end Gate B harness** using existing provenance, intent ledger, isolated dispatcher, reviewed policy and authoritative scope adapters. Ensure actor mismatch, replay, expired confirmation, changed scope, tool substitution and bypass all deny.
+- [ ] Only after independent source/operator identity evidence, propose read-only integration with explicit approval. Gate B OPEN.
+- [ ] Adopt tiered CI; do not add GitHub Actions workflow before permission/secrets review.

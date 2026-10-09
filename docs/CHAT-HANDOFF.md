@@ -101,3 +101,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## Gate B offline bounded WebSocket close — 2026-10-09
 - Added a bounded `closeTimeoutMs` to the injected mock transport and adversarial tests for hanging close, ignored abort and thrown close; focused 5/5 pass. Full regression **119 files / 471 assertions passed / 0 failed**, exit 0; `/tmp/rs-v3-bounded-close-full-20261009.log`.
 - Not a real transport kill switch, TLS provenance or authorization. Gate B still OPEN; do not deploy.
+
+## Gate B accelerated delivery switch — 2026-10-09
+- Owner approved faster vertical-slice development, use of maintained HA/MCP libraries and tiered tests. `AGENTS.md` and `docs/ADR-GATE-B-ACCELERATION.md` specify boundaries. No production integration, permissions or credentials changed.
+- NEXT: official client compatibility evaluation, then combined *isolated* intent/actor/action/policy/scope/confirmation chain. Avoid more standalone mock transport features unless required for safety. Gate B OPEN.

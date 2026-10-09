@@ -571,3 +571,9 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Mock-only `testRegistrySocket` now accepts a validated `closeTimeoutMs` (1–10000 ms) and bounds injected `socket.close()` in `finally`, including when an exchange ignores `AbortSignal`.
 - Focused transport tests: **5/5 passed**, `node --check` and `git diff --check` passed. Full `npm test`: **119 isolated files / 471 assertions passed / zero failed**, exit **0**, log `/tmp/rs-v3-bounded-close-full-20261009.log`.
 - Limitation: settling the caller does **not** prove that an uncooperative underlying I/O is terminated. A trusted future socket implementation must enforce its own transport abort/destroy and TLS identity before accepting real credentials. No HA operations, production service changes or deployments. Gate B remains OPEN.
+
+## 2026-10-09 — approved Gate B acceleration strategy documented
+- Re-read AGENTS, handoff, TODO, WORKLOG, strategy and registry source review on live clean Pi branch. Accepted documented vertical-slice priority, maintained official HA transport candidate and three-tier testing.
+- Changed documentation only: `AGENTS.md`, new `docs/ADR-GATE-B-ACCELERATION.md`, TODO, WORKLOG, CHAT-HANDOFF. No package installation, source code change, HA call, bot restart, token access, deployment or actuation.
+- Validation: documentation assertions and `git diff --check`; no new source behavior, so previous full code regression remains historical (119 files / 471 assertions, exit 0). Gate B OPEN.
+- Next: evaluate official JS WebSocket API and Node transport boundaries, then prioritize integrated offline Gate B actor/action/policy/scope chain.

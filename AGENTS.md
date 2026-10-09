@@ -37,6 +37,13 @@ Locks, alarm/security, destructive configuration changes and other critical oper
 5. Update documentation when behavior or architecture changes.
 6. After a stable tested milestone, commit/push it to GitHub.
 
+## Accelerated vertical-slice workflow (approved 2026-10-09)
+- Prioritize complete, independently tested Gate B command-provenance -> immutable action -> reviewed policy -> confirmation -> authoritative scope -> deny/audit chain over isolated protocol micro-modules.
+- Prefer maintained upstream Home Assistant / MCP libraries for commodity transport. Review version, license, Node 20/ARMv7 support, trust boundaries and rollback before adding dependencies. Never assume a library grants policy authorization.
+- Fast focused tests during edits; integration tests for complete slices; full isolated regression before pushing each stable milestone or merging. GitHub Actions may offload heavy CI after workflow/security review, but final Pi compatibility remains mandatory.
+- No live HA access, new credentials, stage/prod wiring, agent restart, automation, or real actuation without the existing explicit approval and gate criteria. Preserve all previous fail-closed invariants.
+- Keep TODO, WORKLOG and CHAT-HANDOFF synchronized at each stable milestone. Do not mark Gate B complete because an offline adapter passes.
+
 ## Secrets and runtime data
 Never commit .env, API keys, Telegram tokens, private MCP URLs, credentials, personal runtime databases, backups or logs containing secrets. Keep example configuration sanitized.
 

@@ -681,3 +681,11 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Full regression launched at `/tmp/rs-v3-gateb-strict-admission.log`; result pending. Gate B OPEN.
 
 - Full npm test PASSED: 124 files / 493 assertions / 0 failures, exit 0.
+
+## 2026-10-09 — Gate B minimal full vertical-slice fixture
+- Extended the already existing Telegram joined adapter to optionally pass strict original-message and durable replay dependencies into the existing transport admission; default untouched.
+- Added one complete isolated integration scenario: strict raw Telegram event -> bound actor -> immutable intent -> reviewed test room/light config -> default-deny explicit confirm grant -> independent test registry and approval callbacks -> one mock service result -> verified mock HA state -> replay denied. Mismatched actor and missing raw update deny; simulated writes exactly one only after matching confirmation. Focused 4/4 passed.
+- This is an OFFLINE acceptance fixture: test approval callback is not a real operator signature; mock state/source does not prove live HA identity. Real control or production deployment not authorized. Full regression pending in `/tmp/rs-v3-gateb-vertical-full.log`.
+- Remaining blockers: trusted operator-controlled live ingress, authenticated TLS HA registry with protected separate credential, actual reviewed V3 policy and light/switch mapping, live read-only acceptance with owner approval, stage rollback evidence. Gate B remains OPEN.
+
+- Full npm test PASS: 124 files / 494 assertions / zero failed, exit 0.

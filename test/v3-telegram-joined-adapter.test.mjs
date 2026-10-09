@@ -45,3 +45,40 @@ test('strict joined path fails closed without independent registry and approval 
   assert.equal(writes,0);
  }
 });
+
+test('strict joined Telegraf ingress requires raw event and binds confirmed action to actor',async()=>{
+ const {mkdtempSync,writeFileSync,rmSync}=await import('node:fs');
+ const {tmpdir}=await import('node:os');
+ const {join}=await import('node:path');
+ const dir=mkdtempSync(join(tmpdir(),'v3-joined-strict-'));
+ try{
+  const configPath=join(dir,'approved-area.json');
+  writeFileSync(configPath,JSON.stringify({version:1,areas:[{area_id:'room',area_name:'Комната',light_ids:['light.fixture'],excluded_light_ids:[],switch_light_ids:[]}]}));
+  let state='off',writes=0,registryChecks=0,approvalChecks=0;
+  const readTool=async(name,args)=>{
+   if(name==='ha_list_floors_areas')return {structuredContent:{success:true,floors:[{areas:[{area_id:'room',name:'Комната'}]}],unassigned_areas:[]}};
+   if(name==='ha_search')return {structuredContent:{success:true,partial:false,entity_has_more:false,entity_total_matches:args.domain_filter==='light'?1:0,entities:args.domain_filter==='light'?[{entity_id:'light.fixture',domain:'light',area:'Комната'}]:[]}};
+   if(name==='ha_get_state')return {structuredContent:{data:{entity_id:args.entity_id,state}}};
+   throw Error('unexpected_read');
+  };
+  const chain=createIsolatedV3JoinedChain({
+   telegramIngress:createV3TelegramJoinedAdapter({allowedUserId:55,clock:()=>1000000,requireRawMessage:true}),
+   clock:()=>1000000,strictDispatchEvidence:true,configPath,readTool,
+   policy:{default:'deny',entities:{'light.fixture':{level:'confirm',services:['turn_on']}}},
+   verifyRegistryAtDispatch:async()=>{registryChecks++;return {valid:true};},
+   verifyApprovalAtDispatch:async()=>{approvalChecks++;return {valid:true};},
+   simulateWrite:async()=>{writes++;state='on';return {structuredContent:{success:true}};},
+  });
+  const missing=chain.issueFromTransport({ctx:ctx(),action});
+  assert.equal(missing.status,'denied');
+  const original=ctx();original.update.message={...original.message};
+  const issued=chain.issueFromTransport({ctx:original,action});
+  assert.equal(issued.status,'pending');
+  assert.equal((await chain.confirm({userId:56,chatId:55,token:issued.token})).status,'missing');
+  assert.equal(writes,0);
+  assert.equal((await chain.confirm({...issued.actor,token:issued.token})).status,'verified');
+  assert.equal(writes,1);assert.equal(registryChecks,1);assert.equal(approvalChecks,1);
+  assert.equal((await chain.confirm({...issued.actor,token:issued.token})).status,'missing');
+  assert.equal(writes,1);
+ }finally{rmSync(dir,{recursive:true,force:true});}
+});

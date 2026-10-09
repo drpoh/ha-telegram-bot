@@ -178,3 +178,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Optional `requireRawMessage:true` on `createTelegramTransportAdmission` rejects contexts lacking original `update.message` and mismatched fields. Focused tests 9/9 passed; full test result pending in `/tmp/rs-v3-gateb-strict-admission.log`. Not production-wired; does not authenticate arbitrary input. Gate B OPEN.
 
 - Full regression PASSED 124 files / 493 assertions / 0 failures, exit 0.
+
+## Gate B isolated complete vertical slice — 2026-10-09
+- `createV3TelegramJoinedAdapter` supports optional `requireRawMessage` and `durableReplay` forwarded to transport admission. Full offline joined test includes strict raw message, actor mismatch, area/light inventory, mock review assertions, confirmation, single mock actuation and verified mock state, replay denied; focused 4/4 pass. Full suite pending `/tmp/rs-v3-gateb-vertical-full.log`. Gate B NOT accepted for live use.
+
+- Full suite PASS: 124 test files / 494 assertions / 0 failures, exit 0.

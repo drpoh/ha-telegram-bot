@@ -123,3 +123,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## Gate B minimal closure path — 2026-10-09
 - [x] Reviewed existing upstream-client, scope and policy modules; wrote `docs/ADR-GATE-B-MINIMAL-CLOSURE.md` to stop duplicate custom WS work.
 - [ ] Remaining hard acceptance: independently authenticated HA origin and read-only registry, operator-reviewed local policy/classification, trusted ingress action binding and staged end-to-end proof. Without these Gate B cannot be marked done.
+
+## Gate B minimal vertical slice — 2026-10-09
+- [x] Strict original Telegram message -> ledger actor -> area classification -> policy confirmation -> guarded mock service -> state verification, one isolated positive/replay-denial fixture (no real HA write).
+- [ ] Real ingress owner and durable replay deployment; independently authenticated TLS HA registry and bounded socket teardown; reviewed and protected V3 policy + real light/switch classification; operator-approved read-only live acceptance. Do not mark Gate B complete until evidence exists.

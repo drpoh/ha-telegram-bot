@@ -141,3 +141,8 @@ V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned
 - Added offline-only `acquireAssistEntityRegistry`: accepts an injected read-only registry reader, demands complete/non-paginated fresh entity inventory, consistent count, unique IDs, explicit area and device IDs, valid boolean availability/disabled values and light-only scope; fails closed on malformed data and transport exceptions.
 - Focused tests 4/4 passed; not deployed into the running Assist pipeline or Telegram v3 service. This module trusts the supplied `complete` metadata for fixture validation; a **real** adapter still must independently establish HA authority, count scope, registry origin, and immutable provenance. Do not infer live authorization from a successful fixture.
 - Await the full `npm test` result started earlier before claiming complete regression acceptance. No real HA actuation or restart was performed.
+
+## Gate E complete entity-registry acquisition contract — 2026-10-09
+- Previous full regression after independent target verification completed with 99 test files / 393 assertions / zero failures; final process no longer running. Log: `/tmp/rs-gate-e-target-regression-20261009.log`.
+- Added offline `v3-assist-target-reader.mjs`: a read-only injected registry reader must prove complete, unpaginated, fresh entity registry data with matching entity count and unique typed records; otherwise it fails closed. No network adapter, Assist ingress or HA write is installed.
+- Four focused reader tests passed. `ha_search` or a filtered entity subset is **not** accepted as a full authoritative registry. Next step is to inspect actual HA-MCP capabilities and confirm an authoritative complete registry source exists before attempting live voice reads.

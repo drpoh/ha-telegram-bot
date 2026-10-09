@@ -490,3 +490,8 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Added `docs/GATE-B-REGISTRY-SOURCE-REVIEW.md` with exact acceptance prerequisites for an authenticated read-only source. Added negative fixture rejecting generic MCP tool kinds as purported registry source.
 - Focused suite: **4/4 passed**, exit 0; full npm regression not rerun in this checkpoint. No live HA API writes, service changes or production deployment.
 - Next: use sanitized read-only diagnostics to inspect installed HA-MCP registry API/version; implement only after actual source and operator policy provenance is independently verified. Gate B OPEN.
+
+## 2026-10-09 — Real HA-MCP transport schema inspection, no actuation
+- Connected a separate Node MCP client to the configured server and invoked **only** `listTools()` (twice), returning 53 advertised tools and read-only input schemas. No `ha_device_registry_snapshot` exists. `ha_get_device` paginates devices, `ha_get_entity` resolves IDs, `ha_list_floors_areas` lists areas, and `ha_search` paginates search matches; none advertises cross-page atomic consistency / shared version binding.
+- Detailed source assessment in `docs/GATE-B-REGISTRY-SOURCE-REVIEW.md`. This is evidence of capability discovery, not evidence of complete authoritative live snapshot or permission to actuate. Gate B remains OPEN.
+- No source code or permission changes. Next: design version-consistent dedicated read-only registry collector with independent authenticated origin; negative-test pagination mutation, transient missing entries, and mismatched area/device relationships before deployment.

@@ -55,3 +55,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## Gate B source audit checkpoint — 2026-10-09
 - See `docs/GATE-B-REGISTRY-SOURCE-REVIEW.md`. Generic `ha_search` and `ha_get_overview` are insufficient as complete authoritative registry sources. No production transport source is accepted.
 - Focused source contract tests: 4/4 pass; full suite after this test-only documentation change remains not rerun. Gate B OPEN.
+
+## Installed HA-MCP verification — 2026-10-09
+- On Pi, authenticated connection to the configured HA-MCP succeeded with **53 advertised tools**. Schema read-only discovery verified `ha_get_device` paginated list, `ha_get_entity` single/batch resolution, `ha_list_floors_areas`, and paginated `ha_search` — but **no dedicated atomic registry snapshot tool**. See `docs/GATE-B-REGISTRY-SOURCE-REVIEW.md`.
+- Live registry completeness and consistent origin remain UNPROVEN. Never treat generic pagination as authorization; Gate B remains OPEN.

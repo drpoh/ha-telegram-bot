@@ -16,3 +16,12 @@ Status: BLOCKED for production authorization. Review is deliberately read-only.
 6. Preserve Home Assistant Green independence; no production HA write, service restart or new credentials without owner approval.
 
 Next: inspect actual installed server capabilities and version using sanitized read-only diagnostics, then implement and test a source-specific adapter. Do not use generic `ha_search` as a substitute.
+
+## Live read-only capability discovery (2026-10-09)
+- An independent MCP client connected to the configured HA-MCP transport on Raspberry Pi and called **only** `listTools()` twice; no HA entity reads or write tools invoked. The server advertised **53 tools**.
+- `ha_get_device`: supports list pagination (`limit` 1..200, `offset`), optional `detail_level=full`, filtering by area/integration, and single-device lookups. Schema does **not** promise atomic global snapshot or generation/version consistency between pages.
+- `ha_get_entity`: resolves exact entity IDs or stable unique IDs; its exposed schema is not an unfiltered complete entity-registry listing API.
+- `ha_list_floors_areas`: provides floor/area lists and counts, but does not bind their version atomically to the device and entity pages.
+- `ha_search` can enumerate entity-registry matches with pagination, `include_hidden=true`, but is a search surface; its schema does not guarantee all entities, stable membership, or consistency with device lists during concurrent HA mutations.
+- No advertised `ha_device_registry_snapshot` tool. A standalone dedicated source is still needed for Gate B evidence, or upstream must offer documented consistent snapshot semantics verified independently.
+- Do not interpret `ha_get_device`/`ha_search` pagination support as transactional completeness; mixed-time pages and registry mutation require explicit detection. Also require operator-controlled credentials and trusted endpoint binding.

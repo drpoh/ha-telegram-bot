@@ -98,3 +98,8 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## Gate B upstream reconnect boundary — 2026-10-09
 - [x] Reject an offline registry read on upstream Connection disconnect/close/socket replacement without implementing custom reconnect logic.
 - [ ] Prove authenticated TLS provenance and actual cancellation/close behavior of the official client in an independently reviewed isolated transport fixture before accessing real HA.
+
+## Transport-to-policy handoff — 2026-10-09
+- [x] Run isolated *real* Node TLS loopback certificate-chain/hostname negative tests on Pi without HA secrets or network contact; record that actual HA WebSocket transport acceptance remains outstanding.
+- [x] Enter policy-source stage: assert that a positive simulated evidence callback cannot import v2 grants into default-deny v3 policy.
+- [ ] Operator-review actual v3 policy storage and independently authenticated HA registry source before authorizing read-only integration, then stage with explicit owner approval. No production HA credentials introduced.

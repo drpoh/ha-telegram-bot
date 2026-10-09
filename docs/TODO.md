@@ -73,7 +73,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 
 ## Gate B accelerated delivery plan — owner approved 2026-10-09
 - [x] Record vertical-slice / upstream-reuse / tiered-testing decision in `AGENTS.md` and `docs/ADR-GATE-B-ACCELERATION.md` (workflow only).
-- [ ] Assess official `home-assistant-js-websocket` and Node WebSocket transport compatibility/security/rollback; no runtime connection or new credentials yet.
+- [ ] Complete official `home-assistant-js-websocket`/`ws` API and runtime security evaluation, Node ARMv7 compatibility and rollback; registry metadata/licensing precheck done without installation.
 - [ ] Assemble **one isolated end-to-end Gate B harness** using existing provenance, intent ledger, isolated dispatcher, reviewed policy and authoritative scope adapters. Ensure actor mismatch, replay, expired confirmation, changed scope, tool substitution and bypass all deny.
 - [ ] Only after independent source/operator identity evidence, propose read-only integration with explicit approval. Gate B OPEN.
 - [ ] Adopt tiered CI; do not add GitHub Actions workflow before permission/secrets review.

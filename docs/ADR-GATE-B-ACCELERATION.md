@@ -26,3 +26,9 @@ Prompt injection; spoofed actor/speaker; replay/replacement of a pending request
 
 ## Rollback
 This milestone changes documentation only. Revert its commit if workflow direction is unsuitable. Subsequent dependency/integration work must be separate, feature-flagged, reviewed and non-deployed until Gate B acceptance.
+
+## Initial Raspberry Pi package metadata check (2026-10-09)
+- `npm view home-assistant-js-websocket version license engines dependencies --json` returned version **9.7.1**, Apache-2.0, with no declared engines/dependencies in that output. This is package metadata, not proof of compatibility or security.
+- `npm view ws version engines --json` returned **8.22.0**, Node `>=10.0.0`; local runtime Node **20.19.2**.
+- `npm ls ... --depth=0`: neither library currently installed directly. No package installation, socket connection, HA token access or production change.
+- Remaining selection checks: inspect API exports, Node ESM usage, client authentication assumptions, real TLS validation, close/destroy lifecycle, package lock/integrity, Pi ARMv7 smoke test in an isolated environment, and rollback.

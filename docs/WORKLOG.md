@@ -577,3 +577,7 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Changed documentation only: `AGENTS.md`, new `docs/ADR-GATE-B-ACCELERATION.md`, TODO, WORKLOG, CHAT-HANDOFF. No package installation, source code change, HA call, bot restart, token access, deployment or actuation.
 - Validation: documentation assertions and `git diff --check`; no new source behavior, so previous full code regression remains historical (119 files / 471 assertions, exit 0). Gate B OPEN.
 - Next: evaluate official JS WebSocket API and Node transport boundaries, then prioritize integrated offline Gate B actor/action/policy/scope chain.
+
+## 2026-10-09 — upstream transport package metadata preflight
+- On Pi ran `npm view` for `home-assistant-js-websocket` (9.7.1, Apache-2.0) and `ws` (8.22.0, Node >=10) plus `npm ls --depth=0` (neither directly installed). This validates only published metadata, not real trust guarantees.
+- Documentation updated; no dependencies installed, no tests of new runtime behavior, no HA connections, no actuation and no service restarts. Next: inspect package interfaces/security and build isolated end-to-end Gate B chain.

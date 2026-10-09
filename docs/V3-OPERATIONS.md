@@ -103,3 +103,8 @@ V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned
 - Remote device reported Online and subsequently accepted actual ChatGPT remote shell commands without a manually launched remote process. Remote restoration initially lagged boot by roughly 104 seconds (service reported Online at 05:34:44).
 - `rs-gate-d-health.timer` active after boot; successful earlier run at 05:35:09, next due at 05:50:09. `getty@tty1` active. Read-only HA-MCP `ha_get_state(light.led_kukhnia)` returned `off`, `isError=false`, exit 0; no physical write.
 - **Passed:** full host reboot and auto-recovery of v2, v3, Desktop Commander Remote, timer and read-only MCP client. **Not proven:** network exactly-once semantics for write failures, complete operational incident logs or automatic alerts. Preserve current single-light permission boundary.
+
+## Gate D — health state transitions, 2026-10-09
+- Added deterministic read-only outage/recovery transition classification for v2/v3/Remote health snapshots. Records only service name, UTC time, `unhealthy` or `recovered` in private `/home/drpoh/.local/state/rs-home-ai-v3/gate-d-events.jsonl`, bounded to 200 entries. No Telegram messages, secret file reads, HA writes or automated service restarts are implemented by this logic.
+- 9/9 focused tests passed including outage, recovery, healthy repeat, and initial snapshot cases; live read-only health check returned `ok:true` after installation. Scheduled systemd timer uses the updated script on its next invocation.
+- Incident journal tracks process state transitions only. Persisted notifications to a user-controlled channel and end-to-end heartbeat monitoring still need separate review; an incident might go unnoticed if the monitoring timer itself fails.

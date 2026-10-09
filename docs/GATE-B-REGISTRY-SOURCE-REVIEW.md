@@ -47,3 +47,7 @@ Next: inspect actual installed server capabilities and version using sanitized r
 ## Offline WebSocket protocol fixture
 - `v3-ha-registry-ws-frames.mjs` is a frame state-machine only, with fixed registry-list command allowlist and request/result ID matching. It rejects invalid handshake, failed auth, invalid result, malformed JSON and oversized frames.
 - It must never be mistaken for a production client: receipt of a simulated `auth_ok` frame is not proof of server authentication; real transport still requires a protected token, validated TLS server identity, bounded timeouts, byte limits and operator-owned configuration.
+
+## Injected offline WebSocket transport harness
+- `v3-ha-registry-ws-client.mjs` exercises simulated authentication and only the fixed three read-only registry-list operations against an injected mock socket. Requests are paired with response IDs, and timeout/disconnect/rejected auth close the fixture and deny.
+- This is not a deployable HA connection. It does not create or authenticate a WebSocket, verify TLS pinning, protect or load a real access token, verify remote source identity, or cancel hung underlying I/O. `auth_ok` from a mock is not cryptographic verification. No production usage until separately reviewed and authorized.

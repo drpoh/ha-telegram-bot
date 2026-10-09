@@ -77,3 +77,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Gate B offline WebSocket frame guard — 2026-10-09
 - A fixed-read-command WebSocket protocol fixture was added; focused 2/2 tests passed. It has no network socket, TLS or token verification; `authorization:false` is unconditional. Gate B remains OPEN. See latest WORKLOG.
+
+## Gate B offline injected WebSocket client — 2026-10-09
+- `v3-ha-registry-ws-client.mjs` exists with mock-only transport tests: 4/4 focused pass. Full regression **116 files / 460 assertions passed / 0 failures**, exit **0**, log `/tmp/rs-v3-ws-client-full-20261009.log`.
+- Security limit: no real TLS/host or credentials provenance checks, socket supplied externally, authorization always false. Not live-deployed; Gate B OPEN.

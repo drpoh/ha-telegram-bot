@@ -524,3 +524,9 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - The state-machine accepts only three registry list command names, one outstanding request and exact result IDs. Focused tests: **2/2 passing**, exit 0. Full `npm test` not rerun at this checkpoint.
 - This module **does not open a WebSocket, send/validate a token, authenticate a host or enforce real network timeout/TLS**. Fake `auth_ok` fixture is a protocol simulation, not trusted identity. Its results have `authorization:false` throughout; Gate B remains OPEN.
 - Next: implement an independently reviewed bounded transport with injected mock WebSocket and protected token handling; ensure deny on disconnect, timeout, invalid authentication, oversized payload and connection reuse. No HA production integration until approved.
+
+## 2026-10-09 — Gate B injected WebSocket transport harness
+- Added `src/decision/v3-ha-registry-ws-client.mjs` and test fixtures: injected socket only, fixed registry read command allowlist, protocol auth handshake, exact response IDs, per-exchange timeout and cleanup, closes fixture on all paths.
+- Focused regression: **4/4 passing**, exit 0 (WebSocket client and frame protocol). Full `npm test` PASSED: **116 isolated files / 460 assertions / zero failed files**, exit **0**; log `/tmp/rs-v3-ws-client-full-20261009.log`.
+- Important: caller supplies an already-connected mock socket and test token. This module does NOT validate a host, TLS pin/certificate, server identity or token source, does NOT open a real WebSocket and is NOT integrated into production. A mock `auth_ok` is not evidence of trusted HA; `authorization:false` always. A real transport also needs cancellation of outstanding operations, not just promise timeouts.
+- Next: verify full suite, then checkpoint Git; deployment/real HA auth and operator policy remain separately blocked. Do not use this harness as live authorization.

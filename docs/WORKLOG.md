@@ -459,3 +459,9 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Full PR `npm test` initiated in isolated temporary worktree; result **PENDING** at this checkpoint. Log `/tmp/rs-v3-pr-full-test.log`; inspect process/result before claiming success or removing the worktree. Tests began with slow sequential `node --check` on Pi 3.
 - Gate B general actuation and Gate E live Assist remain OPEN. No Home Assistant writes, service restarts, permission expansion or production changes.
 - Next exact action: obtain completed full PR test exit status, check PR diff against latest upstream, then update WORKLOG and handoff before considering merge. Do not merge without evidence and explicit review.
+
+## 2026-10-09 — PR #1 full isolated regression completed
+- Draft PR #1 (`review/gate-e-target-snapshot-hardening-20261009`, head `6a761ba`) was tested in a separate detached Git worktree on Raspberry Pi 3.
+- Full `npm test` log `/tmp/rs-v3-pr-full-test.log`: 109 isolated test files, **442 passing assertions, zero failed files**, `npm test` exit **0**. The outer Desktop Commander process reported exit 1; do not conflate that wrapper status with test exit, and investigate worktree cleanup separately.
+- Main `feature/v3-home-agent` stayed clean and was not deployed; PR is still unmerged. Existing Gate B and Gate E authorization prerequisites remain OPEN. No HA actuation, service restart or policy expansion.
+- Next: inspect PR #1 diff and reconcile it with latest base, perform explicit review, then merge only if safe. Clean temporary worktree without deleting shared dependencies or unrelated files.

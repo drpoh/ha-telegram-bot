@@ -18,7 +18,7 @@ It is a compact navigation index, not a substitute for live repository checks.
 - Gate E only offline/read-only planning; no live voice authorization.
 - dev/stage/prod separation has an ADR and offline tests, but is **not deployed**.
 - Existing v2 and limited v3 pilots must not be restarted, reconfigured, expanded or used for real HA actuation without explicit authorization. Home Assistant Green must remain independent.
-- An isolated draft PR #1 (`review/gate-e-target-snapshot-hardening-20261009`) proposes Gate E snapshot validation hardening. Its new tests are unverified; inspect against HEAD and do not merge automatically: https://github.com/drpoh/ha-telegram-bot/pull/1
+- An isolated draft PR #1 (`review/gate-e-target-snapshot-hardening-20261009`) proposes Gate E snapshot validation hardening. Focused tests 11/11 and isolated full regression 109 files / 442 assertions passed; review diff and base before any merge: https://github.com/drpoh/ha-telegram-bot/pull/1
 
 ## Start-of-chat read-only checks
 Run with Desktop Commander on the authorized Pi, when connected:
@@ -43,6 +43,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - If Pi is offline, GitHub is a fallback; state that live runtime and local unpushed changes are unverified.
 
 ## Resume priority
-1. Check local branch/remote divergence and inspect draft PR #1; run its focused and full tests in isolation before any promotion.
+1. Inspect draft PR #1 against current base; focused and full isolated tests passed, but code review and merge decision are still outstanding.
 2. Continue Gate B trusted evidence and operator-policy provenance work without live HA control.
 3. Complete Gate D incident evidence/backup design and Gate E authenticated read-only route only after their specific prerequisites.

@@ -168,3 +168,8 @@ V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned
 - Most recent full `npm test` after the target-state fixture: 103 isolated test files, 410 assertions passed, zero failed files. Log `/tmp/rs-gate-e-target-state-20261009.log`; final process exited before this review.
 - Performed an explicitly allowlisted **read-only** HA-MCP run for `light.led_kukhnia` with expected HA area `kukhnia`: `ha_get_entity` → `ha_get_device` → `ha_get_state` (one call each). Result: `status=observed`, `state=off`, `areaId=kukhnia`, `authorization=false`.
 - No HA service calls, physical changes, production bot wiring, Atom Echo integration or service restarts. This demonstrates only one known entity's targeted state read; voice-source authentication and general area scope still blocked.
+
+## Gate E Assist ingress offline provenance/replay fixture — 2026-10-09
+- Added `v3-assist-ingress-guard.mjs`, an **offline-only** voice event guard using reviewed satellite ID, trusted-caller `transportVerified`, one-time event ID, TTL and bounded replay memory. Rejects unknown satellites, spoofed speaker identity, replay, expired/future events and capacity exhaustion fail-closed. Five isolated tests passed.
+- Critical limitation: `transportVerified` is a caller-supplied assertion in this fixture, **not cryptographic proof**. Only a future trusted local Assist transport adapter can supply it. The replay ledger is in-memory, resets on restart, and is not an authorization/confirmation store. These shortcomings bar production use and all voice actions until separately designed and accepted.
+- No live Atom Echo ingress, no service restart, no Home Assistant actuation. Full `npm test` regression still required for this change.

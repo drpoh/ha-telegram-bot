@@ -419,3 +419,10 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Added negative fixtures for duplicate, empty and missing device/area IDs, plus valid unchanged evidence.
 - Focused offline tests: 3 files, 8 passed, 0 failed; `git diff --check` clean. No Home Assistant write, restart, policy grant or deployment.
 - Gate B remains OPEN: this strengthens read-only evidence integrity, but cannot authenticate original ingress or establish owner-approved live policy. Full suite regression result is recorded after completion, not presumed.
+
+## 2026-10-09 — Full isolated regression after Gate B hardening
+
+- Full `npm test` completed: 108 isolated files, 431 passing assertions, 0 failed files, exit 0, runtime 291.01 seconds on Raspberry Pi 3.
+- Coverage run used fixture SQLite databases, dummy test credentials and unreachable loopback MCP; not production acceptance.
+- Registry collision fail-closed patch: commit `313ebff`. Policy post-read ownership/permissions revalidation: commit `7185d69`. Focused follow-up: 10/10 passed.
+- Gate B remains OPEN pending trusted channel ingress, protected owner-reviewed approval, authoritative complete live registry and live acceptance approvals. No service restart or HA write.

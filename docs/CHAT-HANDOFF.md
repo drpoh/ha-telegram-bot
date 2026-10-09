@@ -133,3 +133,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Faster regression script — 2026-10-09
 - Optimized `package.json` check with `find ... -print0 | xargs -0 -P 3 -n 1 node --check`, same 256 files and same Node checker, no new dependency. Standalone syntax probe 69.47s/exit 0; `npm run check` 73.69s/exit 0. Full `npm test` **123 files / 481 assertions / 0 failures**, exit 0, **220.98s**, `/tmp/rs-v3-accelerated-test-20261009.log`. Gate B OPEN; no live HA change.
+
+## Gate B composed registry + reviewed-policy fixture — 2026-10-09
+- New `test/v3-gate-b-registry-policy-composition.test.mjs` composes existing official-client-shaped read-only bridge, Telegram joined chain and V3 default-deny policy. Focused 1/1 pass; 6 fixed registry reads, zero simulated writes. Full `npm test` **124 files / 482 assertions / 0 failures**, exit 0, 219.32s. Offline-only. Gate B OPEN.

@@ -621,3 +621,8 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Identified 256 `.mjs` source/test files and slow serial syntax validation in `npm run check` (`find -exec node --check {} \;`); retained exactly the same Node syntax checker but used GNU `xargs -0 -P 3 -n 1` for bounded three-way parallelism, respecting Pi resources and null-safe paths. No dependencies, production code, policy or service modifications.
 - Isolated parallel syntax probe passed (69.47s; exit 0). Updated `package.json` npm `check` script and verified `npm run check` passes exit 0 (73.69s). Full `npm test`: **123 files / 481 assertions / zero failures**, exit 0, **220.98s**, `/tmp/rs-v3-accelerated-test-20261009.log` (previous full baseline 322.81s).
 - This optimizes development workflow only and does not change Gate B authorization evidence. Gate B OPEN; next: official HA registry read source and operator-reviewed policy, not more custom protocol.
+
+## 2026-10-09 — composed registry evidence and reviewed-policy Gate B denial
+- Added `test/v3-gate-b-registry-policy-composition.test.mjs`: real existing offline upstream-Connection bridge with 6 fixed read-only registry calls feeds strict joined Telegram chain and default-deny V3 reviewed-policy source.
+- Focused test 1/1 passed: returned read-only evidence is NOT permission; `authorization:false`, `ready:false`; positive test-only approval callback does not cause any write, simulated writes 0.
+- `npm test` full isolated regression passed: **124 files / 482 assertions / 0 failures**, exit 0, 219.32s; this checkpoint alone cannot establish independent TLS trust, production Telegram actor identity, real registry provenance or operator-approved V3 writes. Gate B OPEN. No real HA or production changes.

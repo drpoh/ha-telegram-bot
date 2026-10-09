@@ -107,3 +107,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## Accelerated verification workflow — 2026-10-09
 - [x] Reuse Node check and GNU xargs to parallelize syntax verification at `-P 3`, preserving coverage with no new runtime dependencies.
 - [ ] Benchmark total full-suite time under normal Pi load and keep test isolation; consider GitHub CI only after reviewed least-privilege workflow, not by skipping safety gates.
+
+## Gate B composition checkpoint — 2026-10-09
+- [x] Compose existing upstream registry bridge + joined Telegram confirmation + V3 reviewed policy into one isolated denial integration test.
+- [ ] Require independent HA TLS/registry provenance, owner-reviewed policy grants, authenticated live Telegram adapter and full approval before any real execution. Offline composed denial is not Gate B acceptance.

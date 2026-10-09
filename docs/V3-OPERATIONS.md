@@ -68,3 +68,9 @@ V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned
 ## Local console restored — 2026-10-09 05:11 EEST
 - Owner ran privileged `systemctl enable --now getty@tty1.service` following removal of invalid `pi` autologin override. Verified `getty@tty1.service`: `enabled`, `active`, `NRestarts=0` and journal only shows clean startup at 05:11:16. v2, v3 and Desktop Commander remained active.
 - A subsequent full isolated test run for Gate C was started in `/tmp/rs-v3-gate-c-20261009.log`; record the final result only after process exit is observed, not while running. No live physical actuation was requested.
+
+## Gate C fault injection — 2026-10-09
+- Added isolated `test/v3-kitchen-mcp-faults.test.mjs` with four scenarios: failed MCP preflight, failed service call after successful preflight, readback failure after one service call, and unavailable admission policy check.
+- Focused test: 4/4 passed. All MCP calls are injected mocks: no HA-MCP network call or physical write is made by these tests.
+- Verified one-shot consent cannot replay a command after failure; no second MCP write is attempted from a duplicate confirmation, and an unavailable admission guard denies without calling MCP.
+- This is offline fault-injection evidence only, not proof of exactly-once delivery across a real network interruption; a real service write may have executed even when its response is lost. Never automatically retry an ambiguous write.

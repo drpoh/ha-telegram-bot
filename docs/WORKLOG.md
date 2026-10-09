@@ -626,3 +626,7 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Added `test/v3-gate-b-registry-policy-composition.test.mjs`: real existing offline upstream-Connection bridge with 6 fixed read-only registry calls feeds strict joined Telegram chain and default-deny V3 reviewed-policy source.
 - Focused test 1/1 passed: returned read-only evidence is NOT permission; `authorization:false`, `ready:false`; positive test-only approval callback does not cause any write, simulated writes 0.
 - `npm test` full isolated regression passed: **124 files / 482 assertions / 0 failures**, exit 0, 219.32s; this checkpoint alone cannot establish independent TLS trust, production Telegram actor identity, real registry provenance or operator-approved V3 writes. Gate B OPEN. No real HA or production changes.
+
+## 2026-10-09 — upstream read timeout denial regression
+- Added a focused test to the existing upstream read bridge suite: a hanging registry request times out and no second request is issued. Focused 5/5 tests passed; full npm regression 124 files / 483 assertions / zero failures, exit 0, runtime 217.65 seconds.
+- This proves denial at the caller boundary, NOT cancellation of a pending network request or TLS provenance. No live HA credentials, connection, actuation, or service restart. Gate B OPEN.

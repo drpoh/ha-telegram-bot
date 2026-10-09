@@ -46,3 +46,13 @@ test('socket replacement during read invalidates evidence, preventing later regi
  assert.equal(result.reason,'registry_transport_failure');
  assert.equal(calls,1);
 });
+
+test('hung upstream registry read times out without advancing to another command',async()=>{
+ let count=0;
+ const connection={connected:true,closeRequested:false,socket:{},sendMessagePromise:async()=>{count++;return new Promise(()=>{});}};
+ const result=await inspectViaUpstreamConnection({connection,timeoutMs:25});
+ assert.equal(result.ready,false);
+ assert.equal(result.authorization,false);
+ assert.equal(result.reason,'registry_transport_failure');
+ assert.equal(count,1);
+});

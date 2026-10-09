@@ -163,3 +163,8 @@ V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned
 - Added `v3-assist-target-state.mjs`, an isolated injected-callback path that validates the exact `ha_get_entity` response, exact linked `ha_get_device` identity and effective room, then calls only the injected `ha_get_state` reader for one `light.*` entity. Refuses mismatches, unknown/unavailable states and read exceptions; returns `authorization:false` even for observed state.
 - Five focused tests passed, verifying read order, no read after room mismatch, no cross-entity state reuse and fail-closed behavior. This is **not** a live Assist endpoint or fully authenticated transport; the injected read callbacks must be independently limited to read-only operations before production use. No HA control call was made.
 - Live production readiness and room-wide scope Gate B are still open. A full isolated test run after this change remains outstanding.
+
+## Gate E real read-only target-chain acceptance — 2026-10-09
+- Most recent full `npm test` after the target-state fixture: 103 isolated test files, 410 assertions passed, zero failed files. Log `/tmp/rs-gate-e-target-state-20261009.log`; final process exited before this review.
+- Performed an explicitly allowlisted **read-only** HA-MCP run for `light.led_kukhnia` with expected HA area `kukhnia`: `ha_get_entity` → `ha_get_device` → `ha_get_state` (one call each). Result: `status=observed`, `state=off`, `areaId=kukhnia`, `authorization=false`.
+- No HA service calls, physical changes, production bot wiring, Atom Echo integration or service restarts. This demonstrates only one known entity's targeted state read; voice-source authentication and general area scope still blocked.

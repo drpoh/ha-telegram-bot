@@ -400,3 +400,7 @@ Full regression after strict operator policy schema and Gate B acceptance checkl
 - This is a test-only loader, not yet a complete secure operator approval pipeline. File ownership and path-race robustness, trusted caller binding, and device-registry provenance remain open. Gate B stays OPEN.
 
 Full regression after local-policy loading fixture: **69 isolated test files, 308 assertions passed, zero failed**, `npm test` exit 0 on Raspberry Pi. Gate B remains OPEN pending approved protected policy origin, complete HA registry source and end-to-end trusted authorization. No HA operations.
+
+## 2026-10-09 — Three-environment design checkpoint
+- Owner requested future dev (development), stage (testing), prod (production). Added ADR and pure fail-closed environment contract. Dev is fixture-only, stage mock/read-only by default, prod deployment needs explicit review. Four focused tests passed. No live environment was deployed or reconfigured.
+- Next: validate environment boundaries in a separate mock executor and test cross-environment isolation; no live Home Assistant writes or production changes.

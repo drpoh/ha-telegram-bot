@@ -20,3 +20,17 @@ test("reject actor, chat, stale, missing update and forged public-channel contex
  ];
  for(const ctx of cases)assert.equal(createTelegramTransportAdmission({allowedUserId:55,clock:()=>1000000}).inspect(ctx).accepted,false);
 });
+
+test("same message under a different update ID cannot replay",()=>{
+ const gate=createTelegramTransportAdmission({allowedUserId:55,clock:()=>1000000});
+ assert.equal(gate.inspect(fresh()).accepted,true);
+ const replay=fresh();replay.update.update_id=901;
+ assert.equal(gate.inspect(replay).reason,"duplicate_transport_message");
+});
+test("bounded replay memory fails closed rather than evicting prior IDs",()=>{
+ const gate=createTelegramTransportAdmission({allowedUserId:55,clock:()=>1000000,maxSeen:1});
+ assert.equal(gate.inspect(fresh()).accepted,true);
+ const another=fresh();another.update.update_id=901;another.message.message_id=8;
+ assert.equal(gate.inspect(another).reason,"replay_capacity_exhausted");
+ assert.equal(gate.inspect(fresh()).reason,"duplicate_transport_message");
+});

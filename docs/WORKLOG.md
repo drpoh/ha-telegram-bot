@@ -432,3 +432,9 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Strengthened offline rollback guard: absent, primitive, array and empty approval record inputs now return invalid evidence rather than throwing or being mistaken for a meaningful review candidate.
 - Added adversarial malformed-input tests. Focused approval revocation and rollback suites: 5/5 passed; git diff --check clean.
 - Still isolated only: no authenticated owner checkpoint, production authorization, MCP writer or live deployment. Gate B remains OPEN.
+
+## 2026-10-09 — Offline Telegram replay capacity guard
+
+- Full regression for previous approval rollback patch: 108 test files, 432 assertions passed, zero failed files, exit 0 (287.88 seconds).
+- Isolated Telegram transport admission now rejects same chat/message with changed update ID and denies when replay cache reaches capacity instead of evicting still-relevant IDs. No persisted replay identity across restart; authenticated production ingress remains unavailable.
+- Focused tests: 8/8 passed, zero failures. Gate B remains OPEN; no live wiring, bot restart or HA control.

@@ -5,6 +5,7 @@ export function createTelegramTransportAdmission({allowedUserId,clock=Date.now,m
  !Number.isSafeInteger(maxAgeMs)||maxAgeMs<1||maxAgeMs>300000||
  !Number.isSafeInteger(maxSeen)||maxSeen<1||maxSeen>10000)throw Error("invalid_transport_config");
  const seen=new Set();
+ const seenMessages=new Set();
  return Object.freeze({
   inspect(ctx){
    const msg=ctx?.message,from=ctx?.from,chat=ctx?.chat;
@@ -20,9 +21,14 @@ export function createTelegramTransportAdmission({allowedUserId,clock=Date.now,m
    const age=clock()-msg.date*1000;
    if(!Number.isFinite(age)||age< -5000||age>maxAgeMs)return {accepted:false,reason:"stale_transport_message"};
    const key=String(chat.id)+":"+String(updateId)+":"+String(msg.message_id);
-   if(seen.has(key))return {accepted:false,reason:"duplicate_transport_message"};
+   const messageKey=String(chat.id)+":"+String(msg.message_id);
+   if(seen.has(key)||seenMessages.has(messageKey))
+    return {accepted:false,reason:"duplicate_transport_message"};
+   // Never evict replay protection while an admitted message remains fresh.
+   // A full bounded cache rejects new traffic until the adapter is reset.
+   if(seen.size>=maxSeen)return {accepted:false,reason:"replay_capacity_exhausted"};
    seen.add(key);
-   if(seen.size>maxSeen)seen.delete(seen.values().next().value);
+   seenMessages.add(messageKey);
    return {accepted:true,actorId:from.id,chatId:chat.id,text:msg.text,issuedAt:msg.date*1000,authorization:false};
   }
  });

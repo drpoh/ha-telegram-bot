@@ -445,3 +445,8 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Extended isolated Telegram admission with optional injected durable claim store, reusing existing Assist replay fixture. Claims key off chat and message ID, not mutable update ID; storage failures reject before admission.
 - Offline restart and storage failure tests added. Focused suites 11/11 passed. No live transport integration; persistent replay storage provenance, concurrency, retention and owner approval remain open.
 - Gate B OPEN, no HA writes, production bot restart or authorization expansion.
+
+## 2026-10-09 — Durable Telegram offline regression result
+
+- All isolated tests after durable replay adapter: 108 files, 436 passing assertions, 0 failed files, exit 0 (116.17 seconds).
+- This is offline evidence only: production authentication, protected replay store, retention, multi-process admission and deployment authorization remain OPEN.

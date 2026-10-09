@@ -126,3 +126,8 @@ V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned
 - Current health snapshot: v2/v3/Remote active; Gate D timers active, with no pending incident messages. No physical HA calls.
 - Began Gate E with `test/v3-assist-gate-e-security.test.mjs` (4/4 passed): voice transcripts cannot claim verified speaker identity, unknown/forged satellites denied, high-risk intents denied, reviewed low-risk intents remain `review` only and never authorize HA actuation.
 - Atom Echo/Assist is not connected to live v3 dispatch. Live voice actions remain deferred pending authenticated transport, authoritative HA registry binding, explicit owner-approved voice confirmation protocol and independent authorization. Existing Telegram per-action confirmation and one-light limit remain unchanged.
+
+## Gate E isolated read-only route — 2026-10-09
+- Implemented offline-only `src/decision/v3-assist-readonly-route.mjs` which validates a trusted device-only Assist envelope and a complete fresh reviewed satellite registry binding. Strictly rejects all HA write/config tools and out-of-scope entity ID forms.
+- Even a valid `ha_get_state` request yields **review** (`target_registry_authorization_required`), not an MCP call, because satellite-area verification does not independently authorize the requested entity. No voice endpoint or live Assist-to-v3 wiring has been deployed.
+- 4/4 isolated Gate E route tests passed after supplying a fake, deliberately non-callable test read client. This explicitly confirms no network or HA operation is performed. Full isolated regression remains to be run before any production changes.

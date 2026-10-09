@@ -595,3 +595,8 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Extended existing `test/v3-telegram-joined-adapter.test.mjs` rather than creating a new production pathway. Strict offline chain now tests missing both evidence callbacks, missing registry evidence, missing approval evidence, and explicit approval rejection. Every branch rejects execution and records zero simulated writes.
 - Focused `node --test test/v3-telegram-joined-adapter.test.mjs`: **3/3 pass**. Full `npm test` **121 files / 476 assertions passed / 0 failures**, exit 0; `/tmp/rs-v3-strict-evidence-full-20261009.log`.
 - Caveat: tests intentionally have no independently authenticated Telegram ingress, HA source or operator policy; strict callbacks are fixtures. No production service change or HA access. Gate B OPEN.
+
+## 2026-10-09 — verified upstream JS Home Assistant client on live Pi without HA connection
+- Git clean at start (HEAD `4412c7c`), reread AGENTS, handoff, TODO and WORKLOG. Confirmed npm metadata: official client ESM `dist/index.js`, ws Node >=10.
+- Created a **temporary, isolated** npm prefix under `/tmp` (not the app). Installed only `home-assistant-js-websocket@9.7.1` and `ws@8.22.0` with `--ignore-scripts --no-audit --no-fund --save=false`; command exit 0, added 2 packages. ESM imports for connection/token-auth and ws default succeeded, exit 0.
+- Documentation-only repo change; `git diff --check`. No project dependencies changed, no production HA connection, no token access, no service restart. Upstream API runtime compatibility demonstrated, not TLS/security or read-only source authenticity. Gate B OPEN.

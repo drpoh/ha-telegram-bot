@@ -117,3 +117,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Gate B joined strict-denial checkpoint — 2026-10-09
 - Existing Telegram joined adapter extended with strict registry/approval evidence fault matrix: focused 3/3 pass; no simulated write when either attestation missing or rejected. Full suite **121 files / 476 assertions passed / 0 failures**, exit 0; `/tmp/rs-v3-strict-evidence-full-20261009.log`. Still offline; Gate B OPEN.
+
+## Official library verified on Pi — 2026-10-09
+- `home-assistant-js-websocket@9.7.1` and `ws@8.22.0` installed **only** in `/tmp/rs-ha-upstream-probe-20261009` using no scripts, Node 20.19.2. ESM export smoke test succeeded (exit 0). No project dependency, real socket, token or service change. Favor official client for future reviewed read-only connection; Gate B OPEN. See acceleration ADR.

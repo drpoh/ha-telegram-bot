@@ -115,3 +115,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## Gate B registry response limits — 2026-10-09
 - [x] Enforce post-receive JSON byte limit in injected official-client-shaped registry reader with oversized-response denial test.
 - [ ] Enforce actual WebSocket max frame size in the reviewed upstream socket configuration; post-receive checks alone cannot bound memory allocation.
+
+## Gate B WSS transport acceptance — 2026-10-09
+- [x] Prove actual `ws` TLS chain/hostname validation, frame-size limit and forced client termination using an ephemeral loopback-only WSS fixture.
+- [ ] Operator approval and independently verified live HA endpoint, protected purpose-specific credential, real socket close/reconnect acceptance, default-deny V3 policy review and staged rollback. No production wiring before explicit review.

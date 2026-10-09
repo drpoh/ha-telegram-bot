@@ -634,3 +634,7 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 ## 2026-10-09 — upstream registry payload-size post-receive bound
 - Expanded existing official-client bridge with a configurable 1 KiB–16 MiB post-receive JSON byte limit (default 2 MiB); payloads exceeding it fail closed before more registry requests. Focused tests 6/6 passed. Full suite **124 files / 484 assertions / 0 failures**, exit 0, 218.87s.
 - This is NOT a WebSocket frame limit and does not prevent a large frame from entering process memory; trusted ws `maxPayload` remains required before live use. No live HA connection or production changes.
+
+## 2026-10-09 — actual upstream WSS loopback validation
+- Used isolated ws 8.22.0 package, Node TLS/OpenSSL and an ephemeral localhost certificate. All five real loopback WSS cases passed: reject untrusted, accept explicitly trusted CA, reject wrong hostname, reject oversized frame via maxPayload, and force client termination. No HA or production connection.
+- Recorded precise limitations and operator-controlled live prerequisites in docs/GATE-B-WSS-ACCEPTANCE.md. Gate B remains OPEN pending actual HA origin and credentials and review.

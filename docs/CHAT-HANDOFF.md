@@ -142,3 +142,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Offline registry response size check — 2026-10-09
 - Existing upstream read bridge now enforces a post-receive JSON-size limit, with oversized registry denial and no later read; focused 6/6 passed. Full suite **124 files / 484 assertions / 0 failures**, exit 0, 218.87s. Transport-level `maxPayload`, real TLS and operator policy still outstanding. Gate B OPEN.
+
+## WSS loopback transport acceptance — 2026-10-09
+- On Pi, actual `ws@8.22.0` WSS loopback test with self-signed SAN localhost (temporary cert) passed untrusted rejection, explicit CA acceptance, wrong hostname rejection, `maxPayload` 4096-byte rejection, and `terminate()` (5/5). No HA or production contact. Full caveats and live prerequisites: `docs/GATE-B-WSS-ACCEPTANCE.md`. Real endpoint credentials/operator approval absent, Gate B OPEN.

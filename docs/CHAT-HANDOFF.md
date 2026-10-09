@@ -130,3 +130,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## Gate B local TLS fixture -> reviewed policy stage — 2026-10-09
 - Real Node TLS loopback handshake fixture passed untrusted CA rejection, trusted CA acceptance and hostname rejection, no HA contact; NOT an upstream HA connection acceptance.
 - Started owner-policy origin stage, reusing `v3-trusted-policy-source.mjs` with new joined-chain denial fixture, focused 1/1 passed: default-deny v3 prevents execution even with simulated positive registry/approval callbacks. Full suite **123 files / 481 assertions / 0 failures**, exit 0, `/tmp/rs-v3-gateb-tls-policy-full-20261009.log`. Gate B OPEN.
+
+## Faster regression script — 2026-10-09
+- Optimized `package.json` check with `find ... -print0 | xargs -0 -P 3 -n 1 node --check`, same 256 files and same Node checker, no new dependency. Standalone syntax probe 69.47s/exit 0; `npm run check` 73.69s/exit 0. Full `npm test` **123 files / 481 assertions / 0 failures**, exit 0, **220.98s**, `/tmp/rs-v3-accelerated-test-20261009.log`. Gate B OPEN; no live HA change.

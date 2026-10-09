@@ -103,3 +103,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Run isolated *real* Node TLS loopback certificate-chain/hostname negative tests on Pi without HA secrets or network contact; record that actual HA WebSocket transport acceptance remains outstanding.
 - [x] Enter policy-source stage: assert that a positive simulated evidence callback cannot import v2 grants into default-deny v3 policy.
 - [ ] Operator-review actual v3 policy storage and independently authenticated HA registry source before authorizing read-only integration, then stage with explicit owner approval. No production HA credentials introduced.
+
+## Accelerated verification workflow — 2026-10-09
+- [x] Reuse Node check and GNU xargs to parallelize syntax verification at `-P 3`, preserving coverage with no new runtime dependencies.
+- [ ] Benchmark total full-suite time under normal Pi load and keep test isolation; consider GitHub CI only after reviewed least-privilege workflow, not by skipping safety gates.

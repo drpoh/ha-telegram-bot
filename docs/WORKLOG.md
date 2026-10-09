@@ -600,3 +600,8 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Git clean at start (HEAD `4412c7c`), reread AGENTS, handoff, TODO and WORKLOG. Confirmed npm metadata: official client ESM `dist/index.js`, ws Node >=10.
 - Created a **temporary, isolated** npm prefix under `/tmp` (not the app). Installed only `home-assistant-js-websocket@9.7.1` and `ws@8.22.0` with `--ignore-scripts --no-audit --no-fund --save=false`; command exit 0, added 2 packages. ESM imports for connection/token-auth and ws default succeeded, exit 0.
 - Documentation-only repo change; `git diff --check`. No project dependencies changed, no production HA connection, no token access, no service restart. Upstream API runtime compatibility demonstrated, not TLS/security or read-only source authenticity. Gate B OPEN.
+
+## 2026-10-09 — official client shape integrated via read-only injected bridge
+- Added `src/decision/v3-ha-upstream-read-bridge.mjs`: tiny adapter for `home-assistant-js-websocket` Connection `sendMessagePromise`, reusing existing `inspectHaRegistryReadOnly`; six calls restricted to native entity/device/area registry read types (two passes), no direct package dependency or socket construction.
+- `test/v3-ha-upstream-read-bridge.test.mjs` focused **2/2 passing**; malformed/failed/oversized fixture returns authorization:false. Full suite **122 files / 478 assertions passed / zero failures**, exit 0, `/tmp/rs-v3-official-bridge-full-20261009.log`.
+- Trust boundary remains open: injected Connection does not prove TLS source, credential hygiene, registry atomicity or operator policy; positive fixtures are **read_only_review**. No real HA calls, service restarts or package installation in project. Gate B OPEN.

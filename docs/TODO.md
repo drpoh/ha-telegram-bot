@@ -90,3 +90,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## Gate B strict joined-chain evidence — 2026-10-09
 - [x] Test fail-closed when strict joined action lacks independent registry evidence and/or reviewed approval evidence; no simulated writes.
 - [ ] Replace callback assertions with genuinely independently verified registry origin and operator-owned policy; prove positive and negative end-to-end acceptance without granting real HA authorization.
+
+## Gate B upstream connection reuse — 2026-10-09
+- [x] Reuse official HA JS client `Connection.sendMessagePromise` interface behind a tiny offline-only registry read bridge; no custom wire protocol and no HA connection.
+- [ ] Supply independent, operator-reviewed authenticated TLS connection and bounded transport lifecycle before allowing any live read-only registry use; no authorization based on registry contents alone.

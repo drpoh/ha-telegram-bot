@@ -150,3 +150,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Found and fixed late-result continuation after registry timeout; 11 focused tests pass. Full regression log: /tmp/rs-v3-gateb-late-read-full.log. Transport cancellation still required. Gate B OPEN.
 
 - Full isolated regression verified: 124 files / 486 passing assertions / 0 failures, exit 0.
+
+## Gate B denial regression — 2026-10-09
+- Added two upstream failure tests for rejected middle-page and close during later pass; focused bridge 10/10 passed. Full regression pending. No production or HA control.
+
+- Full suite passed: 124 files, 488 assertions, 0 failures, exit 0.

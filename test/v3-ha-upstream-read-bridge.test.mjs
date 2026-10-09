@@ -92,3 +92,17 @@ test('late upstream response after timeout cannot resume later registry reads',a
  await new Promise(resolve=>setImmediate(resolve));
  assert.equal(calls,1);
 });
+
+test('rejected registry response halts before any further reads',async()=>{
+ let calls=0;
+ const c={connected:true,closeRequested:false,socket:{},async sendMessagePromise(){calls++;if(calls===2)throw Error('registry_denied');return [];}};
+ const r=await inspectViaUpstreamConnection({connection:c});
+ assert.equal(r.ready,false);assert.equal(r.authorization,false);assert.equal(calls,2);
+});
+
+test('connection closure during later registry pass stops subsequent requests',async()=>{
+ let calls=0;
+ const c={connected:true,closeRequested:false,socket:{},async sendMessagePromise(){calls++;if(calls===5)this.closeRequested=true;return [];}};
+ const r=await inspectViaUpstreamConnection({connection:c});
+ assert.equal(r.ready,false);assert.equal(r.authorization,false);assert.equal(calls,5);
+});

@@ -643,3 +643,8 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 Late upstream responses previously resumed registry reads after timeout. Added expiration checks before/after awaited calls and two adversarial regressions. Focused 11/11 passed. Full regression in /tmp/rs-v3-gateb-late-read-full.log pending. No live HA control.
 
 - Full npm test PASSED: 124 files, 486 assertions, 0 failures, exit 0; /tmp/rs-v3-gateb-late-read-full.log.
+
+## 2026-10-09 — Gate B denial regression expansion
+- Added offline upstream registry regressions for a rejected second read and connection close on the fifth read. Both cases must abort subsequent reads; focused bridge suite 10/10 passed. Full npm test pending. No HA calls or production changes; Gate B remains OPEN.
+
+- Full npm test PASSED: 124 test files, 488 assertions, zero failures, exit 0.

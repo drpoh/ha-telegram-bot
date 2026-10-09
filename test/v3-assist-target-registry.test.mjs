@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {verifyAssistReadTarget} from '../src/decision/v3-assist-target-registry.mjs';
+const entity={entityId:'light.fixture',areaId:'sauna',deviceId:'dev1',available:true,disabled:false};
+const snapshot={success:true,complete:true,partial:false,capturedAt:1000,entities:[entity]};
+const check=(changes={})=>verifyAssistReadTarget({snapshot,entityId:'light.fixture',areaId:'sauna',now:1010,...changes});
+test('verified read-only target is not execution authority',()=>assert.equal(check().status,'read_target_verified_only'));
+test('partial, stale, future and missing evidence denies',()=>{for(const v of [{complete:false},{partial:true},{capturedAt:1},{entities:[]},{entities:[entity,entity]}])assert.equal(check({snapshot:{...snapshot,...v},now:v.capturedAt===1?50000:1010}).allowed,false);assert.equal(check({now:999}).allowed,false);});
+test('wrong area, unavailable, disabled and missing device deny',()=>{for(const v of [{areaId:'kitchen'},{available:false},{disabled:true},{deviceId:''}])assert.equal(check({snapshot:{...snapshot,entities:[{...entity,...v}]}}).allowed,false);});
+test('not a light entity or matching room cannot broaden read scope',()=>{assert.equal(check({entityId:'switch.fixture'}).allowed,false);assert.equal(check({areaId:'kitchen'}).allowed,false);});

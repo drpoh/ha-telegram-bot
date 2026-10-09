@@ -131,3 +131,8 @@ V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned
 - Implemented offline-only `src/decision/v3-assist-readonly-route.mjs` which validates a trusted device-only Assist envelope and a complete fresh reviewed satellite registry binding. Strictly rejects all HA write/config tools and out-of-scope entity ID forms.
 - Even a valid `ha_get_state` request yields **review** (`target_registry_authorization_required`), not an MCP call, because satellite-area verification does not independently authorize the requested entity. No voice endpoint or live Assist-to-v3 wiring has been deployed.
 - 4/4 isolated Gate E route tests passed after supplying a fake, deliberately non-callable test read client. This explicitly confirms no network or HA operation is performed. Full isolated regression remains to be run before any production changes.
+
+## Gate E independently verified read-target fixture — 2026-10-09
+- Added offline-only `v3-assist-target-registry.mjs`: requires a fresh, complete entity registry snapshot with exactly one available, non-disabled `light.*` target, matching the independently verified satellite area and a non-empty device ID. Incomplete/stale/duplicate/wrong-area/unknown entries fail closed.
+- `v3-assist-readonly-route.mjs` now checks both satellite and entity registry evidence before returning a **review plan**, and still never calls HA-MCP or actuates HA. Neither fixture snapshot is treated as live authoritative HA evidence; live adapter and target authorization remain unimplemented.
+- Focused tests: 9/9 passed across target registry and route (including cross-area rejection). Full standard suite is a follow-up; no v2/v3 runtime restart.

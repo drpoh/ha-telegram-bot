@@ -115,3 +115,8 @@ V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned
 - Fixed-text notifications contain service (`v2`, `v3` or `remote`), event (`unhealthy` or `recovered`), and timestamp. Delivery attempts are marked before network requests and not automatically retried after ambiguous network failure, preventing automated duplicate notifications at the cost of potentially missed alerts. Attempts journal is private.
 - No synthetic Telegram alert has been sent and actual delivery is **not yet verified**. The timer does not independently detect a failure of its own monitoring process, and process health is not Telegram/MCP end-to-end health. Treat these as remaining Gate D acceptance limitations.
 - To disable only alerts: `systemctl --user disable --now rs-gate-d-alerts.timer`. Leave `rs-home-ai-v3.service` and v2 untouched.
+
+## Gate D Telegram transport smoke test — 2026-10-09
+- Sent exactly one explicitly marked test notification using the existing v3 Telegram bot credentials to the already approved private chat, without generating a fake incident event or changing any HA state.
+- Telegram `sendMessage` API returned HTTP 200, accepted=true. Receipt by the user's Telegram client was not independently verified; user may confirm receipt.
+- Prior to test, Gate D dry-run found zero pending incident events and read-only health check showed v2, v3 and Remote all active. Do not mistake this smoke test for validation of end-to-end detection of a real process outage, which remains to be tested.

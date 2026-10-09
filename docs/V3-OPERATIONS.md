@@ -120,3 +120,9 @@ V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned
 - Sent exactly one explicitly marked test notification using the existing v3 Telegram bot credentials to the already approved private chat, without generating a fake incident event or changing any HA state.
 - Telegram `sendMessage` API returned HTTP 200, accepted=true. Receipt by the user's Telegram client was not independently verified; user may confirm receipt.
 - Prior to test, Gate D dry-run found zero pending incident events and read-only health check showed v2, v3 and Remote all active. Do not mistake this smoke test for validation of end-to-end detection of a real process outage, which remains to be tested.
+
+## Gate D Telegram receipt and Gate E read-only kickoff — 2026-10-09
+- Owner independently confirmed receipt of the one explicitly marked Gate D Telegram smoke-test notification. Delivery channel is accepted for this test; no real service outage was induced. Monitoring still checks process state rather than end-to-end behavior and has no independent watchdog for timer failures.
+- Current health snapshot: v2/v3/Remote active; Gate D timers active, with no pending incident messages. No physical HA calls.
+- Began Gate E with `test/v3-assist-gate-e-security.test.mjs` (4/4 passed): voice transcripts cannot claim verified speaker identity, unknown/forged satellites denied, high-risk intents denied, reviewed low-risk intents remain `review` only and never authorize HA actuation.
+- Atom Echo/Assist is not connected to live v3 dispatch. Live voice actions remain deferred pending authenticated transport, authoritative HA registry binding, explicit owner-approved voice confirmation protocol and independent authorization. Existing Telegram per-action confirmation and one-light limit remain unchanged.

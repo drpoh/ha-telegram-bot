@@ -36,3 +36,9 @@ Keep the existing v2 production and current v3 pilot as-is. Build the shared app
 ## Offline storage containment hardening — 2026-10-09
 - Environment descriptors now reject nonabsolute, non-normalized, root and nested storage directories. Merely differing path strings is insufficient: e.g. `/isolated/dev` and `/isolated/dev/stage` must not coexist as separate environments.
 - 9/9 focused boundary and isolation tests passed. This is lexical containment validation only: symlinks, actual filesystem ownership, mount points and runtime service permissions still require separate verification before deploying stage or prod.
+
+## Live Pi read-only unit inventory — 2026-10-09
+- Inspected systemd, without editing units: system-level `ha-telegram-bot.service` was active. User-level `rs-home-ai-v3.service` and `desktop-commander-remote.service` were active. The user timers `rs-gate-d-health.timer` and `rs-gate-d-alerts.timer` were present and scheduled.
+- This is not proof of three environments. Neither a distinct dev nor stage Home AI service is deployed. The existing system bot and v3 narrow pilot must stay untouched while environment manifests and credentials are developed offline.
+- Before creating stage, audit installed unit `EnvironmentFile`, `WorkingDirectory`, `ExecStart`, identity, credentials and port allocations with redacted outputs, provide a mock HA source and separate Telegram credentials, test strict isolation and rollback, then request owner approval for any changes to running services.
+- Focused environment tests after nested storage hardening: 9/9 passed; full regression was launched separately, result pending at writing time.

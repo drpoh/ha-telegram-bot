@@ -554,3 +554,9 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 ## 2026-10-09 — dev/stage/prod storage boundary follow-up
 - Reused existing `src/ops/environment-isolation.mjs` and `docs/ADR-DEV-STAGE-PROD.md`; added nested/unsafe storage-path denial and a focused regression fixture. Focused environment suites: 9/9 passed, no HA writes, no service restart. Full suite pending.
 - Three actual running environments are NOT deployed; v2 prod and v3 narrow pilot remain untouched. Next: real installed unit/resource inventory and operator-owned manifest template; do not create stage using live HA Green.
+
+## 2026-10-09 — Environment inventory and full-regression checkpoint
+- Read `AGENTS.md`, `docs/CHAT-HANDOFF.md`, TODO and dev/stage/prod ADR. Raspberry Pi live Git branch `feature/v3-home-agent` was clean at the start; latest starting commit `5e9d2ec`.
+- Read-only live unit inventory: system v2 active, isolated user v3 and Desktop Commander active; Gate D health/alert timers scheduled. No dev/stage services were installed or deployed.
+- Focused environment tests: 9/9 pass, exit 0. Started full `npm test` in `/tmp/rs-v3-environment-isolation-full-20261009.log`; record its final exit and totals before claiming full acceptance.
+- No HA commands, Telegram actions, service restarts or modifications to secrets. Next: record full suite outcome, update handoff, and continue **offline** environment isolation manifest and source-boundary review. Stage needs explicit approval and a mock HA endpoint.

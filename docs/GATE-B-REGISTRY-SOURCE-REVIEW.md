@@ -58,3 +58,6 @@ Next: inspect actual installed server capabilities and version using sanitized r
 ## Local protected secret file prototype
 - `v3-ha-registry-secret-file.mjs` reads only an absolute-path regular file, rejects symlinks, non-owner UID, group/other access and invalid size, and verifies the opened inode. It uses fixture-only tests and is not wired to HA.
 - This is not a completed production security audit: parent directory path components and attacker-writable ancestors must also be verified before allowing real credentials. TLS endpoint identity and secret privilege scoping remain separate blockers.
+
+## Ancestor directory validation (offline)
+- Secret-file fixture now checks parent-directory ownership, symlink components and unsafe writable modes, except sticky shared system directories such as `/tmp` for tests. The path traversal is not an atomic openat sequence and should not be trusted against concurrent attacker-controlled renames. Deploy only using a fixed privileged path with independent operator review.

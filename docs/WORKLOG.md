@@ -540,3 +540,8 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Added standalone `v3-ha-registry-secret-file.mjs` with tests against temporary fixture files only. Requires absolute path, regular non-symlink file owned by intended UID, no group/other permissions, bounded size; opens with `O_NOFOLLOW`, verifies opened inode and closes descriptor.
 - Focused tests: 2/2 passed, exit 0. Full regression not yet rerun at this checkpoint.
 - Limitations: parent-directory traversal/ownership and path race resistance across ancestors have not been audited; secure deployment must constrain a fixed trusted path, reject attacker-writable ancestors and independently authenticate TLS/HA. Reading a token is not authorization. No real credentials accessed or services changed. Gate B OPEN.
+
+## 2026-10-09 — Gate B secret ancestry hardening
+- Extended `v3-ha-registry-secret-file.mjs` to inspect each ancestor directory for symlink traversal, foreign ownership, and unsafe group/other write permissions (sticky shared system directory exception). Added fixture tests covering writable parent and ancestor symlink.
+- Focused 3/3 passed, exit 0. Full `npm test`: **118 test files, 465 assertions passed, 0 failed**, exit **0**, log `/tmp/rs-v3-secret-ancestor-full.log`.
+- This remains an offline fixture, not a final race-free hardened credential loader: securely held directory file descriptors / openat-style traversal and approved deployment path are still needed before a real HA token is used. Home Assistant and production untouched. Gate B OPEN.

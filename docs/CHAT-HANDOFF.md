@@ -87,3 +87,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Gate B secret-file guard — 2026-10-09
 - Added `v3-ha-registry-secret-file.mjs` permission/symlink/owner checks with 2/2 focused tests on temp fixtures. Not connected to live secrets; parent-directory security not audited. Full npm test not yet rerun. Gate B OPEN.
+
+## Gate B secret ancestry fixture — 2026-10-09
+- `v3-ha-registry-secret-file.mjs` now checks ancestor directory ownership/symlinks/unsafe writable modes; focused 3/3 pass. Full suite **118 files / 465 assertions passed / 0 failures**, exit **0**, log `/tmp/rs-v3-secret-ancestor-full.log`. No real secrets accessed and production remains untouched. Gate B OPEN.

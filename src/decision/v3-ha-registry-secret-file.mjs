@@ -1,4 +1,5 @@
 import {open,lstat} from 'node:fs/promises';
+import {dirname,parse} from 'node:path';
 import {constants} from 'node:fs';
 
 // Optional trusted local secret reader. No production wiring, no HA requests.
@@ -7,6 +8,19 @@ export async function readProtectedRegistrySecret({path,ownerUid=process.getuid?
  if(typeof path!=='string'||!path.startsWith('/')||path.includes('\0')||
     !Number.isSafeInteger(ownerUid)||ownerUid<0||!Number.isSafeInteger(maxBytes)||maxBytes<16||maxBytes>4096)
   throw Error('invalid_secret_configuration');
+ // Fail closed on symlinks and directories writable by another local user.
+ // The trusted deployment must also protect the execution process and path configuration.
+ const root=parse(path).root;
+ let ancestor=dirname(path);
+ while(true){
+  const dir=await lstat(ancestor);
+  if(!dir.isDirectory()||dir.isSymbolicLink()||
+     (dir.uid!==ownerUid&&dir.uid!==0)||
+     ((dir.mode&0o022)!==0 && (dir.mode&0o1000)===0))
+   throw Error('untrusted_secret_parent');
+  if(ancestor===root)break;
+  ancestor=dirname(ancestor);
+ }
  const initial=await lstat(path);
  if(!initial.isFile()||initial.isSymbolicLink()||initial.uid!==ownerUid||(initial.mode&0o077)!==0||initial.size>maxBytes||initial.size<16)
   throw Error('untrusted_secret_file');

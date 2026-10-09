@@ -478,3 +478,9 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Focused registry suites: 8/8 passed, exit 0; `git diff --check` clean. Full `npm test` passed on Raspberry Pi 3: **109 isolated files / 443 assertions / zero failed files**, exit **0**; log `/tmp/rs-v3-gateb-registry-full-20261009.log`.
 - This is a source change validated offline; production deployment is not performed. It does not authenticate a live registry source, grant operator policy, alter MCP wiring, restart v2/v3, or actuate Home Assistant. Gate B remains OPEN.
 - Next exact action: continue Gate B with the authoritative complete live HA registry reader and operator-approved policy provenance; do not infer either from a SHA digest or model input.
+
+## 2026-10-09 — Gate B dedicated-registry-source contract (offline)
+- Added `src/decision/v3-registry-source-contract.mjs` and 3 adversarial tests. A purported dedicated read-only HA registry source must declare independently expected transport/operator/completeness/stable-ID guarantees, and snapshot must explicitly be unpaginated (`partial:false`, `has_more:false`, null cursor) with exact array counts.
+- Focused `node --test test/v3-registry-source-contract.test.mjs`: **3/3 passed**, exit 0. Full project regression NOT run for this checkpoint.
+- Important limitation: source metadata can be forged; this pure contract does not authenticate transport or read HA, and returns `authorization:false` even on acceptance. Do not treat `accepted:true` as trusted provenance or allow control. Gate B OPEN.
+- Next: independently review actual HA-MCP capabilities and design a protected authenticated HA registry transport plus offline fault fixtures; run full regression before any merge/deployment.

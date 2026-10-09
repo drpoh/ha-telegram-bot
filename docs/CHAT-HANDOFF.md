@@ -46,3 +46,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 1. Continue Gate B trusted actor/action/policy and authoritative read-only registry provenance (PR #1 has been merged; no need to redo it).
 2. Continue Gate B trusted evidence and operator-policy provenance work without live HA control.
 3. Complete Gate D incident evidence/backup design and Gate E authenticated read-only route only after their specific prerequisites.
+
+## Additional offline Gate B checkpoint — 2026-10-09
+- New dedicated registry source contract and three passing focused tests, **not production integrated**. Claims are not credentials or proof of transport authentication.
+- Full suite most recently recorded before this new module: 109 files / 443 assertions, zero failures. Do not claim the new module passed full regression until rerun.
+- Next: authoritative HA registry transport/source verification, protected owner approval, and independent actor-to-action binding. No real HA control.

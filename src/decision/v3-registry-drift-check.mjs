@@ -4,8 +4,16 @@ import {createHash} from "node:crypto";
 export function normalizeLightingRegistry({entities,devices,areas,groupMembers}={}){
  const deny=reason=>({ok:false,reason});
  if(!Array.isArray(entities)||!Array.isArray(devices)||!Array.isArray(areas)||!Array.isArray(groupMembers))return deny("incomplete_registry");
+ // Registry identity collisions must fail closed, not be hidden by Map/Set.
+ const validId=x=>typeof x==="string"&&x.length>0;
+ const deviceIds=devices.map(x=>x?.id);
+ const areaIdList=areas.map(x=>x?.id);
+ if(!deviceIds.every(validId)||new Set(deviceIds).size!==deviceIds.length)
+  return deny("invalid_or_duplicate_device");
+ if(!areaIdList.every(validId)||new Set(areaIdList).size!==areaIdList.length)
+  return deny("invalid_or_duplicate_area");
  const deviceMap=new Map(devices.map(x=>[x.id,x]));
- const areaIds=new Set(areas.map(x=>x.id));
+ const areaIds=new Set(areaIdList);
  const light=entities.filter(x=>typeof x.entity_id==="string"&&x.entity_id.startsWith("light."));
  if(new Set(light.map(x=>x.entity_id)).size!==light.length)return deny("duplicate_entity");
  if(groupMembers.length===0||new Set(groupMembers).size!==groupMembers.length||!groupMembers.every(x=>typeof x==="string"&&x.startsWith("light.")))return deny("invalid_group_members");

@@ -29,3 +29,17 @@ test("incomplete, duplicate, unknown devices and wrong group fail closed",()=>{
  assert.equal(normalizeLightingRegistry({...b,devices:[]}).ok,false);
  assert.equal(normalizeLightingRegistry({...b,entities:b.entities.map(x=>x.entity_id==="light.ves_svet"?{...x,platform:"yandex_station"}:x)}).ok,false);
 });
+
+
+test('duplicate and missing device or area identities fail closed',()=>{
+ const base={entities:[{entity_id:'light.ves_svet',platform:'group'}],
+  devices:[{id:'device-1',area_id:'area-1'}],areas:[{id:'area-1'}],
+  groupMembers:['light.fixture']};
+ for(const devices of [[{id:'duplicate'},{id:'duplicate'}],[{id:''}],[{}]]){
+  assert.equal(normalizeLightingRegistry({...base,devices}).ok,false);
+ }
+ for(const areas of [[{id:'duplicate'},{id:'duplicate'}],[{id:''}],[{}]]){
+  assert.equal(normalizeLightingRegistry({...base,areas}).ok,false);
+ }
+ assert.equal(normalizeLightingRegistry(base).ok,true);
+});

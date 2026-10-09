@@ -412,3 +412,10 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Existing isolated joined chain is present; no duplicate implementation was introduced. This is a focused regression only, not a full npm test or Gate B acceptance.
 - Gate B remains OPEN: protected owner-approved per-home policy, authoritative complete live registry, authenticated production transport binding and joined audit/fault acceptance are not established.
 - Next: design and test the operator-controlled trust boundary for policy/registry provenance using offline fixtures, then run full isolated regression. Do not deploy or expand device access without explicit approval.
+
+## 2026-10-09 — Fail-closed registry identity collisions (Gate B)
+
+- Added strict non-empty unique ID validation for device and area records in `normalizeLightingRegistry`; duplicate or absent IDs previously risked being silently collapsed by Map/Set.
+- Added negative fixtures for duplicate, empty and missing device/area IDs, plus valid unchanged evidence.
+- Focused offline tests: 3 files, 8 passed, 0 failed; `git diff --check` clean. No Home Assistant write, restart, policy grant or deployment.
+- Gate B remains OPEN: this strengthens read-only evidence integrity, but cannot authenticate original ingress or establish owner-approved live policy. Full suite regression result is recorded after completion, not presumed.

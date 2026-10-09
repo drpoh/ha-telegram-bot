@@ -648,3 +648,10 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Added offline upstream registry regressions for a rejected second read and connection close on the fifth read. Both cases must abort subsequent reads; focused bridge suite 10/10 passed. Full npm test pending. No HA calls or production changes; Gate B remains OPEN.
 
 - Full npm test PASSED: 124 test files, 488 assertions, zero failures, exit 0.
+
+## 2026-10-09 — Gate B simplification and closure-path review
+- Rechecked live Pi branch, comprehensive TODO/strategy and existing source. Confirmed many transport/security fixtures already exist; new custom protocol implementation would duplicate upstream `home-assistant-js-websocket`/`ws` and not solve trusted actor/approval issues.
+- Added `docs/ADR-GATE-B-MINIMAL-CLOSURE.md`, selecting the maintained upstream client, one strict joined policy chain, six bounded registry reads, explicit operator policy and separate live read-only acceptance; no weaker gates or automatic v2 permission import.
+- Focused tests spanning composed registry/policy, upstream reader, joined chain and operator policy loader: **20/20 passed**, exit 0. Documentation-only source change, no full regression needed to assert no runtime mutation.
+- Gate B remains OPEN due to absent operator-reviewed approved V3 policy and lighting classification, independently verified actual TLS+credential source, trusted live ingress binding and acceptance evidence. No live HA access/actuation, unit restarts or privileges changed.
+- Next: implement the smallest connected stage fixture with independent provenance, then request operator-reviewed specific credentials/policy for live read-only acceptance only when isolated tests pass.

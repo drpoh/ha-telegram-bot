@@ -155,3 +155,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Added two upstream failure tests for rejected middle-page and close during later pass; focused bridge 10/10 passed. Full regression pending. No production or HA control.
 
 - Full suite passed: 124 files, 488 assertions, 0 failures, exit 0.
+
+## Gate B simplification decision — 2026-10-09
+- Read `docs/ADR-GATE-B-MINIMAL-CLOSURE.md`: stop redundant custom socket micro-fixtures; prefer official `home-assistant-js-websocket`/`ws`, narrow registry bridge and one strict joined authorization chain. Focused 20/20 passed. No runtime change. Gate B OPEN until independently proven actual HA source + operator-reviewed V3 policy and authenticated ingress.

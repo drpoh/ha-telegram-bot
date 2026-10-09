@@ -119,3 +119,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## Gate B WSS transport acceptance — 2026-10-09
 - [x] Prove actual `ws` TLS chain/hostname validation, frame-size limit and forced client termination using an ephemeral loopback-only WSS fixture.
 - [ ] Operator approval and independently verified live HA endpoint, protected purpose-specific credential, real socket close/reconnect acceptance, default-deny V3 policy review and staged rollback. No production wiring before explicit review.
+
+## Gate B minimal closure path — 2026-10-09
+- [x] Reviewed existing upstream-client, scope and policy modules; wrote `docs/ADR-GATE-B-MINIMAL-CLOSURE.md` to stop duplicate custom WS work.
+- [ ] Remaining hard acceptance: independently authenticated HA origin and read-only registry, operator-reviewed local policy/classification, trusted ingress action binding and staged end-to-end proof. Without these Gate B cannot be marked done.

@@ -60,3 +60,17 @@ test("offline durable replay storage failures fail closed",()=>{
  const malformed=createTelegramTransportAdmission({allowedUserId:55,clock:()=>1000000,durableReplay:{}});
  assert.equal(malformed.inspect(fresh()).reason,"replay_storage_unavailable");
 });
+
+test("raw update and convenience fields must agree when both supplied",()=>{
+ const ok=fresh();ok.update.message={...ok.message};
+ assert.equal(createTelegramTransportAdmission({allowedUserId:55,clock:()=>1000000}).inspect(ok).accepted,true);
+ for(const message of [
+  {...ok.message,text:"Выключи свет"},
+  {...ok.message,from:{id:56}},
+  {...ok.message,message_id:8},
+ ]){
+  const forged={...ok,update:{...ok.update,message}};
+  const result=createTelegramTransportAdmission({allowedUserId:55,clock:()=>1000000}).inspect(forged);
+  assert.equal(result.accepted,false);assert.equal(result.authorization,undefined);
+ }
+});

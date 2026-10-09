@@ -163,3 +163,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Added two offline integration tests to v3-gate-b-registry-policy-composition: positive mock attestations cannot override default-deny policy and missing approval source denies. Focused 3/3 passed. Full regression pending. Gate B remains OPEN.
 
 - Full npm test PASS 124 files / 490 assertions / 0 failed.
+
+## Gate B Telegram update consistency — 2026-10-09
+- Added matching checks between raw Telegram update and Telegraf fields when both supplied. Focused 7/7 pass; full npm test pending. These checks do not prove that a caller-supplied context is genuine. Gate B OPEN.
+
+- Full npm test: 124 files / 491 passing assertions / zero failures.

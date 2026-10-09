@@ -661,3 +661,10 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Full regression running at this checkpoint. No live HA action or production service changes. Gate B OPEN pending independently verified ingress/source and owner policy.
 
 - Full npm test PASS: 124 test files, 490 passing assertions, 0 failed, exit 0.
+
+## 2026-10-09 — Gate B Telegram ingress consistency
+- Added raw Telegram update versus Telegraf convenience-field consistency checks (message ID, actor, chat, timestamp and exact text) when the raw message is available. This blocks one mismatch class before issuing a pending token but does NOT independently authenticate externally injected contexts.
+- New negative fixtures pass, focused ingress tests 7/7. Full npm regression running; no live Telegram/HA operations.
+- Gate B still OPEN: production handler ownership, reviewed V3 policy and authenticated HA origin remain separate blockers.
+
+- Full npm test PASS: 124 files, 491 assertions, 0 failures, exit 0.

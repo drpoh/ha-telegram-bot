@@ -10,6 +10,13 @@ export function createTelegramTransportAdmission({allowedUserId,clock=Date.now,m
   inspect(ctx){
    const msg=ctx?.message,from=ctx?.from,chat=ctx?.chat;
    const updateId=ctx?.update?.update_id;
+   // If a raw update is present, it must describe the same message as the
+   // Telegraf convenience properties. This is consistency, NOT authentication.
+   const raw=ctx?.update?.message;
+   if(raw!==undefined && (raw?.message_id!==msg?.message_id ||
+      raw?.from?.id!==from?.id || raw?.chat?.id!==chat?.id ||
+      raw?.date!==msg?.date || raw?.text!==msg?.text))
+    return {accepted:false,reason:"inconsistent_transport_update"};
    if(!Number.isSafeInteger(updateId)||updateId<0||
     !Number.isSafeInteger(msg?.message_id)||msg.message_id<1||
     !Number.isSafeInteger(from?.id)||from.id!==allowedUserId||

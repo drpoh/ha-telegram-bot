@@ -465,3 +465,9 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Full `npm test` log `/tmp/rs-v3-pr-full-test.log`: 109 isolated test files, **442 passing assertions, zero failed files**, `npm test` exit **0**. The outer Desktop Commander process reported exit 1; do not conflate that wrapper status with test exit, and investigate worktree cleanup separately.
 - Main `feature/v3-home-agent` stayed clean and was not deployed; PR is still unmerged. Existing Gate B and Gate E authorization prerequisites remain OPEN. No HA actuation, service restart or policy expansion.
 - Next: inspect PR #1 diff and reconcile it with latest base, perform explicit review, then merge only if safe. Clean temporary worktree without deleting shared dependencies or unrelated files.
+
+## 2026-10-09 — Gate E PR #1 merged after isolated regression
+- Reviewed PR #1 patch: only the offline `verifyAssistReadTarget` snapshot validator and adversarial tests changed; no MCP execution, HA write, production secrets or privilege broadening.
+- Focused PR tests: 11/11 pass. Full isolated test: 109 files / 442 assertions / zero failed files, `npm test` exit 0; outer wrapper exit 1 followed successful test and left disposable worktree requiring separate cleanup.
+- PR #1 marked ready, merged into `feature/v3-home-agent` as `8eab92b`. Raspberry Pi working branch then fast-forwarded cleanly to the same commit, without restarting services.
+- This completes the Gate E **snapshot-validation hardening task only**. Gate B general authorization and Gate E live voice controls remain OPEN. Next: return to Gate B operator-controlled evidence provenance and authoritative HA registry read design.

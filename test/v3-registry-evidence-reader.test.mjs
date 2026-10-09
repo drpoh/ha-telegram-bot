@@ -23,3 +23,15 @@ test("failed and timed-out adapters deny",async()=>{
  assert.equal((await acquireLightingEvidence({reader:()=>{throw Error("bad")},now})).reason,"registry_read_failed");
  assert.equal((await acquireLightingEvidence({reader:()=>new Promise(()=>{}),now,timeoutMs:5})).reason,"registry_read_failed");
 });
+
+test("malformed unrelated registry entity cannot be silently omitted",async()=>{
+ const pin=normalizeLightingRegistry(data()).sha256;
+ for(const extra of [{entity_id:""},{entity_id:"switch.a"},{entity_id:"bad space"},{entity_id:"sensor.temperature"}]){
+  const bad={...data(),entities:[...data().entities,extra],entityCount:3};
+  if(extra.entity_id==="switch.a"||extra.entity_id==="sensor.temperature")bad.entities.push({...extra});
+  bad.entityCount=bad.entities.length;
+  const r=await acquireLightingEvidence({reader:()=>bad,expectedSha256:pin,now});
+  assert.equal(r.ready,false);
+  assert.notEqual(r.reason,"owner_and_transport_approval_required");
+ }
+});

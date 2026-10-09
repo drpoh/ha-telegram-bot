@@ -11,8 +11,8 @@ It is a compact navigation index, not a substitute for live repository checks.
 5. GitHub `drpoh/ha-telegram-bot`, branch `feature/v3-home-agent`: pushed source of truth; inspect PRs and compare with live Pi before edits.
 
 ## Current verified checkpoint (2026-10-09)
-- Pi working branch: `feature/v3-home-agent`, clean when inspected; last local commit `edd6729`.
-- Latest recorded **completed** isolated suite: 108 test files, 436 assertions passed, 0 failures (see last dated WORKLOG entry).
+- Pi working branch: `feature/v3-home-agent`; verify live HEAD and cleanliness using `git status -sb` on every new chat; dated commit IDs below are historical.
+- Latest verified full isolated regression for Gate B entity identity hardening: **109 test files / 443 assertions passed / zero failures**, npm exit 0 (see latest WORKLOG entry).
 - Gate B remains **OPEN** for general/home-wide actions: missing authoritative complete live HA registry, approved per-home policy, trusted end-to-end identity/action authorization, and production acceptance.
 - Gate D reboot recovery and owner-received Telegram test alert passed; incident alert and tested off-device recovery remain open.
 - Gate E only offline/read-only planning; no live voice authorization.

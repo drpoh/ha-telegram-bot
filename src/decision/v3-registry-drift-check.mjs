@@ -14,8 +14,10 @@ export function normalizeLightingRegistry({entities,devices,areas,groupMembers}=
   return deny("invalid_or_duplicate_area");
  const deviceMap=new Map(devices.map(x=>[x.id,x]));
  const areaIds=new Set(areaIdList);
- const light=entities.filter(x=>typeof x.entity_id==="string"&&x.entity_id.startsWith("light."));
- if(new Set(light.map(x=>x.entity_id)).size!==light.length)return deny("duplicate_entity");
+ const entityIds=entities.map(x=>x?.entity_id);
+ if(!entityIds.every(x=>typeof x==="string"&&/^[a-z0-9_]+\.[a-z0-9_]+$/.test(x))||new Set(entityIds).size!==entityIds.length)
+  return deny("invalid_or_duplicate_entity");
+ const light=entities.filter(x=>x.entity_id.startsWith("light."));
  if(groupMembers.length===0||new Set(groupMembers).size!==groupMembers.length||!groupMembers.every(x=>typeof x==="string"&&x.startsWith("light.")))return deny("invalid_group_members");
  const group=light.find(x=>x.entity_id==="light.ves_svet");
  if(!group||group.platform!=="group")return deny("wrong_group_identity");

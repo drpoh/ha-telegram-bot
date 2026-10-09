@@ -471,3 +471,10 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Focused PR tests: 11/11 pass. Full isolated test: 109 files / 442 assertions / zero failed files, `npm test` exit 0; outer wrapper exit 1 followed successful test and left disposable worktree requiring separate cleanup.
 - PR #1 marked ready, merged into `feature/v3-home-agent` as `8eab92b`. Raspberry Pi working branch then fast-forwarded cleanly to the same commit, without restarting services.
 - This completes the Gate E **snapshot-validation hardening task only**. Gate B general authorization and Gate E live voice controls remain OPEN. Next: return to Gate B operator-controlled evidence provenance and authoritative HA registry read design.
+
+## 2026-10-09 — Gate B fail-closed full-registry entity identity check
+- Reviewed `src/decision/v3-registry-evidence-reader.mjs`, `src/decision/v3-registry-drift-check.mjs` and focused test fixtures. Existing normalizer only checked light-domain duplicates, allowing invalid or duplicate unrelated registry identities to be silently ignored despite an asserted complete snapshot.
+- Changed offline normalization to reject missing, malformed or duplicate `entity_id` for **all** registry entries before constructing light bindings. Added adversarial cases for malformed unrelated IDs and duplicate switch/sensor identities.
+- Focused registry suites: 8/8 passed, exit 0; `git diff --check` clean. Full `npm test` passed on Raspberry Pi 3: **109 isolated files / 443 assertions / zero failed files**, exit **0**; log `/tmp/rs-v3-gateb-registry-full-20261009.log`.
+- This is a source change validated offline; production deployment is not performed. It does not authenticate a live registry source, grant operator policy, alter MCP wiring, restart v2/v3, or actuate Home Assistant. Gate B remains OPEN.
+- Next exact action: continue Gate B with the authoritative complete live HA registry reader and operator-approved policy provenance; do not infer either from a SHA digest or model input.

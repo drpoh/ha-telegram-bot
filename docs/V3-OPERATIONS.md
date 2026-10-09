@@ -96,3 +96,10 @@ V3 controls only `light.led_kukhnia` after trusted Telegram confirmation, pinned
 - `test/gate-d-health.test.mjs`: 5/5 passed, simulating healthy service, stopped service, disabled service, missing PID, missing fields. No production process was killed during fault simulations.
 - `journalctl --user` yields no journal files in the inspected session, whereas system journal queries can return user process entries. Do not treat missing user logs as proof of no errors. The private health journal is service-status history **only**, not full application incident logging. It does not trigger alerts or changes and cannot prove end-to-end Telegram or MCP service health.
 - Installed timer/service units are local Raspberry Pi operational configuration, not part of Git; back up/migrate them separately. To stop only periodic health records: `systemctl --user disable --now rs-gate-d-health.timer`.
+
+## Gate D full host reboot acceptance — 2026-10-09 05:33 EEST
+- Owner rebooted Raspberry Pi: `uptime -s` changed to 2026-10-09 05:33:00, and boot ID changed compared with pre-reboot. HA Green was not restarted.
+- Auto-start verified after host reboot: system `ha-telegram-bot.service` active (PID 927); user `rs-home-ai-v3.service` active (PID 971); `desktop-commander-remote.service` active (PID 969, started 05:33:23). All were enabled and healthcheck returned `ok:true`, zero supervisor restarts.
+- Remote device reported Online and subsequently accepted actual ChatGPT remote shell commands without a manually launched remote process. Remote restoration initially lagged boot by roughly 104 seconds (service reported Online at 05:34:44).
+- `rs-gate-d-health.timer` active after boot; successful earlier run at 05:35:09, next due at 05:50:09. `getty@tty1` active. Read-only HA-MCP `ha_get_state(light.led_kukhnia)` returned `off`, `isError=false`, exit 0; no physical write.
+- **Passed:** full host reboot and auto-recovery of v2, v3, Desktop Commander Remote, timer and read-only MCP client. **Not proven:** network exactly-once semantics for write failures, complete operational incident logs or automatic alerts. Preserve current single-light permission boundary.

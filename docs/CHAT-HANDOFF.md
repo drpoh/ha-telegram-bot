@@ -114,3 +114,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Offline channel provenance vertical-slice — 2026-10-09
 - New tests for channel ledger + command envelope + tool boundary, 2/2 focused passed, full regression **121 files / 475 assertions passed / zero failures**, exit 0, `/tmp/rs-v3-channel-slice-full-20261009.log`. This proves mock rules only; next blocker is trusted ingress outside caller/LLM input. Gate B OPEN.
+
+## Gate B joined strict-denial checkpoint — 2026-10-09
+- Existing Telegram joined adapter extended with strict registry/approval evidence fault matrix: focused 3/3 pass; no simulated write when either attestation missing or rejected. Full suite **121 files / 476 assertions passed / 0 failures**, exit 0; `/tmp/rs-v3-strict-evidence-full-20261009.log`. Still offline; Gate B OPEN.

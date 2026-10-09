@@ -590,3 +590,8 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 ## 2026-10-09 — Gate B channel-neutral provenance regression
 - Added offline `test/v3-gate-b-channel-provenance-slice.test.mjs`, reusing existing command envelope, channel ledger and MCP tool boundary. Focused 2/2 pass; Assist device-only identity cannot impersonate human actor; test Telegram requires authenticated transport assertion, binds actor/original text, rejects replay and unknown/dangerous tools.
 - Full isolated regression **121 files / 475 assertions passed / zero failed**, exit **0**, `/tmp/rs-v3-channel-slice-full-20261009.log`. The fixture does not verify a real Telegram signature, sender or Assist identity and grants no HA authorization. No operational changes; Gate B OPEN.
+
+## 2026-10-09 — Gate B strict joined-evidence fault cases
+- Extended existing `test/v3-telegram-joined-adapter.test.mjs` rather than creating a new production pathway. Strict offline chain now tests missing both evidence callbacks, missing registry evidence, missing approval evidence, and explicit approval rejection. Every branch rejects execution and records zero simulated writes.
+- Focused `node --test test/v3-telegram-joined-adapter.test.mjs`: **3/3 pass**. Full `npm test` **121 files / 476 assertions passed / 0 failures**, exit 0; `/tmp/rs-v3-strict-evidence-full-20261009.log`.
+- Caveat: tests intentionally have no independently authenticated Telegram ingress, HA source or operator policy; strict callbacks are fixtures. No production service change or HA access. Gate B OPEN.

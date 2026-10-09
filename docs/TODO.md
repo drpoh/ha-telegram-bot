@@ -85,3 +85,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## Channel-neutral provenance follow-up — 2026-10-09
 - [x] Add combined offline Assist/Telegram channel-bound ledger/risk/tool denial tests; no actual transport authentication.
 - [ ] Provide independently established ingress identity from adapter-owned transport context and gate actions with reviewed source/policy evidence. No caller-provided `authenticated` claims may authorize operations.
+
+## Gate B strict joined-chain evidence — 2026-10-09
+- [x] Test fail-closed when strict joined action lacks independent registry evidence and/or reviewed approval evidence; no simulated writes.
+- [ ] Replace callback assertions with genuinely independently verified registry origin and operator-owned policy; prove positive and negative end-to-end acceptance without granting real HA authorization.

@@ -20,3 +20,28 @@ test('joined adapter declines stale and group chat messages',()=>{
  const group=ctx();group.chat.type='group';assert.equal(chain.issueFromTransport({ctx:group,action}).status,'denied');
  const stale=ctx();stale.message.date=900;assert.equal(chain.issueFromTransport({ctx:stale,action}).status,'denied');
 });
+
+test('strict joined path fails closed without independent registry and approval evidence',async()=>{
+ let writes=0;
+ for(const evidence of [
+  {},
+  {verifyRegistryAtDispatch:async()=>({valid:true})},
+  {verifyApprovalAtDispatch:async()=>({valid:true})},
+  {verifyRegistryAtDispatch:async()=>({valid:true}),verifyApprovalAtDispatch:async()=>({valid:false})},
+ ]){
+  const chain=createIsolatedV3JoinedChain({
+   telegramIngress:createV3TelegramJoinedAdapter({allowedUserId:55,clock:()=>1000000}),
+   clock:()=>1000000,strictDispatchEvidence:true,
+   policy:{entities:{'light.fixture':{level:'confirm',services:['turn_on']}}},
+   configPath:'/no-real-policy',
+   readTool:async()=>{throw Error('offline read disabled');},
+   simulateWrite:async()=>{writes++;throw Error('unexpected write');},
+   ...evidence,
+  });
+  const pending=chain.issueFromTransport({ctx:ctx(),action});
+  assert.equal(pending.status,'pending');
+  const result=await chain.confirm({...pending.actor,token:pending.token});
+  assert.notEqual(result.status,'verified');
+  assert.equal(writes,0);
+ }
+});

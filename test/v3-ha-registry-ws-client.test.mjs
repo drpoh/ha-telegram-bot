@@ -26,3 +26,22 @@ test('denied tools, failed auth, disconnect, timeout and wrong IDs fail closed',
   assert.equal(r.ok,false);assert.equal(r.authorization,false);assert.equal(socket.closed,true);
  }
 });
+
+test('timed-out pending mock exchange receives abort before socket closure',async()=>{
+ let aborted=false,closed=false;
+ const socket={
+  async exchange(frame,{signal}={}){
+   if(frame===null)return JSON.stringify({type:'auth_required'});
+   if(JSON.parse(frame).type==='auth')return JSON.stringify({type:'auth_ok'});
+   return new Promise((_,reject)=>{
+    signal.addEventListener('abort',()=>{aborted=true;reject(Error('aborted'));},{once:true});
+   });
+  },
+  async close(){closed=true;}
+ };
+ const result=await testRegistrySocket({socket,token:'fixture-only',timeoutMs:10});
+ assert.equal(result.ok,false);
+ assert.equal(result.authorization,false);
+ assert.equal(aborted,true);
+ assert.equal(closed,true);
+});

@@ -65,3 +65,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Offline dev/stage/prod descriptor collision checks for service, storage, port, Telegram reference and HA endpoint reference; see `docs/ADR-DEV-STAGE-PROD.md`.
 - [ ] Before creating stage: choose distinct test bot credentials, service account/runtime data and mock HA instance, harden permissions, validate actual installed unit files and network isolation. Do not use live HA Green as stage.
 - [ ] Before promoting prod: immutable artifacts, stage acceptance, rollback/backup tests and explicit owner authorization; never repurpose the current v2 or v3 runtime automatically.
+
+## Gate B transport follow-up — 2026-10-09
+- [ ] Enforce cancellation and bounded socket close independently of cooperative mock `AbortSignal`; test uncooperative exchanges, late replies and close failures before real transport.
+- [ ] Establish independently verified TLS peer/endpoint provenance with an approved read-only credential deployment; never accept injected claims as authorization.

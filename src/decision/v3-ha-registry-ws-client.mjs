@@ -10,10 +10,17 @@ export async function testRegistrySocket({socket,commands=[...allowed],token,tim
   !Array.isArray(commands)||commands.some(c=>!allowed.has(c)))return deny('invalid_transport_configuration');
  const state=createRegistryFrameSession();
  const exchange=async frame=>{
+  // Cancellation is cooperative: the injected socket must honor signal.
+  // Timeout alone must never be mistaken for confirmed cancellation.
+  const controller=new AbortController();
   let timer;
-  try{return await Promise.race([Promise.resolve().then(()=>socket.exchange(frame)),
-   new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('timeout')),timeoutMs);})]);}
-  finally{clearTimeout(timer);}
+  try{return await Promise.race([
+   Promise.resolve().then(()=>socket.exchange(frame,{signal:controller.signal})),
+   new Promise((_,reject)=>{timer=setTimeout(()=>{
+    controller.abort();reject(Error('timeout'));
+   },timeoutMs);})
+  ]);}
+  finally{clearTimeout(timer);controller.abort();}
  };
  try{
   const hello=state.receive(await exchange(null));if(!hello.ok)return deny(hello.reason);

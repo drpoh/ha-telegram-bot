@@ -560,3 +560,9 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Read-only live unit inventory: system v2 active, isolated user v3 and Desktop Commander active; Gate D health/alert timers scheduled. No dev/stage services were installed or deployed.
 - Focused environment tests: 9/9 pass, exit 0. Started full `npm test` in `/tmp/rs-v3-environment-isolation-full-20261009.log`; record its final exit and totals before claiming full acceptance.
 - No HA commands, Telegram actions, service restarts or modifications to secrets. Next: record full suite outcome, update handoff, and continue **offline** environment isolation manifest and source-boundary review. Stage needs explicit approval and a mock HA endpoint.
+
+## 2026-10-09 — Gate B mock WebSocket cancellation hardening
+- Updated `src/decision/v3-ha-registry-ws-client.mjs` to pass an `AbortSignal` to the injected `socket.exchange(frame, {signal})` and abort on timeout/settlement. A new offline adversarial test confirms the pending exchange receives abort and socket close follows.
+- Focused `node --test test/v3-ha-registry-ws-client.test.mjs`: 3/3 passed; `git diff --check` clean. Full regression: **119 isolated files / 468 assertions passed / zero failed**, `npm test` exit **0**, log `/tmp/rs-v3-ws-abort-full-20261009.log`.
+- This is *cooperative* cancellation only: the caller-provided socket can ignore the signal, and `socket.close()` is not currently independently bounded. There is no real WebSocket connector, trust anchor, TLS certificate validation, production credential access, deployment or HA actuation. Gate B remains OPEN.
+- Next: independently enforced network I/O and socket-close deadlines, actual TLS peer evidence from a trusted runtime, and read-only operator-approved integration before any real HA access.

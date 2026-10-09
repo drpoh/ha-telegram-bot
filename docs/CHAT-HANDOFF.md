@@ -93,3 +93,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Gate B offline TLS peer evidence — 2026-10-09
 - New `v3-ha-registry-tls-evidence.mjs` and 2/2 passing focused fixtures check hostname and certificate fingerprint; no actual network TLS handshake, peer data is caller supplied. Full suite **119 files / 467 assertions passed / 0 failures**, exit 0, log `/tmp/rs-v3-tls-fixture-full.log`. Gate B OPEN.
+
+## Gate B cooperative mock WebSocket cancellation — 2026-10-09
+- Latest offline change passes `AbortSignal` to injected `socket.exchange` and aborts on timeout; focused regression 3/3. Full suite **119 files / 468 assertions passed / 0 failures**, exit 0; log `/tmp/rs-v3-ws-abort-full-20261009.log`.
+- Mock socket can ignore abort and `close()` can hang; this does NOT supply real transport-layer I/O enforcement, TLS peer identity or production authorization. Gate B OPEN.

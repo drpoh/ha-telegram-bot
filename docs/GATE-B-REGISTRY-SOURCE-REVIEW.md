@@ -43,3 +43,7 @@ Next: inspect actual installed server capabilities and version using sanitized r
 - Added `v3-ha-registry-endpoint-policy.mjs` as a **pure, offline configuration check**. It rejects plaintext `ws:`, URL credentials, query or fragment injection, incorrect WebSocket path, and missing operator configuration/protected-secret/TLS-pin declarations.
 - **Important:** caller-provided `tlsPinned:true` is a declaration, not cryptographic pin validation. Never accept model-provided flags as authorization or pass them unverified into a live transport. Real TLS verification, host/IP resolution, token permissions and endpoint ownership must be enforced by the transport and reviewed separately.
 - No HA connection or credentials are used. The accepted result is `configuration_review_only` with `authorization:false`.
+
+## Offline WebSocket protocol fixture
+- `v3-ha-registry-ws-frames.mjs` is a frame state-machine only, with fixed registry-list command allowlist and request/result ID matching. It rejects invalid handshake, failed auth, invalid result, malformed JSON and oversized frames.
+- It must never be mistaken for a production client: receipt of a simulated `auth_ok` frame is not proof of server authentication; real transport still requires a protected token, validated TLS server identity, bounded timeouts, byte limits and operator-owned configuration.

@@ -518,3 +518,9 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Added a pure Gate B config preflight with fail-closed URL validation: wss-only, exact `/api/websocket`, no URL credentials/query/fragment, protected credential source and explicit operator/TLS-pin declarations.
 - Focused tests: **2/2 passed**, exit 0. This **does not implement real TLS certificate pinning** or authenticate an endpoint, and the flags are untrusted until transport verifies them independently. Full `npm test` NOT rerun for this small checkpoint.
 - No real HA network requests, service restarts or configuration changes. Gate B OPEN. Next: implement a bounded, independently authenticated transport with mocked WebSocket frames and verify token/host provenance, then full regression before promotion.
+
+## 2026-10-09 — Offline HA WebSocket frame protocol guard
+- Added `src/decision/v3-ha-registry-ws-frames.mjs` and negative fixtures for malformed handshake, rejected authentication, invalid JSON/size, unmatched result IDs, and non-allowlisted operations.
+- The state-machine accepts only three registry list command names, one outstanding request and exact result IDs. Focused tests: **2/2 passing**, exit 0. Full `npm test` not rerun at this checkpoint.
+- This module **does not open a WebSocket, send/validate a token, authenticate a host or enforce real network timeout/TLS**. Fake `auth_ok` fixture is a protocol simulation, not trusted identity. Its results have `authorization:false` throughout; Gate B remains OPEN.
+- Next: implement an independently reviewed bounded transport with injected mock WebSocket and protected token handling; ensure deny on disconnect, timeout, invalid authentication, oversized payload and connection reuse. No HA production integration until approved.

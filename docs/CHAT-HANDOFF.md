@@ -74,3 +74,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Offline HA WebSocket endpoint policy — 2026-10-09
 - `src/decision/v3-ha-registry-endpoint-policy.mjs`: pure preflight, 2/2 focused passing; **does not connect or verify TLS**. Protected source claims remain untrusted. Full suite last passed 113 files / 454 assertions *before* this module; Gate B OPEN.
+
+## Gate B offline WebSocket frame guard — 2026-10-09
+- A fixed-read-command WebSocket protocol fixture was added; focused 2/2 tests passed. It has no network socket, TLS or token verification; `authorization:false` is unconditional. Gate B remains OPEN. See latest WORKLOG.

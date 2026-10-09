@@ -81,3 +81,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## Gate B integrated fixture checkpoint — 2026-10-09
 - [x] Add a combined **offline** ledger/actor/action/policy/scope/consumption test fixture reusing existing modules, with adversarial actor/chat/token/tool/scope/cancel cases.
 - [ ] Bind provenance from an independently authenticated channel ingress (not caller fields) and complete HA registry/approved policy before Gate B acceptance. Extend whole-chain expired/inflight/replacement and alternative-MCP fault matrix; existing unit fixtures alone do not close Gate B.
+
+## Channel-neutral provenance follow-up — 2026-10-09
+- [x] Add combined offline Assist/Telegram channel-bound ledger/risk/tool denial tests; no actual transport authentication.
+- [ ] Provide independently established ingress identity from adapter-owned transport context and gate actions with reviewed source/policy evidence. No caller-provided `authenticated` claims may authorize operations.

@@ -111,3 +111,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Gate B combined offline vertical-slice fixture — 2026-10-09
 - New `test/v3-gate-b-vertical-slice.test.mjs` reuses existing ledger, mock dispatcher and read-only scope gates; 2/2 focused pass for actor/chat mismatch, forged/replayed token, tool substitution, scope drift and cancellation. Full regression **120 files / 473 assertions passed / zero failures**, exit 0; `/tmp/rs-v3-gate-b-vertical-full-20261009.log`. No live authorization; Gate B OPEN.
+
+## Offline channel provenance vertical-slice — 2026-10-09
+- New tests for channel ledger + command envelope + tool boundary, 2/2 focused passed, full regression **121 files / 475 assertions passed / zero failures**, exit 0, `/tmp/rs-v3-channel-slice-full-20261009.log`. This proves mock rules only; next blocker is trusted ingress outside caller/LLM input. Gate B OPEN.

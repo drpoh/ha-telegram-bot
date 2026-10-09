@@ -545,3 +545,8 @@ Full regression after local-policy loading fixture: **69 isolated test files, 30
 - Extended `v3-ha-registry-secret-file.mjs` to inspect each ancestor directory for symlink traversal, foreign ownership, and unsafe group/other write permissions (sticky shared system directory exception). Added fixture tests covering writable parent and ancestor symlink.
 - Focused 3/3 passed, exit 0. Full `npm test`: **118 test files, 465 assertions passed, 0 failed**, exit **0**, log `/tmp/rs-v3-secret-ancestor-full.log`.
 - This remains an offline fixture, not a final race-free hardened credential loader: securely held directory file descriptors / openat-style traversal and approved deployment path are still needed before a real HA token is used. Home Assistant and production untouched. Gate B OPEN.
+
+## 2026-10-09 — Gate B mock TLS peer evidence fixture
+- Added `v3-ha-registry-tls-evidence.mjs` with constant-time certificate SHA-256 pin comparison, exact expected hostname, peer authorization flag validation. Focused 2/2 passing, exit 0.
+- **Only offline/mock peer evidence:** all peer fields are injected and forgeable. This is not a real TLS handshake, certificate chain verification, trusted channel attestation or production connector. Return authorization:false unconditionally; Gate B remains OPEN.
+- Full regression PASSED: **119 test files / 467 assertions / 0 failed**, exit 0, log `/tmp/rs-v3-tls-fixture-full.log`. Next: actual server-side transport must independently verify TLS (not trust caller-provided booleans) and bound I/O/cancellation before real credentials or HA read requests.

@@ -61,3 +61,6 @@ Next: inspect actual installed server capabilities and version using sanitized r
 
 ## Ancestor directory validation (offline)
 - Secret-file fixture now checks parent-directory ownership, symlink components and unsafe writable modes, except sticky shared system directories such as `/tmp` for tests. The path traversal is not an atomic openat sequence and should not be trusted against concurrent attacker-controlled renames. Deploy only using a fixed privileged path with independent operator review.
+
+## Mock certificate pin evidence
+- `v3-ha-registry-tls-evidence.mjs` compares a mock peer's authorization, expected hostname and SHA-256 fingerprint, but does not perform TLS certificate verification. A caller can fabricate all these fields. Production requires independent trusted transport ownership, Node/OpenSSL verification, strict endpoint binding, timeout/cancellation and refusal to accept model-supplied claims. No live HA connection was made.

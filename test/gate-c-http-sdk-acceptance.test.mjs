@@ -50,9 +50,12 @@ test('Gate C: actual loopback MCP HTTP request abort rejects response; no automa
 });
 test('Gate C: actual loopback MCP HTTP deadline does not replay uncertain action',async()=>{
  await fixture(async({client,enteredPromise,seen,finish})=>{
-  const request=client.callTool({name:'slow_fixture',arguments:{}},undefined,{timeout:50});
+  const request=client.callTool({name:'slow_fixture',arguments:{}},undefined,{timeout:200});
+  // Attach rejection handler synchronously; under Pi load a deadline may fire
+  // before awaited test setup resolves and otherwise yield unhandledRejection.
+  const rejected=assert.rejects(request);
   await enteredPromise;
-  await assert.rejects(request);
+  await rejected;
   finish();
   assert.equal(seen(),1);
  });

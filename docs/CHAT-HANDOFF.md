@@ -275,3 +275,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - New offline `gate-c-stage-recovery` refuses rollback recovery if claim DB is missing, invalid or inside rollback directory; 3/3 focused. Separate claim ledger survives Stage-state snapshot restore, including claims after snapshot. No installation or migration. Consult latest WORKLOG for full regression and Git commit. Gate B and real controlled acceptance remain OPEN.
 
 - Full regression PASS: 134 test files / 530 assertions / 0 failures / exit 0; `/tmp/rs-v3-gatec-recovery-full-20261010.log`.
+
+## 2026-10-10 — New overriding V3 MVP priority
+- **Owner accepted narrow MVP**: one independently approved light, trusted Telegram actor + confirmation + default-deny V3 policy + MCP + fresh verification + replay defense, unchanged independent HA Green. Read `docs/V3-MVP-RELEASE.md` FIRST for the current release scope; defer voice/multiroom/learning/three persistent environments. A non-authorizing pure release checklist and focused 3/3 tests added, no live wiring. Gate B/real Gate C remain OPEN pending owner-controlled evidence and scoped deployment approval.
+
+- Verified final full isolated `npm test` PASS: 135 test files / 533 assertions / 0 failed / exit 0, `/tmp/rs-v3-mvp-scope-rerun-20261010.log`.

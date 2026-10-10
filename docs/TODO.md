@@ -188,3 +188,8 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Offline recovery guard checks protected claim DB is outside rollback tree, exists with valid schema and SQLite quick_check; cannot auto-create missing ledger during recovery. Stage snapshot restore retains later claims in separate protected journal (3/3 focused).
 - [ ] Deployment must provision independently owned immutable-path claim store and verify permissions/symlink races, durable backup, crash behavior and incident reconciliation. Current recovery guard is a prototype and is not wired to live service.
 - [ ] Gate B independently authenticated HA origin, trusted actor ingress and owner-approved entity policy are still real-world acceptance blockers; no synthetic identity can satisfy them.
+
+## 2026-10-10 — Owner-approved V3 minimum viable release scope
+- [x] Freeze single-light Telegram MVP and explicitly defer generic multiroom, voice, auto_safe, LLM migration and long-term learning; see `docs/V3-MVP-RELEASE.md`.
+- [x] Implement pure non-authorizing MVP checklist (3/3 focused) to track acceptance evidence without adding a release bypass.
+- [ ] Close Gate B with operator-owned HA source, trusted Telegram actor and reviewed one-light policy. Then integrate durable no-replay and perform owner-approved one-light controlled Gate C acceptance; keep V2 and HA Green independent.

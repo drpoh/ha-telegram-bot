@@ -801,3 +801,11 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - This narrows the discovered replay window for correctly separated Stage storage, not an approved operational rollback: filesystem ownership, concurrent mutation, root trust, exact deployment identities, real MCP and HA credentials require additional evidence. Runtime paths and HA Green untouched. Full regression result follows.
 
 - Full regression PASS: 134 test files / 530 assertions / 0 failures / exit 0; `/tmp/rs-v3-gatec-recovery-full-20261010.log`.
+
+## 2026-10-10 — MVP scope reduction accepted
+- Owner agreed to prioritize working one-light Telegram V3 MVP over full feature completion. Added release contract `docs/V3-MVP-RELEASE.md` and explicit offline-only review checklist with nine required evidentiary fields, no runtime release side effect. Focused 3/3 pass.
+- Feature work on voice, generic multiroom, autonomous learning, multi-LLM, persistent Stage and auto rollback deferred. Existing policy, MCP SDK, pilot capability boundary and durable journal are to be reused rather than replaced. No HA credentials or runtime changed. Full isolated regression follows.
+
+- First full 135-file isolated regression found one pre-existing loaded-Pi HTTP MCP deadline test failure (`unhandledRejection` because assertion handler was attached after awaiting server entry), 532 passed assertions / one failed file. Updated the test to attach `assert.rejects` synchronously and bounded deadline to 200 ms; focused combined transport+MVP suite passed 5/5. Full regression rerun follows; no production code or environment was affected.
+
+- Verified final full isolated `npm test` PASS: 135 test files / 533 assertions / 0 failed / exit 0, `/tmp/rs-v3-mvp-scope-rerun-20261010.log`.

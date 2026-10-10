@@ -909,3 +909,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-10 — Existing MCP pilot deployment readiness inspection
 - Compared active V3 SHA a7fc446 against dev 490b31d: 67 changed files, ~2988 added lines. Both v2 and V3 service status active, focused 4/4 endpoint tests and node syntax pass. Direct LAN implementation is opt-in and currently denies without independently reviewed network/credential controls. No hot deployment, credential change, HA write or service interruption. Updated operational release plan to require candidate audit instead of blind promotion.
+
+## 2026-10-10 — Fast isolated release candidate assembled
+- Created /home/drpoh/projects/rs-home-ai-v3-candidate from a clean `git archive` of dev HEAD 0deece0, with protected directory permissions 0700 and RELEASE-COMMIT pin file 0600. No dependencies installed or bot started; cannot conflict with live Telegram tokens or services. Checked pilot and MCP client syntax; targeted LAN policies pass 4/4. This is a static candidate only, NOT deployment or production acceptance.

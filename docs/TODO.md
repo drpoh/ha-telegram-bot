@@ -299,3 +299,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Candidate promotion check
 - [x] Confirmed 67-file delta from active V3 pilot (a7fc446) to dev; focused endpoint tests 4/4 and both active services healthy. Protected claims DB remains ready.
 - [ ] Package/test isolated release candidate; must not silently merge 67-file delta into active V3. LAN read-only/credential acceptance and operator-reviewed live on/off still pending.
+
+## 2026-10-10 — Candidate assembled
+- [x] Isolated candidate created from commit 0deece0, mode 0700, RELEASE-COMMIT pinned, syntax + 4 targeted tests pass without launching Telegram or HA control.
+- [ ] Remaining: dependencies in isolated candidate, complete tests against candidate, reviewed source grants, controlled V3 cutover, live /confirm readback. Never start two Telegram pollers with the same bot token.

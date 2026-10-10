@@ -372,3 +372,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — Pilot deployment delta reviewed
 - Dev 490b31d vs live V3 a7fc446 is 67 files / 2988 additions / 27 deletions. Targeted LAN endpoint tests 4/4 PASS, services V2/V3 active. Do not hot-pull dev into production; current LAN MCP exception denies absent verified network+credential policy. Need isolated candidate, signoff and controlled Telegram /confirm test. Claims DB 0600 provisioned.
+
+## 2026-10-10 — Candidate release filesystem prepared
+- /home/drpoh/projects/rs-home-ai-v3-candidate is protected 0700 static git-archive of 0deece0 with RELEASE-COMMIT 0600. Pilot/client syntax and focused LAN rules 4/4 PASS. No node_modules and no process started. Live V2/V3 unchanged. Next install isolated deps and validate fully, but DO NOT run a parallel Telegram poller using current V3 token.

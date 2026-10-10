@@ -859,3 +859,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Inspected only scheme/host class of dedicated V3 pilot URL (actual URL and credentials redacted): HTTP over NON-loopback. This fails secure transport assurance regardless of familiar hostname. Added dev `kitchen-mcp-endpoint-policy` denying non-loopback HTTP and common URL tricks; wired into dev MCP client. Focused 2/2 passed. Live V3 service still active and unchanged; no HA tool invoked or secrets printed. Full regression follows.
 
 - Full isolated npm regression PASS: 142 files / 547 assertions / 0 failures / exit 0; log `/tmp/rs-v3-mcp-trust-audit-20261010.log`.
+
+## 2026-10-10 — SSH local-forward readiness check
+- Observed Pi via metadata-only commands: no TCP listener 9584, no dedicated V3 tunnel unit, SSH host key strict checking configured as `ask`, active V3 unit. A loopback URL **cannot** yet be trusted as HA source; current live URL remains non-loopback HTTP. Added `docs/V3-MVP-MCP-TRUST-RUNBOOK.md` for an operator-controlled host-key-pinned, least-privilege SSH forward and separate HA identity test. No network connection established and no runtime configuration changed.

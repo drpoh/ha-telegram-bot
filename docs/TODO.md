@@ -234,3 +234,8 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Read-only inspection of runtime MCP URL *classification* (no endpoint or secret disclosed): configured protocol is HTTP on a non-loopback host. This is NOT authenticated HA provenance.
 - [x] Dev MCP endpoint policy now denies unauthenticated non-loopback HTTP, embedded URL credentials, query/fragment and unapproved hosts. 2/2 focused.
 - [ ] Resolve real MCP transport trust (TLS-verified endpoint or operator-reviewed protected local tunnel) and authenticated HA registry identity before any release; operational Gate B remains NO-GO.
+
+## 2026-10-10 — MCP trusted transport: runtime topology inspection
+- [x] Confirmed read-only: no loopback listener on port 9584; no dedicated SSH/MCP tunnel user unit; live V3 active. SSH configuration uses interactive host-key checking, not reviewed pinning evidence.
+- [x] Documented minimum SSH local-forward acceptance path and no-go conditions in `docs/V3-MVP-MCP-TRUST-RUNBOOK.md`.
+- [ ] Verify operator-pinned HA SSH host key/identity, provision and verify restricted loopback forward, then read-only MCP/HA entity identity under authorized session. Do not point production V3 at arbitrary localhost services.

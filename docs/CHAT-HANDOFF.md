@@ -323,3 +323,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Read-only runtime URL classification: V3 pilot uses non-loopback HTTP MCP; hostname allowlist alone is not evidence of HA provenance. Dev now rejects this using `kitchen-mcp-endpoint-policy`, no live deployment. Production release remains NO-GO until verified TLS or operator-approved protected loopback tunnel and HA identity attestation. Check WORKLOG for test and latest commit.
 
 - Full isolated npm regression PASS: 142 files / 547 assertions / 0 failures / exit 0; log `/tmp/rs-v3-mcp-trust-audit-20261010.log`.
+
+## 2026-10-10 — Next operational step: verified SSH tunnel
+- Pi read-only topology check: NO listener on 127.0.0.1:9584; no dedicated SSH/MCP tunnel unit, SSH host-key config is `ask` not an owner-reviewed pin. Live V3 remains active with non-loopback HTTP MCP URL. See `docs/V3-MVP-MCP-TRUST-RUNBOOK.md` for explicit trust/transport/HA read-only acceptance requirements. Do not infer trust from mere localhost URL. No live changes.

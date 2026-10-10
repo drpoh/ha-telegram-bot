@@ -343,3 +343,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Effective HA sshd Match User hassio forwarding accepted as previous change, with permitopen only 127.0.0.1:9584; note covers ALL hassio logins. MCP SDK read successfully confirmed at prior commit 8567494. Dev MCP transport now rejects redirects; no deployed tunnel/runtime. See WORKLOG for complete test evidence.
 
 - Full npm test PASS 142 files / 547 assertions / 0 failures (`/tmp/rs-v3-sdk-no-redirect-20261010.log`).
+
+## 2026-10-10 — Release preflight still NO-GO
+- Strict existing HA SSH forwarding config remains accepted. Runtime V3 MCP URL is non-loopback HTTP (dev validator rejects), no listener on Pi 19584, claims.db absent, policy SHA matches. Explicit independent SSH key attestation/HA write-tool permission review and controlled persistent tunnel/pilot approval are outstanding. Latest operational plan in docs/V3-MVP-MCP-TRUST-RUNBOOK.md. Do NOT install unit or switch runtime on generic continuation.

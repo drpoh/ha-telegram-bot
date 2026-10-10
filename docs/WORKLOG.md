@@ -880,3 +880,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Updated dev `src/pilot/kitchen-mcp-client.mjs` to disable redirects at the SDK fetch layer, not just check the initial configured URL. Focused check and 6/6 focused tests pass; full regression follows. No HA state change, ongoing service restart, persistent tunnel activation, or claim-db creation.
 
 - Full npm test PASS: 142 test files / 547 assertions / zero failures / exit 0 (`/tmp/rs-v3-sdk-no-redirect-20261010.log`).
+
+## 2026-10-10 — Release-blocker validation, no runtime changes
+- Reconfirmed current development HEAD e8665a6, live V3 user service active, HA SSH Match User forwarding limited to HA loopback 9584, runtime MCP URL rejected by dev strict endpoint validator, 19584 listener absent, claims.db missing and policy hash unchanged. No live filesystem/config/HA operation. Refined operational trust runbook with atomic activation order and rollback semantics. This is a documentation-only preflight: no functional regression necessary.

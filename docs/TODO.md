@@ -262,3 +262,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Latest GitHub checkpoint 8567494 already records owner-approved, restricted hassio SSH forwarding and real MCP read via temporary tunnel. Verified effective `sshd -T -C user=hassio` returns local-only forwarding to 127.0.0.1:9584.
 - [x] Hardened dev upstream MCP SDK fetch to reject HTTP redirects, preventing unintended alternate destination. Focused syntax and 6/6 test cases pass.
 - [ ] Keep permanent tunnel disabled until reviewed host key and MCP tool grants. Separate user/key grant scope remains broader than ideal, and live pilot/mcp-url are unchanged.
+
+## 2026-10-10 — Operational tunnel activation preflight repeated
+- [x] Effective restricted HA SSH forwarding still present; policy file hash unchanged; runtime endpoint remains insecure non-loopback HTTP; port 19584 not active, durable journal absent. Audit captured in `docs/V3-MVP-MCP-TRUST-RUNBOOK.md`.
+- [ ] Separate approval and trust verification required before installing/enabling tunnel or changing running pilot; do not treat tested dev release as live.

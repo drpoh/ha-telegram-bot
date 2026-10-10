@@ -333,3 +333,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Real acceptance blocked on Zigbee light availability
 - [x] Confirmed root cause `light.led_kukhnia` is `unavailable` (not on/off) in real HA-MCP readback, registry MQTT device identity unchanged; fail-closed preflight correctly blocked write.
 - [ ] Restore target Zigbee light via power/link/Zigbee2MQTT availability outside V3. Verify MCP state `on` or `off`, then retry from NEW private Telegram request + /confirm; never replay previous command or silently substitute another device.
+
+## 2026-10-10 — state_pending fix deployed
+- [x] Bounded delayed readback (three extra reads only, no repeated writes), test 5/5, release 920585d deployed successfully, previous unit backed up.
+- [ ] Fresh real owner Telegram request and /confirm, independently verify final HA state. If still `off` after turn_on, investigate Zigbee2MQTT service/availability and MQTT command delivery; do not bypass protection.

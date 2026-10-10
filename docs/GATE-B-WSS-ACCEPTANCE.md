@@ -29,3 +29,9 @@ No HA address, token, API, live Home Assistant service or running bot was contac
 4. Confirm active socket and verify bounded six fixed registry reads; fail closed on drift and disconnect; never claim registry-read evidence authorizes actions.
 5. Review local V3 default-deny policy and explicit scope grants separately; complete staged fail/rollback tests before any write.
 Until all are complete, Gate B remains OPEN and real HA access must not be attempted.
+
+## 2026-10-10 — Actual upstream client against local WSS (not HA Green)
+- On Pi Node 20/ARMv7, instantiated real `home-assistant-js-websocket@9.7.1` `createConnection` and `createLongLivedTokenAuth` using `ws@8.22.0` with an explicitly trusted ephemeral localhost certificate, strict certificate and hostname checks, maxPayload and handshake timeout.
+- Local HTTPS/WSS fixture responded to `auth_required`, `auth_ok` and only three registry list commands. Existing one-shot bridge issued exactly **six** read-only commands on one connection. Result `read_only_review`, `authorization:false`; exit 0.
+- Same test without trusted CA rejected TLS before WebSocket establishment: zero authenticated WebSocket connections, zero registry calls and `authorization:false`; exit 0.
+- No real HA address, token, Telegram or production code was used; certificate test data ephemeral. This tests actual upstream connection compatibility and basic TLS fail-closed behavior, **not** robust disconnection/reconnect teardown under all faults, origin of HA Green, operator credentials or signed V3 policy. Gate B OPEN.

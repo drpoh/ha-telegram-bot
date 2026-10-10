@@ -703,3 +703,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Full isolated regression pending in `/tmp/rs-v3-gateb-one-shot-full.log`; no live HA transport or production service touched. Gate B OPEN.
 
 - Full npm test PASS: 124 files / 497 assertions / 0 failures, exit 0.
+
+## 2026-10-10 — Real official HA websocket client loopback acceptance
+- Actual `home-assistant-js-websocket` 9.7.1 with `ws` 8.22.0 and HTTPS localhost fixture successfully exercised the one-shot upstream registry bridge: one connection, exactly six registry reads, read-only evidence and no authorization. Unknown-CA case failed before WebSocket upgrade with zero registry reads. Both cases exit 0. See docs/GATE-B-WSS-ACCEPTANCE.md.
+- These are direct isolated WSS runtime tests; no code/dependency/service change, live HA, real secrets or writes. Gate B OPEN pending operator-owned origin/token and policy.

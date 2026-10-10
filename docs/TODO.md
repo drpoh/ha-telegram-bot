@@ -283,3 +283,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — TCP 9584 attribution
 - [x] Confirmed listening host socket inode, but PID namespace and host-network containers prevent safe attribution from SSH add-on. Do not infer which app owns port from name alone.
 - [ ] Use proper Supervisor/host process or official MCP deployment metadata to establish listener owner; if unavailable, restrict LAN access at managed router and verify from independent client.
+
+## 2026-10-10 — Same-subnet router filtering limitation
+- [x] Verified Pi eth0 192.168.31.124/24, HA 192.168.31.94 direct on eth0, router 192.168.31.1 serves HTTP/HTTPS. Generic routed firewall cannot be relied on to filter same-subnet packets.
+- [ ] Identify actual router/switch model and intra-LAN bridge ACL/client isolation support or choose HA server-side port restriction. Do not modify router blind; validate from independent LAN client when enforcing.

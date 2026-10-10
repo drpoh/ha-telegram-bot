@@ -360,3 +360,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — TCP 9584 owner still unproven
 - Restricted HA SSH namespace sees socket inode 8244936 on 0.0.0.0:9584 but cannot name owning PID; Docker port inventory not conclusive due to host networking. No configuration changes. Must use supported Supervisor/host metadata or router isolation; do not guess add-on owner. Docs updated.
+
+## 2026-10-10 — Important same-LAN router caveat
+- Pi 192.168.31.124/24 and HA 192.168.31.94 directly share eth0 L2 network; default gateway 192.168.31.1 (HTTP+HTTPS admin responds, vendor not established). Generic router routed firewall will not necessarily filter TCP/9584 between LAN peers. Need explicitly supported bridge ACL/client isolation, VLAN separation or server-side HA-MCP access control and independent client negative test. Live unchanged.

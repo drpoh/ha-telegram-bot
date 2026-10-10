@@ -897,3 +897,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-10 — Investigate TCP 9584 owner using HA namespace
 - Read-only `/proc/net/tcp`, BusyBox fuser, lsof, netstat and Docker port/network inventory: listener 0.0.0.0:9584 inode 8244936; restricted SSH PID namespace does not expose owning host process, and Docker contains multiple host-network workloads with no obvious published 9584. No ownership assertion or risky firewall edit. Recorded next accepted discovery path in LAN MCP decision doc.
+
+## 2026-10-10 — Corrected source-restriction strategy for same subnet
+- Read-only Pi routing and router reachability reveal same /24 L2 path (192.168.31.124 to 192.168.31.94, gateway 192.168.31.1). Router HTTP(S) web admin reachable but model and bridge ACL feature unknown. Generic routed gateway firewall cannot assure restriction; changed release plan to require proven bridge ACL/VLAN or HA-side filter, including denied independent-client test. No router login, ACL, HA or live app changes.

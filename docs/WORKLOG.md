@@ -696,3 +696,10 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - The durable store fixture is not installed in the running Telegraf service and does not authenticate user-provided contexts. Gate B remains OPEN pending operator-reviewed read-only HA source, approval policy, trusted ingress binding and live acceptance authorization. No HA calls/real messages/writes or service changes.
 
 - Full npm test PASS: 124 isolated files, 495 assertions, 0 failed, exit 0.
+
+## 2026-10-10 — One-shot official upstream Connection read boundary
+- Added `inspectOneShotRegistryConnection` to the existing upstream read bridge. Trusted caller supplies an authenticated official `Connection` factory; this offline abstraction bounds acquisition, reads six registry lists with the existing strict reader and attempts connection close on success/failure and late acquisition. Focused upstream tests 12/12 passed.
+- Official HA client may automatically reconnect. One-shot short-lived read avoids deliberate socket reuse, but timeout/close guarantees and TLS peer provenance have not been proven for actual upstream `Connection`; injected mocks do not grant source authenticity or operator authorization.
+- Full isolated regression pending in `/tmp/rs-v3-gateb-one-shot-full.log`; no live HA transport or production service touched. Gate B OPEN.
+
+- Full npm test PASS: 124 files / 497 assertions / 0 failures, exit 0.

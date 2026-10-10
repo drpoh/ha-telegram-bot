@@ -26,3 +26,34 @@ export async function inspectViaUpstreamConnection({connection,timeoutMs=5000,ma
   },
  });
 }
+
+// Offline wiring boundary for a separately authenticated, short-lived official
+// Connection. The trusted caller supplies the factory; this does NOT establish
+// TLS or credential provenance. Always close, never retain for reconnect/replay.
+export async function inspectOneShotRegistryConnection({createConnected,connectTimeoutMs=3000,closeTimeoutMs=1000,...readOptions}={}){
+ const deny=reason=>({ready:false,authorization:false,reason});
+ if(typeof createConnected!=='function'||!Number.isSafeInteger(connectTimeoutMs)||connectTimeoutMs<1||connectTimeoutMs>10000||
+    !Number.isSafeInteger(closeTimeoutMs)||closeTimeoutMs<1||closeTimeoutMs>10000)
+  return deny('invalid_one_shot_options');
+ let connection,expired=false,timer;
+ try{
+  connection=await Promise.race([
+   Promise.resolve().then(()=>createConnected()).then(async created=>{
+    if(expired){try{await created?.close?.();}catch{/* no authority */}throw Error('late_connection');}
+    return created;
+   }),
+   new Promise((_,reject)=>{timer=setTimeout(()=>{expired=true;reject(Error('connection_timeout'));},connectTimeoutMs);}),
+  ]);
+  if(expired)return deny('connection_timeout');
+  if(typeof connection?.close!=='function')return deny('invalid_one_shot_connection');
+  return await inspectViaUpstreamConnection({connection,...readOptions});
+ }catch{return deny('connection_failed_or_timed_out');}
+ finally{
+  if(timer!==undefined)clearTimeout(timer);
+  if(connection && typeof connection.close==='function'){
+   let closeTimer;
+   try{await Promise.race([Promise.resolve().then(()=>connection.close()),new Promise(resolve=>{closeTimer=setTimeout(resolve,closeTimeoutMs);})]);}
+   catch{/* fail closed */}finally{clearTimeout(closeTimer);}
+  }
+ }
+}

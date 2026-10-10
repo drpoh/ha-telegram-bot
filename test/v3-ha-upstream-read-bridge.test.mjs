@@ -106,3 +106,19 @@ test('connection closure during later registry pass stops subsequent requests',a
  const r=await inspectViaUpstreamConnection({connection:c});
  assert.equal(r.ready,false);assert.equal(r.authorization,false);assert.equal(calls,5);
 });
+
+test('one-shot official client bridge closes a completed authenticated fixture',async()=>{
+ const {inspectOneShotRegistryConnection}=await import('../src/decision/v3-ha-upstream-read-bridge.mjs');
+ let calls=0,closes=0;
+ const connection={connected:true,closeRequested:false,socket:{},async sendMessagePromise(){calls++;return [];},close(){closes++;}};
+ const result=await inspectOneShotRegistryConnection({createConnected:async()=>connection});
+ assert.equal(calls,6);assert.equal(closes,1);assert.equal(result.authorization,false);
+});
+
+test('one-shot official client bridge closes rejected and disconnected fixtures',async()=>{
+ const {inspectOneShotRegistryConnection}=await import('../src/decision/v3-ha-upstream-read-bridge.mjs');
+ let closes=0;
+ const connection={connected:true,closeRequested:false,socket:{},async sendMessagePromise(){throw Error('offline');},close(){closes++;}};
+ const result=await inspectOneShotRegistryConnection({createConnected:async()=>connection});
+ assert.equal(result.ready,false);assert.equal(result.authorization,false);assert.equal(closes,1);
+});

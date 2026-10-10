@@ -188,3 +188,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - New focused `v3-telegram-joined-adapter.test.mjs` fixture exercises strict ingress plus durable replay with a different update ID after chain recreation; 5/5 focused passed. Full regression pending `/tmp/rs-v3-gateb-durable-replay-full.log`. Does not wire production; Gate B OPEN.
 
 - Full npm regression 124 files / 495 passing assertions / 0 failures, exit 0.
+
+## Gate B one-shot read bridge — 2026-10-10
+- Existing `v3-ha-upstream-read-bridge.mjs` now provides `inspectOneShotRegistryConnection` for operator-supplied official `Connection`: bounded acquisition, fixed registry-only reads, best-effort close, never authorizes. Focused 12/12; full test `/tmp/rs-v3-gateb-one-shot-full.log` pending. Offline only; Gate B OPEN pending authenticated TLS source/operator policy and read-only acceptance.
+
+- Full isolated regression: 124 files / 497 passed assertions / 0 failures, exit 0.

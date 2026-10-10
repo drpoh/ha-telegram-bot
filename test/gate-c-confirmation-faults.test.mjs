@@ -98,3 +98,47 @@ test('Gate C: late positive authorization after timeout cannot dispatch',async()
  await new Promise(resolve=>setImmediate(resolve));
  assert.equal(writes,0);
 });
+
+test('Gate C: replacing action during pending authorization never executes the stale action',async()=>{
+ createPendingConfirmation({...actor,action});
+ let release,writes=0;
+ const authorize=()=>new Promise(resolve=>{release=()=>resolve(true);});
+ const first=queueConfirmedAction(actor,{authorize,execute:async()=>{writes++;}});
+ for(let i=0;i<100&&!release;i++)await new Promise(resolve=>setTimeout(resolve,5));
+ assert.equal(typeof release,'function');
+ const replacement={name:'ha_call_service',args:{domain:'light',service:'turn_on',entity_id:'light.other'}};
+ createPendingConfirmation({...actor,action:replacement});
+ release();
+ assert.equal((await first).status,'expired');
+ assert.equal(writes,0);
+ assert.deepEqual((await import('../src/decision/pending-confirmation.mjs')).peekPendingConfirmation(actor).action,replacement);
+});
+
+test('Gate C: a different actor or chat cannot consume another confirmation',async()=>{
+ createPendingConfirmation({...actor,action});
+ let writes=0;
+ const opts={authorize:async()=>true,execute:async()=>{writes++;return {verification:{status:'confirmed'}};}};
+ assert.equal((await queueConfirmedAction({userId:actor.userId+1,chatId:actor.chatId},opts)).status,'missing');
+ assert.equal((await queueConfirmedAction({userId:actor.userId,chatId:actor.chatId+1},opts)).status,'missing');
+ assert.equal(writes,0);
+ assert.equal((await queueConfirmedAction(actor,opts)).status,'executed');
+ assert.equal(writes,1);
+});
+
+test('Gate C: failed executor is never retried by a duplicate confirmation',async()=>{
+ createPendingConfirmation({...actor,action});
+ let attempts=0;
+ const opts={authorize:async()=>true,execute:async()=>{attempts++;throw Error('MCP write result unknown');}};
+ await assert.rejects(queueConfirmedAction(actor,opts),/MCP write result unknown/);
+ assert.equal((await queueConfirmedAction(actor,opts)).status,'missing');
+ assert.equal(attempts,1);
+});
+
+test('Gate C: cancelling an action before queue dispatch denies late execution',async()=>{
+ createPendingConfirmation({...actor,action});
+ let writes=0;
+ const queued=queueConfirmedAction(actor,{authorize:async()=>true,execute:async()=>{writes++;}});
+ assert.equal(cancelPendingConfirmation(actor),true);
+ assert.equal((await queued).status,'missing');
+ assert.equal(writes,0);
+});

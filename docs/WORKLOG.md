@@ -756,3 +756,10 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-10 — Low-interruption workflow policy
 - User explicitly requested far fewer repeated chat progress messages. Persisted quiet autonomous execution in `AGENTS.md` and cross-chat handoff; keep real test results and Git events in repository logs instead of narrating each tool operation. This is a documentation-only change; no service/config/device changes or new tests required.
+
+## 2026-10-10 — Gate C confirmation concurrency (dev only)
+- Prior stage-fault regression log: 127 files / 504 assertions / zero failures. Already pushed as `361cc9c`, followed by docs-only `b51941b`; GitHub feature head matched local. Original shell exit code was not independently preserved in the log; runner summary is observed.
+- Added four tests covering in-flight action replacement, actor/chat isolation, uncertain executor outcome without retry, and pre-dispatch cancel. Focused tests 11/11 passed, exit 0, with temporary SQLite and fake environment. Direct `node --test` without fake TELEGRAM_BOT_TOKEN initially failed at import; resolved by correct isolated harness invocation.
+- These are offline tests, not live authentication, real MCP idempotency or Gate B/C production acceptance. Full test evidence to follow.
+
+- Full isolated `npm test` PASS: 127 test files / 508 assertions / 0 failed, process exit 0, log `/tmp/rs-v3-gatec-races-full-20261010.log`. No runtime systems were touched.

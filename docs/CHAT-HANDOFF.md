@@ -235,3 +235,10 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Dev checkout only: `src/ops/stage-mock-ha.mjs` has opt-in bounded test fault modes delaying or dropping second registry response. `test/stage-gate-c-registry-bridge.test.mjs` confirms deadline/drop both fail closed after two calls, no retry. Focused 5/5. Full suite pending `/tmp/rs-v3-stage-faults-20261010.log`. No stage deployment or real HA contact.
 
 - Full npm test PASS: 127 files / 504 assertions / 0 failed, exit 0.
+
+## 2026-10-10 — Gate C confirmation concurrency
+- Prior stage delay/drop tests passed 127 files / 504 assertions and are already pushed (`361cc9c`, docs follow-up `b51941b`).
+- Four new isolated negative confirmation tests: action replacement during authorization, wrong actor/chat, unknown executor outcome without retry, pre-dispatch cancellation; focused 11/11 exit 0. Consult latest WORKLOG and Git for full suite and commit.
+- Next: Stage storage/rollback isolation, stale state and durable execution safeguards, with no runtime changes or HA writes. Gate B OPEN.
+
+- Full isolated `npm test` PASS: 127 test files / 508 assertions / 0 failed, process exit 0, log `/tmp/rs-v3-gatec-races-full-20261010.log`. No runtime systems were touched.

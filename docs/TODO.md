@@ -155,3 +155,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Gate C fault acceptance
 - [x] Bounded delayed and dropped Stage mock registry requests fail closed; no second read retry, no authority grant, focused 5/5.
 - [ ] Complete actor/action/policy-bound integrated fault cases and independent stage deployment readiness review. No live writes without Gate B acceptance.
+
+## 2026-10-10 — Gate C confirmation concurrency
+- [x] Isolated tests cover replacement while policy awaits, actor/chat mismatch, executor failure without implicit retry, and cancellation before dispatch (11/11 focused).
+- [ ] Add bounded MCP lifecycle, stale state revalidation, durable idempotency across restart and separately approved stage acceptance. No live actuation.

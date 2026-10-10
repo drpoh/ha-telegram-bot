@@ -366,3 +366,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — RESOLVED: MCP 9584 belongs to HA custom component
 - HA config entry `ha_mcp_tools` HA-MCP Server: bind_host 0.0.0.0, server_port 9584, enable_webhook true, webhook_auth ha_auth. `hass_codex_tunnel_mcp` is separate. A supported HA integration option can bind to 127.0.0.1 and leave authenticated webhook through 8123, but changing now would break direct LAN V3. Migrate and independently verify authorized webhook client, inventory other MCP consumers before touching bind. Never expose webhook IDs/secrets. Read docs/V3-MVP-LAN-MCP-DECISION.md.
+
+## 2026-10-10 — Journal block CLOSED, remaining NOT released
+- Operator requested MVP completion. External SQLite claims.db was created and inspected successfully under /home/drpoh/.local/state/rs-home-ai-v3 (0600, drpoh), outside rollback. Do not reset. Live V3 a7fc446 differs from dev 1528e86; existing v2 32b5299 active. Remaining gate: secure/authenticated MCP network and tool permissions, reviewed deployment, real Telegram one-light acceptance. No physical HA write conducted. See V3-MVP-OPERATIONAL-ACCEPTANCE.md.

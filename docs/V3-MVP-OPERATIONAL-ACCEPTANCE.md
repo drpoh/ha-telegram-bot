@@ -28,3 +28,8 @@ Evidence collected through read-only metadata inspection on the Raspberry Pi; no
 ## Go/no-go
 
 NO-GO at 2026-10-10 inspection: independent journal missing; reviewed current HA identity, real test authorization and operational deployment approval absent. No live service or device modified during evidence collection.
+
+## 2026-10-10 — Operator-requested completion: durable journal provisioned
+- User explicitly requested closure of all MVP blocks. On Pi, invoked the existing operator-only `provisionV3PilotJournal` against `/home/drpoh/.local/state/rs-home-ai-v3/claims.db`, outside `/home/drpoh/rs-home-ai-v3` rollback checkout. Result `created`; immediately checked `inspectV3PilotStorage` => `ready:true`, `reason:storage_preflight_passed`; file owner `drpoh`, mode 0600. No existing ledger was overwritten or reset. **Storage block closed.**
+- Still-unmet release blockers: authenticated HA-MCP network/credential policy and verified webhook client migration (the current direct HTTP 0.0.0.0:9584 is not a trusted release transport), audited production checkout promotion (live a7fc446 vs dev 1528e86), real Telegram `/confirm` acceptance/readback and release signoff. Live v2 `32b5299` and V3 remained active; no uncontrolled physical action performed.
+- The user request to finish does not establish that an in-use Home Assistant service can safely be rebound or that broad HA-MCP write-tool credentials are least-privileged. Do not silently change `ha_mcp_tools.bind_host`; use staged webhook validation first.

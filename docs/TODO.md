@@ -291,3 +291,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — HA-MCP server config identified
 - [x] Found `ha_mcp_tools` integration entry on HA; bind_host 0.0.0.0, port 9584, webhook enabled, webhook auth ha_auth. No secrets inspected.
 - [ ] Evaluate staged V3 HA-authenticated webhook client connection and existing MCP consumers. ONLY THEN change HA-MCP Network access to 127.0.0.1, verifying old clients remain functional or migrated. Do not change bind_host directly during current live operation.
+
+## 2026-10-10 — Real operator journal ready
+- [x] Provisioned outside rollback tree: ~/.local/state/rs-home-ai-v3/claims.db (0600, owner drpoh); storage preflight passes. Never reset it.
+- [ ] Finish HA-MCP credential/transport acceptance, deploy approved dev commit separately and run real one-light Telegram confirmed acceptance; not yet safe to mark release GO.

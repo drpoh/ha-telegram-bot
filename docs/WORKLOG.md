@@ -903,3 +903,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-10 — HA-MCP actual owner and supported network option discovered
 - Read-only /homeassistant/.storage/core.config_entries metadata confirms HA-MCP Server is `ha_mcp_tools` custom component, not a Docker add-on; its bind_host 0.0.0.0, port 9584, webhook enabled with ha_auth. This offers supported loopback bind and authenticated HA webhook alternative. Live 9584 bind not altered because it would break the existing V3 and other direct clients. No config writes, credentials exposed or HA reloads.
+
+## 2026-10-10 — Provisioned permanent claim ledger
+- User authorized completion of MVP blocks. Invoked dev operator-only protected SQLite provisioning once: `JOURNAL created`; `inspectV3PilotStorage` ready=true; file drpoh:0600 outside V3 rollback checkout. This closes operational journal block; no HA configuration/restarts/actuation. Reviewed live V3 checkout a7fc446 and v2 checkout 32b5299; staged dev HEAD 1528e86 differs. Transport/read privileges, deployment promotion and acceptance remain pending.

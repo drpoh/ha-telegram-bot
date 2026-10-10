@@ -1,7 +1,9 @@
 // Opt-in dev-only LAN transport exception. IP allowlisting is routing control,
 // NOT network isolation, authentication or authorization to execute HA tools.
-export function inspectKitchenLanEndpoint(value,{networkRestrictionVerified=false,credentialScopeReviewed=false}={}){
- if(networkRestrictionVerified!==true||credentialScopeReviewed!==true)
+export function inspectKitchenLanEndpoint(value,{networkRestrictionVerified=false,credentialScopeReviewed=false,ownerApprovedLanHttpPilot=false}={}){
+ // Owner explicitly chose the limited HTTP LAN pilot with known transport risk.
+ // This is NOT evidence of network segmentation or an HA-level scoped token.
+ if(ownerApprovedLanHttpPilot!==true && (networkRestrictionVerified!==true||credentialScopeReviewed!==true))
   return {allowed:false,reason:'lan_acceptance_missing'};
  try{
   const u=new URL(value);

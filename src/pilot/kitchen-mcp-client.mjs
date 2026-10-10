@@ -3,13 +3,13 @@ import {Client} from '@modelcontextprotocol/sdk/client/index.js';
 import {StreamableHTTPClientTransport} from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import {inspectKitchenMcpEndpoint} from './kitchen-mcp-endpoint-policy.mjs';
 import {inspectKitchenLanEndpoint} from './kitchen-lan-endpoint-policy.mjs';
-export function createKitchenMcpClient({endpointFile='/home/drpoh/.config/rs-home-ai-v3/mcp-url',lanMvp=false,networkRestrictionVerified=false,credentialScopeReviewed=false}={}){
+export function createKitchenMcpClient({endpointFile='/home/drpoh/.config/rs-home-ai-v3/mcp-url',lanMvp=false,networkRestrictionVerified=false,credentialScopeReviewed=false,ownerApprovedLanHttpPilot=false}={}){
  return async (name,args)=>{
   if(!['ha_get_state','ha_call_service'].includes(name) || args?.entity_id!=='light.led_kukhnia')throw Error('scope_denied');
   if(name==='ha_call_service'&&(args.domain!=='light'||!['turn_on','turn_off'].includes(args.service)))throw Error('scope_denied');
   const configured=readFileSync(endpointFile,'utf8').trim();
   const endpoint=lanMvp===true
-   ?inspectKitchenLanEndpoint(configured,{networkRestrictionVerified,credentialScopeReviewed})
+   ?inspectKitchenLanEndpoint(configured,{networkRestrictionVerified,credentialScopeReviewed,ownerApprovedLanHttpPilot})
    :inspectKitchenMcpEndpoint(configured);
   if(!endpoint.allowed)throw Error(endpoint.reason);
   const url=endpoint.url;

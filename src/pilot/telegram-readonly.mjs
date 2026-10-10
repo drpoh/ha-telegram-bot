@@ -11,7 +11,7 @@ const userId=Number(readFileSync(base+'allowed-user-id','utf8').trim());
 if(!/^\d+:[A-Za-z0-9_-]{30,}$/.test(token)||!Number.isSafeInteger(userId)||userId<=0)throw Error('invalid_private_pilot_config');
 const bot=new Telegraf(token);
 const boundary=createKitchenMcpDispatchBoundary({
- releaseEnabled:true,callTool:createKitchenMcpClient(),
+ releaseEnabled:true,callTool:createKitchenMcpClient({lanMvp:true,ownerApprovedLanHttpPilot:true}),
  verifyAdmission:createKitchenLiveAdmission({expectedSha256:'32843f881dbca7a24f205ac6a678b67463486033c581d859ac764b0c54c1091f'})
 });
 // Deployment-owned, pre-provisioned journal outside the rollback checkout.

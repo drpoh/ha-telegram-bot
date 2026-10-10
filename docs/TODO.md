@@ -1,220 +1,145 @@
-**2026-10-10 stage checkpoint:** workspace rules in `AGENTS.md`; example dev/stage/prod isolation descriptor under `config/environments/` and offline test. Stage is **not deployed**, and no real prod credential is defined. Next: separate staged mock service design with explicit rollout review before any running unit changes.
+**2026-10-10:** Dedicated dev clone created at `/home/drpoh/projects/rs-home-ai-dev` without touching active service checkouts; dependency install succeeded. Full isolated regression in progress before promoting as tested dev source. Stage/prod are not yet deployed.
 
-# RS Home AI V3 — new-chat handoff
+**Pi structure/current deployment warning:** see [PI-REPOSITORY-LAYOUT-PLAN.md](PI-REPOSITORY-LAYOUT-PLAN.md). Both HA checkouts are live service sources; NEVER assume `/home/drpoh/rs-home-ai-v3` is a spare clone. Plan migration before any relocation.
 
-This is the FIRST document to read when resuming this project in another chat.
-It is a compact navigation index, not a substitute for live repository checks.
+# TODO — Open work register
 
-**Pi layout warning (2026-10-10):** `/home/drpoh/ha-telegram-bot` is the v2 system-service working directory; `/home/drpoh/rs-home-ai-v3` is a distinct **older** checkout of the same GitHub remote, directly used by the V3 user service. Never reset/rebase/pull the second copy, or move either directory, on a generic continue request. Read `docs/PI-REPOSITORY-LAYOUT-PLAN.md` and run read-only `node scripts/audit-pi-layout.mjs` to check both.
+**Current reviewed status (2026-10-10):** see [repository and branch audit](REVIEW-2026-10-10.md). Gate B OPEN for live source/policy/ingress acceptance; Gate C isolated faults underway; Gate D operational checks partial; Gate E offline only. Earlier unchecked items and checkpoints below are historical and may describe work subsequently completed in fixtures.
 
-**NEW canonical development checkout (2026-10-10):** `/home/drpoh/projects/rs-home-ai-dev`, independently cloned from GitHub. ALL future code/docs editing, testing, commits and pushes should happen there. Do not work in runtime `/home/drpoh/ha-telegram-bot` or `/home/drpoh/rs-home-ai-v3` except read-only inspection. See `docs/PI-REPOSITORY-LAYOUT-PLAN.md`.
+## Current status note — 2026-10-09
 
-## Canonical sources, in priority order
-1. NEW dev working tree and Git status in `/home/drpoh/projects/rs-home-ai-dev`; separately inspect the two untouched runtime checkouts read-only.
-2. `AGENTS.md` and `docs/home-agent-v3-strategy.md`: mission and non-negotiable safety invariants.
-3. `docs/TODO.md` and last dated entries of `docs/WORKLOG.md`: open work and evidence.
-4. `docs/REVIEW-2026-10-09.md` and `docs/PROGRESS.md`: broader gate status (historical totals are not present-day acceptance).
-5. GitHub `drpoh/ha-telegram-bot`, branch `feature/v3-home-agent`: pushed source of truth; inspect PRs and compare with live Pi before edits.
+See `docs/REVIEW-2026-10-09.md` for the reviewed file inventory, operational evidence, current gate boundaries and next priority tasks. Earlier counters/checkpoints below are historical, not present-day production acceptance. General Gate B and voice Gate E remain open; Gate D reboot and Telegram receipt passed but real-alert and disaster-recovery acceptance remains incomplete.
 
-## Current verified checkpoint (2026-10-09)
-- Pi working branch: `feature/v3-home-agent`; verify live HEAD and cleanliness using `git status -sb` on every new chat; dated commit IDs below are historical.
-- Latest verified full isolated regression for Gate B entity identity hardening: **109 test files / 443 assertions passed / zero failures**, npm exit 0 (see latest WORKLOG entry).
-- Gate B remains **OPEN** for general/home-wide actions: missing authoritative complete live HA registry, approved per-home policy, trusted end-to-end identity/action authorization, and production acceptance.
-- Gate D reboot recovery and owner-received Telegram test alert passed; incident alert and tested off-device recovery remain open.
-- Gate E only offline/read-only planning; no live voice authorization.
-- dev/stage/prod separation has an ADR and offline tests, but is **not deployed**.
-- Existing v2 and limited v3 pilots must not be restarted, reconfigured, expanded or used for real HA actuation without explicit authorization. Home Assistant Green must remain independent.
-- Gate E PR #1 snapshot validation hardening **MERGED** as `8eab92b` after focused 11/11 and full isolated 109 files / 442 assertions passed. Offline only; no Assist live authorization: https://github.com/drpoh/ha-telegram-bot/pull/1
+Updated: 2026-10-08. Branch: `feature/v3-home-agent`. Latest pushed checkpoint before this session: `8374ec0`.
 
-## Start-of-chat read-only checks
-Run with Desktop Commander on the authorized Pi, when connected:
-```
-cd /home/drpoh/projects/rs-home-ai-dev
-git status -sb
-git log -5 --oneline
-git branch -vv
-sed -n '1,180p' docs/CHAT-HANDOFF.md
-tail -90 docs/WORKLOG.md
-sed -n '1,150p' docs/TODO.md
-```
-Confirm the current GitHub branch/PRs; never assume this dated checkpoint is still the latest.
-Never print `.env`, access tokens, private HA URLs, DB contents or raw personal logs into chat.
+## Working agreement
+At session start: read `docs/home-agent-v3-strategy.md`, this TODO, `docs/WORKLOG.md`, current `git status`, and the most recent tests. Choose the next task from confirmed blockers.
+At session end: record completed work, failed/unfinished steps, test results, commit/remote status, and next exact action. Never classify an unknown file as safe to delete without inspecting it.
+`docs/PROGRESS.md` is a broader milestone summary, not a substitute for this current queue.
 
-## Operating protocol
-- Select the next item from confirmed blockers in TODO, not conversational progress claims.
-- Inspect changed files, run focused checks, then full isolated regression where appropriate.
-- Log commands, counts, exit codes, branch/commit/push status and remaining caveats in WORKLOG; adjust TODO and this handoff with every stable milestone.
-- Push reviewed tested changes; preserve dirty worktrees and avoid overwriting work done in another chat/session.
-- Distinguish offline test passes, Gate evidence, and operator-authorized live acceptance.
-- If Pi is offline, GitHub is a fallback; state that live runtime and local unpushed changes are unverified.
+## Open tasks
+- [ ] **P1 — Backup/restore design and disaster-recovery testing.** See `docs/BACKUP-RESTORE.md`. Build encrypted off-device SQLite-consistent snapshots, schema/version/hash manifests, isolated restore and negative tests; require explicit approval for schedules, live backups containing secrets, and any production restore. Separate HA Green backups.
+- [ ] **P1 — Engineering ADRs and external project reference reviews.** See `docs/REFERENCES.md`. For each major architecture choice, record alternatives, threat model, upstream license/commit, regression evidence and rollback. No wholesale reuse of third-party code.
+- [x] **P1 — isolate automated SQLite test databases.** Standard `npm test` now uses one temporary schema-only database per file; 43 files / 245 passed, exit 0. Follow-up: replace production schema read with a committed test fixture.
+- [ ] **P0 — Gate B: connect trusted area evidence to the running agent path.** A fail-closed gate has been wired into `src/ai/agent.mjs` for explicit «весь свет в ...» requests. Expanded unresolved plural and mixed light/other-device phrasing protection (231/231 tests); continue covering paraphrases and full agent/confirmation path before deployment. The pure Decision Engine areaEvidence path remains separate; consolidate later.
+- [ ] **P0 — Gate B: prevent unsafe area resolution.** Added pure strict resolver and read-only HA-backed resolver, tested on real HA. Live strict identity is now chained to reviewed local config and inventory in an isolated read-only module. Next: connect approved scope to agent while preserving all policies. Existing permissive resolver used by scenes remains unchanged and requires migration review.
+- [x] **P0 — Gate B: refuse unclassified `light.*` entities.** Generic read-only discovery now requires an explicit, complete partition of light IDs into selected and excluded classes; unclassified or overlapping IDs fail closed. Wiring a trusted per-installation classification source remains open below.
+- [ ] **P0 — Gate B: trusted lighting classification source.** Live HA read-only inventory obtained for sauna, kitchen and corridor, with pending review saved locally in ignored `data/lighting-inventory-review-2026-10-08.json`. Read-only chained discovery now supports approved local config, but actual home mapping remains unapproved. Review undecided switches and lights; only then create approved local config. No room-wide actuation until reviewed.
+- [ ] **P0 — Gate B: mixed-domain and unavailable scope.** Whole-room light + switch requests must never silently execute a subset; unknown/unavailable members block pending an explicit partial-execution policy.
+- [ ] **P1 — Gate C: isolated end-to-end MCP read tests and fault injection.** No real actuation until explicit approval; cover malformed, paginated, stale, unavailable and incorrectly classified inventory.
+- [ ] **P1 — Gate D: staged deployment and rollback.** Running v2 process remains untouched; restart only after review and controlled acceptance tests.
+- [ ] **P1 — verify AUTO_SAFE allowlist device IDs.** Inspect `src/policy/config.mjs` against HA state; do not broaden allowlist before audit.
+- [ ] **P1 — refresh README and long-term milestone details.** Historical totals were refreshed in PROGRESS; latest full baseline before this checkpoint is 198/198.
+- [ ] **P2 — Gate E: reuse shared engine in Assist/voice, no parallel authorization system.**
 
-## Resume priority
-1. Continue Gate B trusted actor/action/policy and authoritative read-only registry provenance (PR #1 has been merged; no need to redo it).
-2. Continue Gate B trusted evidence and operator-policy provenance work without live HA control.
-3. Complete Gate D incident evidence/backup design and Gate E authenticated read-only route only after their specific prerequisites.
+## Recovered files and review
 
-## Additional offline Gate B checkpoint — 2026-10-09
-- New dedicated registry source contract and three passing focused tests, **not production integrated**. Claims are not credentials or proof of transport authentication.
-- Full suite most recently recorded before this new module: 109 files / 443 assertions, zero failures. Do not claim the new module passed full regression until rerun.
-- Next: authoritative HA registry transport/source verification, protected owner approval, and independent actor-to-action binding. No real HA control.
+- [x] Move live-actuating smoke scripts into `scripts/manual/`. They require explicit approval and isolation before execution.
+- [x] Archive accidental terminal diff locally in ignored `data/local-archive/`; not part of Git.
+- [ ] Review standalone audit collectors `src/audit/collector.mjs` and `src/audit/collector-v2.mjs` for compatible read-only APIs and coverage before deploying or scheduling them. Source files preserved.
+- [ ] Review manual smoke scripts end-to-end and validate their restore behavior in controlled conditions. A dual opt-in guard is now present, but the scripts have not been live-tested.
 
-## Gate B source audit checkpoint — 2026-10-09
-- See `docs/GATE-B-REGISTRY-SOURCE-REVIEW.md`. Generic `ha_search` and `ha_get_overview` are insufficient as complete authoritative registry sources. No production transport source is accepted.
-- Focused source contract tests: 4/4 pass; full suite after this test-only documentation change remains not rerun. Gate B OPEN.
+## Completion criteria
+A task can be marked done only with a file/commit reference, verification evidence and any remaining caveat. Local-only work is marked *not pushed*. Do not imply that passing unit tests proves production safety.
 
-## Installed HA-MCP verification — 2026-10-09
-- On Pi, authenticated connection to the configured HA-MCP succeeded with **53 advertised tools**. Schema read-only discovery verified `ha_get_device` paginated list, `ha_get_entity` single/batch resolution, `ha_list_floors_areas`, and paginated `ha_search` — but **no dedicated atomic registry snapshot tool**. See `docs/GATE-B-REGISTRY-SOURCE-REVIEW.md`.
-- Live registry completeness and consistent origin remain UNPROVEN. Never treat generic pagination as authorization; Gate B remains OPEN.
+- [ ] **P0 — entity rename lifecycle (Gate B).** Implement read-only HA entity-registry snapshots and compare `platform + unique_id + domain`; core proposal module `src/home/entity-rename-audit.mjs` and isolated tests added. Next: authoritative registry adapter with completeness/freshness checks, impacted configuration dependency report, reviewed migration transaction and rollback. Never silently remap or actuate devices.
 
-## Gate B offline page consistency checkpoint — 2026-10-09
-- Added `v3-registry-page-consistency.mjs` plus two focused passing tests; this is not an authenticated live collector and cannot authorize anything.
-- Installed HA-MCP lacks a demonstrated shared generation token for all registry pages; this remains the deployment blocker. See WORKLOG for detail.
+- [ ] **P0 availability independence:** Before deploying v3, demonstrate that stopping the agent/Raspberry Pi and disconnecting AI/MCP does not interrupt native Home Assistant, Zigbee2MQTT, existing automations, dashboards or local device control. No automatic replay of stale writes after reconnection. Acceptance test requires owner-approved maintenance window. See `docs/ADR-HA-INDEPENDENCE.md`.
 
-## Native HA WebSocket investigation — 2026-10-09
-- Upstream has direct registry list WebSocket commands for entities, devices and areas. Their separate calls are not an atomic cross-registry snapshot. See `docs/GATE-B-REGISTRY-SOURCE-REVIEW.md`.
-- Offline two-pass digest module passes 2/2 focused tests but is NOT transport authentication or HA authorization; full regression pending.
+## 2026-10-08 — Approved priority order (supersedes historical checkpoint numbers above)
 
-## Bounded offline HA WebSocket read adapter — 2026-10-09
-- `src/decision/v3-ha-registry-read-adapter.mjs` constructs only the three native registry list commands, injectable fixture transport; verifies two passes and child/area links; **5/5 focused tests passed**. Full regression **113 files / 454 assertions passed / zero failed files**, npm exit 0; log `/tmp/rs-v3-registry-read-adapter-full.log`.
-- No live connector is wired or approved, `authorization:false` always. Gate B OPEN; full test outcome must be recorded before considering this milestone stable.
+- [ ] **BLOCKER Gate B:** Join trusted original Telegram request, actor/chat/token and immutable candidate action to operator-reviewed local policy and complete live read-only scope; deny replay, actor mismatch, cancellation, replacement, ambiguous intent and alternative MCP calls. Prove with isolated end-to-end tests and report evidence. The existing `v3-intent-ledger` and `v3-isolated-dispatcher` are **not yet connected**.
+- [ ] **Gate C afterward:** end-to-end fault/race/timeout/cancellation tests through the joined chain; verification must never trigger a second unapproved write.
+- [ ] **Pre-deployment invariant:** independent operation of Home Assistant Green if AI, Pi, MCP or Telegram fails. Live acceptance only with owner authorization.
+- [ ] **Gate D:** bounded rollout, audited controls, backups, rollbacks and monitoring after owner approval.
+- [ ] **Gate E:** voice/Assist on the same policy and authorization stack.
+- [ ] **Documentation hygiene:** keep strategy, TODO, PROGRESS and WORKLOG consistent; never infer operational readiness from passing mock tests or quote an overall readiness percentage.
 
-## Offline HA WebSocket endpoint policy — 2026-10-09
-- `src/decision/v3-ha-registry-endpoint-policy.mjs`: pure preflight, 2/2 focused passing; **does not connect or verify TLS**. Protected source claims remain untrusted. Full suite last passed 113 files / 454 assertions *before* this module; Gate B OPEN.
+## Voice-first reprioritization (owner approved 2026-10-08)
 
-## Gate B offline WebSocket frame guard — 2026-10-09
-- A fixed-read-command WebSocket protocol fixture was added; focused 2/2 tests passed. It has no network socket, TLS or token verification; `authorization:false` is unconditional. Gate B remains OPEN. See latest WORKLOG.
+- [ ] **P0 Gate B:** Integrate channel-neutral command provenance, source trust and strict action scope with shared policy, reviewed local configuration and confirmation; no channel may assert its own privilege.
+- [ ] **P0 Gate B:** Add read-only simulated Atom Echo / Assist adapter and test unverified speaker, replay, reclassification and dangerous action rejection.
+- [ ] **P1:** Design user-safe voice confirmation with explicit scope, short TTL and no unsafe command replay; require identity verification for sensitive operations.
+- [ ] **P2 deferred:** Live Telegram v3 transport wiring. Preserve existing mock adapter and v2 operational service; avoid Telegram-specific assumptions in shared decision code.
+- [ ] **P2 after shared engine:** Reuse engine from HA Assist with no production HA side effects until gates and approval.
 
-## Gate B offline injected WebSocket client — 2026-10-09
-- `v3-ha-registry-ws-client.mjs` exists with mock-only transport tests: 4/4 focused pass. Full regression **116 files / 460 assertions passed / 0 failures**, exit **0**, log `/tmp/rs-v3-ws-client-full-20261009.log`.
-- Security limit: no real TLS/host or credentials provenance checks, socket supplied externally, authorization always false. Not live-deployed; Gate B OPEN.
+## 2026-10-09 — Future environment separation
+- [ ] Adopt `docs/ADR-DEV-STAGE-PROD.md` before any expanded live deployment. Separate dev/stage/prod endpoints, bot tokens, databases, replay stores, service names, permissions and release credentials. Do **not** deploy stage/prod changes until isolation and rollback are proven and owner approves.
+- [x] Pure `src/ops/environment-boundary.mjs` contract and four isolated tests added; **not wired to production**, not an authorization mechanism by itself.
 
-## Gate B injected secret fixture — 2026-10-09
-- Pure fixture `v3-ha-registry-secret-boundary.mjs` tests secret validation/closure, 2/2 focused passed, but NOT production authentication or protection against malicious injected callbacks. No real secrets used. Full regression pending. Gate B OPEN.
+## 2026-10-09 — Environment separation follow-up
+- [x] Offline dev/stage/prod descriptor collision checks for service, storage, port, Telegram reference and HA endpoint reference; see `docs/ADR-DEV-STAGE-PROD.md`.
+- [ ] Before creating stage: choose distinct test bot credentials, service account/runtime data and mock HA instance, harden permissions, validate actual installed unit files and network isolation. Do not use live HA Green as stage.
+- [ ] Before promoting prod: immutable artifacts, stage acceptance, rollback/backup tests and explicit owner authorization; never repurpose the current v2 or v3 runtime automatically.
 
-## Gate B secret-file guard — 2026-10-09
-- Added `v3-ha-registry-secret-file.mjs` permission/symlink/owner checks with 2/2 focused tests on temp fixtures. Not connected to live secrets; parent-directory security not audited. Full npm test not yet rerun. Gate B OPEN.
+## Gate B transport follow-up — 2026-10-09
+- [x] Bound offline caller completion for uncooperative exchange and hanging/failed close (mock tests; does not guarantee underlying I/O termination).
+- [ ] Build trusted transport-layer destruction and late-reply isolation for actual sockets, with independent runtime TLS provenance and complete negative tests before live use.
+- [ ] Establish independently verified TLS peer/endpoint provenance with an approved read-only credential deployment; never accept injected claims as authorization.
 
-## Gate B secret ancestry fixture — 2026-10-09
-- `v3-ha-registry-secret-file.mjs` now checks ancestor directory ownership/symlinks/unsafe writable modes; focused 3/3 pass. Full suite **118 files / 465 assertions passed / 0 failures**, exit **0**, log `/tmp/rs-v3-secret-ancestor-full.log`. No real secrets accessed and production remains untouched. Gate B OPEN.
+## Gate B accelerated delivery plan — owner approved 2026-10-09
+- [x] Record vertical-slice / upstream-reuse / tiered-testing decision in `AGENTS.md` and `docs/ADR-GATE-B-ACCELERATION.md` (workflow only).
+- [x] Evaluate official `home-assistant-js-websocket`/`ws` metadata and Node.js/ARMv7 ESM import compatibility in a temporary isolated Pi prefix; **no live HA connection**.
+- [ ] Before any read-only deployment: independently verify TLS identity/pinning, bounded socket lifecycle, reconnect policy, operator-owned configuration and credential path; perform reviewed rollback/acceptance tests.
+- [ ] Assemble **one isolated end-to-end Gate B harness** using existing provenance, intent ledger, isolated dispatcher, reviewed policy and authoritative scope adapters. Ensure actor mismatch, replay, expired confirmation, changed scope, tool substitution and bypass all deny.
+- [ ] Only after independent source/operator identity evidence, propose read-only integration with explicit approval. Gate B OPEN.
+- [ ] Adopt tiered CI; do not add GitHub Actions workflow before permission/secrets review.
 
-## Gate B offline TLS peer evidence — 2026-10-09
-- New `v3-ha-registry-tls-evidence.mjs` and 2/2 passing focused fixtures check hostname and certificate fingerprint; no actual network TLS handshake, peer data is caller supplied. Full suite **119 files / 467 assertions passed / 0 failures**, exit 0, log `/tmp/rs-v3-tls-fixture-full.log`. Gate B OPEN.
+## Gate B integrated fixture checkpoint — 2026-10-09
+- [x] Add a combined **offline** ledger/actor/action/policy/scope/consumption test fixture reusing existing modules, with adversarial actor/chat/token/tool/scope/cancel cases.
+- [ ] Bind provenance from an independently authenticated channel ingress (not caller fields) and complete HA registry/approved policy before Gate B acceptance. Extend whole-chain expired/inflight/replacement and alternative-MCP fault matrix; existing unit fixtures alone do not close Gate B.
 
-## Gate B cooperative mock WebSocket cancellation — 2026-10-09
-- Latest offline change passes `AbortSignal` to injected `socket.exchange` and aborts on timeout; focused regression 3/3. Full suite **119 files / 468 assertions passed / 0 failures**, exit 0; log `/tmp/rs-v3-ws-abort-full-20261009.log`.
-- Mock socket can ignore abort and `close()` can hang; this does NOT supply real transport-layer I/O enforcement, TLS peer identity or production authorization. Gate B OPEN.
+## Channel-neutral provenance follow-up — 2026-10-09
+- [x] Add combined offline Assist/Telegram channel-bound ledger/risk/tool denial tests; no actual transport authentication.
+- [ ] Provide independently established ingress identity from adapter-owned transport context and gate actions with reviewed source/policy evidence. No caller-provided `authenticated` claims may authorize operations.
 
-## Gate B offline bounded WebSocket close — 2026-10-09
-- Added a bounded `closeTimeoutMs` to the injected mock transport and adversarial tests for hanging close, ignored abort and thrown close; focused 5/5 pass. Full regression **119 files / 471 assertions passed / 0 failed**, exit 0; `/tmp/rs-v3-bounded-close-full-20261009.log`.
-- Not a real transport kill switch, TLS provenance or authorization. Gate B still OPEN; do not deploy.
+## Gate B strict joined-chain evidence — 2026-10-09
+- [x] Test fail-closed when strict joined action lacks independent registry evidence and/or reviewed approval evidence; no simulated writes.
+- [ ] Replace callback assertions with genuinely independently verified registry origin and operator-owned policy; prove positive and negative end-to-end acceptance without granting real HA authorization.
 
-## Gate B accelerated delivery switch — 2026-10-09
-- Owner approved faster vertical-slice development, use of maintained HA/MCP libraries and tiered tests. `AGENTS.md` and `docs/ADR-GATE-B-ACCELERATION.md` specify boundaries. No production integration, permissions or credentials changed.
-- NEXT: official client compatibility evaluation, then combined *isolated* intent/actor/action/policy/scope/confirmation chain. Avoid more standalone mock transport features unless required for safety. Gate B OPEN.
+## Gate B upstream connection reuse — 2026-10-09
+- [x] Reuse official HA JS client `Connection.sendMessagePromise` interface behind a tiny offline-only registry read bridge; no custom wire protocol and no HA connection.
+- [ ] Supply independent, operator-reviewed authenticated TLS connection and bounded transport lifecycle before allowing any live read-only registry use; no authorization based on registry contents alone.
 
-## Official client selection metadata — 2026-10-09
-- Read-only npm metadata on Pi: home-assistant-js-websocket 9.7.1 Apache-2.0, ws 8.22.0 requiring Node >=10; current Node 20.19.2. Neither installed as a direct dependency. API/TLS/ARMv7 validation remains OPEN. See acceleration ADR.
+## Gate B upstream reconnect boundary — 2026-10-09
+- [x] Reject an offline registry read on upstream Connection disconnect/close/socket replacement without implementing custom reconnect logic.
+- [ ] Prove authenticated TLS provenance and actual cancellation/close behavior of the official client in an independently reviewed isolated transport fixture before accessing real HA.
 
-## Gate B combined offline vertical-slice fixture — 2026-10-09
-- New `test/v3-gate-b-vertical-slice.test.mjs` reuses existing ledger, mock dispatcher and read-only scope gates; 2/2 focused pass for actor/chat mismatch, forged/replayed token, tool substitution, scope drift and cancellation. Full regression **120 files / 473 assertions passed / zero failures**, exit 0; `/tmp/rs-v3-gate-b-vertical-full-20261009.log`. No live authorization; Gate B OPEN.
+## Transport-to-policy handoff — 2026-10-09
+- [x] Run isolated *real* Node TLS loopback certificate-chain/hostname negative tests on Pi without HA secrets or network contact; record that actual HA WebSocket transport acceptance remains outstanding.
+- [x] Enter policy-source stage: assert that a positive simulated evidence callback cannot import v2 grants into default-deny v3 policy.
+- [ ] Operator-review actual v3 policy storage and independently authenticated HA registry source before authorizing read-only integration, then stage with explicit owner approval. No production HA credentials introduced.
 
-## Offline channel provenance vertical-slice — 2026-10-09
-- New tests for channel ledger + command envelope + tool boundary, 2/2 focused passed, full regression **121 files / 475 assertions passed / zero failures**, exit 0, `/tmp/rs-v3-channel-slice-full-20261009.log`. This proves mock rules only; next blocker is trusted ingress outside caller/LLM input. Gate B OPEN.
+## Accelerated verification workflow — 2026-10-09
+- [x] Reuse Node check and GNU xargs to parallelize syntax verification at `-P 3`, preserving coverage with no new runtime dependencies.
+- [ ] Benchmark total full-suite time under normal Pi load and keep test isolation; consider GitHub CI only after reviewed least-privilege workflow, not by skipping safety gates.
 
-## Gate B joined strict-denial checkpoint — 2026-10-09
-- Existing Telegram joined adapter extended with strict registry/approval evidence fault matrix: focused 3/3 pass; no simulated write when either attestation missing or rejected. Full suite **121 files / 476 assertions passed / 0 failures**, exit 0; `/tmp/rs-v3-strict-evidence-full-20261009.log`. Still offline; Gate B OPEN.
+## Gate B composition checkpoint — 2026-10-09
+- [x] Compose existing upstream registry bridge + joined Telegram confirmation + V3 reviewed policy into one isolated denial integration test.
+- [ ] Require independent HA TLS/registry provenance, owner-reviewed policy grants, authenticated live Telegram adapter and full approval before any real execution. Offline composed denial is not Gate B acceptance.
 
-## Official library verified on Pi — 2026-10-09
-- `home-assistant-js-websocket@9.7.1` and `ws@8.22.0` installed **only** in `/tmp/rs-ha-upstream-probe-20261009` using no scripts, Node 20.19.2. ESM export smoke test succeeded (exit 0). No project dependency, real socket, token or service change. Favor official client for future reviewed read-only connection; Gate B OPEN. See acceleration ADR.
+## Gate B registry response limits — 2026-10-09
+- [x] Enforce post-receive JSON byte limit in injected official-client-shaped registry reader with oversized-response denial test.
+- [ ] Enforce actual WebSocket max frame size in the reviewed upstream socket configuration; post-receive checks alone cannot bound memory allocation.
 
-## Gate B official upstream Connection bridge — 2026-10-09
-- `v3-ha-upstream-read-bridge.mjs` composes an injected official-client-shaped `sendMessagePromise` with existing two-pass registry checker. 2/2 focused pass, full npm regression **122 files / 478 assertions passed / 0 failures**, exit 0, `/tmp/rs-v3-official-bridge-full-20261009.log`. No network or privileges; Gate B OPEN.
+## Gate B WSS transport acceptance — 2026-10-09
+- [x] Prove actual `ws` TLS chain/hostname validation, frame-size limit and forced client termination using an ephemeral loopback-only WSS fixture.
+- [ ] Operator approval and independently verified live HA endpoint, protected purpose-specific credential, real socket close/reconnect acceptance, default-deny V3 policy review and staged rollback. No production wiring before explicit review.
 
-## Official client reconnect isolation — 2026-10-09
-- `v3-ha-upstream-read-bridge.mjs` now denies disconnected/closing connections and rejects a socket change during registry read. Focused **4/4** passed; full regression **122 files / 480 assertions passed / 0 failures**, exit 0, `/tmp/rs-v3-upstream-reconnect-guard-full-20261009.log`. No HA reads, credentials or deployment; Gate B OPEN.
+## Gate B minimal closure path — 2026-10-09
+- [x] Reviewed existing upstream-client, scope and policy modules; wrote `docs/ADR-GATE-B-MINIMAL-CLOSURE.md` to stop duplicate custom WS work.
+- [ ] Remaining hard acceptance: independently authenticated HA origin and read-only registry, operator-reviewed local policy/classification, trusted ingress action binding and staged end-to-end proof. Without these Gate B cannot be marked done.
 
-## Gate B local TLS fixture -> reviewed policy stage — 2026-10-09
-- Real Node TLS loopback handshake fixture passed untrusted CA rejection, trusted CA acceptance and hostname rejection, no HA contact; NOT an upstream HA connection acceptance.
-- Started owner-policy origin stage, reusing `v3-trusted-policy-source.mjs` with new joined-chain denial fixture, focused 1/1 passed: default-deny v3 prevents execution even with simulated positive registry/approval callbacks. Full suite **123 files / 481 assertions / 0 failures**, exit 0, `/tmp/rs-v3-gateb-tls-policy-full-20261009.log`. Gate B OPEN.
+## Gate B minimal vertical slice — 2026-10-09
+- [x] Strict original Telegram message -> ledger actor -> area classification -> policy confirmation -> guarded mock service -> state verification, one isolated positive/replay-denial fixture (no real HA write).
+- [ ] Real ingress owner and durable replay deployment; independently authenticated TLS HA registry and bounded socket teardown; reviewed and protected V3 policy + real light/switch classification; operator-approved read-only live acceptance. Do not mark Gate B complete until evidence exists.
 
-## Faster regression script — 2026-10-09
-- Optimized `package.json` check with `find ... -print0 | xargs -0 -P 3 -n 1 node --check`, same 256 files and same Node checker, no new dependency. Standalone syntax probe 69.47s/exit 0; `npm run check` 73.69s/exit 0. Full `npm test` **123 files / 481 assertions / 0 failures**, exit 0, **220.98s**, `/tmp/rs-v3-accelerated-test-20261009.log`. Gate B OPEN; no live HA change.
+## 2026-10-10 — Gate B transport offline exit and Gate C development
+- [x] Real official upstream WSS client with trusted local certificate: six bounded reads; untrusted CA: zero reads; forced disconnect on second read: no continuation (isolated only).
+- [ ] Gate B final acceptance still requires actual operator-authorized HA registry origin/credential, V3 policy+light classification, trusted ingress binding and formal live read-only acceptance. No production changes before explicit approval.
+- [x] Gate C started in isolated fault tests: late positive authorization after timeout must not cause execution; 7/7 focused pass.
+- [ ] Gate C needs full joined-chain fault coverage and later owner-approved controlled acceptance; offline tests alone do not permit actuation.
 
-## Gate B composed registry + reviewed-policy fixture — 2026-10-09
-- New `test/v3-gate-b-registry-policy-composition.test.mjs` composes existing official-client-shaped read-only bridge, Telegram joined chain and V3 default-deny policy. Focused 1/1 pass; 6 fixed registry reads, zero simulated writes. Full `npm test` **124 files / 482 assertions / 0 failures**, exit 0, 219.32s. Offline-only. Gate B OPEN.
-
-## Upstream read timeout regression — 2026-10-09
-- New hung-response test in `v3-ha-upstream-read-bridge.test.mjs`; focused 5/5, full `npm test` 124 files / 483 assertions / 0 failures, exit 0, 217.65s. Timeout fails closed and prevents next read, but does not kill the underlying pending socket. Gate B OPEN; no HA connection or service changes.
-
-## Offline registry response size check — 2026-10-09
-- Existing upstream read bridge now enforces a post-receive JSON-size limit, with oversized registry denial and no later read; focused 6/6 passed. Full suite **124 files / 484 assertions / 0 failures**, exit 0, 218.87s. Transport-level `maxPayload`, real TLS and operator policy still outstanding. Gate B OPEN.
-
-## WSS loopback transport acceptance — 2026-10-09
-- On Pi, actual `ws@8.22.0` WSS loopback test with self-signed SAN localhost (temporary cert) passed untrusted rejection, explicit CA acceptance, wrong hostname rejection, `maxPayload` 4096-byte rejection, and `terminate()` (5/5). No HA or production contact. Full caveats and live prerequisites: `docs/GATE-B-WSS-ACCEPTANCE.md`. Real endpoint credentials/operator approval absent, Gate B OPEN.
-
-## Gate B timeout race checkpoint — 2026-10-09
-- Found and fixed late-result continuation after registry timeout; 11 focused tests pass. Full regression log: /tmp/rs-v3-gateb-late-read-full.log. Transport cancellation still required. Gate B OPEN.
-
-- Full isolated regression verified: 124 files / 486 passing assertions / 0 failures, exit 0.
-
-## Gate B denial regression — 2026-10-09
-- Added two upstream failure tests for rejected middle-page and close during later pass; focused bridge 10/10 passed. Full regression pending. No production or HA control.
-
-- Full suite passed: 124 files, 488 assertions, 0 failures, exit 0.
-
-## Gate B simplification decision — 2026-10-09
-- Read `docs/ADR-GATE-B-MINIMAL-CLOSURE.md`: stop redundant custom socket micro-fixtures; prefer official `home-assistant-js-websocket`/`ws`, narrow registry bridge and one strict joined authorization chain. Focused 20/20 passed. No runtime change. Gate B OPEN until independently proven actual HA source + operator-reviewed V3 policy and authenticated ingress.
-
-## Gate B joined policy denial tests — 2026-10-09
-- Added two offline integration tests to v3-gate-b-registry-policy-composition: positive mock attestations cannot override default-deny policy and missing approval source denies. Focused 3/3 passed. Full regression pending. Gate B remains OPEN.
-
-- Full npm test PASS 124 files / 490 assertions / 0 failed.
-
-## Gate B Telegram update consistency — 2026-10-09
-- Added matching checks between raw Telegram update and Telegraf fields when both supplied. Focused 7/7 pass; full npm test pending. These checks do not prove that a caller-supplied context is genuine. Gate B OPEN.
-
-- Full npm test: 124 files / 491 passing assertions / zero failures.
-
-## Gate B Telegram update type — 2026-10-09
-- Isolated transport admission rejects non-message Telegram update types mixed with synthetic ctx.message. Focused transport/adapter tests 11/11 pass. Full regression pending. Gate B OPEN pending trusted handler, HA origin and reviewed policy.
-
-- Full regression passed: 124 files / 492 assertions / 0 failures, exit 0.
-
-## Strict raw Telegram update preflight — 2026-10-09
-- Optional `requireRawMessage:true` on `createTelegramTransportAdmission` rejects contexts lacking original `update.message` and mismatched fields. Focused tests 9/9 passed; full test result pending in `/tmp/rs-v3-gateb-strict-admission.log`. Not production-wired; does not authenticate arbitrary input. Gate B OPEN.
-
-- Full regression PASSED 124 files / 493 assertions / 0 failures, exit 0.
-
-## Gate B isolated complete vertical slice — 2026-10-09
-- `createV3TelegramJoinedAdapter` supports optional `requireRawMessage` and `durableReplay` forwarded to transport admission. Full offline joined test includes strict raw message, actor mismatch, area/light inventory, mock review assertions, confirmation, single mock actuation and verified mock state, replay denied; focused 4/4 pass. Full suite pending `/tmp/rs-v3-gateb-vertical-full.log`. Gate B NOT accepted for live use.
-
-- Full suite PASS: 124 test files / 494 assertions / 0 failures, exit 0.
-
-## Gate B durable Telegram replay across adapter recreation — 2026-10-09
-- New focused `v3-telegram-joined-adapter.test.mjs` fixture exercises strict ingress plus durable replay with a different update ID after chain recreation; 5/5 focused passed. Full regression pending `/tmp/rs-v3-gateb-durable-replay-full.log`. Does not wire production; Gate B OPEN.
-
-- Full npm regression 124 files / 495 passing assertions / 0 failures, exit 0.
-
-## Gate B one-shot read bridge — 2026-10-10
-- Existing `v3-ha-upstream-read-bridge.mjs` now provides `inspectOneShotRegistryConnection` for operator-supplied official `Connection`: bounded acquisition, fixed registry-only reads, best-effort close, never authorizes. Focused 12/12; full test `/tmp/rs-v3-gateb-one-shot-full.log` pending. Offline only; Gate B OPEN pending authenticated TLS source/operator policy and read-only acceptance.
-
-- Full isolated regression: 124 files / 497 passed assertions / 0 failures, exit 0.
-
-## Actual upstream HA client WSS loopback — 2026-10-10
-- Confirmed real upstream `createConnection`/`createLongLivedTokenAuth` + ws using local TLS fixture: 6 registry-only reads / 1 connection / authorization false. Removing CA blocks handshake: 0 WebSocket connections and reads. Both tests exit 0. See docs/GATE-B-WSS-ACCEPTANCE.md. No production wiring. Gate B OPEN.
-
-## 2026-10-10 — Gate B transport fault and Gate C kickoff
-- Real official HA client loopback disconnect on 2nd registry call fails closed: exactly 2 reads, authorization false; see GATE-B-WSS-ACCEPTANCE. Gate B still OPEN for actual authenticated HA origin/operator-reviewed V3 policy and explicitly approved live acceptance.
-- Gate C isolated late authorization test added, focused 7/7 passed; full npm test pending `/tmp/rs-v3-gatec-timeout-full.log`. Never replay a write after delayed confirmation.
-
-- Full regression PASS: 124 files / 498 assertions / 0 failures, exit 0.
-
-## Project strategy, repository and branches audit — 2026-10-10
-- New current-status source `docs/REVIEW-2026-10-10.md`. Remote feature branch matched local at audit start `8093db0`. Remote main `3bfa386` vs local main `76f6508` (behind 1); refactor/v2 separate; review Gate E branch and PR #1 unmerged/not acceptance evidence. No merges or deletions. README/TODO/PROGRESS top pointers updated.
-- Last full confirmed npm regression: 124 test files / 498 assertions / zero failed, exit 0. Review itself did not rerun full npm test. Gate B OPEN, Gate C isolated, Gate D partial, Gate E offline.
-
-- Independent dev clone npm test 124 files / 498 assertions / zero failures, exit 0.
-
-## Workspace rules and isolated stage fixture — 2026-10-10
-- Rules are permanent in repository `AGENTS.md`: edit/push only from `/home/drpoh/projects/rs-home-ai-dev`; inspect runtime v2 `~/ha-telegram-bot` and pilot `~/rs-home-ai-v3` read-only. Never auto-sync the older pilot copy. Project settings/staged permissions remain reviewed separately.
-- `config/environments/isolation.example.json` describes nonsecret disjoint dev/loopback-stage/future-prod *planning* only; no real services, credentials or HA writes deployed. `test/environment-manifest-example.test.mjs` checks isolation contract.
+## 2026-10-10 — Isolated stage planning
+- [x] Persist workspace separation rules and checked sanitized environment manifest fixture (125 test files / 499 assertions passed).
+- [ ] Provision real stage only after separate authorization, protected mock endpoints, identities and rollout plan; no change to current v2/V3 units.

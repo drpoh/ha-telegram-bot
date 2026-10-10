@@ -34,6 +34,14 @@ Start:
 
     npm start
 
+## GitHub branches and release boundaries
+
+- `main`: baseline; does not contain all V3 work.
+- `refactor/v2`: legacy/current-bot development lineage; preserve running v2.
+- `feature/v3-home-agent`: active V3 engineering branch, **not a production release**.
+- `review/gate-e-target-snapshot-hardening-20261009`: separate Gate E review work; do not assume it is merged.
+- The branches do not represent installed dev/stage/prod environments. See [2026-10-10 audit](docs/REVIEW-2026-10-10.md) and [environment ADR](docs/ADR-DEV-STAGE-PROD.md).
+
 ## Development status and handoff
 
 - [Current open tasks](docs/TODO.md)

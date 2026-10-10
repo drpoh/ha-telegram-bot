@@ -202,3 +202,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Gate C isolated late authorization test added, focused 7/7 passed; full npm test pending `/tmp/rs-v3-gatec-timeout-full.log`. Never replay a write after delayed confirmation.
 
 - Full regression PASS: 124 files / 498 assertions / 0 failures, exit 0.
+
+## Project strategy, repository and branches audit — 2026-10-10
+- New current-status source `docs/REVIEW-2026-10-10.md`. Remote feature branch matched local at audit start `8093db0`. Remote main `3bfa386` vs local main `76f6508` (behind 1); refactor/v2 separate; review Gate E branch and PR #1 unmerged/not acceptance evidence. No merges or deletions. README/TODO/PROGRESS top pointers updated.
+- Last full confirmed npm regression: 124 test files / 498 assertions / zero failed, exit 0. Review itself did not rerun full npm test. Gate B OPEN, Gate C isolated, Gate D partial, Gate E offline.

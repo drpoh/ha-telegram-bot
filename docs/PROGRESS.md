@@ -1,5 +1,7 @@
 # v3 Home AI Agent — Progress
 
+**Current reviewed status (2026-10-10):** see [repository and branch audit](REVIEW-2026-10-10.md). Gate B production acceptance OPEN; Gate C offline fault tests ongoing; Gate D limited operational evidence but recovery/real incident acceptance incomplete; Gate E offline only. Do not interpret historical gate rows below as the latest release decision.
+
 ## Current acceptance status — 2026-10-09
 
 See `docs/REVIEW-2026-10-09.md` for the reviewed file inventory, operational evidence, current gate boundaries and next priority tasks. Earlier counters/checkpoints below are historical, not present-day production acceptance. General Gate B and voice Gate E remain open; Gate D reboot and Telegram receipt passed but real-alert and disaster-recovery acceptance remains incomplete.

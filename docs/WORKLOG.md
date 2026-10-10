@@ -714,3 +714,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Began Gate C in isolated faults suite: a pending authorization which returns true only after its deadline cannot trigger a write. Focused Gate C tests 7/7 pass. Full suite pending `/tmp/rs-v3-gatec-timeout-full.log`.
 
 - Full npm test PASS: 124 isolated files, 498 assertions, 0 failed, exit 0.
+
+## 2026-10-10 — Strategy, structure and branch audit
+- Examined fetched Git refs, modular structure, README, AGENTS, strategy, PROGRESS, TODO, previous review and gate records; findings in `docs/REVIEW-2026-10-10.md`.
+- Corrected visible current-status pointers and clarified branch purposes without rewriting chronological history or altering gates. No branch merge/deletion, live HA access or service changes. Full regression not rerun for docs-only edits.

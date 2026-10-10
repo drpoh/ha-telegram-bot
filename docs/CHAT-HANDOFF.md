@@ -335,3 +335,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — IMPORTANT: SSH tunnel candidate NOT usable
 - Read-only HA `sshd -T` confirms `allowtcpforwarding no`. Ephemeral SSH local port accepted TCP but actual channel failed `administratively prohibited`; endpoint `/mcp` returns 404 and configured MCP path differs. DO NOT install/start docs/rs-home-ai-v3-mcp-tunnel.service.example. Need owner-approved restricted SSH forwarding or verified TLS and actual path/protocol validation. No live changes. See updated MCP trust runbook.
+
+## 2026-10-10 — HA SSH restricted local forwarding enabled, MCP real read OK
+- User authorized SSH forwarding change. HA sshd config backup `/etc/ssh/sshd_config.rs-v3-backup-20261010`; scoped `Match User hassio`, `AllowTcpForwarding local`, `PermitOpen 127.0.0.1:9584`, `GatewayPorts no` with global forwarding still denied. `sshd -t`, reconnect PASS. Ephemeral 127.0.0.1:19584 tunnel supports MCP SDK initialize/listTools (53 including write tool), and one `ha_get_state(light.led_kukhnia)` read success; stopped. No running V3/v2 restarts, no writes, no production URL/journal change. Next: independent host attestation, review privileges, owner-approved persistent tunnel, protected claim ledger and controlled actuation acceptance. NO-GO remains.

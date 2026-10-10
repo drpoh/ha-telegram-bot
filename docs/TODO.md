@@ -252,3 +252,8 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — SSH tunnel blocked by HA sshd policy
 - [x] Read-only remote `sshd -T` confirmed `allowtcpforwarding no`; real tunnel HTTP attempt fails `administratively prohibited` even when local TCP listener appears open. HA loopback `/mcp` returns 404; runtime path differs.
 - [ ] Owner-authorized HA SSH forwarding policy (prefer restricted identity) or verified TLS alternative required. Validate exact MCP path and SDK initialize/listTools under approved connection; DO NOT install disabled unit template yet.
+
+## 2026-10-10 — Approved restricted HA SSH forwarding completed
+- [x] Backed up HA sshd_config and applied restricted `Match User hassio` local forwarding to 127.0.0.1:9584 while preserving global deny; config validation PASS and SSH reconnect PASS.
+- [x] Temporary Pi loopback tunnel now passes upstream MCP SDK `listTools` (53 tools) and `ha_get_state(light.led_kukhnia)` read-only. Each tunnel stopped.
+- [ ] Actual MCP grants include `ha_call_service` (not read-only). Require operator review, separate V3 deployment/tunnel approval, independent host key confirmation, external SQLite claim store and one-light controlled acceptance. Do not declare Gate B/C/D fully closed.

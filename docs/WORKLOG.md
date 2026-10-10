@@ -849,3 +849,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-10 — Operational acceptance preparation (read-only)
 - Verified dev `96745bb`, live V3 `a7fc446`, live v2 `32b5299`. V3 user service active/running PID 971; v2 system service active. Existing kitchen operator policy 0600 owned by drpoh and SHA256 matches pinned dev expected hash; hash consistency is not approval or HA identity evidence. Protected external SQLite claims DB at expected target path **missing**. Did not inspect live secret content, execute Home Assistant actions, restart units, create DB, or edit live checkouts.
 - Added sanitized operator acceptance checklist `docs/V3-MVP-OPERATIONAL-ACCEPTANCE.md`, clear NO-GO and no silent promotion. Documentation-only milestone; no functional test requirements changed.
+
+## 2026-10-10 — Safe operational journal provisioning implementation
+- Rechecked Pi: dev HEAD c7f401c, V3/v2 services still active, protected state directory exists (0700), target `claims.db` absent. Added callable offline-only `src/ops/v3-pilot-journal-provision.mjs` with existing-ledger no-reset policy, exclusive 0600 SQLite file creation and immediate validation. Focused 2/2. Did NOT invoke against live target, access HA, change credentials, or restart services. Full regression follows.
+
+- Full isolated regression PASS: 141 test files / 545 assertions / 0 failures / exit 0. Log: `/tmp/rs-v3-operator-storage-20261010.log`.

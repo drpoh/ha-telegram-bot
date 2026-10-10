@@ -225,3 +225,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Verified existing operator policy file metadata (0600) and matching pinned SHA256, without reading or publishing the policy/credentials.
 - [!] NO-GO: pre-provisioned protected `~/.local/state/rs-home-ai-v3/claims.db` is absent. See `docs/V3-MVP-OPERATIONAL-ACCEPTANCE.md` for precise missing approvals and controlled release/rollback steps.
 - [ ] Next operator-approved procedure: provision protected separate journal, verify authenticated HA origin and real entity/policy authority, promote reviewed immutable commit separately from v2, then scoped one-light controlled acceptance.
+
+## 2026-10-10 — Gate D operator-controlled storage provisioner
+- [x] Added explicit-only `provisionV3PilotJournal` for a separately reviewed target: protected directory, atomic 0600 create, existing-ledger preserve, schema/integrity preflight. Focused 2/2; no live provisioning or service changes.
+- [ ] Operator must approve use against runtime storage separately; read-only HA source/actor/entity evidence and scoped one-light acceptance remain blocking. Pilot deployment NO-GO.

@@ -313,3 +313,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — Operational preflight read-only NO-GO
 - Latest verified dev HEAD `96745bb` before doc commit; live V3 `a7fc446` active/running and live v2 `32b5299` active. Pinned kitchen policy SHA256 matches existing 0600 policy file metadata. Independent rollback-safe claims DB missing at expected `~/.local/state/rs-home-ai-v3/claims.db`; direct operational release blocked. Consult `docs/V3-MVP-OPERATIONAL-ACCEPTANCE.md` for exact scoped release path. Do not change live checkouts/services/HA without operator-controlled acceptance.
+
+## 2026-10-10 — Provisioning helper prepared, NOT executed on pilot
+- Added explicit operator-invoked `provisionV3PilotJournal` with exclusive 0600 protected journal creation and no overwrite. Runtime claims DB was missing at inspection and remains untouched. Live HA/source/permissions unverified, Gate D controlled release still NO-GO. See WORKLOG and TODO.
+
+- Full isolated regression PASS: 141 test files / 545 assertions / 0 failures / exit 0. Log: `/tmp/rs-v3-operator-storage-20261010.log`.

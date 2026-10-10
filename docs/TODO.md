@@ -324,3 +324,8 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Requested live acceptance outcome
 - [x] Current HA-MCP identity/options, policy SHA and candidate evidence rechecked. Both current endpoint validators deny the live LAN URL without a reviewed exception; cannot honestly mark release GO.
 - [ ] Establish independently reviewed LAN network+MCP scope permission or choose authenticated HA webhook; then deploy candidate one-poller only with rollback. Owner must send real Telegram request and `/confirm` to perform physical-light test. Do not spoof the confirmation.
+
+## 2026-10-10 — V3 pilot deployed; human acceptance pending
+- [x] Isolated release 7d9bab5 deployed to dedicated user service; old unit backed up, old checkout retained, PID 18430 active, NRestarts=0, v2 active, claims DB healthy.
+- [x] Real read-only `ha_get_state(light.led_kukhnia)` from deployed release client PASS.
+- [ ] Owner: message V3 Telegram bot `Включи свет на кухне` or `Выключи свет на кухне`, then send `/confirm` within 60s. Check post-command reply; collect service evidence with no secrets. Do NOT claim physical actuation occurred before it actually does.

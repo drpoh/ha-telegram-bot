@@ -25,8 +25,12 @@ export function createKitchenDryrunConsent({clock=Date.now,dispatch,executionJou
    // Optional external journal for future reviewed MVP rollout; never retry
    // after unknown outcome. Do not enable live execution merely by setting it.
    if(executionJournal!==undefined){
-    if(typeof executionJournal?.claim!=='function'||!executionJournal.claim(token))
+    try{
+     if(typeof executionJournal?.claim!=='function'||!executionJournal.claim(token))
+      return {status:'denied',reason:'replay_claim_unavailable'};
+    }catch{
      return {status:'denied',reason:'replay_claim_unavailable'};
+    }
    }
    try{
     const result=await dispatch({action:record.action,actor});

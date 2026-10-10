@@ -828,3 +828,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Important: current running pilot has not been changed to use this option. It still requires evidence-based operator acceptance and protected storage before promotion. Full isolated regression follows.
 
 - Full isolated npm test PASS: 138 files / 538 assertions / zero failures / exit 0, `/tmp/rs-v3-mvp-pilot-durable-20261010.log`.
+
+## 2026-10-10 — Protected pilot journal storage readiness
+- Implemented read-only `src/ops/v3-pilot-storage-preflight.mjs` and three focused tests: do not create a missing SQLite ledger; deny in-rollback-tree storage, symlink alias, world-readable database and wrong ownership; accept prepared 0600 owner-held SQLite journal outside rollback. This does not enable execution, mutate the running pilot or inspect live secrets. Further trusted deployment permission/TOCTOU review is still required.
+
+- Full isolated test PASS: 139 files / 541 assertions / zero failures / exit 0; `/tmp/rs-v3-mvp-storage-20261010.log`.

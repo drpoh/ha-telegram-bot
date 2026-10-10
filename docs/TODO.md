@@ -206,3 +206,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Reviewed real dev source `src/pilot/telegram-readonly.mjs`: an existing dedicated Telegraf pilot already has `/confirm`, `/cancel`, a hard one-light boundary, operator-policy hash admission, direct HA registry checks and an official MCP SDK client. Do NOT replace it with another bot/handler.
 - [x] Added optional durable claim to `createKitchenDryrunConsent` **before** injected pilot dispatch; unknown MCP outcome consumes token, missing claim store denies, focused 6/6 including existing fault tests.
 - [ ] Deployment approval required before wiring a protected rollback-independent SQLite journal or changing running pilot. Existing pilot is still unchanged; test its operator policy, HA source trust, auth and current actual safety gate before any approved release.
+
+## 2026-10-10 — MVP pilot protected storage preflight
+- [x] Added offline read-only preflight for existing separate SQLite claim ledger: owner UID, restrictive file/parent permissions, reject symlink, reject journal within rollback tree, verify schema/integrity. Focused 3/3.
+- [ ] Before actual V3 pilot wiring, provision protected dedicated storage with operator-controlled ownership and an independent rollback plan. Handle parent-component symlinks and filesystem races at deployment. Gate B operator HA source/policy acceptance remains required.

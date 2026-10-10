@@ -295,3 +295,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Dev tree already has `src/pilot/telegram-readonly.mjs`: dedicated V3 Telegraf `/confirm` pilot, policy-hash admission and one kitchen-light MCP path. Existing LIVE pilot checkout remains READ-ONLY. Optional durable journal support added to reusable `kitchen-dryrun-consent.mjs`, not wired into live pilot; focused 6/6 passes. Next stage is scoped operator-approved rollout, NOT another bot. See latest TODO/WORKLOG.
 
 - Full isolated npm test PASS: 138 files / 538 assertions / zero failures / exit 0, `/tmp/rs-v3-mvp-pilot-durable-20261010.log`.
+
+## 2026-10-10 — Protected V3 pilot storage preflight
+- New offline read-only preflight module and 3/3 tests enforce protected separately located SQLite claim journal before future pilot release; no live migration or service changes. Check latest WORKLOG for full regression and Git SHA. Gate B actual HA origin/policy/actor remain OPEN.
+
+- Full isolated test PASS: 139 files / 541 assertions / zero failures / exit 0; `/tmp/rs-v3-mvp-storage-20261010.log`.

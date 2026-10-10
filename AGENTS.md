@@ -6,6 +6,13 @@ Build a reliable conversational Home Assistant agent that can remember useful co
 ## Cross-chat continuation
 At the beginning of every new chat, first read `docs/CHAT-HANDOFF.md`, then verify the live Pi Git status, current TODO/WORKLOG and GitHub PRs. Do not treat old chat memories or historical counters as current evidence. Update the handoff after stable milestones.
 
+## Raspberry Pi workspace ownership — effective 2026-10-10
+- **ONLY canonical development checkout:** `/home/drpoh/projects/rs-home-ai-dev`, branch `feature/v3-home-agent`. Perform source edits, tests, documentation, commits and GitHub pushes here.
+- `/home/drpoh/ha-telegram-bot` is the **live v2 system-service directory**; `/home/drpoh/rs-home-ai-v3` is the **live V3 pilot user-service directory**. They are separately versioned checkouts of the same GitHub remote. Inspect them read-only, NEVER auto-pull/rebase/reset, overwrite, delete, move, symlink, or `npm install` in them.
+- Treat `vinted-sales-agent`, `ha-backups`, app state, tokens, live unit files and Home Assistant Green as independently managed; never reorganize or inspect secrets merely to tidy folders.
+- `dev` currently means offline source/test checkout; `stage` and promoted `prod` are NOT yet deployed isolated environments. Distinct environment manifests are planning evidence only, not credentials or authority.
+- When a new chat begins, inspect Git state in dev first and compare runtime Git state read-only. Read `docs/PI-REPOSITORY-LAYOUT-PLAN.md`. Changes to running services, live HA connections or writes, owner-controlled credentials, stage deployment and production release require the existing explicit gate/authorization workflow.
+
 ## Source of truth
 GitHub is the source of truth for code and documentation. Never rely on chat/model memory as the only project state. Before substantial changes, inspect the current branch and relevant files.
 

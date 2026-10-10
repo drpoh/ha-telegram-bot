@@ -27,7 +27,7 @@ It is a compact navigation index, not a substitute for live repository checks.
 ## Start-of-chat read-only checks
 Run with Desktop Commander on the authorized Pi, when connected:
 ```
-cd /home/drpoh/ha-telegram-bot
+cd /home/drpoh/projects/rs-home-ai-dev
 git status -sb
 git log -5 --oneline
 git branch -vv
@@ -212,3 +212,9 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Last full confirmed npm regression: 124 test files / 498 assertions / zero failed, exit 0. Review itself did not rerun full npm test. Gate B OPEN, Gate C isolated, Gate D partial, Gate E offline.
 
 - Independent dev clone npm test 124 files / 498 assertions / zero failures, exit 0.
+
+## Workspace rules and isolated stage fixture — 2026-10-10
+- Rules are permanent in repository `AGENTS.md`: edit/push only from `/home/drpoh/projects/rs-home-ai-dev`; inspect runtime v2 `~/ha-telegram-bot` and pilot `~/rs-home-ai-v3` read-only. Never auto-sync the older pilot copy. Project settings/staged permissions remain reviewed separately.
+- `config/environments/isolation.example.json` describes nonsecret disjoint dev/loopback-stage/future-prod *planning* only; no real services, credentials or HA writes deployed. `test/environment-manifest-example.test.mjs` checks isolation contract.
+
+- New dev checkout full suite: 125 files / 499 assertions / 0 failures, exit 0.

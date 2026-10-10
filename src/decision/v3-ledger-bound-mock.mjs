@@ -5,7 +5,7 @@ import {verifyConfirmedLightResult} from "./confirmed-result-verification.mjs";
 
 // Isolated only: caller provides actor and token; request/action are read from
 // the private ledger. No live service client is imported or supplied by default.
-export function createLedgerBoundMockDispatcher({ledger,policy,configPath,readTool,simulateWrite,verifyRegistryAtDispatch}={}){
+export function createLedgerBoundMockDispatcher({ledger,policy,configPath,readTool,simulateWrite,verifyRegistryAtDispatch,executionJournal}={}){
  if(typeof ledger?.inspect!=="function" || typeof ledger?.consume!=="function" ||
   typeof readTool!=="function" || typeof simulateWrite!=="function")throw Error("missing_fixture");
  return async ({userId,chatId,token}={})=>{
@@ -34,12 +34,19 @@ export function createLedgerBoundMockDispatcher({ledger,policy,configPath,readTo
   if(!consumed)return {status:"missing"};
   if(JSON.stringify(consumed.action)!==JSON.stringify(action) ||
    consumed.originalUserText!==record.originalUserText)return {status:"denied"};
+  // For the narrow MVP fixture, claim the original ledger token durably before
+  // a potentially uncertain tool call. Never derive claim IDs from LLM output.
+  if(executionJournal!==undefined){
+   if(typeof executionJournal?.claim!=="function" || !executionJournal.claim(token))
+    return {status:"duplicate_or_unavailable"};
+  }
   let serviceResult;
   try{serviceResult=await simulateWrite(action.name,structuredClone(action.args));}
-  catch{return {status:"failed"};}
+  catch{executionJournal?.mark?.(token,"unverified");return {status:"failed"};}
   const verification=await verifyConfirmedLightResult({
    action,serviceResult,readState:id=>readTool("ha_get_state",{entity_id:id}),
   });
+  executionJournal?.mark?.(token,verification.verified?"verified":"unverified");
   return {status:verification.verified?"verified":"unverified"};
  };
 }

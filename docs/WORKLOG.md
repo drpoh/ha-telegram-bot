@@ -809,3 +809,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - First full 135-file isolated regression found one pre-existing loaded-Pi HTTP MCP deadline test failure (`unhandledRejection` because assertion handler was attached after awaiting server entry), 532 passed assertions / one failed file. Updated the test to attach `assert.rejects` synchronously and bounded deadline to 200 ms; focused combined transport+MVP suite passed 5/5. Full regression rerun follows; no production code or environment was affected.
 
 - Verified final full isolated `npm test` PASS: 135 test files / 533 assertions / 0 failed / exit 0, `/tmp/rs-v3-mvp-scope-rerun-20261010.log`.
+
+## 2026-10-10 — Narrow MVP integrated mock
+- Extended the **isolated-only** ledger-bound mock dispatcher with optional durable execution journal claim from the original server-side confirmation UUID. Claim happens after consume and before the simulated write; unknown write failure retains used ID. Existing calls without journal keep prior semantics. New focused one-light actor/policy/consent/SQLite/readback/replay integration test passed 1/1. No runtime client or HA touched. Full regression follows.
+
+- Full isolated `npm test`: 136 files / 534 assertions / 0 failures, process exit 0; `/tmp/rs-v3-mvp-joined-full-20261010.log`.

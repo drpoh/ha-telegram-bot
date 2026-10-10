@@ -193,3 +193,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Freeze single-light Telegram MVP and explicitly defer generic multiroom, voice, auto_safe, LLM migration and long-term learning; see `docs/V3-MVP-RELEASE.md`.
 - [x] Implement pure non-authorizing MVP checklist (3/3 focused) to track acceptance evidence without adding a release bypass.
 - [ ] Close Gate B with operator-owned HA source, trusted Telegram actor and reviewed one-light policy. Then integrate durable no-replay and perform owner-approved one-light controlled Gate C acceptance; keep V2 and HA Green independent.
+
+## 2026-10-10 — MVP joined ledger and durable action claim
+- [x] Reuse the existing V3 intent ledger, reviewed area-light policy, scoped tool boundary and SQLite replay journal in one offline candidate-light joined chain. Wrong actor rejected, action confirmed once, state read back and claim survives new journal instance.
+- [ ] Trusted Telegram adapter, operator-reviewed HA origin and actual one-device scoped policy/deployment remain mandatory before pilot writes. Fixture action text uses narrow simulated single light, not permission to execute live.

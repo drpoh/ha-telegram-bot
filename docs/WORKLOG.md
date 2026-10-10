@@ -833,3 +833,9 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Implemented read-only `src/ops/v3-pilot-storage-preflight.mjs` and three focused tests: do not create a missing SQLite ledger; deny in-rollback-tree storage, symlink alias, world-readable database and wrong ownership; accept prepared 0600 owner-held SQLite journal outside rollback. This does not enable execution, mutate the running pilot or inspect live secrets. Further trusted deployment permission/TOCTOU review is still required.
 
 - Full isolated test PASS: 139 files / 541 assertions / zero failures / exit 0; `/tmp/rs-v3-mvp-storage-20261010.log`.
+
+## 2026-10-10 — V3 MVP dev pilot journal wiring
+- Edited canonical dev `src/pilot/telegram-readonly.mjs` only. The existing pilot now uses `inspectV3PilotStorage` against a separately provisioned, rollback-independent expected path before constructing `executionJournal` for `createKitchenDryrunConsent`. If absent/unsafe, it injects a deny-only claim function and no MCP dispatch is possible through confirmation. User-facing `/status` and `/confirm` explain the blocked condition. No DB, credentials or live services created/touched; this change remains unpromoted.
+- Focused syntax and 5/5 journal/storage tests passed. Full regression follows. Operator-owned HA provenance and one-light acceptance still OPEN.
+
+- Full isolated `npm test` PASS: 139 test files / 541 assertions / 0 failed / shell exit 0, log `/tmp/rs-v3-mvp-pilot-wired-20261010.log`.

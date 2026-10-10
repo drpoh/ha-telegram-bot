@@ -300,3 +300,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - New offline read-only preflight module and 3/3 tests enforce protected separately located SQLite claim journal before future pilot release; no live migration or service changes. Check latest WORKLOG for full regression and Git SHA. Gate B actual HA origin/policy/actor remain OPEN.
 
 - Full isolated test PASS: 139 files / 541 assertions / zero failures / exit 0; `/tmp/rs-v3-mvp-storage-20261010.log`.
+
+## 2026-10-10 — DEV pilot fail-closed journal integration
+- Existing `src/pilot/telegram-readonly.mjs` now references protected, pre-provisioned SQLite claims DB outside runtime checkout; missing/unsafe journal causes denial before physical MCP call and explanatory Telegram response. **DEV CHECKOUT ONLY**. No live unit/repository checkout changed, and no provisioned DB created. Gate B and scoped real acceptance still required. Check latest WORKLOG for final regression/HEAD.
+
+- Full isolated `npm test` PASS: 139 test files / 541 assertions / 0 failed / shell exit 0, log `/tmp/rs-v3-mvp-pilot-wired-20261010.log`.

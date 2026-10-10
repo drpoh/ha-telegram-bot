@@ -210,3 +210,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — MVP pilot protected storage preflight
 - [x] Added offline read-only preflight for existing separate SQLite claim ledger: owner UID, restrictive file/parent permissions, reject symlink, reject journal within rollback tree, verify schema/integrity. Focused 3/3.
 - [ ] Before actual V3 pilot wiring, provision protected dedicated storage with operator-controlled ownership and an independent rollback plan. Handle parent-component symlinks and filesystem races at deployment. Gate B operator HA source/policy acceptance remains required.
+
+## 2026-10-10 — Dev pilot fail-closed journal wiring
+- [x] In DEV ONLY, wired existing dedicated V3 Telegraf pilot to the protected SQLite journal via read-only storage preflight. Missing/unsafe DB yields claim refusal and no physical dispatch; `/status` and `/confirm` explain the block.
+- [ ] Provision protected journal through approved deployment (do not auto-create in pilot), confirm HA identity, exact light and operator policy, then separately approve one-device rollout. Live pilot checkout/service unchanged.

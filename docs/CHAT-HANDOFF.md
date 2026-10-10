@@ -310,3 +310,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Finalized dev-only protected-journal wiring for dedicated V3 Telegram pilot via fail-closed `prepareV3PilotExecutionJournal`, with 4/4 focused. This closes the **development wiring milestone only**, not MVP release, Gate B or Gate C operator acceptance. Next: review and approve real HA source + exact light/permission, pre-provision separate claim DB, perform controlled acceptance and release after owner authorization. Do not modify runtime checkouts without scope approval.
 
 - Final isolated `npm test` PASS: 140 test files / 543 assertions / zero failures / exit code 0; `/tmp/rs-v3-mvp-milestone-final-20261010.log`.
+
+## 2026-10-10 — Operational preflight read-only NO-GO
+- Latest verified dev HEAD `96745bb` before doc commit; live V3 `a7fc446` active/running and live v2 `32b5299` active. Pinned kitchen policy SHA256 matches existing 0600 policy file metadata. Independent rollback-safe claims DB missing at expected `~/.local/state/rs-home-ai-v3/claims.db`; direct operational release blocked. Consult `docs/V3-MVP-OPERATIONAL-ACCEPTANCE.md` for exact scoped release path. Do not change live checkouts/services/HA without operator-controlled acceptance.

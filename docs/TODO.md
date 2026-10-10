@@ -219,3 +219,9 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Review failure path for protected SQLite opening. Central `prepareV3PilotExecutionJournal` returns deny-only journal if preflight or journal opening fails; no database auto-creation on missing storage, no write permissions inferred. 4/4 focused tests pass.
 - [x] Development implementation checkpoint COMPLETE; do not confuse with runtime release acceptance.
 - [ ] Owner-controlled release acceptance: approve and provision protected ledger separately, verify HA origin/operator policy/light identity, obtain explicit one-device test authorization, observe rollback; existing live V3 pilot and v2 remain untouched.
+
+## 2026-10-10 — Operational MVP acceptance evidence (read-only)
+- [x] Verified Pi service states and distinct deployed Git SHAs; v2 active, V3 pilot active/running, neither changed.
+- [x] Verified existing operator policy file metadata (0600) and matching pinned SHA256, without reading or publishing the policy/credentials.
+- [!] NO-GO: pre-provisioned protected `~/.local/state/rs-home-ai-v3/claims.db` is absent. See `docs/V3-MVP-OPERATIONAL-ACCEPTANCE.md` for precise missing approvals and controlled release/rollback steps.
+- [ ] Next operator-approved procedure: provision protected separate journal, verify authenticated HA origin and real entity/policy authority, promote reviewed immutable commit separately from v2, then scoped one-light controlled acceptance.

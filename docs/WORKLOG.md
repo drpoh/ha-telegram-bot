@@ -912,3 +912,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-10 — Fast isolated release candidate assembled
 - Created /home/drpoh/projects/rs-home-ai-v3-candidate from a clean `git archive` of dev HEAD 0deece0, with protected directory permissions 0700 and RELEASE-COMMIT pin file 0600. No dependencies installed or bot started; cannot conflict with live Telegram tokens or services. Checked pilot and MCP client syntax; targeted LAN policies pass 4/4. This is a static candidate only, NOT deployment or production acceptance.
+
+## 2026-10-10 — Isolated candidate dependency and complete regression evidence
+- Under /home/drpoh/projects/rs-home-ai-v3-candidate (pinned 0deece0), `npm ci --ignore-scripts --no-audit --no-fund` exit 0, 149 packages installed, no lifecycle scripts executed. `npm test` exit 0: **143 isolated test files, 549 passed assertions, 0 failed files**; output `/tmp/rs-v3-candidate-full-test.log`. No Telegram bot, MCP tool call or HA write was started from candidate. Live V2/V3 services remain active. Candidate is ready for release REVIEW, not yet approved for network/device actuation.

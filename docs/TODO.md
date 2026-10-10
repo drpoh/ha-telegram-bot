@@ -303,3 +303,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Candidate assembled
 - [x] Isolated candidate created from commit 0deece0, mode 0700, RELEASE-COMMIT pinned, syntax + 4 targeted tests pass without launching Telegram or HA control.
 - [ ] Remaining: dependencies in isolated candidate, complete tests against candidate, reviewed source grants, controlled V3 cutover, live /confirm readback. Never start two Telegram pollers with the same bot token.
+
+## 2026-10-10 — Full candidate regression complete
+- [x] Candidate npm ci 149 dependencies, exit 0 (scripts disabled). `npm test`: 143 test files, 549 assertions, 0 failures, exit 0.
+- [ ] Confirm authenticated LAN MCP credentials/network rule and safe single-light policy; only then perform controlled V3 service cutover. Do not run a second Telegram poller with same token; preserve candidate SHA, rollback and external claims.db.

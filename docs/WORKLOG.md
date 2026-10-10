@@ -707,3 +707,10 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-10 — Real official HA websocket client loopback acceptance
 - Actual `home-assistant-js-websocket` 9.7.1 with `ws` 8.22.0 and HTTPS localhost fixture successfully exercised the one-shot upstream registry bridge: one connection, exactly six registry reads, read-only evidence and no authorization. Unknown-CA case failed before WebSocket upgrade with zero registry reads. Both cases exit 0. See docs/GATE-B-WSS-ACCEPTANCE.md.
 - These are direct isolated WSS runtime tests; no code/dependency/service change, live HA, real secrets or writes. Gate B OPEN pending operator-owned origin/token and policy.
+
+## 2026-10-10 — transport fault test and Gate C isolated start
+- Real `home-assistant-js-websocket` with localhost TLS test server: force-terminated WSS connection during second registry read; result `registry_transport_failure`, authorization false, 2 requests only, exit 0. No HA Green connection. See GATE-B-WSS-ACCEPTANCE.
+- Gate B isolated transport scenarios now cover success, untrusted certificate and read-time disconnect; **formal Gate B OPEN** for operator identity, actual origin and reviewed grants. Do not waive live acceptance.
+- Began Gate C in isolated faults suite: a pending authorization which returns true only after its deadline cannot trigger a write. Focused Gate C tests 7/7 pass. Full suite pending `/tmp/rs-v3-gatec-timeout-full.log`.
+
+- Full npm test PASS: 124 isolated files, 498 assertions, 0 failed, exit 0.

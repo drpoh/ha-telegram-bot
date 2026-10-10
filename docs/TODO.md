@@ -127,3 +127,9 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## Gate B minimal vertical slice — 2026-10-09
 - [x] Strict original Telegram message -> ledger actor -> area classification -> policy confirmation -> guarded mock service -> state verification, one isolated positive/replay-denial fixture (no real HA write).
 - [ ] Real ingress owner and durable replay deployment; independently authenticated TLS HA registry and bounded socket teardown; reviewed and protected V3 policy + real light/switch classification; operator-approved read-only live acceptance. Do not mark Gate B complete until evidence exists.
+
+## 2026-10-10 — Gate B transport offline exit and Gate C development
+- [x] Real official upstream WSS client with trusted local certificate: six bounded reads; untrusted CA: zero reads; forced disconnect on second read: no continuation (isolated only).
+- [ ] Gate B final acceptance still requires actual operator-authorized HA registry origin/credential, V3 policy+light classification, trusted ingress binding and formal live read-only acceptance. No production changes before explicit approval.
+- [x] Gate C started in isolated fault tests: late positive authorization after timeout must not cause execution; 7/7 focused pass.
+- [ ] Gate C needs full joined-chain fault coverage and later owner-approved controlled acceptance; offline tests alone do not permit actuation.

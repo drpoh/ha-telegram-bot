@@ -196,3 +196,9 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Actual upstream HA client WSS loopback — 2026-10-10
 - Confirmed real upstream `createConnection`/`createLongLivedTokenAuth` + ws using local TLS fixture: 6 registry-only reads / 1 connection / authorization false. Removing CA blocks handshake: 0 WebSocket connections and reads. Both tests exit 0. See docs/GATE-B-WSS-ACCEPTANCE.md. No production wiring. Gate B OPEN.
+
+## 2026-10-10 — Gate B transport fault and Gate C kickoff
+- Real official HA client loopback disconnect on 2nd registry call fails closed: exactly 2 reads, authorization false; see GATE-B-WSS-ACCEPTANCE. Gate B still OPEN for actual authenticated HA origin/operator-reviewed V3 policy and explicitly approved live acceptance.
+- Gate C isolated late authorization test added, focused 7/7 passed; full npm test pending `/tmp/rs-v3-gatec-timeout-full.log`. Never replay a write after delayed confirmation.
+
+- Full regression PASS: 124 files / 498 assertions / 0 failures, exit 0.

@@ -85,3 +85,16 @@ test("Gate C: cancellation during policy evaluation prevents execution",async()=
  assert.equal((await request).status,"expired");
  assert.equal(writes,0);
 });
+
+test('Gate C: late positive authorization after timeout cannot dispatch',async()=>{
+ createPendingConfirmation({...actor,action});
+ let release,writes=0;
+ const authorize=()=>new Promise(resolve=>{release=()=>resolve(true);});
+ const result=await queueConfirmedAction(actor,{authorize,authorizationTimeoutMs:25,
+  execute:async()=>{writes++;return {verification:{status:'confirmed'}};}});
+ assert.equal(result.status,'authorization_denied');
+ assert.equal(writes,0);
+ release();
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(writes,0);
+});

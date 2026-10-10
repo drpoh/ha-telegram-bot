@@ -35,3 +35,7 @@ Until all are complete, Gate B remains OPEN and real HA access must not be attem
 - Local HTTPS/WSS fixture responded to `auth_required`, `auth_ok` and only three registry list commands. Existing one-shot bridge issued exactly **six** read-only commands on one connection. Result `read_only_review`, `authorization:false`; exit 0.
 - Same test without trusted CA rejected TLS before WebSocket establishment: zero authenticated WebSocket connections, zero registry calls and `authorization:false`; exit 0.
 - No real HA address, token, Telegram or production code was used; certificate test data ephemeral. This tests actual upstream connection compatibility and basic TLS fail-closed behavior, **not** robust disconnection/reconnect teardown under all faults, origin of HA Green, operator credentials or signed V3 policy. Gate B OPEN.
+
+## 2026-10-10 — actual client transport drop after authentication
+- Ran real official HA JS client + ws, against an ephemeral localhost TLS fixture. Server force-terminated socket on the **second** of six intended registry reads. One-shot reader returned `registry_transport_failure`, `authorization:false`, with exactly 2 requests, one WSS connection; exit 0. No later reads or writes.
+- Isolated transport failure acceptance passed, but live Gate B remains OPEN pending actual HA certificate/credential/source, operator-reviewed device grants, independently authenticated ingress, and owner-approved read-only acceptance. This test does NOT prove all reconnect or physical socket teardown races.

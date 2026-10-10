@@ -883,3 +883,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-10 — Release-blocker validation, no runtime changes
 - Reconfirmed current development HEAD e8665a6, live V3 user service active, HA SSH Match User forwarding limited to HA loopback 9584, runtime MCP URL rejected by dev strict endpoint validator, 19584 listener absent, claims.db missing and policy hash unchanged. No live filesystem/config/HA operation. Refined operational trust runbook with atomic activation order and rollback semantics. This is a documentation-only preflight: no functional regression necessary.
+
+## 2026-10-10 — Change of MVP transport strategy (owner decision)
+- Owner selected existing LAN HA-MCP, no tunnel. Confirmed Raspberry Pi 192.168.31.124 via eth0 to HA 192.168.31.94, HA listening on 0.0.0.0:9584, MCP URL mode 0600. Did not change the client to accept unprotected HTTP; wrote LAN-specific security and release requirements in docs/V3-MVP-LAN-MCP-DECISION.md. Still need LAN source restrictions and controlled write scope. No HA, V2 or V3 runtime changed.

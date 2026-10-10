@@ -346,3 +346,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — Release preflight still NO-GO
 - Strict existing HA SSH forwarding config remains accepted. Runtime V3 MCP URL is non-loopback HTTP (dev validator rejects), no listener on Pi 19584, claims.db absent, policy SHA matches. Explicit independent SSH key attestation/HA write-tool permission review and controlled persistent tunnel/pilot approval are outstanding. Latest operational plan in docs/V3-MVP-MCP-TRUST-RUNBOOK.md. Do NOT install unit or switch runtime on generic continuation.
+
+## 2026-10-10 — Selected MVP route is direct LAN HA-MCP
+- User chose direct LAN existing HA-MCP, no SSH tunnel. Pi 192.168.31.124 -> HA 192.168.31.94, MCP 0.0.0.0:9584. Current dev still rejects unencrypted non-loopback MCP HTTP. Do not weaken until LAN source restriction and MCP write rights validated. docs/V3-MVP-LAN-MCP-DECISION.md is new current transport strategy. No service/HA changes; launch NO-GO.

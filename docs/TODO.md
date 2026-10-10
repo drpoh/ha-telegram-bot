@@ -266,3 +266,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Operational tunnel activation preflight repeated
 - [x] Effective restricted HA SSH forwarding still present; policy file hash unchanged; runtime endpoint remains insecure non-loopback HTTP; port 19584 not active, durable journal absent. Audit captured in `docs/V3-MVP-MCP-TRUST-RUNBOOK.md`.
 - [ ] Separate approval and trust verification required before installing/enabling tunnel or changing running pilot; do not treat tested dev release as live.
+
+## 2026-10-10 — Owner chose direct LAN HA-MCP MVP
+- [x] Read-only Pi route shows 192.168.31.124 -> 192.168.31.94; HA-MCP listens on 0.0.0.0:9584; runtime endpoint config file 0600. Added `docs/V3-MVP-LAN-MCP-DECISION.md`.
+- [ ] Limit HA TCP/9584 to Pi source via owner-controlled firewall/proxy/network control and verify rejection of unrelated LAN client; attest MCP credential scope. Only then review narrowly scoped LAN exception in client. **Default deny remains**.

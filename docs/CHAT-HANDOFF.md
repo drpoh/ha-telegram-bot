@@ -242,3 +242,9 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Next: Stage storage/rollback isolation, stale state and durable execution safeguards, with no runtime changes or HA writes. Gate B OPEN.
 
 - Full isolated `npm test` PASS: 127 test files / 508 assertions / 0 failed, process exit 0, log `/tmp/rs-v3-gatec-races-full-20261010.log`. No runtime systems were touched.
+
+## 2026-10-10 — Gate C state freshness checkpoint
+- Pure verification offers optional strict timestamp boundary (`minObservedAtMs`), new focused fixtures 5/5. Existing runtime callers are unchanged and do not enforce this option. Never treat caller-supplied HA timestamps or this test as trusted provenance/production acceptance.
+- Continue independent stage storage/rollback and trusted real-MCP readback integration only after gates/approval. Consult latest WORKLOG for full regression and commit.
+
+- Full isolated regression PASS: 128 test files / 513 assertions / 0 failures, process exit 0; `/tmp/rs-v3-gatec-freshness-20261010.log`. No runtime change.

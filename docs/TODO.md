@@ -159,3 +159,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Gate C confirmation concurrency
 - [x] Isolated tests cover replacement while policy awaits, actor/chat mismatch, executor failure without implicit retry, and cancellation before dispatch (11/11 focused).
 - [ ] Add bounded MCP lifecycle, stale state revalidation, durable idempotency across restart and separately approved stage acceptance. No live actuation.
+
+## 2026-10-10 — Gate C state freshness contract
+- [x] Optional post-action `last_updated` boundary denies pre-command, missing, malformed and mismatched state readback; five focused tests pass.
+- [ ] Require trusted read adapter to supply a post-command boundary and evidence. Existing callers do not opt in, so this alone is NOT proof of fresh state, HA provenance or authorization.

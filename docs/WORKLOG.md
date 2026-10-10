@@ -763,3 +763,9 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - These are offline tests, not live authentication, real MCP idempotency or Gate B/C production acceptance. Full test evidence to follow.
 
 - Full isolated `npm test` PASS: 127 test files / 508 assertions / 0 failed, process exit 0, log `/tmp/rs-v3-gatec-races-full-20261010.log`. No runtime systems were touched.
+
+## 2026-10-10 — Gate C optional state freshness contract
+- Extended pure `verifyConfirmedLightResult` with optional `minObservedAtMs`. When explicitly supplied, a valid `last_updated` at/after the boundary is required; malformed/missing/old timestamps fail closed. Five new isolated unit tests pass. Historical callers retain their existing semantics for compatibility and are NOT upgraded to fresh-state assurance.
+- Timestamp is untrusted unless the invoking adapter authenticates its source and supplies its own boundary; a post-action timestamp cannot independently prove causality. No live MCP/HA or service changes. Full suite evidence follows.
+
+- Full isolated regression PASS: 128 test files / 513 assertions / 0 failures, process exit 0; `/tmp/rs-v3-gatec-freshness-20261010.log`. No runtime change.

@@ -795,3 +795,9 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Gate B review: production-authorized HA TLS identity, reviewed policy and actor binding are not present. No live credentials or devices were accessed. Real controlled HA write acceptance cannot be claimed; owner must specify an isolated approved device/action and rollback prerequisites. Full npm regression result to follow.
 
 - Full isolated regression PASS: 133 test files / 527 assertions / 0 failed / shell exit 0; `/tmp/rs-v3-gatec-http-stage-20261010.log`. Network fixture uses 127.0.0.1 only. Stage restore replay hazard remains a BLOCKER, not an accepted rollback.
+
+## 2026-10-10 — Gate C rollback replay mitigation (offline)
+- Added `src/ops/gate-c-stage-recovery.mjs` and three focused tests (3/3): SQLite backup/restore of disposable Stage-state database leaves a separately located execution claim database intact; both earlier and post-snapshot action IDs remain denied after recovery. Missing, schema-free and in-rollback-tree ledgers fail closed without silently recreating a database.
+- This narrows the discovered replay window for correctly separated Stage storage, not an approved operational rollback: filesystem ownership, concurrent mutation, root trust, exact deployment identities, real MCP and HA credentials require additional evidence. Runtime paths and HA Green untouched. Full regression result follows.
+
+- Full regression PASS: 134 test files / 530 assertions / 0 failures / exit 0; `/tmp/rs-v3-gatec-recovery-full-20261010.log`.

@@ -183,3 +183,8 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [ ] Implement independently durable rollback-safe claim reconciliation, real network disconnect after dispatch, explicit trusted auth for isolated Stage and operator-managed lifecycle; current Stage is NOT deployed.
 - [ ] Gate B acceptance still requires operator-owned real HA endpoint, credentials, approved V3 policy, authenticated actor and permitted entity classifications. Do not inspect or use real secrets without scoped permission.
 - [ ] Live controlled HA actuation and deployment are NOT accepted by this request without a specified permitted device/action/rollback plan. Gate C operational acceptance OPEN.
+
+## 2026-10-10 — Gate C rollback replay-window mitigation
+- [x] Offline recovery guard checks protected claim DB is outside rollback tree, exists with valid schema and SQLite quick_check; cannot auto-create missing ledger during recovery. Stage snapshot restore retains later claims in separate protected journal (3/3 focused).
+- [ ] Deployment must provision independently owned immutable-path claim store and verify permissions/symlink races, durable backup, crash behavior and incident reconciliation. Current recovery guard is a prototype and is not wired to live service.
+- [ ] Gate B independently authenticated HA origin, trusted actor ingress and owner-approved entity policy are still real-world acceptance blockers; no synthetic identity can satisfy them.

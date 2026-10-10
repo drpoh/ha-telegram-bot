@@ -270,3 +270,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Gate B trusted HA endpoint + actor + policy review and permission-scoped controlled HA acceptance remain blocked. Stage deployment and any real write require specific owner approval; do not infer consent for arbitrary household device. Latest complete regression in WORKLOG; Git HEAD requires verification.
 
 - Full isolated regression PASS: 133 test files / 527 assertions / 0 failed / shell exit 0; `/tmp/rs-v3-gatec-http-stage-20261010.log`. Network fixture uses 127.0.0.1 only. Stage restore replay hazard remains a BLOCKER, not an accepted rollback.
+
+## 2026-10-10 — Gate C Stage recovery protection
+- New offline `gate-c-stage-recovery` refuses rollback recovery if claim DB is missing, invalid or inside rollback directory; 3/3 focused. Separate claim ledger survives Stage-state snapshot restore, including claims after snapshot. No installation or migration. Consult latest WORKLOG for full regression and Git commit. Gate B and real controlled acceptance remain OPEN.
+
+- Full regression PASS: 134 test files / 530 assertions / 0 failures / exit 0; `/tmp/rs-v3-gatec-recovery-full-20261010.log`.

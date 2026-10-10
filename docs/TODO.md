@@ -329,3 +329,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Isolated release 7d9bab5 deployed to dedicated user service; old unit backed up, old checkout retained, PID 18430 active, NRestarts=0, v2 active, claims DB healthy.
 - [x] Real read-only `ha_get_state(light.led_kukhnia)` from deployed release client PASS.
 - [ ] Owner: message V3 Telegram bot `Включи свет на кухне` or `Выключи свет на кухне`, then send `/confirm` within 60s. Check post-command reply; collect service evidence with no secrets. Do NOT claim physical actuation occurred before it actually does.
+
+## 2026-10-10 — Real acceptance blocked on Zigbee light availability
+- [x] Confirmed root cause `light.led_kukhnia` is `unavailable` (not on/off) in real HA-MCP readback, registry MQTT device identity unchanged; fail-closed preflight correctly blocked write.
+- [ ] Restore target Zigbee light via power/link/Zigbee2MQTT availability outside V3. Verify MCP state `on` or `off`, then retry from NEW private Telegram request + /confirm; never replay previous command or silently substitute another device.

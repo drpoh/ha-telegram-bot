@@ -369,3 +369,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — Journal block CLOSED, remaining NOT released
 - Operator requested MVP completion. External SQLite claims.db was created and inspected successfully under /home/drpoh/.local/state/rs-home-ai-v3 (0600, drpoh), outside rollback. Do not reset. Live V3 a7fc446 differs from dev 1528e86; existing v2 32b5299 active. Remaining gate: secure/authenticated MCP network and tool permissions, reviewed deployment, real Telegram one-light acceptance. No physical HA write conducted. See V3-MVP-OPERATIONAL-ACCEPTANCE.md.
+
+## 2026-10-10 — Pilot deployment delta reviewed
+- Dev 490b31d vs live V3 a7fc446 is 67 files / 2988 additions / 27 deletions. Targeted LAN endpoint tests 4/4 PASS, services V2/V3 active. Do not hot-pull dev into production; current LAN MCP exception denies absent verified network+credential policy. Need isolated candidate, signoff and controlled Telegram /confirm test. Claims DB 0600 provisioned.

@@ -906,3 +906,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-10 — Provisioned permanent claim ledger
 - User authorized completion of MVP blocks. Invoked dev operator-only protected SQLite provisioning once: `JOURNAL created`; `inspectV3PilotStorage` ready=true; file drpoh:0600 outside V3 rollback checkout. This closes operational journal block; no HA configuration/restarts/actuation. Reviewed live V3 checkout a7fc446 and v2 checkout 32b5299; staged dev HEAD 1528e86 differs. Transport/read privileges, deployment promotion and acceptance remain pending.
+
+## 2026-10-10 — Existing MCP pilot deployment readiness inspection
+- Compared active V3 SHA a7fc446 against dev 490b31d: 67 changed files, ~2988 added lines. Both v2 and V3 service status active, focused 4/4 endpoint tests and node syntax pass. Direct LAN implementation is opt-in and currently denies without independently reviewed network/credential controls. No hot deployment, credential change, HA write or service interruption. Updated operational release plan to require candidate audit instead of blind promotion.

@@ -295,3 +295,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Real operator journal ready
 - [x] Provisioned outside rollback tree: ~/.local/state/rs-home-ai-v3/claims.db (0600, owner drpoh); storage preflight passes. Never reset it.
 - [ ] Finish HA-MCP credential/transport acceptance, deploy approved dev commit separately and run real one-light Telegram confirmed acceptance; not yet safe to mark release GO.
+
+## 2026-10-10 — Candidate promotion check
+- [x] Confirmed 67-file delta from active V3 pilot (a7fc446) to dev; focused endpoint tests 4/4 and both active services healthy. Protected claims DB remains ready.
+- [ ] Package/test isolated release candidate; must not silently merge 67-file delta into active V3. LAN read-only/credential acceptance and operator-reviewed live on/off still pending.

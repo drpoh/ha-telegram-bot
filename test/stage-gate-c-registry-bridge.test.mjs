@@ -38,3 +38,36 @@ test('Gate C: malformed stage response and unreachable endpoint fail closed',asy
  assert.equal(result.authorization,false);
  assert.equal(result.reason,'registry_transport_failure');
 });
+
+test('Gate C: delayed second stage read exceeds deadline without retry or authorization',async()=>{
+ const mock=createStageMockHa({registryFault:'delay',delayMs:160});const address=await mock.start();
+ let calls=0;
+ try{
+  const result=await inspectHaRegistryReadOnly({timeoutMs:45,request:async command=>{
+   calls++;
+   const response=await fetch(`http://127.0.0.1:${address.port}/registry`);
+   const body=await response.json();
+   return body[{'config/entity_registry/list':'entities','config/device_registry/list':'devices','config/area_registry/list':'areas'}[command.type]];
+  }});
+  assert.equal(result.authorization,false);
+  assert.equal(result.reason,'registry_transport_failure');
+  await new Promise(resolve=>setTimeout(resolve,180));
+  assert.equal(calls,2);
+ }finally{await mock.close();}
+});
+
+test('Gate C: dropped second stage read fails closed without retry',async()=>{
+ const mock=createStageMockHa({registryFault:'drop'});const address=await mock.start();
+ let calls=0;
+ try{
+  const result=await inspectHaRegistryReadOnly({timeoutMs:500,request:async command=>{
+   calls++;
+   const response=await fetch(`http://127.0.0.1:${address.port}/registry`);
+   const body=await response.json();
+   return body[{'config/entity_registry/list':'entities','config/device_registry/list':'devices','config/area_registry/list':'areas'}[command.type]];
+  }});
+  assert.equal(result.authorization,false);
+  assert.equal(result.reason,'registry_transport_failure');
+  assert.equal(calls,2);
+ }finally{await mock.close();}
+});

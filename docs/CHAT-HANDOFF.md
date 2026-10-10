@@ -228,3 +228,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Added isolated `test/stage-gate-c-registry-bridge.test.mjs`: six real loopback HTTP fixture reads into existing registry adapter, read-only decision, denied POST; malformed/unreachable cases fail closed. Focused 2/2. Full npm test pending `/tmp/rs-stage-gatec-http-integration-20261010.log`. Not real HA WebSocket and does not close Gate B or C production acceptance.
 
 - Full npm regression PASSED: 127 files / 502 assertions / 0 failures, exit 0.
+
+## 2026-10-10 — Gate C Stage delay/drop faults
+- Dev checkout only: `src/ops/stage-mock-ha.mjs` has opt-in bounded test fault modes delaying or dropping second registry response. `test/stage-gate-c-registry-bridge.test.mjs` confirms deadline/drop both fail closed after two calls, no retry. Focused 5/5. Full suite pending `/tmp/rs-v3-stage-faults-20261010.log`. No stage deployment or real HA contact.
+
+- Full npm test PASS: 127 files / 504 assertions / 0 failed, exit 0.

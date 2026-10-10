@@ -746,3 +746,10 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Full regression pending `/tmp/rs-stage-gatec-http-integration-20261010.log`.
 
 - Full npm regression PASSED: 127 test files, 502 passed assertions, zero failures; exit 0.
+
+## 2026-10-10 — Gate C stage transport faults
+- Extended offline `createStageMockHa` with bounded opt-in `registryFault=delay/drop`, only on the second registry request, no HA client or real credentials. All other requests remain deny-by-default.
+- Integration tests prove second-read delay beyond adapter deadline and forcibly dropped response cause `registry_transport_failure`, `authorization:false`, with exactly two attempted reads and no retry even after delayed response. Focused Stage tests 5/5 passed. Full suite pending `/tmp/rs-v3-stage-faults-20261010.log`.
+- Stage remains ephemeral loopback fixture, NOT a permanent installed systemd service. Gate B live source/approved policy still OPEN. Runtime checkouts unchanged.
+
+- Full npm test PASS: 127 test files / 504 assertions / zero failures, exit 0.

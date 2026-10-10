@@ -151,3 +151,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Gate C staged HTTP integration checkpoint
 - [x] Exercise real loopback I/O through existing registry read-only decision adapter; malformed transport and write attempts fail closed in isolated Stage mock.
 - [ ] Add fault injection for delayed/dropped responses and bind trusted identity/action/policy to an actual independently reviewed staging acceptance. No live HA until Gate B owner-approved read-only source criteria are met.
+
+## 2026-10-10 — Gate C fault acceptance
+- [x] Bounded delayed and dropped Stage mock registry requests fail closed; no second read retry, no authority grant, focused 5/5.
+- [ ] Complete actor/action/policy-bound integrated fault cases and independent stage deployment readiness review. No live writes without Gate B acceptance.

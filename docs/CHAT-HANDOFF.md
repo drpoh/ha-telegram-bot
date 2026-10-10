@@ -399,3 +399,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — V3 now live at release 920585d
 - Owner's previous /confirm returned state_pending and actual HA light was off. Dev fix adds up to 3 delayed read-only state checks after service success, no write retry. 5 focused tests PASS; GitHub 920585d. Live V3 user service now working from `/home/drpoh/projects/rs-home-ai-v3-release-920585d` (active PID 19169, restarts 0); old unit backed up at `/home/drpoh/.config/systemd/user/rs-home-ai-v3.service.before-920585d`. Telegram v2 unaffected. Owner needs fresh request+/confirm. Readback is not yet physically accepted; if it stays off investigate Zigbee2MQTT, not the readback parser.
+
+## 2026-10-10 — ROOT CAUSE: Zigbee delivery failure, not V3
+- Owner reported state_pending again; Zigbee2MQTT logs at 18:38:23 explicitly show `genOnOff.on` to 0x2c1165fffeb1e848 / "Led кухня" **Delivery failed for '31135'**. HA entity remains off, last_updated 18:20:38. Existing V3 controls and single-write policy behaved correctly. Fix light power/zigbee mesh; do not keep patching readback or changing target. Fresh Telegram confirmation only once transport is restored.

@@ -279,3 +279,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — HA-MCP listener source filter discovery
 - [x] Read-only HA inventory did not identify an obvious dedicated MCP Docker app by name/port; active 0.0.0.0:9584 confirmed.
 - [ ] Identify HA-MCP actual owning process/app and supported network/authorization configuration. Apply only narrow verified network controls; do not bind to HA loopback while selecting direct LAN.
+
+## 2026-10-10 — TCP 9584 attribution
+- [x] Confirmed listening host socket inode, but PID namespace and host-network containers prevent safe attribution from SSH add-on. Do not infer which app owns port from name alone.
+- [ ] Use proper Supervisor/host process or official MCP deployment metadata to establish listener owner; if unavailable, restrict LAN access at managed router and verify from independent client.

@@ -357,3 +357,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — HA-MCP listener ownership not yet established
 - HA 9584 still on all interfaces; read-only HA app and Docker inventory did not reveal an obvious dedicated MCP container. Do not assume ownership or modify firewall blindly. Direct-LAN path still needs server-side source restriction and credential review; live v2/V3 untouched. See docs/V3-MVP-LAN-MCP-DECISION.md.
+
+## 2026-10-10 — TCP 9584 owner still unproven
+- Restricted HA SSH namespace sees socket inode 8244936 on 0.0.0.0:9584 but cannot name owning PID; Docker port inventory not conclusive due to host networking. No configuration changes. Must use supported Supervisor/host metadata or router isolation; do not guess add-on owner. Docs updated.

@@ -894,3 +894,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-10 — HA-MCP access-control surface inspection
 - Read-only HA CLI, Docker process name and published-port metadata reviewed. Listener 9584 still 0.0.0.0, but no obvious MCP Docker container could be attributed from those listings. Consequently no add-on-specific restriction can yet be safely applied; no speculative iptables, Supervisor configuration or HA production changes were made. Detailed next steps documented in docs/V3-MVP-LAN-MCP-DECISION.md.
+
+## 2026-10-10 — Investigate TCP 9584 owner using HA namespace
+- Read-only `/proc/net/tcp`, BusyBox fuser, lsof, netstat and Docker port/network inventory: listener 0.0.0.0:9584 inode 8244936; restricted SSH PID namespace does not expose owning host process, and Docker contains multiple host-network workloads with no obvious published 9584. No ownership assertion or risky firewall edit. Recorded next accepted discovery path in LAN MCP decision doc.

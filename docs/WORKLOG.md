@@ -915,3 +915,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-10 — Isolated candidate dependency and complete regression evidence
 - Under /home/drpoh/projects/rs-home-ai-v3-candidate (pinned 0deece0), `npm ci --ignore-scripts --no-audit --no-fund` exit 0, 149 packages installed, no lifecycle scripts executed. `npm test` exit 0: **143 isolated test files, 549 passed assertions, 0 failed files**; output `/tmp/rs-v3-candidate-full-test.log`. No Telegram bot, MCP tool call or HA write was started from candidate. Live V2/V3 services remain active. Candidate is ready for release REVIEW, not yet approved for network/device actuation.
+
+## 2026-10-10 — Journal failure handling hardened
+- Fixed an unhandled SQLite claim exception in `createKitchenDryrunConsent.confirm`: throws now cause `replay_claim_unavailable` deny and consumed confirmation, without calling physical dispatch. New targeted regression PASS 1/1, commit a07d264. Historical static release candidate 0deece0 remains unchanged and must not be deployed as this new fix is absent there. Live V3 and V2 untouched.

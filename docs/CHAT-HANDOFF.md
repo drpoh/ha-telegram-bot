@@ -378,3 +378,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — Candidate ready for review, no deployment
 - Isolated candidate pinned 0deece0 in /home/drpoh/projects/rs-home-ai-v3-candidate has installed 149 packages via npm ci --ignore-scripts and full npm test PASS (143 files, 549 assertions, 0 failures, exit 0). Live services untouched. Current dev docs HEAD will be ahead of candidate. Only pending operator-approved network/write-trust acceptance and controlled unique-poller V3 cutover remain; SQLite journal already exists (0600). Do not claim MVP released.
+
+## 2026-10-10 — Dev hardening newer than candidate
+- New a07d264 fixes fail-closed replay claim throws, regression PASS. Static release candidate pinned 0deece0 now stale relative to bugfix; rebuild before promotion. Protected SQLite claims.db exists, no live Telegram polling or HA actuation executed. MCP permissions and user-generated Telegram /confirm still needed before MVP GO.

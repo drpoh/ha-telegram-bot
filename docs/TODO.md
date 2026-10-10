@@ -307,3 +307,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Full candidate regression complete
 - [x] Candidate npm ci 149 dependencies, exit 0 (scripts disabled). `npm test`: 143 test files, 549 assertions, 0 failures, exit 0.
 - [ ] Confirm authenticated LAN MCP credentials/network rule and safe single-light policy; only then perform controlled V3 service cutover. Do not run a second Telegram poller with same token; preserve candidate SHA, rollback and external claims.db.
+
+## 2026-10-10 — Current release blockers after journal hardening
+- [x] Journal claim error is now fail-closed in dev and covered by a focused regression test.
+- [ ] Rebuild candidate from a07d264+, test it, review actual MCP credentials and source rules. Real Telegram /confirm acceptance requires a fresh owner-created Telegram request and is not safely reproducible by sending an assistant-invented event. No live release yet.

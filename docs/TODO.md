@@ -320,3 +320,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Candidate-v2 full tests green
 - [x] Full test PASS: 144 files, 550 assertions, 0 failures, exit 0; candidate pinned 72616d0.
 - [ ] Final MVP launch still depends on actual LAN MCP permission/trust review, controlled one-poller V3 deployment and real user Telegram `/confirm` acceptance. Do not misrepresent as completed.
+
+## 2026-10-10 — Requested live acceptance outcome
+- [x] Current HA-MCP identity/options, policy SHA and candidate evidence rechecked. Both current endpoint validators deny the live LAN URL without a reviewed exception; cannot honestly mark release GO.
+- [ ] Establish independently reviewed LAN network+MCP scope permission or choose authenticated HA webhook; then deploy candidate one-poller only with rollback. Owner must send real Telegram request and `/confirm` to perform physical-light test. Do not spoof the confirmation.

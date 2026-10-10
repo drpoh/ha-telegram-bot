@@ -387,3 +387,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — Candidate-v2 passed full regression
 - `/home/drpoh/projects/rs-home-ai-v3-candidate-v2` pinned 72616d0; `npm test` PASS 144 files, 550 assertions, zero failed files, exit 0. External claims.db readiness PASS, V2/V3 still active and unchanged. Deployment and real one-light acceptance remain pending independently verified MCP trust and operator action. Evidence: `/tmp/rs-v3-candidate-v2-full.log`.
+
+## 2026-10-10 — Real rollout preflight blocked, do not claim completion
+- Owner requested permission verification, live V3 rollout+rollback and real Telegram light test. Actual endpoint: dev secure validator rejects it; LAN validator returns lan_acceptance_missing. HA-MCP has wide tools, no reviewed scoped credential. Candidate 72616d0 (144/550 PASS) stays isolated; live V3 a7fc446 stays active, no HA write or `/confirm` spoofing. Need actual approved network/credential boundary then one-poller cutover and authentic owner Telegram request/confirm. See docs/V3-MVP-OPERATIONAL-ACCEPTANCE.md.

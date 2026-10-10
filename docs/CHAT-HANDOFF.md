@@ -1,3 +1,5 @@
+**Communication rule (2026-10-10):** Owner wants substantially fewer chat messages. Send one short plan, work autonomously through a coherent milestone, then one final summary. No repetitive "running tests / updating docs / committing" updates; interrupt only for substantive blocker, risk or approval. `AGENTS.md` section "Quiet autonomous execution" is binding for future sessions.
+
 # RS Home AI V3 — new-chat handoff
 
 This is the FIRST document to read when resuming this project in another chat.

@@ -753,3 +753,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Stage remains ephemeral loopback fixture, NOT a permanent installed systemd service. Gate B live source/approved policy still OPEN. Runtime checkouts unchanged.
 
 - Full npm test PASS: 127 test files / 504 assertions / zero failures, exit 0.
+
+## 2026-10-10 — Low-interruption workflow policy
+- User explicitly requested far fewer repeated chat progress messages. Persisted quiet autonomous execution in `AGENTS.md` and cross-chat handoff; keep real test results and Git events in repository logs instead of narrating each tool operation. This is a documentation-only change; no service/config/device changes or new tests required.

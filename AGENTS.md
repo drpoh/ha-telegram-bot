@@ -36,6 +36,12 @@ Default to least privilege:
 
 Locks, alarm/security, destructive configuration changes and other critical operations must never become autonomous merely because an LLM requests them.
 
+## Quiet autonomous execution — owner preference 2026-10-10
+- Minimize chat interruptions: one short initial plan and one concise report after a meaningful completed milestone. Do not narrate each test run, documentation edit, command, poll or Git commit.
+- Continue independently through related low-risk tasks without waiting for repeated "Продолжай". Report during execution only for a material blocker, meaningful unexpected risk, required approval or unusually long operation.
+- Batch related tests and documentation updates. Do focused tests while coding, then run full regression once per stable milestone rather than after every small edit. Never skip necessary safety validation or claim passing tests without results.
+- Keep factual status, unfinished work and commit details in TODO, WORKLOG and CHAT-HANDOFF instead of repeating progress messages in chat.
+
 ## Development workflow
 1. Read relevant implementation and docs.
 2. Make the smallest coherent change.

@@ -739,3 +739,10 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Full test started at `/tmp/rs-v3-stage-loopback-full-20261010.log`; result pending. Stage remains NOT deployed; Gate B live acceptance OPEN. Production v2/V3 units unchanged.
 
 - Full isolated npm test PASSED: 126 test files / 500 assertions / zero failures, exit 0.
+
+## 2026-10-10 — Gate C local stage I/O registry integration
+- `test/stage-gate-c-registry-bridge.test.mjs` joins a real ephemeral localhost HTTP fixture server to the existing injected read-only registry adapter. Six bounded fetch reads produce `read_only_review`, never authorization. Service POST returns HTTP 403.
+- Malformed fixture response and rejected/unreachable request both fail closed. Focused 2/2 passed. This is an HTTP fixture bridge, **not** actual Home Assistant WSS or approved policy/live acceptance. No HA access, Telegram, service restart or real writes.
+- Full regression pending `/tmp/rs-stage-gatec-http-integration-20261010.log`.
+
+- Full npm regression PASSED: 127 test files, 502 passed assertions, zero failures; exit 0.

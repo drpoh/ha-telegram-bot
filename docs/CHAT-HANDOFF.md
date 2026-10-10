@@ -223,3 +223,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Canonical workspace `~/projects/rs-home-ai-dev`: added `src/ops/stage-mock-ha.mjs` and `test/stage-mock-ha.test.mjs`. Mock binds only 127.0.0.1, returns synthetic empty registry, denies writes and closes; focused 1/1. Full regression pending `/tmp/rs-v3-stage-loopback-full-20261010.log`. Not a production/stage deployment or real HA source. No runtime changes.
 
 - Full suite PASSED: 126 test files / 500 assertions / 0 failed, exit 0.
+
+## Gate C Stage local I/O integration — 2026-10-10
+- Added isolated `test/stage-gate-c-registry-bridge.test.mjs`: six real loopback HTTP fixture reads into existing registry adapter, read-only decision, denied POST; malformed/unreachable cases fail closed. Focused 2/2. Full npm test pending `/tmp/rs-stage-gatec-http-integration-20261010.log`. Not real HA WebSocket and does not close Gate B or C production acceptance.
+
+- Full npm regression PASSED: 127 files / 502 assertions / 0 failures, exit 0.

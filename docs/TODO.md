@@ -147,3 +147,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Stage mock work
 - [x] Build disposable loopback-only, read-only synthetic HA mock; test allowed registry reads and denied writes without real HA/Telegram credentials.
 - [ ] Before deploying a persistent stage: owner-approved separate service, independent storage/credentials, suitable request authentication, monitoring and rollback, all isolated from household HA Green. Stage **NOT deployed**.
+
+## 2026-10-10 — Gate C staged HTTP integration checkpoint
+- [x] Exercise real loopback I/O through existing registry read-only decision adapter; malformed transport and write attempts fail closed in isolated Stage mock.
+- [ ] Add fault injection for delayed/dropped responses and bind trusted identity/action/policy to an actual independently reviewed staging acceptance. No live HA until Gate B owner-approved read-only source criteria are met.

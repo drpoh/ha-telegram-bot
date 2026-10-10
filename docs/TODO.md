@@ -197,3 +197,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — MVP joined ledger and durable action claim
 - [x] Reuse the existing V3 intent ledger, reviewed area-light policy, scoped tool boundary and SQLite replay journal in one offline candidate-light joined chain. Wrong actor rejected, action confirmed once, state read back and claim survives new journal instance.
 - [ ] Trusted Telegram adapter, operator-reviewed HA origin and actual one-device scoped policy/deployment remain mandatory before pilot writes. Fixture action text uses narrow simulated single light, not permission to execute live.
+
+## 2026-10-10 — Narrow Telegram MVP admission fixture
+- [x] Compose existing raw Telegram update consistency/admission with the existing actor-bound intent ledger; deny non-private, altered text, changed actor, duplicate message and repeated confirmation. Focused 2/2.
+- [ ] Wire ONLY via separately operator-reviewed actual Telegraf handler, then independently attest HA origin/approved light/policy. Synthetic ctx fixture never proves actual Telegram authentication.

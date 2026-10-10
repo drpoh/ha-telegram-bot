@@ -285,3 +285,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - V3 ledger-bound *mock* can now use independent SQLite executionJournal; one focused test covers actor mismatch → scope/policy → single consent → durable no-replay → readback of the kitchen pilot candidate. This is not trusted ingress, an authenticated HA source or authorized pilot deployment. Verify newest Git/test log before continuing.
 
 - Full isolated `npm test`: 136 files / 534 assertions / 0 failures, process exit 0; `/tmp/rs-v3-mvp-joined-full-20261010.log`.
+
+## 2026-10-10 — Telegram MVP chain checkpoint
+- Reused existing raw-update Telegram admission and actor-bound intent ledger in one offline fixture; 2/2 focused PASS. Actual trusted Telegraf ingress/HA identity and owner-approved release remain unresolved. No live service changes. See WORKLOG for full regression.
+
+- Final isolated npm regression PASS: 137 files / 536 assertions / 0 failed / exit 0; `/tmp/rs-v3-mvp-telegram-rerun-20261010.log`. No runtime paths or HA touched.

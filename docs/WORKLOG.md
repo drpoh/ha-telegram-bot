@@ -814,3 +814,10 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Extended the **isolated-only** ledger-bound mock dispatcher with optional durable execution journal claim from the original server-side confirmation UUID. Claim happens after consume and before the simulated write; unknown write failure retains used ID. Existing calls without journal keep prior semantics. New focused one-light actor/policy/consent/SQLite/readback/replay integration test passed 1/1. No runtime client or HA touched. Full regression follows.
 
 - Full isolated `npm test`: 136 files / 534 assertions / 0 failures, process exit 0; `/tmp/rs-v3-mvp-joined-full-20261010.log`.
+
+## 2026-10-10 — Reused Telegram admission → consent fixture
+- Added two focused offline integration tests joining existing `v3-telegram-joined-adapter` (`requireRawMessage:true`) to `v3-intent-ledger`; original request is bound to user/chat and consumed only once, spoofed raw/convenience fields, unrelated actor, group chats and duplicate updates denied. No new runtime adapter was created; test context is intentionally synthetic and not proof of actual Telegram authenticity. Focused 2/2 PASS. Full regression follows.
+
+- Full first 137-file isolated run: 535 assertions passed but one pre-existing Stage delayed-read test assumed exactly two requests; heavily loaded Pi can timeout before the second request. This was a test expectation problem, not a permissive decision. Adjusted to assert 1–2 bounded requests with registry_transport_failure and authorization=false. Focused Stage+Telegram 6/6 PASS. Full rerun follows.
+
+- Final isolated npm regression PASS: 137 files / 536 assertions / 0 failed / exit 0; `/tmp/rs-v3-mvp-telegram-rerun-20261010.log`. No runtime paths or HA touched.

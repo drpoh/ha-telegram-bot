@@ -214,3 +214,8 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Dev pilot fail-closed journal wiring
 - [x] In DEV ONLY, wired existing dedicated V3 Telegraf pilot to the protected SQLite journal via read-only storage preflight. Missing/unsafe DB yields claim refusal and no physical dispatch; `/status` and `/confirm` explain the block.
 - [ ] Provision protected journal through approved deployment (do not auto-create in pilot), confirm HA identity, exact light and operator policy, then separately approve one-device rollout. Live pilot checkout/service unchanged.
+
+## 2026-10-10 — MVP dev pilot journal wiring milestone finalized
+- [x] Review failure path for protected SQLite opening. Central `prepareV3PilotExecutionJournal` returns deny-only journal if preflight or journal opening fails; no database auto-creation on missing storage, no write permissions inferred. 4/4 focused tests pass.
+- [x] Development implementation checkpoint COMPLETE; do not confuse with runtime release acceptance.
+- [ ] Owner-controlled release acceptance: approve and provision protected ledger separately, verify HA origin/operator policy/light identity, obtain explicit one-device test authorization, observe rollback; existing live V3 pilot and v2 remain untouched.

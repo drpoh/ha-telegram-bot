@@ -839,3 +839,9 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Focused syntax and 5/5 journal/storage tests passed. Full regression follows. Operator-owned HA provenance and one-light acceptance still OPEN.
 
 - Full isolated `npm test` PASS: 139 test files / 541 assertions / 0 failed / shell exit 0, log `/tmp/rs-v3-mvp-pilot-wired-20261010.log`.
+
+## 2026-10-10 — Finalization: MVP journal integration milestone
+- Replaced direct SQLite journal constructor in dev V3 Telegraf pilot with `prepareV3PilotExecutionJournal`. Missing/invalid/unavailable journal yields a deny-only claim adapter without changing HA. Confirmed in focused tests: missing storage does not get created, prepared protected SQLite allows one durable claim, subsequent replay blocked. 4/4 focused PASS.
+- **Development journal-wiring milestone closed. Overall V3 MVP release NOT accepted**: independent operator-owned HA source, policy, one approved device, protected on-host storage provisioning and controlled one-device acceptance not yet verified. No live pilot checkout, service or HA write changed. Full suite result follows.
+
+- Final isolated `npm test` PASS: 140 test files / 543 assertions / zero failures / exit code 0; `/tmp/rs-v3-mvp-milestone-final-20261010.log`.

@@ -305,3 +305,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Existing `src/pilot/telegram-readonly.mjs` now references protected, pre-provisioned SQLite claims DB outside runtime checkout; missing/unsafe journal causes denial before physical MCP call and explanatory Telegram response. **DEV CHECKOUT ONLY**. No live unit/repository checkout changed, and no provisioned DB created. Gate B and scoped real acceptance still required. Check latest WORKLOG for final regression/HEAD.
 
 - Full isolated `npm test` PASS: 139 test files / 541 assertions / 0 failed / shell exit 0, log `/tmp/rs-v3-mvp-pilot-wired-20261010.log`.
+
+## 2026-10-10 — Closed dev milestone, next is operational acceptance
+- Finalized dev-only protected-journal wiring for dedicated V3 Telegram pilot via fail-closed `prepareV3PilotExecutionJournal`, with 4/4 focused. This closes the **development wiring milestone only**, not MVP release, Gate B or Gate C operator acceptance. Next: review and approve real HA source + exact light/permission, pre-provision separate claim DB, perform controlled acceptance and release after owner authorization. Do not modify runtime checkouts without scope approval.
+
+- Final isolated `npm test` PASS: 140 test files / 543 assertions / zero failures / exit code 0; `/tmp/rs-v3-mvp-milestone-final-20261010.log`.

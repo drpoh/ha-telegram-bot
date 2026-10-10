@@ -4,8 +4,7 @@ import {createKitchenDryrunConsent} from './kitchen-dryrun-consent.mjs';
 import {createKitchenMcpDispatchBoundary} from './kitchen-mcp-dispatch-boundary.mjs';
 import {createKitchenLiveAdmission} from './kitchen-live-admission.mjs';
 import {createKitchenMcpClient} from './kitchen-mcp-client.mjs';
-import {inspectV3PilotStorage} from '../ops/v3-pilot-storage-preflight.mjs';
-import {createGateCExecutionJournal} from '../decision/v3-gate-c-execution-journal.mjs';
+import {prepareV3PilotExecutionJournal} from '../ops/v3-pilot-execution-journal.mjs';
 const base='/home/drpoh/.config/rs-home-ai-v3/';
 const token=readFileSync(base+'telegram-token','utf8').trim();
 const userId=Number(readFileSync(base+'allowed-user-id','utf8').trim());
@@ -18,10 +17,8 @@ const boundary=createKitchenMcpDispatchBoundary({
 // Deployment-owned, pre-provisioned journal outside the rollback checkout.
 // Absent or untrusted storage must disable physical dispatch, not create a fresh DB.
 const claimsPath='/home/drpoh/.local/state/rs-home-ai-v3/claims.db';
-const storage=inspectV3PilotStorage({dbPath:claimsPath,rollbackRoot:'/home/drpoh/rs-home-ai-v3'});
-const executionJournal=storage.ready
- ? createGateCExecutionJournal({dbPath:claimsPath})
- : Object.freeze({claim:()=>false});
+const storage=prepareV3PilotExecutionJournal({dbPath:claimsPath,rollbackRoot:'/home/drpoh/rs-home-ai-v3'});
+const executionJournal=storage.journal;
 const pilot=createKitchenDryrunConsent({
  executionJournal,
  dispatch:({action})=>boundary.dispatch({action})

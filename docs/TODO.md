@@ -248,3 +248,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — SSH tunnel service candidate prepared
 - [x] Added disabled example user service for strict-key SSH loopback forwarding; `systemd-analyze verify` passed (temporary copy only).
 - [ ] Do not install/start until operator has independently verified host key, allowed identity, HA-side MCP listener security, and approved the service. Live pilot remains unchanged.
+
+## 2026-10-10 — SSH tunnel blocked by HA sshd policy
+- [x] Read-only remote `sshd -T` confirmed `allowtcpforwarding no`; real tunnel HTTP attempt fails `administratively prohibited` even when local TCP listener appears open. HA loopback `/mcp` returns 404; runtime path differs.
+- [ ] Owner-authorized HA SSH forwarding policy (prefer restricted identity) or verified TLS alternative required. Validate exact MCP path and SDK initialize/listTools under approved connection; DO NOT install disabled unit template yet.

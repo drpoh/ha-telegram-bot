@@ -332,3 +332,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — Disabled systemd SSH forward example
 - New `docs/rs-home-ai-v3-mcp-tunnel.service.example`, `systemd-analyze verify` exit 0 using temporary .service copy; not installed/enabled/started. Strict SSH host key must be independently checked before owner-approved activation; HA listener 0.0.0.0:9584 and MCP permissions still need review. Current runtime untouched; consult V3-MVP-MCP-TRUST-RUNBOOK.md.
+
+## 2026-10-10 — IMPORTANT: SSH tunnel candidate NOT usable
+- Read-only HA `sshd -T` confirms `allowtcpforwarding no`. Ephemeral SSH local port accepted TCP but actual channel failed `administratively prohibited`; endpoint `/mcp` returns 404 and configured MCP path differs. DO NOT install/start docs/rs-home-ai-v3-mcp-tunnel.service.example. Need owner-approved restricted SSH forwarding or verified TLS and actual path/protocol validation. No live changes. See updated MCP trust runbook.

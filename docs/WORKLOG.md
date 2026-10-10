@@ -868,3 +868,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-10 — Candidate persistent V3 MCP SSH forward
 - Generated a non-installed example user-systemd unit for loopback-only port 19584 -> HA-MCP 9584 with strict SSH host verification and fail-closed startup. Verified unit syntax with systemd-analyze (exit 0); no service installed/enabled/restarted. Existing SSH BatchMode authentication still succeeds; live V3 user service remains active. The trust/security gate remains OPEN, and an owner-signed HA host identity and permission review are required.
+
+## 2026-10-10 — Live transport blocker definitively identified
+- Strict-key temporary SSH forward used TCP port 19584 but real forwarded curl reset. Collected SSH diagnostic `administratively prohibited` and read-only remote `sshd -T`: `allowtcpforwarding no`. Direct read-only HA loopback `/mcp` returned 404; existing MCP URL path is different (actual path kept secret). No HA config modifications, MCP tool calls, persistent processes or live service changes. Corrected trust runbook: TCP listener alone is insufficient; candidate systemd template must remain disabled and NOT installed.

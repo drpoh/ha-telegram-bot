@@ -733,3 +733,9 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Canonical development checkout is `/home/drpoh/projects/rs-home-ai-dev`; runtime v2 and V3 pilot checkouts remain read-only and unchanged.
 - Added `AGENTS.md` rules and `config/environments/isolation.example.json` with isolated mock stage, no real credentials or HA writes. Targeted test 6/6; full regression 125 files / 499 assertions / 0 failures, exit 0.
 - Stage is a planning fixture only, not an installed service.
+
+## 2026-10-10 — Gate C / staged HA loopback mock prototype
+- Added a minimal ephemeral stage HA-shaped loopback server (`src/ops/stage-mock-ha.mjs`) with two GET-only synthetic fixture endpoints, HTTP 403 for everything else, and no HA/Telegram imports, credentials or real calls. Test covers loopback-only bind, synthetic reads, write denial and clean closure; focused 1/1 passes.
+- Full test started at `/tmp/rs-v3-stage-loopback-full-20261010.log`; result pending. Stage remains NOT deployed; Gate B live acceptance OPEN. Production v2/V3 units unchanged.
+
+- Full isolated npm test PASSED: 126 test files / 500 assertions / zero failures, exit 0.

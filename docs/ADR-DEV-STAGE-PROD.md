@@ -45,3 +45,8 @@ Keep the existing v2 production and current v3 pilot as-is. Build the shared app
 
 ## 2026-10-10 checkout ownership update
 - Read `PI-REPOSITORY-LAYOUT-PLAN.md`: the v2 system unit runs from `/home/drpoh/ha-telegram-bot`, while V3 pilot user unit runs from `/home/drpoh/rs-home-ai-v3`; both are separate checkouts of the same remote with different HEADs. Neither is a disposable dev environment. No changes to live units until separately authorized.
+
+## 2026-10-10 stage mock lifecycle prototype
+- Added `src/ops/stage-mock-ha.mjs`: a disposable Node built-in HTTP server listening only on `127.0.0.1`; allowed `GET /health` and `GET /registry` return explicitly synthetic empty read fixtures, while every other request is rejected with HTTP 403. It imports neither HA-MCP, the real HA client, Telegram nor secrets; it cannot actuate a real Home Assistant.
+- The corresponding isolated test starts it with an OS-assigned loopback port, checks read fixtures and denies representative service/write requests, and shuts it down. This is a **test mock**, not a deployable, authenticated HA emulator or approved stage service. No systemd unit, credential, external listener or port reservation was installed.
+- A future actual stage must have its own managed identity, storage, strictly local networking, observability and reviewed unit and restore procedure; it needs explicit owner deployment approval. Never replace stage mock with the household Home Assistant Green.

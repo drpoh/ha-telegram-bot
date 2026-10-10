@@ -143,3 +143,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Isolated stage planning
 - [x] Persist workspace separation rules and checked sanitized environment manifest fixture (125 test files / 499 assertions passed).
 - [ ] Provision real stage only after separate authorization, protected mock endpoints, identities and rollout plan; no change to current v2/V3 units.
+
+## 2026-10-10 — Stage mock work
+- [x] Build disposable loopback-only, read-only synthetic HA mock; test allowed registry reads and denied writes without real HA/Telegram credentials.
+- [ ] Before deploying a persistent stage: owner-approved separate service, independent storage/credentials, suitable request authentication, monitoring and rollback, all isolated from household HA Green. Stage **NOT deployed**.

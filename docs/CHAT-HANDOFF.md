@@ -218,3 +218,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - `config/environments/isolation.example.json` describes nonsecret disjoint dev/loopback-stage/future-prod *planning* only; no real services, credentials or HA writes deployed. `test/environment-manifest-example.test.mjs` checks isolation contract.
 
 - New dev checkout full suite: 125 files / 499 assertions / 0 failures, exit 0.
+
+## 2026-10-10 — ephemeral stage mock
+- Canonical workspace `~/projects/rs-home-ai-dev`: added `src/ops/stage-mock-ha.mjs` and `test/stage-mock-ha.test.mjs`. Mock binds only 127.0.0.1, returns synthetic empty registry, denies writes and closes; focused 1/1. Full regression pending `/tmp/rs-v3-stage-loopback-full-20261010.log`. Not a production/stage deployment or real HA source. No runtime changes.
+
+- Full suite PASSED: 126 test files / 500 assertions / 0 failed, exit 0.

@@ -259,3 +259,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Added complete offline mock chain: admission, SQLite claim, one simulated write, strict fresh result verification, no retry under seven concurrent calls, stale-readback and uncertain MCP-result denial. Focused 3/3 pass; full result and Git SHA in newest WORKLOG/Git. Gate B and real Gate C acceptance remain OPEN.
 
 - Full `npm test` PASS: 130 files / 522 assertions / 0 failures / exit 0; `/tmp/rs-v3-gatec-joined-full-20261010.log`.
+
+## 2026-10-10 — Gate C actual MCP SDK offline fixture
+- Added `test/gate-c-mcp-sdk-transport.test.mjs` using installed upstream SDK Client/Server/InMemoryTransport: successful call once and timeout after server sees call with durable no-replay, 2/2 focused exit 0. Does not use HA credentials/network or change live services. In-memory protocol is NOT end-to-end network or operator acceptance. Gate B and operational Gate C remain OPEN.
+
+- Full npm regression PASS: 131 test files / 524 assertions / zero failures / exit code 0; log `/tmp/rs-v3-gatec-sdk-full-20261010.log`.

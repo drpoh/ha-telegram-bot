@@ -782,3 +782,9 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Simulation boundaries: `admit` and `verify` are injectable fixture callbacks, not independently authenticated, and write is never real MCP or HA. This is additional integrated negative evidence, not full Gate C operator acceptance. Full regression follows.
 
 - Full `npm test` PASS: 130 files / 522 assertions / 0 failures / exit 0; `/tmp/rs-v3-gatec-joined-full-20261010.log`.
+
+## 2026-10-10 — Gate C real SDK in-memory protocol fixture
+- Used already-installed upstream `@modelcontextprotocol/sdk` Client and McpServer over linked `InMemoryTransport`, without installing a new dependency or calling HA. A successful SDK tool call is durably claimed once; SDK protocol timeout after dispatch yields unknown/unverified and subsequent duplicate is denied. Focused 2/2 pass (exit 0).
+- This is actual SDK protocol processing but NOT a real network socket or authenticated MCP endpoint. Cancellation at the SDK client does not prove server-side side effects were cancelled. Gate C production acceptance remains OPEN pending source/policy Gate B, approved stage and network lifecycle tests. Full regression follows.
+
+- Full npm regression PASS: 131 test files / 524 assertions / zero failures / exit code 0; log `/tmp/rs-v3-gatec-sdk-full-20261010.log`.

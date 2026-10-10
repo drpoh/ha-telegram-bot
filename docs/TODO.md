@@ -172,3 +172,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Gate C composed durable execution acceptance fixture
 - [x] Integrated offline admission → durable action claim → simulated MCP write → strict post-action readback → replay denial with concurrent requests and stale/unknown negative cases (3/3 focused).
 - [ ] Real MCP protocol abort/close, trusted action identity and actual HA source/policy remain outstanding. This does not authorize controlled live HA exercise.
+
+## 2026-10-10 — Gate C upstream MCP SDK contract
+- [x] Reuse installed `@modelcontextprotocol/sdk` Client/McpServer/InMemoryTransport to test actual protocol tool dispatch and SDK timeout against durable no-replay journal (2/2 focused).
+- [ ] Remaining blockers: live HA identity/policy Gate B, authenticated staging deployment, forced network socket teardown, rollback and owner-approved controlled acceptance. Do not close operational Gate C based on in-memory transport.

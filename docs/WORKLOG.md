@@ -821,3 +821,10 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Full first 137-file isolated run: 535 assertions passed but one pre-existing Stage delayed-read test assumed exactly two requests; heavily loaded Pi can timeout before the second request. This was a test expectation problem, not a permissive decision. Adjusted to assert 1–2 bounded requests with registry_transport_failure and authorization=false. Focused Stage+Telegram 6/6 PASS. Full rerun follows.
 
 - Final isolated npm regression PASS: 137 files / 536 assertions / 0 failed / exit 0; `/tmp/rs-v3-mvp-telegram-rerun-20261010.log`. No runtime paths or HA touched.
+
+## 2026-10-10 — Existing pilot path audit, safer MVP integration
+- Found actual V3 dedicated Telegraf bot already implemented in `src/pilot/telegram-readonly.mjs`, with `/confirm` and `/cancel`, single kitchen-light intent parsing and `createKitchenLiveAdmission`. The original live pilot is an **independent runtime checkout**; no edits or restarts there.
+- Rather than introducing another Telegram handler, extended isolated `createKitchenDryrunConsent` with optional durable action journal using the existing SQLite implementation. Journal UUID claim occurs after consumption but before injected dispatch; an unavailable journal blocks execution, and unknown outcome is retained as unverified. All six focused pilot and fault tests passed.
+- Important: current running pilot has not been changed to use this option. It still requires evidence-based operator acceptance and protected storage before promotion. Full isolated regression follows.
+
+- Full isolated npm test PASS: 138 files / 538 assertions / zero failures / exit 0, `/tmp/rs-v3-mvp-pilot-durable-20261010.log`.

@@ -1,7 +1,7 @@
 import {createV3IntentLedger} from '../decision/v3-intent-ledger.mjs';
 
 // Telegram-only demonstration: no real HA client and no dispatch function.
-export function createKitchenDryrunConsent({clock=Date.now,dispatch}={}){
+export function createKitchenDryrunConsent({clock=Date.now,dispatch,executionJournal}={}){
  const ledger=createV3IntentLedger({clock});
  const intents=new Map();
  const key=(actor)=>JSON.stringify([actor.userId,actor.chatId]);
@@ -22,7 +22,20 @@ export function createKitchenDryrunConsent({clock=Date.now,dispatch}={}){
    const record=ledger.consume({...actor,token});
    if(!record)return {status:'missing'};
    if(typeof dispatch!=='function')return {status:'simulated',service:record.action.args.service,actualWrite:false};
-   try{return await dispatch({action:record.action,actor});}catch{return {status:'failed',reason:'dispatch_exception'};}
+   // Optional external journal for future reviewed MVP rollout; never retry
+   // after unknown outcome. Do not enable live execution merely by setting it.
+   if(executionJournal!==undefined){
+    if(typeof executionJournal?.claim!=='function'||!executionJournal.claim(token))
+     return {status:'denied',reason:'replay_claim_unavailable'};
+   }
+   try{
+    const result=await dispatch({action:record.action,actor});
+    executionJournal?.mark?.(token,result?.status==='verified'?'verified':'unverified');
+    return result;
+   }catch{
+    executionJournal?.mark?.(token,'unverified');
+    return {status:'failed',reason:'dispatch_exception'};
+   }
   },
   cancel(actor){if(!valid(actor))return false;intents.delete(key(actor));return ledger.cancel(actor);}
  });

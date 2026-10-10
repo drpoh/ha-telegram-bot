@@ -201,3 +201,8 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Narrow Telegram MVP admission fixture
 - [x] Compose existing raw Telegram update consistency/admission with the existing actor-bound intent ledger; deny non-private, altered text, changed actor, duplicate message and repeated confirmation. Focused 2/2.
 - [ ] Wire ONLY via separately operator-reviewed actual Telegraf handler, then independently attest HA origin/approved light/policy. Synthetic ctx fixture never proves actual Telegram authentication.
+
+## 2026-10-10 — MVP pilot integration review
+- [x] Reviewed real dev source `src/pilot/telegram-readonly.mjs`: an existing dedicated Telegraf pilot already has `/confirm`, `/cancel`, a hard one-light boundary, operator-policy hash admission, direct HA registry checks and an official MCP SDK client. Do NOT replace it with another bot/handler.
+- [x] Added optional durable claim to `createKitchenDryrunConsent` **before** injected pilot dispatch; unknown MCP outcome consumes token, missing claim store denies, focused 6/6 including existing fault tests.
+- [ ] Deployment approval required before wiring a protected rollback-independent SQLite journal or changing running pilot. Existing pilot is still unchanged; test its operator policy, HA source trust, auth and current actual safety gate before any approved release.

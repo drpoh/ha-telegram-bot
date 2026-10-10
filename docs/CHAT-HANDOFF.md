@@ -290,3 +290,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Reused existing raw-update Telegram admission and actor-bound intent ledger in one offline fixture; 2/2 focused PASS. Actual trusted Telegraf ingress/HA identity and owner-approved release remain unresolved. No live service changes. See WORKLOG for full regression.
 
 - Final isolated npm regression PASS: 137 files / 536 assertions / 0 failed / exit 0; `/tmp/rs-v3-mvp-telegram-rerun-20261010.log`. No runtime paths or HA touched.
+
+## 2026-10-10 — MVP real pilot found; do not duplicate Telegram bot
+- Dev tree already has `src/pilot/telegram-readonly.mjs`: dedicated V3 Telegraf `/confirm` pilot, policy-hash admission and one kitchen-light MCP path. Existing LIVE pilot checkout remains READ-ONLY. Optional durable journal support added to reusable `kitchen-dryrun-consent.mjs`, not wired into live pilot; focused 6/6 passes. Next stage is scoped operator-approved rollout, NOT another bot. See latest TODO/WORKLOG.
+
+- Full isolated npm test PASS: 138 files / 538 assertions / zero failures / exit 0, `/tmp/rs-v3-mvp-pilot-durable-20261010.log`.

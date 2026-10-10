@@ -402,3 +402,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — ROOT CAUSE: Zigbee delivery failure, not V3
 - Owner reported state_pending again; Zigbee2MQTT logs at 18:38:23 explicitly show `genOnOff.on` to 0x2c1165fffeb1e848 / "Led кухня" **Delivery failed for '31135'**. HA entity remains off, last_updated 18:20:38. Existing V3 controls and single-write policy behaved correctly. Fix light power/zigbee mesh; do not keep patching readback or changing target. Fresh Telegram confirmation only once transport is restored.
+
+## 2026-10-10 — IKEA target device truly offline
+- Zigbee2MQTT and Mosquitto running healthy, V3 active. Read-only inspection of Zigbee2MQTT DB identifies light.led_kukhnia as IKEA TRADFRI Driver 30W router (IEEE 0x2c1165fffeb1e848), successful historic interview but lastSeen 2026-10-09 13:56 EEST. Zigbee commands on/off/brightness fail delivery. Need restore electrical power to driver or Zigbee connectivity, not MCP/AI changes.

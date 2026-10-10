@@ -886,3 +886,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-10 — Change of MVP transport strategy (owner decision)
 - Owner selected existing LAN HA-MCP, no tunnel. Confirmed Raspberry Pi 192.168.31.124 via eth0 to HA 192.168.31.94, HA listening on 0.0.0.0:9584, MCP URL mode 0600. Did not change the client to accept unprotected HTTP; wrote LAN-specific security and release requirements in docs/V3-MVP-LAN-MCP-DECISION.md. Still need LAN source restrictions and controlled write scope. No HA, V2 or V3 runtime changed.
+
+## 2026-10-10 — LAN transport evidence and candidate client gate
+- Owner-selected direct LAN HA-MCP path remains dev-only. HA TCP 9584 is exposed on 0.0.0.0; no usable host firewall utility or source-specific rule verified from restricted SSH shell. Added strict dev-only LAN endpoint eligibility helper with independent network/credential evidence switches (not runtime authorization), refusing wrong host/port/protocol/URL credentials. Two focused tests pass. Live HA-MCP network exposure, Telegram v2, V3 pilot, and runtime secrets unchanged. Full regression follows.
+
+- Full suite PASS: 143 files / 549 assertions / 0 failures, exit 0 (`/tmp/rs-v3-lan-policy-20261010.log`).

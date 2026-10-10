@@ -270,3 +270,8 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Owner chose direct LAN HA-MCP MVP
 - [x] Read-only Pi route shows 192.168.31.124 -> 192.168.31.94; HA-MCP listens on 0.0.0.0:9584; runtime endpoint config file 0600. Added `docs/V3-MVP-LAN-MCP-DECISION.md`.
 - [ ] Limit HA TCP/9584 to Pi source via owner-controlled firewall/proxy/network control and verify rejection of unrelated LAN client; attest MCP credential scope. Only then review narrowly scoped LAN exception in client. **Default deny remains**.
+
+## 2026-10-10 — Direct LAN MVP restriction review
+- [x] Confirmed HA-MCP still listens on 0.0.0.0:9584. No verified firewall/proxy isolation found through available HA SSH shell commands; do NOT claim source filtering.
+- [x] Added dev-only strict LAN endpoint candidate `kitchen-lan-endpoint-policy.mjs`: denies until network isolation AND credential review independently affirmed, accepts only 192.168.31.94:9584, no URL credentials/query/fragment. Focused 2/2.
+- [ ] Determine HA add-on/network control surface and apply/verify allow Pi 192.168.31.124 only, deny other LAN clients, then review credentials. Candidate is deliberately NOT wired to executing MCP client.

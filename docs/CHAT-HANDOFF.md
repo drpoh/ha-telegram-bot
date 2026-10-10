@@ -349,3 +349,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — Selected MVP route is direct LAN HA-MCP
 - User chose direct LAN existing HA-MCP, no SSH tunnel. Pi 192.168.31.124 -> HA 192.168.31.94, MCP 0.0.0.0:9584. Current dev still rejects unencrypted non-loopback MCP HTTP. Do not weaken until LAN source restriction and MCP write rights validated. docs/V3-MVP-LAN-MCP-DECISION.md is new current transport strategy. No service/HA changes; launch NO-GO.
+
+## 2026-10-10 — LAN candidate scope gate (not deployed)
+- Direct LAN remains selected. HA-MCP TCP/9584 bound 0.0.0.0, no actual Pi-only filtering verified. New pure dev `src/pilot/kitchen-lan-endpoint-policy.mjs` denies default, requires independent network isolation + credential review before accepting exact 192.168.31.94:9584. Not integrated with live MCP client or service. Next must identify a real HA add-on/router restriction method; do not claim release or weaken normal endpoint validation.
+
+- Full suite PASS: 143 files / 549 assertions / 0 failures.

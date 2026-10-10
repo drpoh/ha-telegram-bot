@@ -1,3 +1,5 @@
+**Pi structure/current deployment warning:** see [PI-REPOSITORY-LAYOUT-PLAN.md](PI-REPOSITORY-LAYOUT-PLAN.md). Both HA checkouts are live service sources; NEVER assume `/home/drpoh/rs-home-ai-v3` is a spare clone. Plan migration before any relocation.
+
 # TODO — Open work register
 
 **Current reviewed status (2026-10-10):** see [repository and branch audit](REVIEW-2026-10-10.md). Gate B OPEN for live source/policy/ingress acceptance; Gate C isolated faults underway; Gate D operational checks partial; Gate E offline only. Earlier unchecked items and checkpoints below are historical and may describe work subsequently completed in fixtures.

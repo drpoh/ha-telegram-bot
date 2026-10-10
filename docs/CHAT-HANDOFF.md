@@ -3,6 +3,8 @@
 This is the FIRST document to read when resuming this project in another chat.
 It is a compact navigation index, not a substitute for live repository checks.
 
+**Pi layout warning (2026-10-10):** `/home/drpoh/ha-telegram-bot` is the v2 system-service working directory; `/home/drpoh/rs-home-ai-v3` is a distinct **older** checkout of the same GitHub remote, directly used by the V3 user service. Never reset/rebase/pull the second copy, or move either directory, on a generic continue request. Read `docs/PI-REPOSITORY-LAYOUT-PLAN.md` and run read-only `node scripts/audit-pi-layout.mjs` to check both.
+
 ## Canonical sources, in priority order
 1. Live Pi working tree and Git status in `/home/drpoh/ha-telegram-bot`.
 2. `AGENTS.md` and `docs/home-agent-v3-strategy.md`: mission and non-negotiable safety invariants.

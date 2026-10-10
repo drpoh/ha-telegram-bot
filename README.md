@@ -42,6 +42,10 @@ Start:
 - `review/gate-e-target-snapshot-hardening-20261009`: separate Gate E review work; do not assume it is merged.
 - The branches do not represent installed dev/stage/prod environments. See [2026-10-10 audit](docs/REVIEW-2026-10-10.md) and [environment ADR](docs/ADR-DEV-STAGE-PROD.md).
 
+## Raspberry Pi filesystem safety
+
+**Two checkout paths from the same repository are used by different running units.** Do not treat either as a disposable clone. See [filesystem and migration plan](docs/PI-REPOSITORY-LAYOUT-PLAN.md) and use `node scripts/audit-pi-layout.mjs` for a read-only inventory before changing paths.
+
 ## Development status and handoff
 
 - [Current open tasks](docs/TODO.md)

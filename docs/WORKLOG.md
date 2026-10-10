@@ -718,3 +718,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-10 — Strategy, structure and branch audit
 - Examined fetched Git refs, modular structure, README, AGENTS, strategy, PROGRESS, TODO, previous review and gate records; findings in `docs/REVIEW-2026-10-10.md`.
 - Corrected visible current-status pointers and clarified branch purposes without rewriting chronological history or altering gates. No branch merge/deletion, live HA access or service changes. Full regression not rerun for docs-only edits.
+
+## 2026-10-10 — Pi directory/repository structural audit and development planning
+- Confirmed both `/home/drpoh/ha-telegram-bot` and `/home/drpoh/rs-home-ai-v3` are separate worktrees of the same GitHub remote but serve different systemd units. V3 older checkout must not be auto-updated. Vinted is independent and has local changes.
+- Added no-write layout inventory script and `docs/PI-REPOSITORY-LAYOUT-PLAN.md` with target dev/stage/prod convention, explicit migration prerequisites and rollback rules. No moving, deleting, service changes, secrets or HA calls.

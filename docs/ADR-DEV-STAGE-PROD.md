@@ -42,3 +42,6 @@ Keep the existing v2 production and current v3 pilot as-is. Build the shared app
 - This is not proof of three environments. Neither a distinct dev nor stage Home AI service is deployed. The existing system bot and v3 narrow pilot must stay untouched while environment manifests and credentials are developed offline.
 - Before creating stage, audit installed unit `EnvironmentFile`, `WorkingDirectory`, `ExecStart`, identity, credentials and port allocations with redacted outputs, provide a mock HA source and separate Telegram credentials, test strict isolation and rollback, then request owner approval for any changes to running services.
 - Focused environment tests after nested storage hardening: 9/9 passed; full regression was launched separately, result pending at writing time.
+
+## 2026-10-10 checkout ownership update
+- Read `PI-REPOSITORY-LAYOUT-PLAN.md`: the v2 system unit runs from `/home/drpoh/ha-telegram-bot`, while V3 pilot user unit runs from `/home/drpoh/rs-home-ai-v3`; both are separate checkouts of the same remote with different HEADs. Neither is a disposable dev environment. No changes to live units until separately authorized.

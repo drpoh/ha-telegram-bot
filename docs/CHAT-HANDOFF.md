@@ -381,3 +381,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — Dev hardening newer than candidate
 - New a07d264 fixes fail-closed replay claim throws, regression PASS. Static release candidate pinned 0deece0 now stale relative to bugfix; rebuild before promotion. Protected SQLite claims.db exists, no live Telegram polling or HA actuation executed. MCP permissions and user-generated Telegram /confirm still needed before MVP GO.
+
+## 2026-10-10 — Final test checkpoint
+- Current isolated candidate-v2 is pinned 72616d07f1a2850bc977a16d301034aafe5671c2; SQLite ledger preflight PASS; both services active. Full candidate-v2 npm test launched; check /tmp/rs-v3-candidate-v2-full.log and process before recording success. No live V3 promotion or HA light write. Remaining acceptance: MCP scope and owner-generated Telegram /confirm.

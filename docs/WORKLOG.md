@@ -918,3 +918,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-10 — Journal failure handling hardened
 - Fixed an unhandled SQLite claim exception in `createKitchenDryrunConsent.confirm`: throws now cause `replay_claim_unavailable` deny and consumed confirmation, without calling physical dispatch. New targeted regression PASS 1/1, commit a07d264. Historical static release candidate 0deece0 remains unchanged and must not be deployed as this new fix is absent there. Live V3 and V2 untouched.
+
+## 2026-10-10 — Candidate-v2 final validation in progress
+- Started full regression on isolated candidate pinned 72616d07f1a2850bc977a16d301034aafe5671c2. Rechecked protected external claims.db via inspector: ready=true, storage_preflight_passed; both V2 and V3 services active. Pending final test output; no HA actuation or production deployment.

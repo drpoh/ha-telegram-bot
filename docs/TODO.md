@@ -311,3 +311,8 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Current release blockers after journal hardening
 - [x] Journal claim error is now fail-closed in dev and covered by a focused regression test.
 - [ ] Rebuild candidate from a07d264+, test it, review actual MCP credentials and source rules. Real Telegram /confirm acceptance requires a fresh owner-created Telegram request and is not safely reproducible by sending an assistant-invented event. No live release yet.
+
+## 2026-10-10 — Candidate-v2 final regression
+- [x] Candidate-v2 pinned 72616d07f1a2850bc977a16d301034aafe5671c2; external claims.db preflight passed again and v2/V3 services are active.
+- [ ] Full candidate-v2 npm test running; record actual result before release claim.
+- [ ] Complete HA-MCP trusted permission review and controlled single-light Telegram confirmation before live V3 promotion. Do not start duplicate polling bot or assert an unverified release.

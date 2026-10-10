@@ -168,3 +168,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Add SQLite PRIMARY KEY atomic dispatch claim using existing SQLite CLI rather than a bespoke lock service. Reserve before the simulated write, persist unknown result through restart, never retry uncertain operations; six focused checks pass.
 - [ ] Independently validate real concurrent claims under process race, bounded actual MCP transport, durable actor/action binding and trusted ingress, crash/fsync guarantees, stale readback and monitored restart/rollback. Offline tests do not constitute live Gate C acceptance.
 - [ ] **Gate C production acceptance BLOCKED** by Gate B trusted HA origin/identity/policy and separately authorized controlled stage/live read-write acceptance. Do not mark production Gate C closed.
+
+## 2026-10-10 — Gate C composed durable execution acceptance fixture
+- [x] Integrated offline admission → durable action claim → simulated MCP write → strict post-action readback → replay denial with concurrent requests and stale/unknown negative cases (3/3 focused).
+- [ ] Real MCP protocol abort/close, trusted action identity and actual HA source/policy remain outstanding. This does not authorize controlled live HA exercise.

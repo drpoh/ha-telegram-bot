@@ -254,3 +254,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Gate C production **still OPEN**: prove real MCP timeout/cancel, concurrency, durable action identity, HA state evidence, stage rollback and approved live acceptance. See latest TODO/WORKLOG and verify current Git SHA.
 
 - Full isolated `npm test` PASS: 129 test files / 519 assertions / 0 failed / exit 0, `/tmp/rs-v3-gatec-durable-full-20261010.log`.
+
+## 2026-10-10 — Gate C durable joined simulation
+- Added complete offline mock chain: admission, SQLite claim, one simulated write, strict fresh result verification, no retry under seven concurrent calls, stale-readback and uncertain MCP-result denial. Focused 3/3 pass; full result and Git SHA in newest WORKLOG/Git. Gate B and real Gate C acceptance remain OPEN.
+
+- Full `npm test` PASS: 130 files / 522 assertions / 0 failures / exit 0; `/tmp/rs-v3-gatec-joined-full-20261010.log`.

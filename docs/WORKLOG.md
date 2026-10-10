@@ -776,3 +776,9 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Remaining production Gate C: authenticated and authorized end-to-end action provenance, bounded actual MCP I/O and cancellation semantics, durable real replay defense with safe restart, source-fresh state verification, monitored rollback and owner-approved controlled acceptance. Gate B remains open. Full regression result follows.
 
 - Full isolated `npm test` PASS: 129 test files / 519 assertions / 0 failed / exit 0, `/tmp/rs-v3-gatec-durable-full-20261010.log`.
+
+## 2026-10-10 — Gate C composed durable mock execution
+- Added `test/gate-c-durable-joined-chain.test.mjs`, combining the SQLite dispatch claim and strict fresh readback into a single simulated chain. 7 simultaneous requests for one frozen action yield exactly one mock invocation; stale HA-shaped readbacks and dropped-after-send mocked executor results cannot cause another invocation. Policy failure also denies. Focused 3/3 pass.
+- Simulation boundaries: `admit` and `verify` are injectable fixture callbacks, not independently authenticated, and write is never real MCP or HA. This is additional integrated negative evidence, not full Gate C operator acceptance. Full regression follows.
+
+- Full `npm test` PASS: 130 files / 522 assertions / 0 failures / exit 0; `/tmp/rs-v3-gatec-joined-full-20261010.log`.

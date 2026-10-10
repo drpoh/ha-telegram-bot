@@ -338,3 +338,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — HA SSH restricted local forwarding enabled, MCP real read OK
 - User authorized SSH forwarding change. HA sshd config backup `/etc/ssh/sshd_config.rs-v3-backup-20261010`; scoped `Match User hassio`, `AllowTcpForwarding local`, `PermitOpen 127.0.0.1:9584`, `GatewayPorts no` with global forwarding still denied. `sshd -t`, reconnect PASS. Ephemeral 127.0.0.1:19584 tunnel supports MCP SDK initialize/listTools (53 including write tool), and one `ha_get_state(light.led_kukhnia)` read success; stopped. No running V3/v2 restarts, no writes, no production URL/journal change. Next: independent host attestation, review privileges, owner-approved persistent tunnel, protected claim ledger and controlled actuation acceptance. NO-GO remains.
+
+## 2026-10-10 — Upstream MCP transport redirect denial
+- Effective HA sshd Match User hassio forwarding accepted as previous change, with permitopen only 127.0.0.1:9584; note covers ALL hassio logins. MCP SDK read successfully confirmed at prior commit 8567494. Dev MCP transport now rejects redirects; no deployed tunnel/runtime. See WORKLOG for complete test evidence.
+
+- Full npm test PASS 142 files / 547 assertions / 0 failures (`/tmp/rs-v3-sdk-no-redirect-20261010.log`).

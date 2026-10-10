@@ -257,3 +257,8 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Backed up HA sshd_config and applied restricted `Match User hassio` local forwarding to 127.0.0.1:9584 while preserving global deny; config validation PASS and SSH reconnect PASS.
 - [x] Temporary Pi loopback tunnel now passes upstream MCP SDK `listTools` (53 tools) and `ha_get_state(light.led_kukhnia)` read-only. Each tunnel stopped.
 - [ ] Actual MCP grants include `ha_call_service` (not read-only). Require operator review, separate V3 deployment/tunnel approval, independent host key confirmation, external SQLite claim store and one-light controlled acceptance. Do not declare Gate B/C/D fully closed.
+
+## 2026-10-10 — Verified SSH/MCP read and redirect hardening
+- [x] Latest GitHub checkpoint 8567494 already records owner-approved, restricted hassio SSH forwarding and real MCP read via temporary tunnel. Verified effective `sshd -T -C user=hassio` returns local-only forwarding to 127.0.0.1:9584.
+- [x] Hardened dev upstream MCP SDK fetch to reject HTTP redirects, preventing unintended alternate destination. Focused syntax and 6/6 test cases pass.
+- [ ] Keep permanent tunnel disabled until reviewed host key and MCP tool grants. Separate user/key grant scope remains broader than ideal, and live pilot/mcp-url are unchanged.

@@ -10,7 +10,9 @@ export function createKitchenMcpClient({endpointFile='/home/drpoh/.config/rs-hom
   if(!endpoint.allowed)throw Error(endpoint.reason);
   const url=endpoint.url;
   const client=new Client({name:'rs-home-ai-v3-kitchen',version:'0.1.0'});
-  try{await client.connect(new StreamableHTTPClientTransport(url));return await client.callTool({name,arguments:args});}
+  // Never follow server-driven redirects to a different, unreviewed origin.
+  const noRedirectFetch=(input,init)=>fetch(input,{...init,redirect:'error'});
+  try{await client.connect(new StreamableHTTPClientTransport(url,{fetch:noRedirectFetch,requestInit:{redirect:'error'}}));return await client.callTool({name,arguments:args});}
   finally{await client.close().catch(()=>{});}
  };
 }

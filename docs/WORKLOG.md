@@ -874,3 +874,9 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-10 — Approved HA SSH forwarding and real MCP read verification
 - Explicit user approval received for restricted forwarding. Applied HA SSH config with backup `/etc/ssh/sshd_config.rs-v3-backup-20261010`; global AllowTcpForwarding no remains, scoped Match User hassio permits local forward only to 127.0.0.1:9584. sshd -t PASS, reloaded, strict SSH reconnect PASS. No other HA config touched. Ephemeral Pi loopback forwarded actual configured MCP path. Official SDK listTools PASS (53 tools, including a write capability); exact scoped `ha_get_state(light.led_kukhnia)` response contains structured data and no isError. No light write and no persistent tunnel or pilot change. Caveat: hassio Match rule covers all hassio SSH logins and key fingerprint not independently attested. See trust runbook.
+
+## 2026-10-10 — Verify previous authorization and harden SDK transport
+- Re-inspected HA sshd effective configuration: global AllowTcpForwarding no, Match User hassio local forwarding PermitOpen 127.0.0.1:9584. Previous checkpoint 8567494 proves upstream SDK listTools and single-light ha_get_state through temporary forwarding. Current user-service is not attached to new tunnel.
+- Updated dev `src/pilot/kitchen-mcp-client.mjs` to disable redirects at the SDK fetch layer, not just check the initial configured URL. Focused check and 6/6 focused tests pass; full regression follows. No HA state change, ongoing service restart, persistent tunnel activation, or claim-db creation.
+
+- Full npm test PASS: 142 test files / 547 assertions / zero failures / exit 0 (`/tmp/rs-v3-sdk-no-redirect-20261010.log`).

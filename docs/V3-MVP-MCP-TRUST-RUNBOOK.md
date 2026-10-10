@@ -29,3 +29,10 @@ Use a separately configured, restricted **SSH local-forward** from the Pi to the
 - Separately authorized one-light actuation acceptance and rollback sign-off.
 
 Do not upgrade `Gate B` or `Gate C` to PASS from an offline test or a local listener alone.
+
+## 2026-10-10 additional read-only acceptance evidence
+- SSH `BatchMode=yes`, `StrictHostKeyChecking=yes` succeeded with the Pi's pre-existing `known_hosts` record. Stored local fingerprints (still require out-of-band owner verification): ED25519 `SHA256:fkIMHj61cYOe+RSDSKWkR89kQM9MFoQZlSEnJdpZirw`, RSA `SHA256:IlVBP8CcNZdlJP7+G/r/F8YS0psZfvRZ+IwG+rPlrCI`.
+- HA host reports listener `0.0.0.0:9584` (this is potentially exposed to LAN; restrict network ingress as part of owner-managed hardening). It is not bound to HA loopback, though forwarding destination can be loopback.
+- Authenticated SSH read-only registry inspection found exactly one `light.led_kukhnia`, `mqtt` platform, enabled; expected device ID, unique ID, single device, and kitchen area all match developer admission expectations. This is point-in-time metadata, not live write approval.
+- An **ephemeral** strict-host-key SSH tunnel `127.0.0.1:19584` -> HA `127.0.0.1:9584` passed a TCP probe and was immediately stopped; subsequent `ss` showed no listener. This proves temporary forwarding, NOT authenticated MCP tool capabilities or production tunnel availability.
+- Still NO-GO: host key not independently attested by operator, HA-MCP tool identity/rights not accepted, standalone persistent tunnel not installed, claims journal missing, no approved real actuation.

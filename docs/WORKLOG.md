@@ -862,3 +862,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-10 — SSH local-forward readiness check
 - Observed Pi via metadata-only commands: no TCP listener 9584, no dedicated V3 tunnel unit, SSH host key strict checking configured as `ask`, active V3 unit. A loopback URL **cannot** yet be trusted as HA source; current live URL remains non-loopback HTTP. Added `docs/V3-MVP-MCP-TRUST-RUNBOOK.md` for an operator-controlled host-key-pinned, least-privilege SSH forward and separate HA identity test. No network connection established and no runtime configuration changed.
+
+## 2026-10-10 — Real read-only HA trust evidence, ephemeral tunnel
+- Strict SSH key checking with existing Pi known_hosts successfully authenticated the host. Used only authenticated, read-only registry JSON inspection on HA to verify unique light.led_kukhnia, mqtt platform, enabled status, matching device/unique ID and kitchen area. HA has a listening MCP 9584 port on 0.0.0.0. Ephemeral SSH local forward on Pi 127.0.0.1:19584 passed a TCP probe, then was stopped and confirmed absent. **No MQTT/MCP tool called, device switched, HA configuration changed, claim DB created, or active systemd service touched.** Owner independent key attestation and tool-level acceptance remain missing. Details in MCP trust runbook.

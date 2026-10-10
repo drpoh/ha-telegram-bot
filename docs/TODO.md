@@ -239,3 +239,8 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Confirmed read-only: no loopback listener on port 9584; no dedicated SSH/MCP tunnel user unit; live V3 active. SSH configuration uses interactive host-key checking, not reviewed pinning evidence.
 - [x] Documented minimum SSH local-forward acceptance path and no-go conditions in `docs/V3-MVP-MCP-TRUST-RUNBOOK.md`.
 - [ ] Verify operator-pinned HA SSH host key/identity, provision and verify restricted loopback forward, then read-only MCP/HA entity identity under authorized session. Do not point production V3 at arbitrary localhost services.
+
+## 2026-10-10 — Authenticated SSH read-only HA registry evidence
+- [x] Existing SSH key record accepted with strict host-key checking, remote HA MCP port listening; ephemeral local SSH forward TCP passed then stopped.
+- [x] Read-only HA entity/device registry confirms a single enabled MQTT `light.led_kukhnia` matching expected unique ID, device ID and kitchen area.
+- [ ] Independently attest HA SSH key, review exposed MCP listener and privileges, restrict direct LAN access, accept MCP transport identity and owner-scoped read-only capability; then approve a separate persistent forward/release.

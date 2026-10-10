@@ -326,3 +326,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — Next operational step: verified SSH tunnel
 - Pi read-only topology check: NO listener on 127.0.0.1:9584; no dedicated SSH/MCP tunnel unit, SSH host-key config is `ask` not an owner-reviewed pin. Live V3 remains active with non-loopback HTTP MCP URL. See `docs/V3-MVP-MCP-TRUST-RUNBOOK.md` for explicit trust/transport/HA read-only acceptance requirements. Do not infer trust from mere localhost URL. No live changes.
+
+## 2026-10-10 — SSH and HA registry read-only acceptance advanced
+- Strict SSH to HA succeeded with existing known_hosts. Read-only HA entity/device registry confirms single enabled MQTT light.led_kukhnia and expected unique ID/device ID/kitchen area. HA MCP port 9584 listening on 0.0.0.0 (potential LAN exposure). Temporary 127.0.0.1:19584 SSH forwarded TCP PASS and was immediately stopped. Existing keys still need independent owner attestation; production tunnel, MCP tool provenance, protected SQLite journal, release consent all remain NO-GO. See docs/V3-MVP-MCP-TRUST-RUNBOOK.md.

@@ -854,3 +854,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Rechecked Pi: dev HEAD c7f401c, V3/v2 services still active, protected state directory exists (0700), target `claims.db` absent. Added callable offline-only `src/ops/v3-pilot-journal-provision.mjs` with existing-ledger no-reset policy, exclusive 0600 SQLite file creation and immediate validation. Focused 2/2. Did NOT invoke against live target, access HA, change credentials, or restart services. Full regression follows.
 
 - Full isolated regression PASS: 141 test files / 545 assertions / 0 failures / exit 0. Log: `/tmp/rs-v3-operator-storage-20261010.log`.
+
+## 2026-10-10 — Real runtime MCP source audit (metadata only)
+- Inspected only scheme/host class of dedicated V3 pilot URL (actual URL and credentials redacted): HTTP over NON-loopback. This fails secure transport assurance regardless of familiar hostname. Added dev `kitchen-mcp-endpoint-policy` denying non-loopback HTTP and common URL tricks; wired into dev MCP client. Focused 2/2 passed. Live V3 service still active and unchanged; no HA tool invoked or secrets printed. Full regression follows.
+
+- Full isolated npm regression PASS: 142 files / 547 assertions / 0 failures / exit 0; log `/tmp/rs-v3-mcp-trust-audit-20261010.log`.

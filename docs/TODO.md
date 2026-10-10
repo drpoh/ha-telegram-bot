@@ -229,3 +229,8 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Gate D operator-controlled storage provisioner
 - [x] Added explicit-only `provisionV3PilotJournal` for a separately reviewed target: protected directory, atomic 0600 create, existing-ledger preserve, schema/integrity preflight. Focused 2/2; no live provisioning or service changes.
 - [ ] Operator must approve use against runtime storage separately; read-only HA source/actor/entity evidence and scoped one-light acceptance remain blocking. Pilot deployment NO-GO.
+
+## 2026-10-10 — Actual V3 MCP origin inspection
+- [x] Read-only inspection of runtime MCP URL *classification* (no endpoint or secret disclosed): configured protocol is HTTP on a non-loopback host. This is NOT authenticated HA provenance.
+- [x] Dev MCP endpoint policy now denies unauthenticated non-loopback HTTP, embedded URL credentials, query/fragment and unapproved hosts. 2/2 focused.
+- [ ] Resolve real MCP transport trust (TLS-verified endpoint or operator-reviewed protected local tunnel) and authenticated HA registry identity before any release; operational Gate B remains NO-GO.

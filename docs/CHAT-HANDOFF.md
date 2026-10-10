@@ -318,3 +318,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Added explicit operator-invoked `provisionV3PilotJournal` with exclusive 0600 protected journal creation and no overwrite. Runtime claims DB was missing at inspection and remains untouched. Live HA/source/permissions unverified, Gate D controlled release still NO-GO. See WORKLOG and TODO.
 
 - Full isolated regression PASS: 141 test files / 545 assertions / 0 failures / exit 0. Log: `/tmp/rs-v3-operator-storage-20261010.log`.
+
+## 2026-10-10 — Critical MCP transport trust finding
+- Read-only runtime URL classification: V3 pilot uses non-loopback HTTP MCP; hostname allowlist alone is not evidence of HA provenance. Dev now rejects this using `kitchen-mcp-endpoint-policy`, no live deployment. Production release remains NO-GO until verified TLS or operator-approved protected loopback tunnel and HA identity attestation. Check WORKLOG for test and latest commit.
+
+- Full isolated npm regression PASS: 142 files / 547 assertions / 0 failures / exit 0; log `/tmp/rs-v3-mcp-trust-audit-20261010.log`.

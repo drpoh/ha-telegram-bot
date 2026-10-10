@@ -900,3 +900,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-10 — Corrected source-restriction strategy for same subnet
 - Read-only Pi routing and router reachability reveal same /24 L2 path (192.168.31.124 to 192.168.31.94, gateway 192.168.31.1). Router HTTP(S) web admin reachable but model and bridge ACL feature unknown. Generic routed gateway firewall cannot assure restriction; changed release plan to require proven bridge ACL/VLAN or HA-side filter, including denied independent-client test. No router login, ACL, HA or live app changes.
+
+## 2026-10-10 — HA-MCP actual owner and supported network option discovered
+- Read-only /homeassistant/.storage/core.config_entries metadata confirms HA-MCP Server is `ha_mcp_tools` custom component, not a Docker add-on; its bind_host 0.0.0.0, port 9584, webhook enabled with ha_auth. This offers supported loopback bind and authenticated HA webhook alternative. Live 9584 bind not altered because it would break the existing V3 and other direct clients. No config writes, credentials exposed or HA reloads.

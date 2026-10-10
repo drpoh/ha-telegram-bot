@@ -363,3 +363,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — Important same-LAN router caveat
 - Pi 192.168.31.124/24 and HA 192.168.31.94 directly share eth0 L2 network; default gateway 192.168.31.1 (HTTP+HTTPS admin responds, vendor not established). Generic router routed firewall will not necessarily filter TCP/9584 between LAN peers. Need explicitly supported bridge ACL/client isolation, VLAN separation or server-side HA-MCP access control and independent client negative test. Live unchanged.
+
+## 2026-10-10 — RESOLVED: MCP 9584 belongs to HA custom component
+- HA config entry `ha_mcp_tools` HA-MCP Server: bind_host 0.0.0.0, server_port 9584, enable_webhook true, webhook_auth ha_auth. `hass_codex_tunnel_mcp` is separate. A supported HA integration option can bind to 127.0.0.1 and leave authenticated webhook through 8123, but changing now would break direct LAN V3. Migrate and independently verify authorized webhook client, inventory other MCP consumers before touching bind. Never expose webhook IDs/secrets. Read docs/V3-MVP-LAN-MCP-DECISION.md.

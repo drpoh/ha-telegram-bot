@@ -287,3 +287,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Same-subnet router filtering limitation
 - [x] Verified Pi eth0 192.168.31.124/24, HA 192.168.31.94 direct on eth0, router 192.168.31.1 serves HTTP/HTTPS. Generic routed firewall cannot be relied on to filter same-subnet packets.
 - [ ] Identify actual router/switch model and intra-LAN bridge ACL/client isolation support or choose HA server-side port restriction. Do not modify router blind; validate from independent LAN client when enforcing.
+
+## 2026-10-10 — HA-MCP server config identified
+- [x] Found `ha_mcp_tools` integration entry on HA; bind_host 0.0.0.0, port 9584, webhook enabled, webhook auth ha_auth. No secrets inspected.
+- [ ] Evaluate staged V3 HA-authenticated webhook client connection and existing MCP consumers. ONLY THEN change HA-MCP Network access to 127.0.0.1, verifying old clients remain functional or migrated. Do not change bind_host directly during current live operation.

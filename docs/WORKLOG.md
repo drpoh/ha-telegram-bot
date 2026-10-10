@@ -722,3 +722,9 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-10 — Pi directory/repository structural audit and development planning
 - Confirmed both `/home/drpoh/ha-telegram-bot` and `/home/drpoh/rs-home-ai-v3` are separate worktrees of the same GitHub remote but serve different systemd units. V3 older checkout must not be auto-updated. Vinted is independent and has local changes.
 - Added no-write layout inventory script and `docs/PI-REPOSITORY-LAYOUT-PLAN.md` with target dev/stage/prod convention, explicit migration prerequisites and rollback rules. No moving, deleting, service changes, secrets or HA calls.
+
+## 2026-10-10 — First development/runtime filesystem separation
+- Created independent clean Git clone `/home/drpoh/projects/rs-home-ai-dev` from `feature/v3-home-agent` at `32b5299`, without changing v2 or V3 pilot runtime checkout. `npm ci --ignore-scripts --no-audit --no-fund` completed successfully (149 packages; exit 0). No secrets copied.
+- This is a safe development workspace, not deployed dev/stage/prod units. New canonical development directory documented in README, TODO, layout plan and handoff. Full offline npm test launched at `/tmp/rs-dev-clone-regression-20261010.log`; result to be recorded after completion.
+
+- New isolated dev checkout full npm test PASSED: 124 files / 498 assertions / 0 failed, exit 0; `/tmp/rs-dev-clone-regression-20261010.log`. Both old service checkout paths unchanged.

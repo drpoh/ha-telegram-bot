@@ -44,6 +44,8 @@ Start:
 
 ## Raspberry Pi filesystem safety
 
+Development checkout: `/home/drpoh/projects/rs-home-ai-dev` (separate clone, no production tokens). Do not develop directly in either running bot service directory.
+
 **Two checkout paths from the same repository are used by different running units.** Do not treat either as a disposable clone. See [filesystem and migration plan](docs/PI-REPOSITORY-LAYOUT-PLAN.md) and use `node scripts/audit-pi-layout.mjs` for a read-only inventory before changing paths.
 
 ## Development status and handoff

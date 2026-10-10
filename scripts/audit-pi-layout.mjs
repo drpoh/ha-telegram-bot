@@ -6,7 +6,7 @@ import {existsSync,readFileSync} from 'node:fs';
 import {join} from 'node:path';
 const home=process.env.HOME;
 const run=(cwd,args)=>{try{return execFileSync('git',args,{cwd,encoding:'utf8',timeout:3000,stdio:['ignore','pipe','ignore']}).trim();}catch{return null;}};
-const repoPaths=['ha-telegram-bot','rs-home-ai-v3','vinted-sales-agent'];
+const repoPaths=['projects/rs-home-ai-dev','ha-telegram-bot','rs-home-ai-v3','vinted-sales-agent'];
 for(const name of repoPaths){
  const directory=join(home,name);
  if(!existsSync(directory)){console.log(JSON.stringify({name,exists:false}));continue;}

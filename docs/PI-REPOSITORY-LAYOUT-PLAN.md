@@ -16,6 +16,13 @@ Status: **planning + read-only inventory tool only**. No files moved, no product
 
 Two checkouts of the same remote are **not** duplicate junk. One is directly used by production v2, the other by the V3 pilot, and their Git history differs. Also the existing project checkouts are **not yet** actual isolated dev/stage/prod environments.
 
+## Safe first migration step — completed 2026-10-10
+
+- New independent Git clone created at `/home/drpoh/projects/rs-home-ai-dev` from `feature/v3-home-agent` at `32b5299`, with `.git` separate from both runtime checkouts. No runtime directory moved, no systemd unit changed.
+- Installed application dependencies in that dev clone via `npm ci --ignore-scripts --no-audit --no-fund` (149 packages; exit 0). No `.env` or production credentials were copied. Full offline test result is recorded in WORKLOG once finished.
+- **Authoritative development workspace from this point:** `/home/drpoh/projects/rs-home-ai-dev`. Push source changes from this location. `~/ha-telegram-bot` is a **live v2 execution directory**, and `~/rs-home-ai-v3` is a **live V3 pilot execution directory**. Never pull/rebase/reset either on routine development requests.
+- `dev` remains a **code/testing checkout only**, not a running dev service or a complete isolated infrastructure environment. Stage and prod migration still require separate acceptance and deployment authorization.
+
 ## Future layout — only after explicit deployment review
 
 ```text

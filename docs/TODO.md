@@ -1,3 +1,5 @@
+**2026-10-10:** Dedicated dev clone created at `/home/drpoh/projects/rs-home-ai-dev` without touching active service checkouts; dependency install succeeded. Full isolated regression in progress before promoting as tested dev source. Stage/prod are not yet deployed.
+
 **Pi structure/current deployment warning:** see [PI-REPOSITORY-LAYOUT-PLAN.md](PI-REPOSITORY-LAYOUT-PLAN.md). Both HA checkouts are live service sources; NEVER assume `/home/drpoh/rs-home-ai-v3` is a spare clone. Plan migration before any relocation.
 
 # TODO — Open work register

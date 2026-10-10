@@ -5,8 +5,10 @@ It is a compact navigation index, not a substitute for live repository checks.
 
 **Pi layout warning (2026-10-10):** `/home/drpoh/ha-telegram-bot` is the v2 system-service working directory; `/home/drpoh/rs-home-ai-v3` is a distinct **older** checkout of the same GitHub remote, directly used by the V3 user service. Never reset/rebase/pull the second copy, or move either directory, on a generic continue request. Read `docs/PI-REPOSITORY-LAYOUT-PLAN.md` and run read-only `node scripts/audit-pi-layout.mjs` to check both.
 
+**NEW canonical development checkout (2026-10-10):** `/home/drpoh/projects/rs-home-ai-dev`, independently cloned from GitHub. ALL future code/docs editing, testing, commits and pushes should happen there. Do not work in runtime `/home/drpoh/ha-telegram-bot` or `/home/drpoh/rs-home-ai-v3` except read-only inspection. See `docs/PI-REPOSITORY-LAYOUT-PLAN.md`.
+
 ## Canonical sources, in priority order
-1. Live Pi working tree and Git status in `/home/drpoh/ha-telegram-bot`.
+1. NEW dev working tree and Git status in `/home/drpoh/projects/rs-home-ai-dev`; separately inspect the two untouched runtime checkouts read-only.
 2. `AGENTS.md` and `docs/home-agent-v3-strategy.md`: mission and non-negotiable safety invariants.
 3. `docs/TODO.md` and last dated entries of `docs/WORKLOG.md`: open work and evidence.
 4. `docs/REVIEW-2026-10-09.md` and `docs/PROGRESS.md`: broader gate status (historical totals are not present-day acceptance).
@@ -208,3 +210,5 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## Project strategy, repository and branches audit — 2026-10-10
 - New current-status source `docs/REVIEW-2026-10-10.md`. Remote feature branch matched local at audit start `8093db0`. Remote main `3bfa386` vs local main `76f6508` (behind 1); refactor/v2 separate; review Gate E branch and PR #1 unmerged/not acceptance evidence. No merges or deletions. README/TODO/PROGRESS top pointers updated.
 - Last full confirmed npm regression: 124 test files / 498 assertions / zero failed, exit 0. Review itself did not rerun full npm test. Gate B OPEN, Gate C isolated, Gate D partial, Gate E offline.
+
+- Independent dev clone npm test 124 files / 498 assertions / zero failures, exit 0.

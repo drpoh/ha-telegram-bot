@@ -264,3 +264,9 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Added `test/gate-c-mcp-sdk-transport.test.mjs` using installed upstream SDK Client/Server/InMemoryTransport: successful call once and timeout after server sees call with durable no-replay, 2/2 focused exit 0. Does not use HA credentials/network or change live services. In-memory protocol is NOT end-to-end network or operator acceptance. Gate B and operational Gate C remain OPEN.
 
 - Full npm regression PASS: 131 test files / 524 assertions / zero failures / exit code 0; log `/tmp/rs-v3-gatec-sdk-full-20261010.log`.
+
+## 2026-10-10 — Gate C HTTP and rollback findings
+- Offline Stage HTTP now exercises real loopback sockets via official MCP SDK, abort and deadline; focused 2/2. SQLite .backup/restore fixture demonstrates rollback replay hole if claim journal is rolled back: restored environments must be quarantined, never resume writes until separate monotonic audit/claim recovery. No installed Stage or live HA modified.
+- Gate B trusted HA endpoint + actor + policy review and permission-scoped controlled HA acceptance remain blocked. Stage deployment and any real write require specific owner approval; do not infer consent for arbitrary household device. Latest complete regression in WORKLOG; Git HEAD requires verification.
+
+- Full isolated regression PASS: 133 test files / 527 assertions / 0 failed / shell exit 0; `/tmp/rs-v3-gatec-http-stage-20261010.log`. Network fixture uses 127.0.0.1 only. Stage restore replay hazard remains a BLOCKER, not an accepted rollback.

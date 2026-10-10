@@ -788,3 +788,10 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - This is actual SDK protocol processing but NOT a real network socket or authenticated MCP endpoint. Cancellation at the SDK client does not prove server-side side effects were cancelled. Gate C production acceptance remains OPEN pending source/policy Gate B, approved stage and network lifecycle tests. Full regression follows.
 
 - Full npm regression PASS: 131 test files / 524 assertions / zero failures / exit code 0; log `/tmp/rs-v3-gatec-sdk-full-20261010.log`.
+
+## 2026-10-10 — Gate C loopback SDK and isolated Stage rollback audit
+- Implemented actual TCP loopback Streamable HTTP integration using existing upstream `@modelcontextprotocol/sdk` server/client and its Express helper. AbortSignal and deadline both terminate client wait after server receives one synthetic call. No retry is issued, but server-side effects may survive abort: client cancellation is NOT a transactional undo. Focused 2/2 passing, no HA access.
+- Added SQLite online `.backup`/restore test using built-in sqlite3 rather than copying WAL database files. A restored pre-command snapshot preserves earlier claims but necessarily lacks claims created after backup. **Critical**: restoring only the journal creates a replay window; require quarantine and separate monotonic durable claim ledger/reconciliation before deploying Stage or any rollback. Test does not modify an installed Stage (none exists).
+- Gate B review: production-authorized HA TLS identity, reviewed policy and actor binding are not present. No live credentials or devices were accessed. Real controlled HA write acceptance cannot be claimed; owner must specify an isolated approved device/action and rollback prerequisites. Full npm regression result to follow.
+
+- Full isolated regression PASS: 133 test files / 527 assertions / 0 failed / shell exit 0; `/tmp/rs-v3-gatec-http-stage-20261010.log`. Network fixture uses 127.0.0.1 only. Stage restore replay hazard remains a BLOCKER, not an accepted rollback.

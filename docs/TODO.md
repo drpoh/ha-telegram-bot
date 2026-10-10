@@ -176,3 +176,10 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Gate C upstream MCP SDK contract
 - [x] Reuse installed `@modelcontextprotocol/sdk` Client/McpServer/InMemoryTransport to test actual protocol tool dispatch and SDK timeout against durable no-replay journal (2/2 focused).
 - [ ] Remaining blockers: live HA identity/policy Gate B, authenticated staging deployment, forced network socket teardown, rollback and owner-approved controlled acceptance. Do not close operational Gate C based on in-memory transport.
+
+## 2026-10-10 — Gate C actual loopback HTTP MCP and Stage rollback
+- [x] Official installed MCP SDK Streamable HTTP localhost server/client abort and deadline cases passed focused 2/2, no HA or service calls.
+- [x] SQLite `.backup` / restore fixture identifies critical rollback replay window: an older snapshot does not contain claims made later. Therefore restored Stage must remain QUARANTINED (no actions), pending reconciliation against a separate durable ledger.
+- [ ] Implement independently durable rollback-safe claim reconciliation, real network disconnect after dispatch, explicit trusted auth for isolated Stage and operator-managed lifecycle; current Stage is NOT deployed.
+- [ ] Gate B acceptance still requires operator-owned real HA endpoint, credentials, approved V3 policy, authenticated actor and permitted entity classifications. Do not inspect or use real secrets without scoped permission.
+- [ ] Live controlled HA actuation and deployment are NOT accepted by this request without a specified permitted device/action/rollback plan. Gate C operational acceptance OPEN.

@@ -18,3 +18,8 @@ Owner selected **existing LAN HA-MCP**, without dedicated SSH tunnel. This super
 
 ## Immediate release assessment
 **NO-GO**: no evidence yet of source-specific TCP/9584 access enforcement or independent credential scoping. The owner chose the architectural LAN option, not a waiver of security controls or automatic permission to operate devices. No live network/HA/pilot changes were performed.
+
+## 2026-10-10 — HA-side listener ownership read-only investigation
+- Reconfirmed TCP 9584 listens on 0.0.0.0. HA's `ha apps` CLI is present; available Docker container name/port listings did not identify a dedicated MCP container matching port 9584. An HA add-on-specific source allowlist cannot yet be asserted or safely changed.
+- Safe next action is to identify the authoritative listener process/configuration using HA Supervisor/app details and existing HA-MCP installation instructions, then restrict its bind address or enforce explicit source filtering by a tested network control. Changing 0.0.0.0 to 127.0.0.1 would **break direct-LAN V3**, so do not do so as a shortcut.
+- Do not use a client-only IP check as proof of server-side protection. Keep the default-deny client and existing V2/V3 services unchanged until a verified network rule and credential boundaries are established.

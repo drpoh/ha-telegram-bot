@@ -891,3 +891,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Owner-selected direct LAN HA-MCP path remains dev-only. HA TCP 9584 is exposed on 0.0.0.0; no usable host firewall utility or source-specific rule verified from restricted SSH shell. Added strict dev-only LAN endpoint eligibility helper with independent network/credential evidence switches (not runtime authorization), refusing wrong host/port/protocol/URL credentials. Two focused tests pass. Live HA-MCP network exposure, Telegram v2, V3 pilot, and runtime secrets unchanged. Full regression follows.
 
 - Full suite PASS: 143 files / 549 assertions / 0 failures, exit 0 (`/tmp/rs-v3-lan-policy-20261010.log`).
+
+## 2026-10-10 — HA-MCP access-control surface inspection
+- Read-only HA CLI, Docker process name and published-port metadata reviewed. Listener 9584 still 0.0.0.0, but no obvious MCP Docker container could be attributed from those listings. Consequently no add-on-specific restriction can yet be safely applied; no speculative iptables, Supervisor configuration or HA production changes were made. Detailed next steps documented in docs/V3-MVP-LAN-MCP-DECISION.md.

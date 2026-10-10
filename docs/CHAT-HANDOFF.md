@@ -354,3 +354,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Direct LAN remains selected. HA-MCP TCP/9584 bound 0.0.0.0, no actual Pi-only filtering verified. New pure dev `src/pilot/kitchen-lan-endpoint-policy.mjs` denies default, requires independent network isolation + credential review before accepting exact 192.168.31.94:9584. Not integrated with live MCP client or service. Next must identify a real HA add-on/router restriction method; do not claim release or weaken normal endpoint validation.
 
 - Full suite PASS: 143 files / 549 assertions / 0 failures.
+
+## 2026-10-10 — HA-MCP listener ownership not yet established
+- HA 9584 still on all interfaces; read-only HA app and Docker inventory did not reveal an obvious dedicated MCP container. Do not assume ownership or modify firewall blindly. Direct-LAN path still needs server-side source restriction and credential review; live v2/V3 untouched. See docs/V3-MVP-LAN-MCP-DECISION.md.

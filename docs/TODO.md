@@ -275,3 +275,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Confirmed HA-MCP still listens on 0.0.0.0:9584. No verified firewall/proxy isolation found through available HA SSH shell commands; do NOT claim source filtering.
 - [x] Added dev-only strict LAN endpoint candidate `kitchen-lan-endpoint-policy.mjs`: denies until network isolation AND credential review independently affirmed, accepts only 192.168.31.94:9584, no URL credentials/query/fragment. Focused 2/2.
 - [ ] Determine HA add-on/network control surface and apply/verify allow Pi 192.168.31.124 only, deny other LAN clients, then review credentials. Candidate is deliberately NOT wired to executing MCP client.
+
+## 2026-10-10 — HA-MCP listener source filter discovery
+- [x] Read-only HA inventory did not identify an obvious dedicated MCP Docker app by name/port; active 0.0.0.0:9584 confirmed.
+- [ ] Identify HA-MCP actual owning process/app and supported network/authorization configuration. Apply only narrow verified network controls; do not bind to HA loopback while selecting direct LAN.

@@ -769,3 +769,10 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Timestamp is untrusted unless the invoking adapter authenticates its source and supplies its own boundary; a post-action timestamp cannot independently prove causality. No live MCP/HA or service changes. Full suite evidence follows.
 
 - Full isolated regression PASS: 128 test files / 513 assertions / 0 failures, process exit 0; `/tmp/rs-v3-gatec-freshness-20261010.log`. No runtime change.
+
+## 2026-10-10 — Gate C durable SQLite no-retry fixture
+- Reused built-in sqlite3 CLI and current `src/db/database.mjs` helper: new isolated `v3-gate-c-execution-journal.mjs` reserves an action ID with primary-key `INSERT OR IGNORE` before simulated invocation. Uncertain outcome is retained and cannot be retried automatically after re-instantiation. Six focused tests pass; an additional pair of independent processes confirmed persistence across process boundary (sequential, not a simultaneous concurrency proof).
+- The module is **NOT wired into live bot or pilot**. This is deliberate: user-provided IDs or fixture policy booleans cannot authenticate admission. SQLite at-most-once claim protects only a designated durable database, cannot prove exactly-once physical actuation and does not guarantee successful operations. SQLite reference: https://www.sqlite.org/lang_conflict.html.
+- Remaining production Gate C: authenticated and authorized end-to-end action provenance, bounded actual MCP I/O and cancellation semantics, durable real replay defense with safe restart, source-fresh state verification, monitored rollback and owner-approved controlled acceptance. Gate B remains open. Full regression result follows.
+
+- Full isolated `npm test` PASS: 129 test files / 519 assertions / 0 failed / exit 0, `/tmp/rs-v3-gatec-durable-full-20261010.log`.

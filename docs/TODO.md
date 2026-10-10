@@ -163,3 +163,8 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — Gate C state freshness contract
 - [x] Optional post-action `last_updated` boundary denies pre-command, missing, malformed and mismatched state readback; five focused tests pass.
 - [ ] Require trusted read adapter to supply a post-command boundary and evidence. Existing callers do not opt in, so this alone is NOT proof of fresh state, HA provenance or authorization.
+
+## 2026-10-10 — Gate C durable no-replay acceptance fixture
+- [x] Add SQLite PRIMARY KEY atomic dispatch claim using existing SQLite CLI rather than a bespoke lock service. Reserve before the simulated write, persist unknown result through restart, never retry uncertain operations; six focused checks pass.
+- [ ] Independently validate real concurrent claims under process race, bounded actual MCP transport, durable actor/action binding and trusted ingress, crash/fsync guarantees, stale readback and monitored restart/rollback. Offline tests do not constitute live Gate C acceptance.
+- [ ] **Gate C production acceptance BLOCKED** by Gate B trusted HA origin/identity/policy and separately authorized controlled stage/live read-write acceptance. Do not mark production Gate C closed.

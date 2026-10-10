@@ -248,3 +248,9 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Continue independent stage storage/rollback and trusted real-MCP readback integration only after gates/approval. Consult latest WORKLOG for full regression and commit.
 
 - Full isolated regression PASS: 128 test files / 513 assertions / 0 failures, process exit 0; `/tmp/rs-v3-gatec-freshness-20261010.log`. No runtime change.
+
+## 2026-10-10 — Gate C durable dispatch claim
+- In canonical dev checkout, new OFFLINE-only SQLite execution journal and six tests: a claim is committed before any simulated dispatch; unknown results, errors and restarts never auto-retry. Deliberately not wired to runtime until trusted ingress/policy and operator approved storage. No production credentials, devices, services or runtime directories altered.
+- Gate C production **still OPEN**: prove real MCP timeout/cancel, concurrency, durable action identity, HA state evidence, stage rollback and approved live acceptance. See latest TODO/WORKLOG and verify current Git SHA.
+
+- Full isolated `npm test` PASS: 129 test files / 519 assertions / 0 failed / exit 0, `/tmp/rs-v3-gatec-durable-full-20261010.log`.

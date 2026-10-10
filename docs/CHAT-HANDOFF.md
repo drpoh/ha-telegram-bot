@@ -384,3 +384,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — Final test checkpoint
 - Current isolated candidate-v2 is pinned 72616d07f1a2850bc977a16d301034aafe5671c2; SQLite ledger preflight PASS; both services active. Full candidate-v2 npm test launched; check /tmp/rs-v3-candidate-v2-full.log and process before recording success. No live V3 promotion or HA light write. Remaining acceptance: MCP scope and owner-generated Telegram /confirm.
+
+## 2026-10-10 — Candidate-v2 passed full regression
+- `/home/drpoh/projects/rs-home-ai-v3-candidate-v2` pinned 72616d0; `npm test` PASS 144 files, 550 assertions, zero failed files, exit 0. External claims.db readiness PASS, V2/V3 still active and unchanged. Deployment and real one-light acceptance remain pending independently verified MCP trust and operator action. Evidence: `/tmp/rs-v3-candidate-v2-full.log`.

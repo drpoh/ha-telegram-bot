@@ -316,3 +316,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Candidate-v2 pinned 72616d07f1a2850bc977a16d301034aafe5671c2; external claims.db preflight passed again and v2/V3 services are active.
 - [ ] Full candidate-v2 npm test running; record actual result before release claim.
 - [ ] Complete HA-MCP trusted permission review and controlled single-light Telegram confirmation before live V3 promotion. Do not start duplicate polling bot or assert an unverified release.
+
+## 2026-10-10 — Candidate-v2 full tests green
+- [x] Full test PASS: 144 files, 550 assertions, 0 failures, exit 0; candidate pinned 72616d0.
+- [ ] Final MVP launch still depends on actual LAN MCP permission/trust review, controlled one-poller V3 deployment and real user Telegram `/confirm` acceptance. Do not misrepresent as completed.

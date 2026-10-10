@@ -921,3 +921,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-10 — Candidate-v2 final validation in progress
 - Started full regression on isolated candidate pinned 72616d07f1a2850bc977a16d301034aafe5671c2. Rechecked protected external claims.db via inspector: ready=true, storage_preflight_passed; both V2 and V3 services active. Pending final test output; no HA actuation or production deployment.
+
+## 2026-10-10 — Candidate-v2 complete regression SUCCESS
+- On isolated candidate-v2 at immutable commit 72616d07f1a2850bc977a16d301034aafe5671c2, `npm test` finished EXIT=0: **144 isolated test files, 550 assertions, zero failures**. Log `/tmp/rs-v3-candidate-v2-full.log`. Protected SQLite journal preflight passed and both live V2/V3 services remain active. This is software validation, not authorization for actual MCP write or proof that the active V3 was upgraded.

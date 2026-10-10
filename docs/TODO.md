@@ -244,3 +244,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Existing SSH key record accepted with strict host-key checking, remote HA MCP port listening; ephemeral local SSH forward TCP passed then stopped.
 - [x] Read-only HA entity/device registry confirms a single enabled MQTT `light.led_kukhnia` matching expected unique ID, device ID and kitchen area.
 - [ ] Independently attest HA SSH key, review exposed MCP listener and privileges, restrict direct LAN access, accept MCP transport identity and owner-scoped read-only capability; then approve a separate persistent forward/release.
+
+## 2026-10-10 — SSH tunnel service candidate prepared
+- [x] Added disabled example user service for strict-key SSH loopback forwarding; `systemd-analyze verify` passed (temporary copy only).
+- [ ] Do not install/start until operator has independently verified host key, allowed identity, HA-side MCP listener security, and approved the service. Live pilot remains unchanged.

@@ -865,3 +865,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-10 — Real read-only HA trust evidence, ephemeral tunnel
 - Strict SSH key checking with existing Pi known_hosts successfully authenticated the host. Used only authenticated, read-only registry JSON inspection on HA to verify unique light.led_kukhnia, mqtt platform, enabled status, matching device/unique ID and kitchen area. HA has a listening MCP 9584 port on 0.0.0.0. Ephemeral SSH local forward on Pi 127.0.0.1:19584 passed a TCP probe, then was stopped and confirmed absent. **No MQTT/MCP tool called, device switched, HA configuration changed, claim DB created, or active systemd service touched.** Owner independent key attestation and tool-level acceptance remain missing. Details in MCP trust runbook.
+
+## 2026-10-10 — Candidate persistent V3 MCP SSH forward
+- Generated a non-installed example user-systemd unit for loopback-only port 19584 -> HA-MCP 9584 with strict SSH host verification and fail-closed startup. Verified unit syntax with systemd-analyze (exit 0); no service installed/enabled/restarted. Existing SSH BatchMode authentication still succeeds; live V3 user service remains active. The trust/security gate remains OPEN, and an owner-signed HA host identity and permission review are required.

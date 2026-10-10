@@ -329,3 +329,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — SSH and HA registry read-only acceptance advanced
 - Strict SSH to HA succeeded with existing known_hosts. Read-only HA entity/device registry confirms single enabled MQTT light.led_kukhnia and expected unique ID/device ID/kitchen area. HA MCP port 9584 listening on 0.0.0.0 (potential LAN exposure). Temporary 127.0.0.1:19584 SSH forwarded TCP PASS and was immediately stopped. Existing keys still need independent owner attestation; production tunnel, MCP tool provenance, protected SQLite journal, release consent all remain NO-GO. See docs/V3-MVP-MCP-TRUST-RUNBOOK.md.
+
+## 2026-10-10 — Disabled systemd SSH forward example
+- New `docs/rs-home-ai-v3-mcp-tunnel.service.example`, `systemd-analyze verify` exit 0 using temporary .service copy; not installed/enabled/started. Strict SSH host key must be independently checked before owner-approved activation; HA listener 0.0.0.0:9584 and MCP permissions still need review. Current runtime untouched; consult V3-MVP-MCP-TRUST-RUNBOOK.md.

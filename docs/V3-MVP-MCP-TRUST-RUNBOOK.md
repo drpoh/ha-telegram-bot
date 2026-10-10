@@ -36,3 +36,8 @@ Do not upgrade `Gate B` or `Gate C` to PASS from an offline test or a local list
 - Authenticated SSH read-only registry inspection found exactly one `light.led_kukhnia`, `mqtt` platform, enabled; expected device ID, unique ID, single device, and kitchen area all match developer admission expectations. This is point-in-time metadata, not live write approval.
 - An **ephemeral** strict-host-key SSH tunnel `127.0.0.1:19584` -> HA `127.0.0.1:9584` passed a TCP probe and was immediately stopped; subsequent `ss` showed no listener. This proves temporary forwarding, NOT authenticated MCP tool capabilities or production tunnel availability.
 - Still NO-GO: host key not independently attested by operator, HA-MCP tool identity/rights not accepted, standalone persistent tunnel not installed, claims journal missing, no approved real actuation.
+
+## 2026-10-10 — separate disabled user-unit candidate
+- Created `docs/rs-home-ai-v3-mcp-tunnel.service.example`, a **not installed, not enabled** user systemd unit to SSH-forward 127.0.0.1:19584 to the HA listener with strict host-key checks, BatchMode and ExitOnForwardFailure. No agent runtime dependency or live URL change is configured.
+- The file was copied to a temporary `.service` path for `systemd-analyze verify`: exit 0. This validates unit syntax only, not remote identity, SSH trust or MCP tool access.
+- Owner must independently verify/pin the actual SSH host key, review the HA-side listener exposure (currently `0.0.0.0:9584`), then explicitly authorize any installation/activation. Real one-light actuation and journal provisioning remain separate approvals.

@@ -42,8 +42,31 @@ test('journal mark failure never causes another write or hangs actor guard',asyn
  assert.equal(pilot.request(actor,intent).status,'pending');
  const result=await pilot.confirm(actor);
  assert.equal(result.status,'failed');
- assert.equal(result.reason,'dispatch_exception');
+ assert.equal(result.reason,'journal_mark_unavailable');
  assert.equal(writes,1);
  assert.equal((await pilot.confirm(actor)).status,'missing');
  assert.equal(pilot.request(actor,intent).status,'pending');
+});
+
+test('SQLite outcome mark returning false cannot report success or repeat write',async()=>{
+ let writes=0,markCalls=0;
+ const pilot=createKitchenDryrunConsent({
+  executionJournal:{claim:()=>true,mark:()=>{markCalls++;return false;}},
+  dispatch:async()=>{writes++;return {status:'verified'};}
+ });
+ assert.equal(pilot.request(actor,intent).status,'pending');
+ assert.deepEqual(await pilot.confirm(actor),{status:'failed',reason:'journal_mark_unavailable'});
+ assert.equal(writes,1);
+ assert.equal(markCalls,1);
+ assert.equal((await pilot.confirm(actor)).status,'missing');
+});
+test('journal with no mark operation cannot report a verified result',async()=>{
+ let writes=0;
+ const pilot=createKitchenDryrunConsent({
+  executionJournal:{claim:()=>true},
+  dispatch:async()=>{writes++;return {status:'verified'};}
+ });
+ assert.equal(pilot.request(actor,intent).status,'pending');
+ assert.equal((await pilot.confirm(actor)).reason,'journal_mark_unavailable');
+ assert.equal(writes,1);
 });

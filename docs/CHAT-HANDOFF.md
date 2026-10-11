@@ -561,3 +561,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Repository cleanup audit and preservation rules documented in `REPOSITORY-MAINTENANCE-2026-10-11.md`. Actual obsolete GitHub head deletion remains open; no risky file deletions were made.
 - Source-only `/lights_on` output bounded to 20 listed lights while preserving all counts. CI and PR verification pending. This is the next user-facing release candidate, not yet deployed.
 - Next operational gate: fresh Pi DEV `git status`, fast-forward only clean DEV, ARMv7 regression, review bot release/rollback; owner approval before touching live V2 or V3. Stop speculative infrastructure growth.
+
+## 2026-10-11 — Practical MVP /lights_on release candidate review
+- Read-only `/lights_on` Pi acceptance and reversible release plan is in `docs/LIGHTS-ON-RELEASE-GATE-2026-10-11.md`. Current `callHA` ignores AbortSignal and can update memory on a late read; fix/review before production. Offline PR CI pending. No Pi or HA changes.

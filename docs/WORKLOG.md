@@ -1143,3 +1143,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-11 — V3 practical scope and backlog consolidation
 - Live @RSHomeAI_v3_bot confirmed at immutable `97343fa`, running. Owner-confirmed `/start`, `/status`, missing confirmations, and request→cancel→confirm behavior. Pi DEV `5621292` passed 165 files/640 checks. Subsequent sauna feature PR #13 merged `aa5af27` (GitHub CI 166 files/643 assertions), but Pi DEV and live release have NOT been updated to it.
 - `docs/TODO.md` replaced with short authoritative V3 delivery queue. Earlier text remains retrievable in Git history; GitHub branches and Pi runtime files were not deleted. `src/decision` remains referenced and is not a safe deletion target. No runtime or permission changes.
+
+## 2026-10-11 — Pi sauna real-read acceptance
+- Owner confirmed Pi DEV at `3a889da`, 166 test files/643 assertions/0 failed; real read-only HA-MCP `ha_get_state` returned sauna temperature `75.875 °C`, readiness `off`, and `summarizeSauna` returned `complete`. The readiness binary sensor last_reported was older, which alone does not prove staleness for an unchanged state. No live V3 deployment occurred.

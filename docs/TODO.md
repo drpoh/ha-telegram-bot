@@ -11,7 +11,7 @@ Updated 2026-10-11. **Single current priority: deliver useful capabilities throu
 
 ## P0 — next useful V3 release (only)
 - [ ] Synchronize clean canonical Pi DEV to `feature/v3-home-agent` head `aa5af27` (or verified newer SHA) using **fast-forward only** and rerun `npm test` on Pi ARMv7. Never pull into live V2/V3 paths.
-- [ ] Verify actual read-only `ha_get_state` response envelopes for `sensor.sauna_te_sauna_temperature` and `binary_sensor.sauna_sauna_te_sauna_ready` from trusted existing HA-MCP path, including unknown/unavailable. No HA write.
+- [x] Verify actual read-only `ha_get_state` response envelopes for `sensor.sauna_te_sauna_temperature` and `binary_sensor.sauna_sauna_te_sauna_ready` from trusted existing HA-MCP path, for live normal state. Unknown/unavailable are covered by offline tests; real fault injection not performed. No HA write.
 - [ ] Review V3 sauna command and MCP allowlist for real endpoint identity, network source controls and existing admission boundary. GitHub CI alone is not authorization to deploy.
 - [ ] Prepare new **immutable** V3 release candidate, verify systemd executable path and rollback procedure, preserve external SQLite claims/credentials, request owner approval before restart or production change.
 - [ ] After approved promotion, Telegram acceptance: `/sauna`, `Какая температура в сауне?`, `Сауна готова?`; validate truthful values and fallback while retaining existing tamboor `/confirm` protection.

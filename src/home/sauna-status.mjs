@@ -1,4 +1,6 @@
 // Exact sauna read-only summary. No MCP client or HA write capability.
+// The temperature reading is time-sensitive; the readiness entity can stay
+// unchanged for many hours, so its last_changed is not a freshness test.
 export async function summarizeSauna({readState}={}){
  const unavailable={status:'unavailable',authorization:false,actualWrite:false,text:'Не удалось получить достоверное состояние сауны.'};
  if(typeof readState!=='function')return unavailable;

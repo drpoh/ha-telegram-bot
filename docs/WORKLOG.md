@@ -978,3 +978,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-11 — Branch/file audit plus Stage revalidation
 - Git fetch/prune, status and ls-remote confirmed `feature/v3-home-agent` aligned with origin and clean before edits. GitHub branches main, refactor/v2, feature/v3-home-agent and review/gate-e-target-snapshot-hardening-20261009 exist. Required AGENTS/HANDOFF/TODO/WORKLOG/Stage-2 plan present. Live V2 service active; live V3 user service active at immutable 97343fa; old V2 and V3 checkouts intentionally at different revisions 32b5299 and a7fc446. Not a sync fault; avoid risky auto-pulls of service-owned repositories.
 - Added offline two-snapshot identity revalidation and 20-attempt concurrent token consumption tests, 6/6 pass. Revalidation remains NON-AUTHORIZING. No running services, credentials or physical HA targets changed.
+
+## 2026-10-11 — Safe repo structure clarifications and stage confirmation
+- Inspected canonical dev root, 22 src subdirectories, docs, deployment templates, unit paths and historical checkout commits using read-only Pi layout audit. Found potentially confusing legacy root scripts and kitchen-named pilot modules; retained in place to avoid breaking imports or manually triggered real-device tools.
+- Added `docs/PROJECT-MAP.md` authoritative source/runtime/branch/credential ownership index, linked from README and AGENTS. No live filesystem paths, services, branches or secret locations modified.
+- Built mock-only 60s confirmation simulator with exact registry recheck at confirm, one-time consumption, actor isolation and no HA actuation. Focused simulation+revalidation tests 9/9 passed.

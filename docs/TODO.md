@@ -368,3 +368,9 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Add two-snapshot identity revalidation and concurrency/replay offline tests (6/6).
 - [ ] Integrate with mock-only staged confirmation flow; model registry changes between intent and dispatch without ever writing to HA.
 - [ ] Repeat full regression before any release candidate, review stage service/credentials separately and do not promote automatically.
+
+## 2026-10-11 — Project structure and Stage simulated confirmations
+- [x] Audit Pi paths and Git repo structure; document authoritative source, pinned prod and historical checkouts in `docs/PROJECT-MAP.md`; link from README and AGENTS.
+- [x] Stage-only user consent and target revalidation simulator, concurrency and failure tests 9/9; no production actions.
+- [ ] Before any file moves/renames, audit root script and kitchen-named module imports and live execution dependencies; keep live paths unchanged.
+- [ ] Run full isolated Pi regression on this checkpoint; next stage design independent stage identity/storage and verified registry provenance without leaking prod access.

@@ -13,6 +13,10 @@ At the beginning of every new chat, first read `docs/CHAT-HANDOFF.md`, then veri
 - `dev` currently means offline source/test checkout; `stage` and promoted `prod` are NOT yet deployed isolated environments. Distinct environment manifests are planning evidence only, not credentials or authority.
 - When a new chat begins, inspect Git state in dev first and compare runtime Git state read-only. Read `docs/PI-REPOSITORY-LAYOUT-PLAN.md`. Changes to running services, live HA connections or writes, owner-controlled credentials, stage deployment and production release require the existing explicit gate/authorization workflow.
 
+## Project navigation
+- Read `docs/PROJECT-MAP.md` to distinguish canonical development checkout, preserved historical clones, immutable active V3 release, local stage mock, branches and private runtime state.
+- Do not rename/move historical root scripts or `kitchen-*` pilot modules as routine tidying; first prove dependency safety and update imports, tests, release/runbooks separately.
+
 ## Source of truth
 GitHub is the source of truth for code and documentation. Never rely on chat/model memory as the only project state. Before substantial changes, inspect the current branch and relevant files.
 

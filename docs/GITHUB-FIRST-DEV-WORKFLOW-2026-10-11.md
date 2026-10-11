@@ -1,6 +1,6 @@
 # GitHub-first offline development review (2026-10-11)
 
-Status: **proposal only**. This branch does not deploy or modify any Raspberry Pi runtime.
+Status: **adopted in source development via merged PR #2** (`a4a07ae`, 2026-10-11). GitHub-hosted offline CI passed 160 files / 622 assertions. This workflow does not deploy or modify any Raspberry Pi runtime.
 
 ## Working agreement
 
@@ -10,7 +10,7 @@ Status: **proposal only**. This branch does not deploy or modify any Raspberry P
 - No self-hosted runner on the home Raspberry Pi; no `pull_request_target`, deployment action, environment secrets or auto-merge.
 - A GitHub green check is only preflight evidence. For changes intended to be released, run compatibility/full tests against the canonical Pi dev checkout and record actual exit status before an authorized promotion.
 - Never modify or pull the existing `/home/drpoh/ha-telegram-bot` V2 runtime or `/home/drpoh/rs-home-ai-v3` preserved V3 checkout. Active pinned V3 release is separately operated. Do not expand HA scopes or restart services.
-- Merge of this CI proposal requires review of the workflow permissions and its first GitHub Actions execution. GH PR check results must be checked explicitly, not assumed.
+- PR #2 was reviewed, GitHub Actions run `38151447467` passed and PR #2 was squash-merged. Review each future PR's separate CI result; never infer approval from a prior run.
 - Stage/prod continue to require owner-approved isolated deployment and verified rollback. GitHub Actions does not constitute trusted HA identity, authoritative registry provenance, or Gate B signoff.
 
 ## Known limitations
@@ -18,4 +18,4 @@ Status: **proposal only**. This branch does not deploy or modify any Raspberry P
 - Ubuntu runner passing does not prove ARMv7/Raspberry Pi compatibility.
 - Fixtures mock HA and credentials; they do not exercise authenticated production MCP.
 - `npm ci --ignore-scripts` keeps install lifecycle scripts disabled for this review CI. If a future dependency needs one, evaluate it rather than weakening CI globally.
-- A workflow on a PR branch is not evidence that the workflow itself was approved or successfully executed.
+- The initial workflow passed on GitHub. This is not evidence of Raspberry Pi ARMv7 compatibility or production acceptance.

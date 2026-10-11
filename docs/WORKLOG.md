@@ -1050,3 +1050,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-11 — Dependency audit of decision modules
 - Node built-in, read-only relative-import traversal across 317 `.mjs` files found 415 import edges, no unresolved matched paths, 77 decision modules all with inbound refs and 76 directly imported by tests. V2 source entry transitively reaches 16 decision modules; V3 source entry reaches 5.
 - Added `V3-DECISION-DEPENDENCY-AUDIT-2026-10-11.md`, updated structure index and TODO. No executable change, module move, service update or production write. Decision: no justified `src/decision` deletion or bulk restructure; preserve historical mock regression evidence. Full regression not needed for document-only modifications.
+
+## 2026-10-11 — Fail-closed Stage batch confirmation after transport failure
+- Confirm registry-read failures previously returned denial without consuming the pending batch token, which could later be replayed after recovery. Minimal change to existing Stage `createStageBatchConsent` exposes exact actor/token-bound `cancel` via the existing ledger, and `stage-batch-http-simulation` invokes it on missing confirm snapshot. No new service or abstraction.
+- Added two regression cases: unrelated actors/incorrect tokens cannot cancel another pending batch; failed HTTP confirm invalidates token even if a subsequent fixture registry read succeeds. Focused Stage suite 15/15 PASS. Full regression: `/tmp/rs-stage-batch-revoke-full-20261011.log` (PASS).
+- All changes source-only in dev; no HA client, V2/V3 runtime, credentials, real device writes or permission expansion.

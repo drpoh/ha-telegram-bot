@@ -21,6 +21,7 @@ export function createStageBatchHttpSimulation({baseUrl,clock=Date.now,fetchImpl
  };
  return Object.freeze({
   async issue({actor,requests}={}){const snapshot=await read();return snapshot?stage.issue({actor,requests,snapshot}):deny('stage_snapshot_unavailable');},
-  async confirm({actor,token}={}){const snapshot=await read();return snapshot?stage.confirm({actor,token,snapshot}):deny('stage_snapshot_unavailable');},
+  async confirm({actor,token}={}){const snapshot=await read();if(!snapshot){stage.cancel({actor,token});return deny('stage_snapshot_unavailable');}
+   return stage.confirm({actor,token,snapshot});},
  });
 }

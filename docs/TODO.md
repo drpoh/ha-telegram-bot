@@ -24,6 +24,7 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [ ] Preserve Home Assistant Green and native automations when AI, Pi, Zigbee2MQTT or HA-MCP fails. Any real failure testing needs a reviewed maintenance window, backup and operator authorization.
 
 ## P1 — Stage 2 and operations
+- [x] Revoke exact actor/token batch consent on Stage HTTP confirm registry-read failure; deny replay after mock recovers (offline only).
 - [x] Draft conservative Node.js + systemd stage deployment design, `deploy/stage/README.md`; no service installed and no new credentials.
 - [x] Implement source-only mock Stage entry with loopback bind, no live HA/Telegram imports and SIGTERM exit; two subprocess tests pass.
 - [x] Stage 3 source-only subprocess safety tests: clean loopback shutdown and rejected HA/AI credentials and port settings (4/4).

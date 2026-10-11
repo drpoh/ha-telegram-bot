@@ -9,3 +9,11 @@ test('two lights yield non-authorizing simulation only',()=>{const s=createStage
 test('missing or changed second member invalidates entire batch without partial action',()=>{for(const items of [[first],[first,e('light.b','replacement')],[first,e('light.b','dlight.b','tambur',false)]]){const s=createStageBatchConsent({clock:()=>now});const p=s.issue({actor,requests:req,snapshot:snapshot()});const result=s.confirm({actor,token:p.token,snapshot:snapshot(items)});assert.equal(result.status,'denied');assert.equal(result.actualWrite,false);}});
 test('duplicate, ambiguous or stale batch fails before pending intent',()=>{const s=createStageBatchConsent({clock:()=>now});assert.equal(s.issue({actor,requests:[req[0],req[0]],snapshot:snapshot()}).reason,'duplicate_target');assert.equal(s.issue({actor,requests:req,snapshot:snapshot([first,second],now-30001)}).status,'denied');});
 test('token cannot be claimed twice or by other actor',async()=>{const s=createStageBatchConsent({clock:()=>now});const p=s.issue({actor,requests:req,snapshot:snapshot()});assert.equal(s.confirm({actor:{userId:99,chatId:99},token:p.token,snapshot:snapshot()}).status,'denied');const results=await Promise.all(Array.from({length:20},()=>Promise.resolve().then(()=>s.confirm({actor,token:p.token,snapshot:snapshot()}))));assert.equal(results.filter(x=>x.status==='simulated').length,1);});
+
+test('cancel is actor- and token-bound and consumes only matching pending batch',()=>{
+ const s=createStageBatchConsent({clock:()=>now});const p=s.issue({actor,requests:req,snapshot:snapshot()});
+ assert.equal(s.cancel({actor:{userId:33,chatId:33},token:p.token}),false);
+ assert.equal(s.cancel({actor,token:'wrong-token'}),false);
+ assert.equal(s.cancel({actor,token:p.token}),true);
+ assert.equal(s.confirm({actor,token:p.token,snapshot:snapshot()}).reason,'missing_expired_or_used_intent');
+});

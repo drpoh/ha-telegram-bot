@@ -24,6 +24,10 @@ export function createStageBatchConsent({clock=Date.now}={}){
    const intent=ledger.issue({...actor,userText:'stage batch',action:{name:'stage_batch_candidate_only',args:{targets:r.results}},ttlMs:60000});
    return {status:'pending',token:intent.token,authorized:false,actualWrite:false};
   },
+  cancel({actor,token}={}){
+   if(!actorValid(actor))return false;
+   return ledger.consume({...actor,token})!==null;
+  },
   confirm({actor,token,snapshot}={}){
    if(!actorValid(actor))return deny('invalid_actor');
    const intent=ledger.consume({...actor,token});if(!intent)return deny('missing_expired_or_used_intent');

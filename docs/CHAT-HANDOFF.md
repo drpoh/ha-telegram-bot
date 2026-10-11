@@ -486,3 +486,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-11 — Decision dependency graph audited
 - One-time offline static graph: 317 source/test/script `.mjs` files, 415 edges, 77/77 decision modules statically referenced, 76/77 directly tested, no matched unresolved imports. V2 source reaches 16, V3 source reaches 5 decision modules; these do not imply which modules are loaded by pinned runtime artifacts. No safe deletion candidate identified. See `docs/V3-DECISION-DEPENDENCY-AUDIT-2026-10-11.md`.
 - Physical relocation and deletion deferred; next focus returns to dev-only permission/identity contracts and required production trust gates.
+
+## 2026-10-11 — Stage batch transport-failure replay hardening
+- Source-only Stage batch now consumes matching pending confirmation if confirmation-time mock HTTP registry read fails, blocking delayed retry after recovery. Uses existing intent ledger, no new infrastructure. Actor/token mismatches do not cancel legitimate pending intent. Focused 15/15 tests PASS; full log `/tmp/rs-stage-batch-revoke-full-20261011.log` (PASS).
+- Next: dev-only multi-device scope policy/identity tests; no live promotion or HA changes.

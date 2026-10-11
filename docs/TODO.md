@@ -9,6 +9,11 @@ Updated 2026-10-11. **Single current priority: deliver useful capabilities throu
 - V2 uses separate live checkout; read-only `/lights_on` in *development source* belongs to V2; do not confuse it with deployed V3.
 - GitHub offline CI for sauna PR #13: **166 test files / 643 assertions / zero failures**; merged as `aa5af27`. No V3 production deployment.
 
+## Latest production checkpoint
+- [x] Owner verified V3 systemd effective release `c6a9812`, active/running, and four working Telegram sauna/status queries. Full evidence in `V3-PRODUCTION-CHECKPOINT-2026-10-11.md`.
+- [ ] Post-switch request → `/cancel` → `/confirm` no-write regression and retained rollback check; then tag/stabilize checkpoint without touching running service.
+- [ ] One-off branch cleanup (20 remote branches before checkpoint PR) and read-only Pi stale-file consumer audit. No mass deletion of 77 referenced decision modules.
+
 ## P0 — next useful V3 release (only)
 - [ ] Synchronize clean canonical Pi DEV to `feature/v3-home-agent` head `aa5af27` (or verified newer SHA) using **fast-forward only** and rerun `npm test` on Pi ARMv7. Never pull into live V2/V3 paths.
 - [x] Verify actual read-only `ha_get_state` response envelopes for `sensor.sauna_te_sauna_temperature` and `binary_sensor.sauna_sauna_te_sauna_ready` from trusted existing HA-MCP path, for live normal state. Unknown/unavailable are covered by offline tests; real fault injection not performed. No HA write.

@@ -28,3 +28,9 @@ Status: **offline stage contract and runtime fault tests verified; no stage/prod
 - `src/decision/v3-stage-target-resolution.mjs` validates a complete, fresh, non-paginated trusted light inventory before returning only `{status:'candidate', authorized:false}`; it cannot call HA or authorize writes.
 - It demands exact name or entity ID, exact area, a unique match and an available/enabled target. Duplicates, stale/partial snapshots, cross-area names, fuzzy strings and ambiguous identical names fail closed.
 - `test/v3-stage-target-resolution.test.mjs`: seven independent tests passed. A candidate still requires a separately trusted source/identity, reviewed policy, real HA state and user confirmation before ever reaching a production dispatcher. Production remains pinned at 97343fa.
+
+## Stage mock registry integration — 2026-10-11
+- Extended disposable `stage-mock-ha` `/registry` with a complete, mock-only snapshot and a fixture-only entity collection; still no HA client or service writer. Existing mock health/read and forbidden HTTP methods remain protected.
+- `src/ops/stage-target-read.mjs` enforces exact loopback URL `http://127.0.0.1:<port>/`, JSON response, `environment=stage`, `mode=mock`, `authorization=false`, no redirects, 1.5 s read timeout, then returns only a non-authorizing candidate through `resolveStageLight`.
+- Fixed freshness sampling to use time at receipt instead of before HTTP request; otherwise a newly generated snapshot was falsely rejected as 'from the future'. Stale source timestamps are still denied by `resolveStageLight`.
+- Integration tests exercise duplicate names, exact area selection, unavailable devices, invalid remote endpoint, simulated connection drop and forged authorization. Focused test suite `node --test test/v3-stage-mock-target-read.test.mjs test/stage-mock-runtime-isolation.test.mjs test/v3-stage-target-resolution.test.mjs`: 14/14 pass, zero failures. No production writes or stage service deployment.

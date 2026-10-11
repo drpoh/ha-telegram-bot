@@ -360,3 +360,5 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [ ] Plan independently provisioned stage runtime credentials/service only after explicit authorization; do not start a second poller or copy prod secrets.
 - [x] Pure Stage 2 multi-device selection candidate implementation, seven offline tests passing; exact name/ID + area, stale/ambiguous/disabled deny, no live authority.
 - [ ] Wire only into mock stage's read path and test attack/fault cases before proposing any production support.
+- [x] Connect candidate resolver to stage mock HTTP `/registry`: loopback-only endpoint, explicit mock provenance, read timeout, ambiguity/fault/forged-grant tests (14 focused tests pass).
+- [ ] Simulate concurrent confirmations and stale registry changes in stage; evaluate trusted registry-binding before live device expansion.

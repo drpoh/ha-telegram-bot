@@ -971,3 +971,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-11 — Offline multi-light candidate selector
 - Reused existing read-only discovery conventions and added deterministic `resolveStageLight` pure selector in dev only, with seven passing tests including identical names within an area, exact area and entity ID, stale/incomplete snapshots, unavailable/disabled targets, duplicates and malformed registry data. Returns `authorized:false` even when uniquely resolved. No HA connections, actuation, Telegram service or grants changed.
+
+## 2026-10-11 — Stage registry reader integrated, mock only
+- Added non-authorizing loopback-only stage registry read adapter, extended disposable mock with a complete fixture snapshot, and five HTTP integration tests. Initial tests found clock-order problem (`now` measured before HTTP response), corrected to sample receive time. Combined 14/14 focused tests pass. No production changes; no actual stage credentials or continuous service.

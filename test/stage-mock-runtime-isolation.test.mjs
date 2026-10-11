@@ -16,7 +16,10 @@ test('stage fixture is loopback-only, no production HA, no write endpoints',asyn
   const health=await fetch(base+'/health').then(x=>x.json());
   assert.deepEqual(health,{ok:true,environment:'stage',mode:'mock',haWrites:false});
   const registry=await fetch(base+'/registry').then(x=>x.json());
-  assert.deepEqual(registry,{entities:[],devices:[],areas:[],authorization:false});
+  assert.equal(registry.environment,'stage');
+  assert.equal(registry.authorization,false);
+  assert.deepEqual(registry.entities,[]);
+  assert.equal(registry.complete,true);
   for(const [method,path] of [['POST','/services/light/turn_on'],['GET','/api/states'],['POST','/registry']]){
    const response=await fetch(base+path,{method});
    assert.equal(response.status,403);

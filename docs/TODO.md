@@ -32,6 +32,7 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [ ] Review live V2 release/rollback and authorized Telegram test before installing `/lights_on`; do not edit running checkout or restart bot automatically.
 
 - [x] Dev read-only `/lights_on` inventory has a bounded 5s HA-MCP search wait; late results and invalid time budgets fail closed (9 focused tests). This is a caller deadline, **not** proof of transport cancellation.
+- [x] Gate C dev-only read-only light inventory now sends a cooperative AbortSignal on deadline (tests for abort, ignored abort, timer cleanup); real HA-MCP transport cancellation remains UNVERIFIED and no production deployment is authorized.
 - [ ] Evaluate HA-MCP transport AbortSignal/actual socket cancellation separately; a late read callback may still run after the caller deadline. No automatic write retry.
 
 ## P1 — Stage 2 and operations

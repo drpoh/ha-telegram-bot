@@ -3,6 +3,9 @@
 Reviewed 2026-10-11. **This is the current queue**, not the historical running log. Earlier 389-line register is preserved in [the historical TODO archive](archive/TODO-history-through-2026-10-11.md) with Git history intact. Read [PROJECT-MAP](PROJECT-MAP.md) and [CHAT-HANDOFF](CHAT-HANDOFF.md) for service ownership and runtime state. Completion evidence belongs in [WORKLOG](WORKLOG.md).
 
 ## Verified baseline
+- [x] GitHub-first offline CI introduced by PR #2 (`a4a07ae`), GitHub CI passed 160 files / 622 assertions / 0 failures. PR #3 (`142dfec`) passed 160/625/0; PR #4 (`a1ee64c`) passed 161/628/0; all merged 2026-10-11. **Not Raspberry Pi release acceptance.**
+- [ ] Canonical Pi DEV last explicitly observed clean at `2a71552`; GitHub is three commits ahead. Check local status and fast-forward only the DEV checkout after reviewing local changes; do not change pinned runtimes.
+
 - [x] Live V3 one-light Telegram MVP on `light.tambur_svet_l1`: both `turn_off` and `turn_on` were confirmed via independent HA-MCP reads on 2026-10-11. Active pinned release: `97343fa`, not the canonical dev branch.
 - [x] Existing Telegram V2 and V3 services remained active during the latest cleanup. No broader Home Assistant permission was granted.
 - [x] Canonical development checkout: `/home/drpoh/projects/rs-home-ai-dev`, branch `feature/v3-home-agent`; immutable V3 release and V2 runtime must not be auto-updated.
@@ -35,7 +38,7 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [x] Gate C dev-only read-only light inventory now sends a cooperative AbortSignal on deadline (tests for abort, ignored abort, timer cleanup); real HA-MCP transport cancellation remains UNVERIFIED and no production deployment is authorized.
 - [ ] Evaluate HA-MCP transport AbortSignal/actual socket cancellation separately; a late read callback may still run after the caller deadline. No automatic write retry.
 
-- [x] Gate C offline pilot actor in-flight lock: reject new Telegram intent during unresolved dispatch, deny concurrent confirmation and never retry an unknown MCP outcome. Isolated tests added; GitHub CI acceptance pending.
+- [x] Gate C offline pilot actor in-flight lock: reject new Telegram intent during unresolved dispatch, deny concurrent confirmation and never retry an unknown MCP outcome. PR #4 merged; 161 files / 628 assertions / 0 failures on GitHub CI. Not cross-process or deployed.
 - [ ] Cross-process unknown-result lock needs durable journal/state admission review before any additional live action; this in-memory guard is not a deployment upgrade.
 
 ## P1 — Stage 2 and operations

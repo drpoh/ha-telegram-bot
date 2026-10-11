@@ -526,3 +526,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — New bounded read-only MCP inventory deadline
 - Latest dev-only `src/home/discovered-lights-overview.mjs` adds 5s default caller deadline and 9/9 focused regression, denied after late response; no actual request abort guarantee. Running Telegram V2/V3 remain untouched. Full regression PASS: 160 files, 622 assertions, zero failures. Production remains unchanged.
+
+## 2026-10-11 — Gate C GitHub PR for cooperative read-only cancellation
+- Proposed opt-in abort signaling for timeout of dev-only `/lights_on` HA-MCP inventory. Zero HA write paths. Test CI and PR merge status still to verify. Real socket-level cancellation is NOT proven. Raspberry Pi runtime copies remain unchanged.

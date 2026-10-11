@@ -1099,3 +1099,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Canonical dev source: `summarizeDiscoveredLights` now has a 5000 ms bounded wait, explicit 1..30000 ms parameter validation and rejection on expiry. Timer clears on settle. Late callback resolution cannot revise an already denied result.
 - Focused `test/discovered-lights-overview.test.mjs`: 9/9 PASS including unresponsive and late HA-MCP, and malformed time budgets. This is NOT transport/socket cancellation; readTool may remain active after timeout. No HA write or live service change.
 - Full npm regression: PASS, 160 test files, 622 assertions, 0 failed files; log: /tmp/rs-v3-lights-timeout-full-20261011.log. Production promotion remains separately gated.
+
+## 2026-10-11 — Gate C cooperative read-only cancellation (GitHub PR)
+- Added optional `{signal}` to the existing injected `readTool` request when listing lights; on timeout, AbortController aborts while caller still fails closed. This is a hint to adapters only, not proof that the live HA-MCP SDK cancels its network request.
+- Three isolated negative tests cover cooperating transport, ignored cancellation with a late result, and timer cleanup after success. GitHub Actions CI result must be inspected before merging; Raspberry Pi ARMv7 and deployment remain separate gates.

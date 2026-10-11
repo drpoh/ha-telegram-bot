@@ -11,7 +11,8 @@ Updated 2026-10-11. **Single current priority: deliver useful capabilities throu
 
 ## Latest production checkpoint
 - [x] Owner verified V3 systemd effective release `c6a9812`, active/running, and four working Telegram sauna/status queries. Full evidence in `V3-PRODUCTION-CHECKPOINT-2026-10-11.md`.
-- [ ] Post-switch request → `/cancel` → `/confirm` no-write regression and retained rollback check; then tag/stabilize checkpoint without touching running service.
+- [x] Post-switch request → `/cancel` → `/confirm` Telegram regression: owner confirmed pending, cancelled, then missing. No confirmed write; independent physical state not inspected.
+- [ ] Read-only Pi runtime/old-file inventory and rollback retention; cleanup classification before deleting source files, branches or release directories.
 - [ ] One-off branch cleanup (20 remote branches before checkpoint PR) and read-only Pi stale-file consumer audit. No mass deletion of 77 referenced decision modules.
 
 ## P0 — next useful V3 release (only)
@@ -43,3 +44,6 @@ Updated 2026-10-11. **Single current priority: deliver useful capabilities throu
 
 ## Navigation
 Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.md`, and `docs/home-agent-v3-strategy.md` before modifying live-adjacent V3 code. `docs/REPOSITORY-MAINTENANCE-2026-10-11.md` documents branch candidates. `docs/PROJECT-AUDIT-2026-10-11.md` and `docs/V3-DECISION-DEPENDENCY-AUDIT-2026-10-11.md` explain why code deletion is restricted.
+
+## Cleanup checkpoint 2026-10-11
+- Owner-confirmed live V3 `c6a9812` `/sauna` and protected cancellation after upgrade. See `V3-CLEANUP-CHECKPOINT-2026-10-11.md`. No production mutation during cleanup audit.

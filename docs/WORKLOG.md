@@ -1156,3 +1156,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-11 — Active sauna production checkpoint
 - Owner confirmed running V3 systemd release `c6a9812` and successful 4/4 Telegram status/sauna read queries. See `V3-PRODUCTION-CHECKPOINT-2026-10-11.md`. Cancel regression after release, rollback checks and one-off cleanup remain open. Production untouched by this documentation update.
+
+## 2026-10-11 — Live V3 post-switch cancellation / cleanup checkpoint
+- Owner tested pending tamboor light request → `/cancel` → `/confirm` in active `c6a9812`; responses pending, cancelled, missing. No confirmed device write. Real physical state not independently checked. `docs/V3-CLEANUP-CHECKPOINT-2026-10-11.md` classifies cleanup by runtime/rollback consumers and requires read-only Pi inventory before deletion. No service or HA changes.

@@ -460,3 +460,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — Reuse-first decision
 - Owner selected existing HA/Assist/ESPHome/HA-MCP/systemd and maintained libraries; create only shared decision/policy adapters. Decision formally recorded at `docs/ADR-REUSE-FIRST-2026-10-11.md`, linked from PROJECT-MAP, active TODO updated. Do not expand Stage mock into a substitute for Home Assistant; review duplicate policy modules before next code addition. No production modifications authorized.
+
+## 2026-10-11 — Reuse-first Stage simplification
+- Both `stage-consent-simulation.mjs` and `stage-batch-consent.mjs` now reuse the single `resolveStageLight()` policy on each independently supplied snapshot, rather than same-snapshot two-pass revalidation. Separate HTTP reads, device identity comparison and token consumption remain unchanged; 13 focused tests passed. Full regression before promotion required. Never modify pinned live V3 release for this mock refactor.
+- Shared selector simplification full `npm test` passed: 154 test files/590 assertions/zero failures. No policy grant widened and no service deployed. Next: inspect actual production policy for opportunities to reuse shared deterministic interfaces, without live wiring.

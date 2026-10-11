@@ -1,5 +1,5 @@
 import {createV3IntentLedger} from '../decision/v3-intent-ledger.mjs';
-import {revalidateStageTarget} from '../decision/v3-stage-target-revalidation.mjs';
+import {resolveStageLight} from '../decision/v3-stage-target-resolution.mjs';
 // Mock-only all-or-nothing batch. Never imports or invokes any HA client.
 export function createStageBatchConsent({clock=Date.now}={}){
  const ledger=createV3IntentLedger({clock});
@@ -9,8 +9,8 @@ export function createStageBatchConsent({clock=Date.now}={}){
   if(!Array.isArray(requests)||requests.length<2||requests.length>12)return {reason:'invalid_batch_size'};
   const ids=new Set(),results=[];
   for(const item of requests){
-   const r=revalidateStageTarget({initialSnapshot:snapshot,currentSnapshot:snapshot,name:item?.name,areaId:item?.areaId,now:clock()});
-   if(r.status!=='candidate_revalidated')return {reason:r.reason};
+   const r=resolveStageLight({snapshot,name:item?.name,areaId:item?.areaId,now:clock()});
+   if(r.status!=='candidate')return {reason:r.reason};
    if(ids.has(r.entityId))return {reason:'duplicate_target'};
    ids.add(r.entityId);results.push({entityId:r.entityId,deviceId:r.deviceId,areaId:r.areaId});
   }

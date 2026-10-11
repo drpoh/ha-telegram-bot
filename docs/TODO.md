@@ -11,7 +11,8 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 
 ## Engineering principle
 - [x] Reuse-first architecture accepted and documented in [ADR-REUSE-FIRST-2026-10-11.md](ADR-REUSE-FIRST-2026-10-11.md): Home Assistant/Assist/ESPHome/HA-MCP/systemd/Node.js own infrastructure; write only missing deterministic policy and adapters.
-- [ ] Audit duplicated Stage/production selection and confirmation policy modules before creating another adapter; retain safety invariants.
+- [x] Simplify Stage single/batch consent to reuse the same pure selector for each independently fetched snapshot (13 focused tests); no new decision framework.
+- [ ] Audit duplicated production-policy selection/confirmation paths before modifying the live agent; preserve existing source and scope controls.
 
 ## P0 — trust and safety before broader live control
 - [ ] Prove authoritative complete/fresh HA registry identity and secure HA-MCP transport/source restrictions; current LAN 9584 trust boundary requires independent review. Do not infer live authority from Stage mock results.

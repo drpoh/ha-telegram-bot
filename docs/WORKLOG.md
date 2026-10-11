@@ -1020,3 +1020,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-11 — Reuse-first architecture alignment
 - Confirmed Node 20 project already relies on built-in HTTP/node:test, Telegraf, HA-MCP SDK and systemd for infrastructure. Adopted `docs/ADR-REUSE-FIRST-2026-10-11.md`: use platform capabilities instead of rebuilding infrastructure; reserve custom code for source trust, deterministic selection, scoped authorization, replay protection and safe verification.
 - Corrected a stale TODO that still listed mock batch HTTP registry integration as incomplete after existing `stage-batch-http-simulation` tests were added. No runtime behavior or service settings changed.
+
+## 2026-10-11 — Shared Stage selector simplification
+- Reused existing pure `resolveStageLight()` directly for both single-light and batch mock consent issue/confirm snapshots, rather than artificially passing the same snapshot twice into `revalidateStageTarget()`. At both phases the actual separate registry snapshot is still checked, actor and single-use gates are unchanged, no additional authority is granted. Focused batch/single/HTTP tests: 13/13 pass. This avoids duplicative policy evaluation while preserving fail-closed behavior.
+- Full regression after simplification PASS: 154 isolated test files, 590 assertions, 0 failed, exit 0. Evidence `/tmp/rs-shared-selector-full-20261011.log`. Stage/production boundaries unchanged.

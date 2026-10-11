@@ -4,11 +4,13 @@ import {createV3IntentLedger} from '../decision/v3-intent-ledger.mjs';
 export function createKitchenDryrunConsent({clock=Date.now,dispatch,executionJournal}={}){
  const ledger=createV3IntentLedger({clock});
  const intents=new Map();
+ const inFlight=new Set();
  const key=(actor)=>JSON.stringify([actor.userId,actor.chatId]);
  const valid=(actor)=>Number.isSafeInteger(actor?.userId)&&actor.userId>0&&actor.userId===actor.chatId;
  return Object.freeze({
   request(actor,text){
    if(!valid(actor))return {status:'denied'};
+   if(inFlight.has(key(actor)))return {status:'denied',reason:'action_in_flight'};
    const normalized=typeof text==='string'?text.toLowerCase().trim().replace(/ё/g,'е'):'';
    if(!['включи свет в тамбуре','выключи свет в тамбуре'].includes(normalized))return {status:'unsupported'};
    const service=normalized.startsWith('включи')?'turn_on':'turn_off';
@@ -21,6 +23,7 @@ export function createKitchenDryrunConsent({clock=Date.now,dispatch,executionJou
    const token=intents.get(key(actor));intents.delete(key(actor));
    const record=ledger.consume({...actor,token});
    if(!record)return {status:'missing'};
+   if(inFlight.has(key(actor)))return {status:'denied',reason:'action_in_flight'};
    if(typeof dispatch!=='function')return {status:'simulated',service:record.action.args.service,actualWrite:false};
    // Optional external journal for future reviewed MVP rollout; never retry
    // after unknown outcome. Do not enable live execution merely by setting it.
@@ -32,13 +35,16 @@ export function createKitchenDryrunConsent({clock=Date.now,dispatch,executionJou
      return {status:'denied',reason:'replay_claim_unavailable'};
     }
    }
+   inFlight.add(key(actor));
    try{
     const result=await dispatch({action:record.action,actor});
     executionJournal?.mark?.(token,result?.status==='verified'?'verified':'unverified');
     return result;
    }catch{
-    executionJournal?.mark?.(token,'unverified');
+    try{executionJournal?.mark?.(token,'unverified');}catch{}
     return {status:'failed',reason:'dispatch_exception'};
+   }finally{
+    inFlight.delete(key(actor));
    }
   },
   cancel(actor){if(!valid(actor))return false;intents.delete(key(actor));return ledger.cancel(actor);}

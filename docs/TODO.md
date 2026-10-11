@@ -35,6 +35,9 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [x] Gate C dev-only read-only light inventory now sends a cooperative AbortSignal on deadline (tests for abort, ignored abort, timer cleanup); real HA-MCP transport cancellation remains UNVERIFIED and no production deployment is authorized.
 - [ ] Evaluate HA-MCP transport AbortSignal/actual socket cancellation separately; a late read callback may still run after the caller deadline. No automatic write retry.
 
+- [x] Gate C offline pilot actor in-flight lock: reject new Telegram intent during unresolved dispatch, deny concurrent confirmation and never retry an unknown MCP outcome. Isolated tests added; GitHub CI acceptance pending.
+- [ ] Cross-process unknown-result lock needs durable journal/state admission review before any additional live action; this in-memory guard is not a deployment upgrade.
+
 ## P1 — Stage 2 and operations
 - [x] Revoke exact actor/token batch consent on Stage HTTP confirm registry-read failure; deny replay after mock recovers (offline only).
 - [x] Draft conservative Node.js + systemd stage deployment design, `deploy/stage/README.md`; no service installed and no new credentials.

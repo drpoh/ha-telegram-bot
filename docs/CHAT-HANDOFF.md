@@ -529,3 +529,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — Gate C GitHub PR for cooperative read-only cancellation
 - Proposed opt-in abort signaling for timeout of dev-only `/lights_on` HA-MCP inventory. Zero HA write paths. Test CI and PR merge status still to verify. Real socket-level cancellation is NOT proven. Raspberry Pi runtime copies remain unchanged.
+
+## 2026-10-11 — Gate C pending-dispatch guard proposal
+- Proposed source-only in-flight actor guard and tests for unknown MCP outcome, competing /confirm and journal mark errors; GitHub PR CI pending. No production deployment. Existing durable journal remains separate; do not infer cross-process protection from an in-memory lock.

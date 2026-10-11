@@ -1,93 +1,35 @@
-# RS Home AI — current actionable tasks
+# RS Home AI V3 — active next steps
 
-Reviewed 2026-10-11. **This is the current queue**, not the historical running log. Earlier 389-line register is preserved in [the historical TODO archive](archive/TODO-history-through-2026-10-11.md) with Git history intact. Read [PROJECT-MAP](PROJECT-MAP.md) and [CHAT-HANDOFF](CHAT-HANDOFF.md) for service ownership and runtime state. Completion evidence belongs in [WORKLOG](WORKLOG.md).
+Updated 2026-10-11. **Single current priority: deliver useful capabilities through the existing @RSHomeAI_v3_bot.** Completed work and historical plans are preserved in Git history, `docs/archive/TODO-history-through-2026-10-11.md`, `docs/WORKLOG.md` and `docs/CHAT-HANDOFF.md`. Do not use older dated sections as authorization.
 
 ## Verified baseline
-- [x] GitHub-first offline CI introduced by PR #2 (`a4a07ae`), GitHub CI passed 160 files / 622 assertions / 0 failures. PR #3 (`142dfec`) passed 160/625/0; PR #4 (`a1ee64c`) passed 161/628/0; all merged 2026-10-11. **Not Raspberry Pi release acceptance.**
-- [ ] Canonical Pi DEV last explicitly observed clean at `2a71552`; GitHub has advanced beyond the last observed Pi DEV head; exact current divergence needs a new Pi read-only check. Check local status and fast-forward only the DEV checkout after reviewing local changes; do not change pinned runtimes.
+- Live V3: `rs-home-ai-v3.service`, **active/running** on 2026-10-11, effective `ExecStart`: `/usr/bin/node /home/drpoh/projects/rs-home-ai-v3-release-97343fa/src/pilot/telegram-readonly.mjs`; working directory: immutable release `/home/drpoh/projects/rs-home-ai-v3-release-97343fa`. Keep pinned until explicitly approved promotion.
+- Owner's Telegram V3 acceptance: `/start`, `/status`, empty `/confirm`, empty `/cancel`, and pending light request → `/cancel` → `/confirm` behaved correctly. No independent light readback in cancellation scenario.
+- Canonical Pi DEV at GitHub `5621292`, owner ran `npm test` on Raspberry Pi: **165 test files / 640 assertions / zero failures**. Newer GitHub source commit `aa5af27` contains sauna feature; Pi compatibility for this newer commit is **not yet verified**.
+- V2 uses separate live checkout; read-only `/lights_on` in *development source* belongs to V2; do not confuse it with deployed V3.
+- GitHub offline CI for sauna PR #13: **166 test files / 643 assertions / zero failures**; merged as `aa5af27`. No V3 production deployment.
 
-- [x] Live V3 one-light Telegram MVP on `light.tambur_svet_l1`: both `turn_off` and `turn_on` were confirmed via independent HA-MCP reads on 2026-10-11. Active pinned release: `97343fa`, not the canonical dev branch.
-- [x] Existing Telegram V2 and V3 services remained active during the latest cleanup. No broader Home Assistant permission was granted.
-- [x] Canonical development checkout: `/home/drpoh/projects/rs-home-ai-dev`, branch `feature/v3-home-agent`; immutable V3 release and V2 runtime must not be auto-updated.
-- [x] Dev Stage 2 mock isolation, exact light selection, stale/replaced target revalidation, one-use consent and transport-failure checks; full Pi regression after cleanup: 150 test files, 574 assertions, 0 failures (2026-10-11).
-- [x] Six historical standalone model experiments moved to `scripts/legacy/` with Git rename; root live-capable `smoke-auto-safe.mjs` and old `bot.mjs` retained.
+## P0 — next useful V3 release (only)
+- [ ] Synchronize clean canonical Pi DEV to `feature/v3-home-agent` head `aa5af27` (or verified newer SHA) using **fast-forward only** and rerun `npm test` on Pi ARMv7. Never pull into live V2/V3 paths.
+- [ ] Verify actual read-only `ha_get_state` response envelopes for `sensor.sauna_te_sauna_temperature` and `binary_sensor.sauna_sauna_te_sauna_ready` from trusted existing HA-MCP path, including unknown/unavailable. No HA write.
+- [ ] Review V3 sauna command and MCP allowlist for real endpoint identity, network source controls and existing admission boundary. GitHub CI alone is not authorization to deploy.
+- [ ] Prepare new **immutable** V3 release candidate, verify systemd executable path and rollback procedure, preserve external SQLite claims/credentials, request owner approval before restart or production change.
+- [ ] After approved promotion, Telegram acceptance: `/sauna`, `Какая температура в сауне?`, `Сауна готова?`; validate truthful values and fallback while retaining existing tamboor `/confirm` protection.
 
-## Engineering principle
-- [x] Reuse-first architecture accepted and documented in [ADR-REUSE-FIRST-2026-10-11.md](ADR-REUSE-FIRST-2026-10-11.md): Home Assistant/Assist/ESPHome/HA-MCP/systemd/Node.js own infrastructure; write only missing deterministic policy and adapters.
-- [x] Simplify Stage single/batch consent to reuse the same pure selector for each independently fetched snapshot (13 focused tests); no new decision framework.
-- [x] Audit live V3 vs Stage selection/consent imports and source-of-trust contracts; document differences in `V3-SHARED-DECISION-AUDIT-2026-10-11.md`, with offline boundary tests.
-- [x] Compare trusted actor/action-envelope invariants in live pilot and isolated joined chain; preserve distinct trusted ingress and durable claim boundaries (`docs/V3-SHARED-DECISION-AUDIT-2026-10-11.md`).
-- [x] Add focused cross-path contract tests for trusted actor, action scope and replay before any live refactor (test/v3-cross-path-trust-contract.test.mjs); no production changes.
-- [x] Review joined-chain policy-denied token retention vs live pilot consume-on-dispatch semantics; focused offline contract test PASS on Pi. Preserve distinct behavior; no physical retry permission. See `V3-PRACTICAL-MVP-PRIORITIES-2026-10-11.md`.
+## P1 — subsequent user value
+- [ ] Add bounded read-only lighting overview to **V3** (not the V2 `/lights_on` implementation), reusing existing pure summary and only explicitly reviewed read scope.
+- [ ] Add trusted, limited conversation context and room status; then reuse HA Assist/ESPHome for voice. Never create independent voice authority or a second Telegram poller.
 
-## P0 — trust and safety before broader live control
-- [x] Review whether new HA-MCP/registry infrastructure is necessary: reuse existing HA-native path and source/endpoint guards; documented in `V3-MCP-TRUST-NECESSITY-REVIEW-2026-10-11.md`.
-- [ ] **Promotion gate, not dev blocker:** independently prove authoritative complete/fresh HA registry and secure HA-MCP source restriction, including unrelated-LAN-client denial. HA/network changes need separate approval; LAN 9584 remains unverified.
-- [x] Complete offline Stage batch fixture scope/identity hardening: existing deny-default policy schema, exact per-light two-service mock scope, fresh identity/name check, group-wide failure, token replay/transport tests. This is **non-authorizing**, not approved real multi-device control.
-- [ ] Real owner-reviewed multi-device permissions and authenticated complete HA registry remain separately gated; no live scope expansion.
-- [ ] Preserve Home Assistant Green and native automations when AI, Pi, Zigbee2MQTT or HA-MCP fails. Any real failure testing needs a reviewed maintenance window, backup and operator authorization.
+## Safety gates — still open
+- [ ] Gate B: complete authoritative HA registry and actual secure HA-MCP source restriction including unrelated LAN denial, actor identity and exact write-policy authorization before wider physical control.
+- [ ] Gate C: live fault/restart acceptance, durable identity/action binding, independent Pi validation and owner-review. Offline replay tests are **not** live acceptance.
+- [ ] Gate D: operational disaster recovery/real notification acceptance; Gate E: Assist voice adapter and trusted policy reuse. Stage remains an offline loopback mock.
+- [ ] Maintain HA Green independence and no automatic change to V2 or V3 production.
 
-- [x] Review HA-native multi-light registry inspection in dev with injected read-only official-connection contract and two-pass negative fixture tests; documented in `V3-MULTIDEVICE-REGISTRY-READINESS-2026-10-11.md`. One-shot late/disconnected lifecycle checks also pass; real endpoint attestation remains open.
+## Safe hygiene remaining (non-blocking)
+- [ ] GitHub contains historical squash-merged PR branches. Confirm PR head SHA, branch protection and external consumers before deleting; preserve `main`, `refactor/v2`, `feature/v3-home-agent`. Connector does not expose branch deletion.
+- [ ] Review actual systemd, cron, shell/manual consumers before moving or deleting root `bot.mjs`, `smoke-auto-safe.mjs`, prior release directories or historical V3 checkout. Retain rollback artifacts.
+- [ ] Do **not** mass move/delete `src/decision`: audited 77 modules have incoming references. `scripts/legacy/` already contains grouped model experiments.
 
-- [x] Dev-only bounded "which lights are on" summary with explicit entity scope and failure-safe reads (`src/home/on-lights-summary.mjs`); not deployed to V2/V3.
-- [x] Wire `/lights_on` in dev Telegram V2 source to existing `ha_get_state` for the bounded configured light subset; strictly label partial house coverage; not deployed.
-- [x] Verify read-only `ha_get_state` structured format and complete `ha_search` result against current HA-MCP (41 lights, 21 unknown/unavailable). Dev `/lights_on` uses one complete `ha_search` snapshot and explicitly reports unknown states.
-- [ ] Review live V2 release/rollback and authorized Telegram test before installing `/lights_on`; do not edit running checkout or restart bot automatically.
-
-- [x] Dev read-only `/lights_on` inventory has a bounded 5s HA-MCP search wait; late results and invalid time budgets fail closed (9 focused tests). This is a caller deadline, **not** proof of transport cancellation.
-- [x] Gate C dev-only read-only light inventory now sends a cooperative AbortSignal on deadline (tests for abort, ignored abort, timer cleanup); real HA-MCP transport cancellation remains UNVERIFIED and no production deployment is authorized.
-- [ ] Evaluate HA-MCP transport AbortSignal/actual socket cancellation separately; a late read callback may still run after the caller deadline. No automatic write retry.
-
-- [x] Gate C offline pilot actor in-flight lock: reject new Telegram intent during unresolved dispatch, deny concurrent confirmation and never retry an unknown MCP outcome. PR #4 merged; 161 files / 628 assertions / 0 failures on GitHub CI. Not cross-process or deployed.
-- [ ] Cross-process unknown-result lock needs durable journal/state admission review before any additional live action; this in-memory guard is not a deployment upgrade.
-
-- [x] Offline SQLite Gate C journal acceptance tests cover crash before mark, 5 independent racing processes, and terminal outcome replay (PR #6 merged, CI 162 files / 631 assertions / 0 failed). This verifies duplicate-action-id rejection, not full actor/command authorization or live failover.
-
-- [x] Gate C joined offline pilot regression combines private-actor check, exact tambour consent, one-use confirm, deny-on-journal-fault and unknown MCP result without retry. This is offline proof only, not Stage/prod signoff.
-- [ ] Full Gate C closure requires live endpoint admission/security evidence, durable identity/action binding across restarts, independent ARMv7 validation and owner-approved fault acceptance. Do not imply completion of this operational gate from offline CI.
-
-- [x] Harden Gate C pilot journal result: an absent, throwing or false SQLite outcome mark cannot be reported as verified after dispatch (offline tests; CI acceptance pending). No retry and no production promotion.
-
-- [x] Draft `/lights_on` operator-only Pi DEV fast-forward, ARMv7 regression and release/rollback gate. Current `callHA` ignores `AbortSignal` and can update memory after caller timeout. See `LIGHTS-ON-RELEASE-GATE-2026-10-11.md`.
-- [ ] Before release: resolve SDK cancellation/late read side effects and inspect effective V2 runtime path, independent HA-MCP source trust and rollback. No GitHub CI auto-promotion.
-
-## P1 — Stage 2 and operations
-- [x] Revoke exact actor/token batch consent on Stage HTTP confirm registry-read failure; deny replay after mock recovers (offline only).
-- [x] Draft conservative Node.js + systemd stage deployment design, `deploy/stage/README.md`; no service installed and no new credentials.
-- [x] Implement source-only mock Stage entry with loopback bind, no live HA/Telegram imports and SIGTERM exit; two subprocess tests pass.
-- [x] Stage 3 source-only subprocess safety tests: clean loopback shutdown and rejected HA/AI credentials and port settings (4/4).
-- [x] Stage 3 source-only readiness milestone: 153 isolated test files / 588 assertions / 0 failures.
-- [x] Create inert systemd Stage template and validate policy directives (2 unit tests and rendered syntax check; not installed).
-- [ ] Provision/install isolated Stage service only after independent owner-approved sandbox, effective IP isolation and identity review; no service deployed.
-- [x] Dev-only batch confirmation for 2–12 exact light targets, revalidation, one-use claim and all-or-nothing denial (13 focused tests including existing gates).
-- [x] Batch simulation uses independent Stage HTTP registry reads at issue/confirmation, rejects dropped connection and real HA LAN address (test/stage-batch-http-simulation.test.mjs).
-- [ ] Address historical Zigbee2MQTT Ember coordinator ASH disconnect issue independently from V3; verify coordinator/serial connectivity before any network reconfiguration or firmware change.
-- [ ] Validate isolated restore/rollback and backup procedures, preserving external V3 SQLite claims and HA Green independence. Do not handle production secrets or schedule backups without approval.
-- [ ] Evaluate authenticated HA webhook/loopback migration and other MCP consumers before modifying the currently configured server listener.
-
-- [x] Stage next milestone started: offline HTTP negative-route tests prove synthetic stage mock rejects writes and non-loopback bind. No persistent Stage service installed, effective host network firewall unverified.
-
-## P2 — repository and architecture hygiene
-- [x] Group source and document responsibilities in `docs/STRUCTURE-INDEX.md` without mass-moving imports or changing live file ownership.
-- [x] Inventory static imports and test/entrypoint reachability of `src/decision/` (`V3-DECISION-DEPENDENCY-AUDIT-2026-10-11.md`): all 77 referenced, no safe deletion candidates.
-- [ ] Defer physical `src/decision/` moves pending concrete benefit, dynamic/external-consumer review and complete regression; consolidate only proven-equivalent policy logic.
-- [ ] Confirm GitHub branch protection/PR policy, then decide whether to delete `review/gate-e-target-snapshot-hardening-20261009`; comparison shows no unique commits relative to active V3 and GitHub search returned no PRs. Do not delete automatically.
-- [ ] Audit manual/cron/external invocation before moving root `bot.mjs` and `smoke-auto-safe.mjs`. Keep historical kitchen policy fixture files referenced by tests.
-- [ ] Replace historical `deploy/rs-home-ai-v3.service` with an operator-reviewed, immutable-artifact template; current one is explicitly **NOT INSTALLABLE AS-IS**.
-- [ ] Review release artifact retention/rollback before deleting any former V3 releases or checkout.
-- [ ] Build Gate E Assist/voice adapter on the shared policy and confirmation engine; do not establish separate voice authority.
-
-- [x] Audit GitHub branch topology and squash-merge ancestry; see `REPOSITORY-MAINTENANCE-2026-10-11.md`. Seven merged PR branches are deletion candidates; no supported GitHub branch-delete action available in this session.
-- [ ] Verify merged PR head SHAs and branch protections, delete seven obsolete remote PR heads, then re-list; preserve `main`, `refactor/v2`, `feature/v3-home-agent` and the historical Gate E branch pending external-reference review.
-
-- [x] Live Telegram V3 `/start`, `/status`, missing `/confirm`, `/cancel`, and pending → `/cancel` → `/confirm` checked by owner on pinned release `97343fa`; no cancelled command executed. Read-only sauna candidate developed separately; not deployed.
-- [ ] V3 read-only sauna feature PR: run CI and ARMv7 tests, verify HA-MCP sensor structured response, review immutable V3 release and rollback, explicit operator approval before deployment.
-
-## Focus after maintenance: actual user value
-- [x] Repository hygiene audit recorded; no risky mass moves, duplicate deletion or active service changes. Seven squash-merged PR branches remain remote pending exact-head UI cleanup; historical Gate E branch retained. Do not call physical cleanup complete.
-- [x] Read-only dev `/lights_on` output now caps listed ON lights at 20 while retaining complete counts and unknown-state reporting; offline CI acceptance pending.
-- [ ] Highest user-facing priority: owner-reviewed, reversible read-only `/lights_on` pilot release on an existing bot (no new poller) after current Pi DEV status, ARMv7 validation, release/rollback check and consent. No deployment from GitHub CI.
-- [ ] Next: bounded read-only room/device status and Assist adapter using existing shared policy, not another decision framework. Gate B remains open for broader actuation.
-
-## Working protocol
-At each new chat, read `AGENTS.md`, `PROJECT-MAP.md`, `CHAT-HANDOFF.md`, this TODO and the latest WORKLOG. Verify canonical dev Git status and actual service `ExecStart`. Use focused tests while implementing, full isolated regression at release-worthy milestones, then append evidence to WORKLOG/HANDOFF and commit/push. Production changes require separate explicit approval; tests do not automatically promote builds.
+## Navigation
+Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.md`, and `docs/home-agent-v3-strategy.md` before modifying live-adjacent V3 code. `docs/REPOSITORY-MAINTENANCE-2026-10-11.md` documents branch candidates. `docs/PROJECT-AUDIT-2026-10-11.md` and `docs/V3-DECISION-DEPENDENCY-AUDIT-2026-10-11.md` explain why code deletion is restricted.

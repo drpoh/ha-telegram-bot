@@ -517,3 +517,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — Whole-home light status, real read-only evidence
 - Existing HA-MCP live read-only `ha_search` returned full 41-light subset (6 on, 14 off, 21 unavailable/unknown) at inspection; no device writes. Dev `/lights_on` now summarizes explicit unknowns, rejects incomplete/ambiguous inventory; three focused tests PASS. Running V2/V3 unchanged; full regression and deployment review still required.
+
+## 2026-10-11 — Read-only lights discovery safety extension
+- Full latest dev regression PASS 160 files / 618 assertions / zero failed. Enhanced `test/discovered-lights-overview.test.mjs` denial assertions for incomplete inventory, empty data and identity ambiguity; updated acceptance documentation superseding earlier 3-light adapter design. Real bot V2/V3 remain separate and not deployed from this change. Next meaningful gate is owner-reviewed `/lights_on` deployment and read-only user acceptance, or independent trusted HA registry boundary work.

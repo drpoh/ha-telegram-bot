@@ -1088,3 +1088,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Real read-only HA-MCP `ha_get_state` on the 3 configured lights: response has `structuredContent` with matching entity IDs; only one had on/off, two lacked a known state. No state values or credentials stored.
 - Real read-only `ha_search` on existing V2 MCP endpoint returned complete 41 light entities (6 on, 14 off, 19 unavailable, 2 unknown) at inspection time. Used existing search rather than inventing registry infrastructure.
 - Dev Telegram `/lights_on` now uses strict one-shot `ha_search` inventory with fail-closed pagination/duplicates and reports unknowns separately from off. No production V2 restart or deployment. Added three focused tests PASS; full regression pending.
+
+## 2026-10-11 — Read-only light discovery negative contract extension
+- Verified clean canonical dev baseline `6eded60` had previous stage/production audit already committed. Added 2 negative tests for incomplete HA-MCP light search identity/pagination proof and empty/duplicate/foreign-domain registry entries, plus updated stale `/lights_on` acceptance documentation to reflect current complete `ha_search` read-only adapter. Focused 5/5 pass; full `npm test` 160 files, 618 assertions, zero failed, exit 0 (`/tmp/rs-discovery-guard-full-20261011.log`). No runtime service touched.

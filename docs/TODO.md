@@ -48,6 +48,9 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 
 - [x] Harden Gate C pilot journal result: an absent, throwing or false SQLite outcome mark cannot be reported as verified after dispatch (offline tests; CI acceptance pending). No retry and no production promotion.
 
+- [x] Draft `/lights_on` operator-only Pi DEV fast-forward, ARMv7 regression and release/rollback gate. Current `callHA` ignores `AbortSignal` and can update memory after caller timeout. See `LIGHTS-ON-RELEASE-GATE-2026-10-11.md`.
+- [ ] Before release: resolve SDK cancellation/late read side effects and inspect effective V2 runtime path, independent HA-MCP source trust and rollback. No GitHub CI auto-promotion.
+
 ## P1 — Stage 2 and operations
 - [x] Revoke exact actor/token batch consent on Stage HTTP confirm registry-read failure; deny replay after mock recovers (offline only).
 - [x] Draft conservative Node.js + systemd stage deployment design, `deploy/stage/README.md`; no service installed and no new credentials.

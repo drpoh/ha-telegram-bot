@@ -46,6 +46,8 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [x] Gate C joined offline pilot regression combines private-actor check, exact tambour consent, one-use confirm, deny-on-journal-fault and unknown MCP result without retry. This is offline proof only, not Stage/prod signoff.
 - [ ] Full Gate C closure requires live endpoint admission/security evidence, durable identity/action binding across restarts, independent ARMv7 validation and owner-approved fault acceptance. Do not imply completion of this operational gate from offline CI.
 
+- [x] Harden Gate C pilot journal result: an absent, throwing or false SQLite outcome mark cannot be reported as verified after dispatch (offline tests; CI acceptance pending). No retry and no production promotion.
+
 ## P1 — Stage 2 and operations
 - [x] Revoke exact actor/token batch consent on Stage HTTP confirm registry-read failure; deny replay after mock recovers (offline only).
 - [x] Draft conservative Node.js + systemd stage deployment design, `deploy/stage/README.md`; no service installed and no new credentials.

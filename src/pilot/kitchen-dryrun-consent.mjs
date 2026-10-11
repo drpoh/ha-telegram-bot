@@ -37,12 +37,21 @@ export function createKitchenDryrunConsent({clock=Date.now,dispatch,executionJou
    }
    inFlight.add(key(actor));
    try{
-    const result=await dispatch({action:record.action,actor});
-    executionJournal?.mark?.(token,result?.status==='verified'?'verified':'unverified');
+    let result;
+    try{
+     result=await dispatch({action:record.action,actor});
+    }catch{
+     try{executionJournal?.mark?.(token,'unverified');}catch{}
+     return {status:'failed',reason:'dispatch_exception'};
+    }
+    if(executionJournal!==undefined){
+     try{
+      if(typeof executionJournal.mark!=='function'||
+         executionJournal.mark(token,result?.status==='verified'?'verified':'unverified')!==true)
+       return {status:'failed',reason:'journal_mark_unavailable'};
+     }catch{return {status:'failed',reason:'journal_mark_unavailable'};}
+    }
     return result;
-   }catch{
-    try{executionJournal?.mark?.(token,'unverified');}catch{}
-    return {status:'failed',reason:'dispatch_exception'};
    }finally{
     inFlight.delete(key(actor));
    }

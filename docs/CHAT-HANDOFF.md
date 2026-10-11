@@ -553,3 +553,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-11 — Repository Maintenance branch audit
 - GitHub read-only inventory: 11 branches prior to maintenance PR. Seven are historical heads of squash-merged PRs #2–#8. Do not confuse their diverged Git ancestry with unique unmerged content. `docs/REPOSITORY-MAINTENANCE-2026-10-11.md` records explicit keep/delete candidates and prerequisites.
 - Gate E historical review branch is ancestor of current feature V3 in GitHub comparison (0 behind), but is preserved pending external use review. No remote branches, local Pi files or active services deleted.
+
+## 2026-10-11 — Gate C mark-status correctness hardening
+- Found and fixed dev-source journal completion false-return being incorrectly treated as successful verification. Negative tests cover missing, thrown and false mark operation. GitHub CI pending; real release not changed. Resume branch status via GitHub PR and CI.

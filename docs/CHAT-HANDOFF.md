@@ -475,3 +475,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-11 — Cross-path contract checks, source-only
 - Added executable trust/scope/replay comparison `test/v3-cross-path-trust-contract.test.mjs`; 6 focused checks PASS including import boundaries. Joined policy denial retains an intent whereas pilot dispatch failures consume one; preserve separate contracts and review explicitly before consolidation. No V2, V3 or HA operations altered.
 - Full regression: `/tmp/rs-cross-path-contract-full-20261011.log` (PASS, see WORKLOG). Next P0: authoritative HA registry provenance and LAN MCP transport trust, read-only evidence first.
+
+## 2026-10-11 — MCP trust work rationalized
+- Reviewed need for separate infrastructure: NOT needed. Existing offline registry provenance/endpoint/capability guards are present and deliberately non-authorizing. Historical `ha_mcp_tools` exposure on 0.0.0.0:9584 still lacks independently verified source access control and negative LAN-client test; this requires separately authorized HA/network changes prior to wider production promotion. See `docs/V3-MCP-TRUST-NECESSITY-REVIEW-2026-10-11.md`.
+- No active service, HA or secret changes. Continue offline scope/actor failure testing; do not treat the environment as ready for production expansion.

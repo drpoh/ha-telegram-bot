@@ -1037,3 +1037,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Added offline `test/v3-cross-path-trust-contract.test.mjs` for source/actor provenance, strict pilot allowlist, disabled release, confirmation TTL, replay and denied joined-chain policy. Stage/prod code and permissions untouched.
 - Focused 6 checks PASS including stage import boundaries. The joined mock retains policy-denied tokens until cancel/expiry; pilot consumes after dispatch attempt. Tracked difference in shared decision audit and TODO, rather than changing security-sensitive semantics without review.
 - Full regression evidence: `/tmp/rs-cross-path-contract-full-20261011.log` (PASS, see log).
+
+## 2026-10-11 — HA-MCP trust necessity audit (read-only)
+- Checked canonical dev branch and actual user-service `ExecStart`: immutable V3 97343fa active, V2 system service active. Reviewed existing registry-source, endpoint and capability fail-closed guards. Historical HA integration evidence identifies `ha_mcp_tools` bound on 0.0.0.0:9584, but server-side network isolation and independent denied-client proof are not established.
+- Decision documented in `V3-MCP-TRUST-NECESSITY-REVIEW-2026-10-11.md`: reuse native HA registry and supported authentication rather than create new infrastructure. Complete source-only review; real network restriction and HA registry attestation remain prerequisites for wider production scope, NOT prerequisites for further isolated dev tests.

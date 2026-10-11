@@ -18,7 +18,8 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [ ] Review joined-chain policy-denied token retention vs live pilot consume-on-dispatch semantics; preserve distinct behavior until an explicit reviewed replay contract is selected.
 
 ## P0 — trust and safety before broader live control
-- [ ] Prove authoritative complete/fresh HA registry identity and secure HA-MCP transport/source restrictions; current LAN 9584 trust boundary requires independent review. Do not infer live authority from Stage mock results.
+- [x] Review whether new HA-MCP/registry infrastructure is necessary: reuse existing HA-native path and source/endpoint guards; documented in `V3-MCP-TRUST-NECESSITY-REVIEW-2026-10-11.md`.
+- [ ] **Promotion gate, not dev blocker:** independently prove authoritative complete/fresh HA registry and secure HA-MCP source restriction, including unrelated-LAN-client denial. HA/network changes need separate approval; LAN 9584 remains unverified.
 - [ ] Extend strict actor, command provenance, device identity, policy and confirmation gates from single light to an owner-reviewed set in **dev/stage only**. Block ambiguity, room/domain mismatch, missing/renamed/unavailable entities, replay and partial failures.
 - [ ] Preserve Home Assistant Green and native automations when AI, Pi, Zigbee2MQTT or HA-MCP fails. Any real failure testing needs a reviewed maintenance window, backup and operator authorization.
 

@@ -411,3 +411,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — FIRST V3 LIVE PASS
 - User's private Telegram confirmed V3 /confirm for turn_off of `light.tambur_svet_l1`. Bot confirmed; independently read HA-MCP on release 97343fa gives state `off` and last_updated 2026-10-11T12:46:38+03. V3 active, zero restarts; V2 active. Need one turn_on with fresh intent and /confirm for bidirectional MVP acceptance. Preserve all rollback and SQLite claims.
+
+## 2026-10-11 — MILESTONE: V3 one-light bidirectional MVP completed
+- Both real Telegram /confirm paths succeeded on `light.tambur_svet_l1`. Independent real MCP readback off at 12:46:38 and on at 12:48:25 (2026-10-11, EEST). V3 release 97343fa active with zero restarts; existing V2 active. Keep capability restricted to exactly one target and turn_on/off confirmation; never infer whole-home readiness. Next: controlled dev/stage/prod expansion and additional fail-closed cases.

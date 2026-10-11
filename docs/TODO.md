@@ -345,3 +345,9 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-11 — Live pilot acceptance
 - [x] Real owner Telegram V3 `/confirm` turn_off `light.tambur_svet_l1`: verified `off` independently via HA-MCP; both services active.
 - [ ] Complete fresh turn_on via Telegram and independently verify on; then close bidirectional pilot acceptance.
+
+## 2026-10-11 — One-light pilot completion
+- [x] Real private Telegram turn_off plus /confirm -> independent HA-MCP `off`.
+- [x] Real private Telegram turn_on plus /confirm -> independent HA-MCP `on` at 12:48:25 EEST.
+- [x] Verify V3 user service active with zero restarts; existing V2 bot active.
+- [ ] Plan next stage's dev/stage/prod separation, safe scoped target expansion, independent failure regression and Zigbee coordinator stability audit; do not enable broader live permissions without fresh owner approval.

@@ -958,3 +958,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-11 — First real V3 Telegram Zigbee actuation ACCEPTED
 - Owner ran fresh V3 private Telegram `Выключи свет в тамбуре` + `/confirm`; bot returned `Home Assistant подтвердил состояние светильника после команды.`
 - Independently read exact target through the deployed release 97343fa HA-MCP client: `light.tambur_svet_l1` state=`off`, last_updated=`2026-10-11T12:46:38.448755+03:00`, isError=false. V3 user service ActiveState=active NRestarts=0; V2 Telegram bot remains active. This closes first live off-path verification, including HA state readback. Next: owner fresh `Включи свет в тамбуре` + `/confirm` to complete opposite direction, with independent readback; do not claim full bidirectional acceptance until that succeeds.
+
+## 2026-10-11 — V3 ONE-LIGHT MVP BIDIRECTIONAL LIVE ACCEPTANCE PASSED
+- Owner sent fresh «Включи свет в тамбуре» and /confirm to private V3 Telegram bot, received `Home Assistant подтвердил состояние светильника после команды.`
+- Independently checked deployed release 97343fa real MCP `ha_get_state(light.tambur_svet_l1)`: exact entity, state=`on`, last_updated=`2026-10-11T12:48:25.228409+03:00`, isError=false. Prior actual turn_off was independently confirmed as off at 12:46:38. Both physical state directions verified.
+- V3 service ActiveState=active NRestarts=0; existing V2 Telegram service active. This closes the explicitly scoped one-light V3 pilot acceptance, not general multi-device coverage or Zigbee coordinator reliability. Retain strict allowlist, 60-second one-time Telegram confirmation, claim journal, and rollback. Next stage: design gradual dev/stage/prod expansion with regression gates, not automatic broader grants.

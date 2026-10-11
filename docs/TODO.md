@@ -374,3 +374,10 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Stage-only user consent and target revalidation simulator, concurrency and failure tests 9/9; no production actions.
 - [ ] Before any file moves/renames, audit root script and kitchen-named module imports and live execution dependencies; keep live paths unchanged.
 - [ ] Run full isolated Pi regression on this checkpoint; next stage design independent stage identity/storage and verified registry provenance without leaking prod access.
+
+## 2026-10-11 — Hygiene audit actions
+- [x] Read-only review of GitHub branch ancestry, service paths, root script references, legacy pilot fixtures and release artifact sizes.
+- [x] Publish `docs/PROJECT-AUDIT-2026-10-11.md`; mark obsolete tracked systemd template dangerous to install as-is.
+- [ ] Inspect PR/protection/retention for old review branch before deletion; do not remove automatically.
+- [ ] Identify external cron/manual consumers before archiving root experimental files; keep safe rollback and production artifacts.
+- [ ] Full regression before any refactor/move of active source, with path change review.

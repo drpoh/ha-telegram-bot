@@ -1,3 +1,6 @@
+# HISTORICAL EXAMPLE — DO NOT INSTALL AS-IS.
+# Paths and kitchen label are outdated. Current deployment uses an immutable release artifact.
+# See docs/PROJECT-AUDIT-2026-10-11.md and docs/PROJECT-MAP.md.
 [Unit]
 Description=RS Home AI v3 isolated kitchen Telegram pilot
 After=network-online.target

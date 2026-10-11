@@ -983,3 +983,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Inspected canonical dev root, 22 src subdirectories, docs, deployment templates, unit paths and historical checkout commits using read-only Pi layout audit. Found potentially confusing legacy root scripts and kitchen-named pilot modules; retained in place to avoid breaking imports or manually triggered real-device tools.
 - Added `docs/PROJECT-MAP.md` authoritative source/runtime/branch/credential ownership index, linked from README and AGENTS. No live filesystem paths, services, branches or secret locations modified.
 - Built mock-only 60s confirmation simulator with exact registry recheck at confirm, one-time consumption, actor isolation and no HA actuation. Focused simulation+revalidation tests 9/9 passed.
+
+## 2026-10-11 — Safe repository hygiene review
+- Audited GitHub branches, Pi checkout/runtime mapping, root scripts and references, historical pilot fixture uses and old release footprints. Documented prioritized findings in `docs/PROJECT-AUDIT-2026-10-11.md`; marked old systemd deployment template NOT INSTALLABLE AS-IS. No deletions, running service/unit changes or HA actions.

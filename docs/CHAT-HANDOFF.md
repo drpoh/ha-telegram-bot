@@ -428,3 +428,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-11 — Structure review and simulated Stage confirmations
 - New `docs/PROJECT-MAP.md` is the canonical navigation entry. README and AGENTS link there. Preserve live v2 checkout, old V3 checkout and immutable release separately; root legacy scripts and `kitchen-*` modules are known technical debt, not safe to mass-rename.
 - Stage-only `src/ops/stage-consent-simulation.mjs` now ties one-shot 60s intent to current exact registry/device check and **never** authorizes real dispatch. Focused tests 9/9 pass, including 24 competing confirmations, replaced/disappeared/unavailable device, stale registry, expired and cross-actor attempts. Production V3 release 97343fa, v2 and HA unchanged.
+
+## 2026-10-11 — Repository hygiene audit
+- See `docs/PROJECT-AUDIT-2026-10-11.md`: active V3 uses immutable release 97343fa, source dev independent; deploy/rs-home-ai-v3.service is stale and now labeled historical; review Gate E branch is fully behind dev (113 commits, zero ahead) but was NOT deleted. Root experimental scripts are possible archive candidates (no tracked basename references), not proven unused by cron/manual; historic kitchen policy fixtures ARE referenced by a test. No files or Git branches were removed.

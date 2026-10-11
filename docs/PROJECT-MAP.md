@@ -1,6 +1,6 @@
 # RS Home AI — authoritative project map
 
-Updated 2026-10-11. **Start here to avoid confusing source branches with running services.**
+Updated 2026-10-11. See [latest cleanup audit](PROJECT-AUDIT-2026-10-11.md) before considering any file or branch removal. **Start here to avoid confusing source branches with running services.**
 
 ## Which directory is authoritative?
 | Location | Purpose | Edit policy |

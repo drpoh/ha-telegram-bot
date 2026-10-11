@@ -1163,3 +1163,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-11 — Historical V3 release folders archived
 - Owner ran reversible move of `rs-home-ai-v3-release-7d9bab5` and `rs-home-ai-v3-release-920585d` to `~/projects/archive/rs-home-ai-v3/`; verified both target directories exist with private permissions and `systemctl --user is-active rs-home-ai-v3.service` is `active` afterwards.
 - Prior scan showed historic systemd backup unit references to old paths and active Gate D timers bound to **separate historical checkout** `/home/drpoh/rs-home-ai-v3`; keep this checkout and its timers. No source code or live production unit changed. Archive move is reversible and does not reclaim disk capacity.
+
+## 2026-10-12 — Remote branch cleanup verified
+- Owner removed 19 ephemeral remote branches; connector independently confirmed four retained GitHub branches: `main`, `refactor/v2`, `feature/v3-home-agent`, and Gate E review. See `docs/V3-GITHUB-CLEANUP-2026-10-12.md`. V3 production unchanged. Gate D runtime health and Pi DEV resync remain to verify.

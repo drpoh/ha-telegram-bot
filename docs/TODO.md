@@ -50,3 +50,6 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 
 ## Cleanup checkpoint 2026-10-11
 - Owner-confirmed live V3 `c6a9812` `/sauna` and protected cancellation after upgrade. See `V3-CLEANUP-CHECKPOINT-2026-10-11.md`. No production mutation during cleanup audit.
+
+## 2026-10-12 — Remote branch cleanup verified
+- Owner removed 19 ephemeral remote branches; connector independently confirmed four retained GitHub branches: `main`, `refactor/v2`, `feature/v3-home-agent`, and Gate E review. See `docs/V3-GITHUB-CLEANUP-2026-10-12.md`. V3 production unchanged. Gate D runtime health and Pi DEV resync remain to verify.

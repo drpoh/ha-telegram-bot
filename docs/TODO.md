@@ -60,6 +60,8 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [ ] Validate isolated restore/rollback and backup procedures, preserving external V3 SQLite claims and HA Green independence. Do not handle production secrets or schedule backups without approval.
 - [ ] Evaluate authenticated HA webhook/loopback migration and other MCP consumers before modifying the currently configured server listener.
 
+- [x] Stage next milestone started: offline HTTP negative-route tests prove synthetic stage mock rejects writes and non-loopback bind. No persistent Stage service installed, effective host network firewall unverified.
+
 ## P2 — repository and architecture hygiene
 - [x] Group source and document responsibilities in `docs/STRUCTURE-INDEX.md` without mass-moving imports or changing live file ownership.
 - [x] Inventory static imports and test/entrypoint reachability of `src/decision/` (`V3-DECISION-DEPENDENCY-AUDIT-2026-10-11.md`): all 77 referenced, no safe deletion candidates.

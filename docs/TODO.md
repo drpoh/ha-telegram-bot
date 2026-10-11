@@ -37,6 +37,9 @@ Updated 2026-10-11. **Single current priority: deliver useful capabilities throu
 - [ ] Gate D: operational disaster recovery/real notification acceptance; Gate E: Assist voice adapter and trusted policy reuse. Stage remains an offline loopback mock.
 - [ ] Maintain HA Green independence and no automatic change to V2 or V3 production.
 
+- [x] Owner moved historic V3 releases `7d9bab5` and `920585d` to `~/projects/archive/rs-home-ai-v3/` and confirmed `rs-home-ai-v3.service` still active. This did **not** free disk space; historical unit backup paths now refer to archived locations.
+- [ ] Verify Gate D timer health and V2 after archive; keep historical checkout `~/rs-home-ai-v3` because enabled Gate D timers use its scripts.
+
 ## Safe hygiene remaining (non-blocking)
 - [ ] GitHub contains historical squash-merged PR branches. Confirm PR head SHA, branch protection and external consumers before deleting; preserve `main`, `refactor/v2`, `feature/v3-home-agent`. Connector does not expose branch deletion.
 - [ ] Review actual systemd, cron, shell/manual consumers before moving or deleting root `bot.mjs`, `smoke-auto-safe.mjs`, prior release directories or historical V3 checkout. Retain rollback artifacts.

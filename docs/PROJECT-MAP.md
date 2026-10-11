@@ -1,6 +1,6 @@
 # RS Home AI — authoritative project map
 
-Updated 2026-10-11. See [latest cleanup audit](PROJECT-AUDIT-2026-10-11.md) before considering any file or branch removal. **Start here to avoid confusing source branches with running services.**
+Updated 2026-10-11 (GitHub-first CI workflow after PR #2). See [latest cleanup audit](PROJECT-AUDIT-2026-10-11.md) before considering any file or branch removal. **Start here to avoid confusing source branches with running services.**
 
 ## Which directory is authoritative?
 | Location | Purpose | Edit policy |
@@ -40,6 +40,10 @@ Engineering direction: [reuse-first ADR](ADR-REUSE-FIRST-2026-10-11.md). For cod
 - `main`: baseline; `refactor/v2`: V2 lineage; `feature/v3-home-agent`: active source development; `review/gate-e-target-snapshot-hardening-20261009`: unmerged review work at last audit.
 - `dev` is a source checkout. `stage` currently is a disposable local mock used by tests, not an installed service. `prod` is the separately pinned V3 release and legacy V2 service, not a Git branch.
 - Promotion requires explicit review, isolated candidate, tests, identity/policy check, rollback, and owner authorization. Git push alone is not deployment.
+
+## GitHub-first development when Pi remote tools are unavailable
+- Source changes may be proposed on short-lived GitHub PR branches with isolated GitHub-hosted CI; passing CI does not update the canonical Pi DEV checkout or authorize live deployment. See `GITHUB-FIRST-DEV-WORKFLOW-2026-10-11.md`.
+- Prior source status on Pi: DEV `2a71552` clean before GitHub merged PR #2–#4; inspect local status before fast-forward, do not touch pinned V2/V3 runtimes.
 
 ## Quick safe maintenance
 1. Read `AGENTS.md`, this map, `docs/CHAT-HANDOFF.md`, latest `docs/TODO.md` and `docs/WORKLOG.md`.

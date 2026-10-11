@@ -15,7 +15,8 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [ ] Preserve Home Assistant Green and native automations when AI, Pi, Zigbee2MQTT or HA-MCP fails. Any real failure testing needs a reviewed maintenance window, backup and operator authorization.
 
 ## P1 — Stage 2 and operations
-- [ ] Design actual separate stage identity, token, service, isolated storage and mock HA endpoint. **No deployment** until the operator approves and shared production credentials are ruled out.
+- [x] Draft conservative Node.js + systemd stage deployment design, `deploy/stage/README.md`; no service installed and no new credentials.
+- [ ] Implement safe standalone stage daemon only after independent launch/scope review; **no deployment** until explicit approval.
 - [x] Dev-only batch confirmation for 2–12 exact light targets, revalidation, one-use claim and all-or-nothing denial (13 focused tests including existing gates).
 - [ ] Connect batch simulation to independently refreshed stage HTTP registry at issue and confirmation, injecting network failures; no real writes.
 - [ ] Address historical Zigbee2MQTT Ember coordinator ASH disconnect issue independently from V3; verify coordinator/serial connectivity before any network reconfiguration or firmware change.

@@ -44,3 +44,7 @@ Status: **offline stage contract and runtime fault tests verified; no stage/prod
 - `src/ops/stage-consent-simulation.mjs` uses the already reviewed 60-second one-shot intent ledger and a second exact entity/device/area check at confirmation. It never imports a real MCP/HA client, receives no production credentials and returns `authorized:false, actualWrite:false` even when successful.
 - Offline tests reject cross-actor claims, expired/replayed tokens, device replacement, disappearance, unavailable targets and stale registry; concurrent confirmation has at most one successful *simulation*. No actuator was touched.
 - The project navigation source of truth is now `docs/PROJECT-MAP.md`. Retained V2 and historic V3 checkouts, active pinned release and canonical dev source are explicitly differentiated; no moving or renaming of live files was attempted.
+
+## Stage 2 closeout gate (2026-10-11)
+- `stage-batch-http-simulation` tests added for expired intent, forged/nonmatching actor and stale clock/failure conditions; combined HTTP test 6/6 PASS. Earlier linked mock batch tests and pure identity/replay gates remain in repository.
+- Next phase uses existing Node.js HTTP server and systemd user service, without new orchestrator. Deployment design `deploy/stage/README.md` is documentation only; stage process, credentials and systemd unit not installed. Owner authorization is required before installing any persistent stage service.

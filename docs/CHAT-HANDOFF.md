@@ -442,3 +442,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-11 — Stage batch consent resumed
 - Existing previously uncommitted `src/ops/stage-batch-consent.mjs` and tests verified 13/13 focused checks. Batch is dev/mock-only and never authorizes HA writes. Next connect independent Stage HTTP registry reads and test transport failures, before any broader live capability.
 - Added dev-only `stage-batch-http-simulation.mjs`, 3/3 HTTP tests pass. Uses separate mock snapshots for issue and confirm; no real HA endpoint accepted or actuation. Further Stage race/timeout tests and full regression needed before candidate release. Active V3 still pinned at 97343fa.
+
+## 2026-10-11 — Stage 2 mock HTTP closure and next phase
+- Expanded `stage-batch-http-simulation.test.mjs` to expiration and actor mismatch; six HTTP-focused tests pass. Next phase design `deploy/stage/README.md` recommends Node.js built-in HTTP and a separately approved systemd user service; no daemon installed, no extra Telegram poller, no real HA credentials or prod code touched. Run full regression and commit/push before calling Stage 2 offline milestone closed.
+- Stage 2 offline full regression PASS: 152 files / 584 assertions / zero failed, exit 0. No live deployment or broader HA permissions. Next stage: implement isolated standalone mock process and review its runtime boundaries before separately authorized systemd installation.

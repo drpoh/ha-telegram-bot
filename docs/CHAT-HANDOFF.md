@@ -575,3 +575,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — Pi sauna real-read acceptance
 - Owner confirmed Pi DEV at `3a889da`, 166 test files/643 assertions/0 failed; real read-only HA-MCP `ha_get_state` returned sauna temperature `75.875 °C`, readiness `off`, and `summarizeSauna` returned `complete`. The readiness binary sensor last_reported was older, which alone does not prove staleness for an unchanged state. No live V3 deployment occurred.
+
+## 2026-10-11 — Sauna candidate preparation
+- Added source-only guarded packaging script and `docs/V3-SAUNA-RELEASE-CANDIDATE.md`: exact Git ref, clean DEV, no overwrite of existing release, no Telegram poller or systemd changes. GitHub CI pending; operator still needs Pi acceptance and separate production switch authorization.

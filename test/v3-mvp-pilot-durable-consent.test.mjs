@@ -16,7 +16,7 @@ test('MVP pilot consent: durable UUID claim before execution, unknown result can
    claim(id){claimed.push(id);return journal.claim(id);},
    mark:(id,status)=>journal.mark(id,status)
   },dispatch:async()=>{calls++;throw Error('MCP unknown outcome');}});
-  assert.equal(consent.request(actor,'Включи свет на кухне').status,'pending');
+  assert.equal(consent.request(actor,'Включи свет в тамбуре').status,'pending');
   assert.equal((await consent.confirm(actor)).status,'failed');
   assert.equal((await consent.confirm(actor)).status,'missing');
   assert.equal(calls,1);
@@ -28,7 +28,7 @@ test('MVP pilot consent: durable UUID claim before execution, unknown result can
 test('MVP pilot consent: unavailable durable journal fails closed before dispatch',async()=>{
  let writes=0;
  const consent=createKitchenDryrunConsent({executionJournal:{claim:()=>false},dispatch:async()=>{writes++;}});
- consent.request(actor,'Выключи свет на кухне');
+ consent.request(actor,'Выключи свет в тамбуре');
  assert.deepEqual(await consent.confirm(actor),{status:'denied',reason:'replay_claim_unavailable'});
  assert.equal(writes,0);
 });

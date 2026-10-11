@@ -10,7 +10,7 @@ export function createKitchenMcpDispatchBoundary({callTool,releaseEnabled=false,
    if(releaseEnabled!==true)return deny('live_release_disabled');
    if(typeof verifyAdmission!=='function')return deny('missing_trusted_admission');
    if(action?.name!=='ha_call_service'||action.args?.domain!=='light'||
-      action.args?.entity_id!=='light.led_kukhnia'||
+      action.args?.entity_id!=='light.tambur_svet_l1'||
       !['turn_on','turn_off'].includes(action.args?.service)||
       Object.keys(action.args).sort().join(',')!=='domain,entity_id,service')return deny('out_of_scope');
    if(typeof callTool!=='function')return deny('mcp_unavailable');

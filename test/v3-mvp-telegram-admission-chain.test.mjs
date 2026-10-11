@@ -7,8 +7,8 @@ test('MVP: raw Telegram fixture admission binds actor, original message, single-
  const now=Date.parse('2026-10-10T12:00:00Z');
  const ledger=createV3IntentLedger({clock:()=>now});
  const actor=111;
- const action={name:'ha_call_service',args:{domain:'light',service:'turn_on',entity_id:'light.led_kukhnia'}};
- const raw={message_id:101,date:now/1000,text:'Включи свет на кухне',from:{id:actor},chat:{id:actor,type:'private'}};
+ const action={name:'ha_call_service',args:{domain:'light',service:'turn_on',entity_id:'light.tambur_svet_l1'}};
+ const raw={message_id:101,date:now/1000,text:'Включи свет в тамбуре',from:{id:actor},chat:{id:actor,type:'private'}};
  const ctx={from:raw.from,chat:raw.chat,message:raw,update:{update_id:555,message:raw}};
  const admit=createV3TelegramJoinedAdapter({allowedUserId:actor,clock:()=>now,requireRawMessage:true})({
   issueVerified:({actorId,sourceId,text,authenticated,action:requested,ttlMs})=>{
@@ -21,7 +21,7 @@ test('MVP: raw Telegram fixture admission binds actor, original message, single-
  const issued=admit({ctx,action,ttlMs:30000});
  const record=ledger.inspect({userId:actor,chatId:actor,token:issued.token});
  assert.equal(record.originalUserText,raw.text);
- assert.equal(record.action.args.entity_id,'light.led_kukhnia');
+ assert.equal(record.action.args.entity_id,'light.tambur_svet_l1');
  assert.equal(admit({ctx,action,ttlMs:30000}).status,'denied');
  assert.equal(ledger.consume({userId:actor,chatId:actor,token:issued.token}).token,issued.token);
  assert.equal(ledger.consume({userId:actor,chatId:actor,token:issued.token}),null);

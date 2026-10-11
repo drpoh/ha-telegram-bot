@@ -2,9 +2,9 @@ import {readV3PolicyFile} from '../decision/v3-operator-policy-loader.mjs';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 const exec=promisify(execFile);
-const TARGET='light.led_kukhnia';
-const DEVICE='6b9dafcf36218948bb2a4b9b60b82837';
-const UNIQUE='0x2c1165fffeb1e848_light_zigbee2mqtt';
+const TARGET='light.tambur_svet_l1';
+const DEVICE='4cbaab0f1663e40a638b7636f938a7e7';
+const UNIQUE='0xa4c13898b491c3ca_light_l1_zigbee2mqtt';
 const POLICY_DIR='/home/drpoh/.config/rs-home-ai-v3';
 export function createKitchenLiveAdmission({expectedSha256,registryReader}={}){
  const reader=registryReader??(async file=>{
@@ -24,6 +24,6 @@ export function createKitchenLiveAdmission({expectedSha256,registryReader}={}){
   const e=matched?.length===1?matched[0]:null;
   const device=devices.data?.devices?.find(d=>d.id===DEVICE);
   return {valid:!!(e?.platform==='mqtt' && e?.unique_id===UNIQUE && e?.device_id===DEVICE &&
-     !e.disabled_by && device?.area_id==='kukhnia' && !device.disabled_by)};
+     !e.disabled_by && device?.area_id==='koridor_1_etazh' && !device.disabled_by)};
  };
 }

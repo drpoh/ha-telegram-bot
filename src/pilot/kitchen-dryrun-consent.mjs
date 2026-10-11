@@ -10,9 +10,9 @@ export function createKitchenDryrunConsent({clock=Date.now,dispatch,executionJou
   request(actor,text){
    if(!valid(actor))return {status:'denied'};
    const normalized=typeof text==='string'?text.toLowerCase().trim().replace(/ё/g,'е'):'';
-   if(!['включи свет на кухне','выключи свет на кухне'].includes(normalized))return {status:'unsupported'};
+   if(!['включи свет в тамбуре','выключи свет в тамбуре'].includes(normalized))return {status:'unsupported'};
    const service=normalized.startsWith('включи')?'turn_on':'turn_off';
-   const issued=ledger.issue({...actor,userText:text,action:{name:'ha_call_service',args:{domain:'light',entity_id:'light.led_kukhnia',service}},ttlMs:60000});
+   const issued=ledger.issue({...actor,userText:text,action:{name:'ha_call_service',args:{domain:'light',entity_id:'light.tambur_svet_l1',service}},ttlMs:60000});
    intents.set(key(actor),issued.token);
    return {status:'pending',expiresAt:issued.expiresAt};
   },

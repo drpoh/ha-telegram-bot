@@ -1,6 +1,6 @@
 // Offline-only pre-dispatch guard. Injected evidence is NOT authentication.
 // No network/client imports, and no live HA writer in this module.
-const TARGET='light.led_kukhnia';
+const TARGET='light.tambur_svet_l1';
 export async function inspectKitchenSingleTarget({action,verifyRegistry,verifyOwner,verifyTelegram}={}){
  const deny=reason=>({allowed:false,reason});
  if(action?.name!=='ha_call_service'||action?.args?.domain!=='light'||

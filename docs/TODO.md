@@ -337,3 +337,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-10 — state_pending fix deployed
 - [x] Bounded delayed readback (three extra reads only, no repeated writes), test 5/5, release 920585d deployed successfully, previous unit backed up.
 - [ ] Fresh real owner Telegram request and /confirm, independently verify final HA state. If still `off` after turn_on, investigate Zigbee2MQTT service/availability and MQTT command delivery; do not bypass protection.
+
+## 2026-10-11 — Tambur V3 pilot
+- [x] Replace failed IKEA test target with `light.tambur_svet_l1` across pilot gates and trusted operator policy; verify live MCP state on, registry identity and 28 focused tests.
+- [ ] Complete a real owner Telegram /confirm turn_off with verified state, then turn_on with verified state; preserve rollback.

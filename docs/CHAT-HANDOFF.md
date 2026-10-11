@@ -405,3 +405,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-10 — IKEA target device truly offline
 - Zigbee2MQTT and Mosquitto running healthy, V3 active. Read-only inspection of Zigbee2MQTT DB identifies light.led_kukhnia as IKEA TRADFRI Driver 30W router (IEEE 0x2c1165fffeb1e848), successful historic interview but lastSeen 2026-10-09 13:56 EEST. Zigbee commands on/off/brightness fail delivery. Need restore electrical power to driver or Zigbee connectivity, not MCP/AI changes.
+
+## 2026-10-11 — Owner switched pilot target to light.tambur_svet_l1
+- Real HA MCP returns on for new target. Registry unique_id `0xa4c13898b491c3ca_light_l1_zigbee2mqtt`, device `4cbaab0f1663e40a638b7636f938a7e7`, area `koridor_1_etazh`; live admission valid=true with updated hash. Owner Telegram prompts are «Выключи свет в тамбуре» then /confirm (current state on), or «Включи свет в тамбуре» then /confirm. No physical write performed in validation. Old policy backed up at `~/.config/rs-home-ai-v3/kitchen-operator-policy.json.before-tambur`.

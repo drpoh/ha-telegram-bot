@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createKitchenMcpDispatchBoundary} from '../src/pilot/kitchen-mcp-dispatch-boundary.mjs';
-const action={name:'ha_call_service',args:{domain:'light',service:'turn_on',entity_id:'light.led_kukhnia'}};
+const action={name:'ha_call_service',args:{domain:'light',service:'turn_on',entity_id:'light.tambur_svet_l1'}};
 test('default deny does not invoke injected MCP writer',async()=>{
  let calls=0;const b=createKitchenMcpDispatchBoundary({callTool:async()=>{calls++}});
  assert.equal((await b.dispatch({action,})).status,'denied');

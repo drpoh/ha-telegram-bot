@@ -12,7 +12,7 @@ if(!/^\d+:[A-Za-z0-9_-]{30,}$/.test(token)||!Number.isSafeInteger(userId)||userI
 const bot=new Telegraf(token);
 const boundary=createKitchenMcpDispatchBoundary({
  releaseEnabled:true,callTool:createKitchenMcpClient({lanMvp:true,ownerApprovedLanHttpPilot:true}),
- verifyAdmission:createKitchenLiveAdmission({expectedSha256:'32843f881dbca7a24f205ac6a678b67463486033c581d859ac764b0c54c1091f'})
+ verifyAdmission:createKitchenLiveAdmission({expectedSha256:'a12580eb40a0e40833fbccb631e3aaa01d57159f43ea5cc88426c1ebce48e85a'})
 });
 // Deployment-owned, pre-provisioned journal outside the rollback checkout.
 // Absent or untrusted storage must disable physical dispatch, not create a fresh DB.
@@ -25,7 +25,7 @@ const pilot=createKitchenDryrunConsent({
 });
 const actor=ctx=>({userId:ctx.from.id,chatId:ctx.chat.id});
 const allow=ctx=>ctx.chat?.type==='private'&&ctx.chat?.id===userId&&ctx.from?.id===userId;
-bot.start(ctx=>allow(ctx)?ctx.reply('RS Home AI v3: кухонный пилот. Команды только для light.led_kukhnia и только после /confirm.'):undefined);
+bot.start(ctx=>allow(ctx)?ctx.reply('RS Home AI v3: пилот тамбура. Команды только для light.tambur_svet_l1 и только после /confirm.'):undefined);
 bot.command('status',ctx=>allow(ctx)?ctx.reply(storage.ready?'RS Home AI v3: защищённый журнал доступен. Для реальной команды требуется /confirm и проверка разрешений.':'RS Home AI v3: исполнение заблокировано — защищённый журнал не готов. HA не затронут.'):undefined);
 bot.command('confirm',async ctx=>{
  if(!allow(ctx))return;
@@ -36,7 +36,7 @@ bot.command('cancel',ctx=>allow(ctx)?ctx.reply(pilot.cancel(actor(ctx))?'Зап�
 bot.on('message',ctx=>{
  if(!allow(ctx))return;
  const r=pilot.request(actor(ctx),ctx.message?.text);
- return ctx.reply(r.status==='pending'?'Цель: light.led_kukhnia. Действие: '+(ctx.message.text.toLowerCase().startsWith('включи')?'ВКЛЮЧИТЬ':'ВЫКЛЮЧИТЬ')+'. Для РЕАЛЬНОГО переключения отправь /confirm в течение 60 секунд либо /cancel.':'Режим тестирования. Попробуй: «Включи свет на кухне» или «Выключи свет на кухне».');
+ return ctx.reply(r.status==='pending'?'Цель: light.tambur_svet_l1. Действие: '+(ctx.message.text.toLowerCase().startsWith('включи')?'ВКЛЮЧИТЬ':'ВЫКЛЮЧИТЬ')+'. Для РЕАЛЬНОГО переключения отправь /confirm в течение 60 секунд либо /cancel.':'Режим тестирования. Попробуй: «Включи свет в тамбуре» или «Выключи свет в тамбуре».');
 });
 bot.catch(e=>console.error('telegram_handler_error',e?.name||'Error'));
 process.once('SIGTERM',()=>bot.stop('SIGTERM'));

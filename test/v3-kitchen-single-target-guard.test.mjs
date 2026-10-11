@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {inspectKitchenSingleTarget} from '../src/pilot/kitchen-single-target-guard.mjs';
-const action={name:'ha_call_service',args:{domain:'light',entity_id:'light.led_kukhnia',service:'turn_on'}};
+const action={name:'ha_call_service',args:{domain:'light',entity_id:'light.tambur_svet_l1',service:'turn_on'}};
 const yes=async()=>({valid:true});
 test('selected pilot target is still never authorized by fixture evidence',async()=>{
  const r=await inspectKitchenSingleTarget({action,verifyRegistry:yes,verifyOwner:yes,verifyTelegram:yes});

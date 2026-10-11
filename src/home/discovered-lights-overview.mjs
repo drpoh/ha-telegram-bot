@@ -24,6 +24,8 @@ export async function summarizeDiscoveredLights({readTool,maxEntities=200,timeou
   (e.state==='on'?on:e.state==='off'?off:unknown).push(e.entity_id);
  }
  const summary=`Из ${d.entities.length} найденных светильников: включено ${on.length}, выключено ${off.length}, состояние неизвестно у ${unknown.length}.`;
- const details=on.length?` Включены: ${on.join(', ')}.`:' Подтверждённых включённых светильников нет.';
+ const visibleOn=on.slice(0,20);
+ const remaining=on.length-visibleOn.length;
+ const details=on.length?` Включены: ${visibleOn.join(', ')}${remaining?`; ещё ${remaining} (список сокращён)`:''}.`:' Подтверждённых включённых светильников нет.';
  return {status:unknown.length?'partial':'complete',authorization:false,actualWrite:false,checked:d.entities.length,on,off,unknown,text:summary+details+(unknown.length?' Неизвестные не считаются выключенными.':'')};
 }

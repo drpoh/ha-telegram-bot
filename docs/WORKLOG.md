@@ -1127,3 +1127,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-11 — Gate C journal mark return-value hardening PR
 - Found pilot confirm returned `verified` if `executionJournal.mark()` silently returned false. Source-only fix reports `failed:journal_mark_unavailable`, never repeats dispatch, and treats missing `mark` as failure when journal enabled. Updated throw-case assertion and negative tests. CI acceptance pending; live V3 pinned artifact untouched.
+
+## 2026-10-11 — Maintenance freeze and user-value-first MVP
+- Maintenance audit PR #9 was merged as `83d5905`, and Gate C journal fail-closed PR #10 as `92846a5`, with GitHub offline CI 164 files / 636 assertions / 0 failed. Remote branch deletion is still pending because the connected GitHub action cannot delete refs. Do not misreport 11-branch inventory as current after new temporary PR branches.
+- Freeze cosmetic source moves/renames. Stop building new Gate C framework unless an actual issue blocks owner-reviewed release. Prioritize bounded read-only lighting status using the existing bot and HA-MCP, before voice/general automation.
+- Dev-only bounded listing now displays at most 20 ON entity IDs, retaining total ON/OFF/unknown counts; no new HA writes. Await GitHub CI and Pi compatibility check before release.

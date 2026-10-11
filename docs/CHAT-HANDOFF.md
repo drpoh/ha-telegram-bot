@@ -556,3 +556,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — Gate C mark-status correctness hardening
 - Found and fixed dev-source journal completion false-return being incorrectly treated as successful verification. Negative tests cover missing, thrown and false mark operation. GitHub CI pending; real release not changed. Resume branch status via GitHub PR and CI.
+
+## 2026-10-11 — Maintenance exit / practical MVP focus
+- Repository cleanup audit and preservation rules documented in `REPOSITORY-MAINTENANCE-2026-10-11.md`. Actual obsolete GitHub head deletion remains open; no risky file deletions were made.
+- Source-only `/lights_on` output bounded to 20 listed lights while preserving all counts. CI and PR verification pending. This is the next user-facing release candidate, not yet deployed.
+- Next operational gate: fresh Pi DEV `git status`, fast-forward only clean DEV, ARMv7 regression, review bot release/rollback; owner approval before touching live V2 or V3. Stop speculative infrastructure growth.

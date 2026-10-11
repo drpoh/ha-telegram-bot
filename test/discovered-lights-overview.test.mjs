@@ -75,3 +75,17 @@ test('ignored cancellation yields denial, not a retried search',async()=>{
  await new Promise(resolve=>setImmediate(resolve));
  assert.equal(result.status,'unavailable');assert.equal(calls,1);
 });
+
+test('large light inventory stays concise while full counts and unknowns remain accurate',async()=>{
+ const entities=Array.from({length:120},(_,i)=>e('long_entity_name_'+String(i).padStart(3,'0'),'on'));
+ entities.push(e('offline','unavailable'));
+ const result=await summarizeDiscoveredLights({readTool:async()=>snap(entities)});
+ assert.equal(result.status,'partial');
+ assert.equal(result.on.length,120);
+ assert.equal(result.unknown.length,1);
+ assert.match(result.text,/включено 120/);
+ assert.match(result.text,/ещё 100 \(список сокращён\)/);
+ assert.ok(result.text.length<1500);
+ assert.equal(result.authorization,false);
+ assert.equal(result.actualWrite,false);
+});

@@ -77,5 +77,11 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [x] Audit GitHub branch topology and squash-merge ancestry; see `REPOSITORY-MAINTENANCE-2026-10-11.md`. Seven merged PR branches are deletion candidates; no supported GitHub branch-delete action available in this session.
 - [ ] Verify merged PR head SHAs and branch protections, delete seven obsolete remote PR heads, then re-list; preserve `main`, `refactor/v2`, `feature/v3-home-agent` and the historical Gate E branch pending external-reference review.
 
+## Focus after maintenance: actual user value
+- [x] Repository hygiene audit recorded; no risky mass moves, duplicate deletion or active service changes. Seven squash-merged PR branches remain remote pending exact-head UI cleanup; historical Gate E branch retained. Do not call physical cleanup complete.
+- [x] Read-only dev `/lights_on` output now caps listed ON lights at 20 while retaining complete counts and unknown-state reporting; offline CI acceptance pending.
+- [ ] Highest user-facing priority: owner-reviewed, reversible read-only `/lights_on` pilot release on an existing bot (no new poller) after current Pi DEV status, ARMv7 validation, release/rollback check and consent. No deployment from GitHub CI.
+- [ ] Next: bounded read-only room/device status and Assist adapter using existing shared policy, not another decision framework. Gate B remains open for broader actuation.
+
 ## Working protocol
 At each new chat, read `AGENTS.md`, `PROJECT-MAP.md`, `CHAT-HANDOFF.md`, this TODO and the latest WORKLOG. Verify canonical dev Git status and actual service `ExecStart`. Use focused tests while implementing, full isolated regression at release-worthy milestones, then append evidence to WORKLOG/HANDOFF and commit/push. Production changes require separate explicit approval; tests do not automatically promote builds.

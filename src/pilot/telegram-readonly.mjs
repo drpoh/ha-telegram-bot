@@ -7,6 +7,7 @@ import {createKitchenMcpClient} from './kitchen-mcp-client.mjs';
 import {prepareV3PilotExecutionJournal} from '../ops/v3-pilot-execution-journal.mjs';
 import {summarizeSauna} from '../home/sauna-status.mjs';
 import {summarizeTambourLight} from '../home/tambour-light-status.mjs';
+import {summarizeLightOverview} from '../home/light-overview.mjs';
 const base='/home/drpoh/.config/rs-home-ai-v3/';
 const token=readFileSync(base+'telegram-token','utf8').trim();
 const userId=Number(readFileSync(base+'allowed-user-id','utf8').trim());
@@ -36,6 +37,11 @@ bot.command('confirm',async ctx=>{
  return ctx.reply(result.status==='missing'?'Нет действующего запроса для подтверждения.':result.status==='verified'?'Home Assistant подтвердил состояние светильника после команды.':result.status==='unverified'?'Команда отправлена, но итоговое состояние не подтверждено: '+result.reason:result.reason==='replay_claim_unavailable'?'Команда заблокирована: защищённый журнал подтверждений недоступен.':'Команда не выполнена или результат неизвестен: '+(result.reason||result.status));
 });
 bot.command('cancel',ctx=>allow(ctx)?ctx.reply(pilot.cancel(actor(ctx))?'Запрос отменён.':'Активного запроса нет.'):undefined);
+bot.command('lights',async ctx=>{
+ if(!allow(ctx))return;
+ const result=await summarizeLightOverview({readState:id=>saunaRead('ha_get_state',{entity_id:id})});
+ return ctx.reply(result.text);
+});
 bot.command('light',async ctx=>{
  if(!allow(ctx))return;
  const result=await summarizeTambourLight({readState:id=>saunaRead('ha_get_state',{entity_id:id})});
@@ -51,6 +57,9 @@ bot.on('message',ctx=>{
  const text=typeof ctx.message?.text==='string'?ctx.message.text.trim().toLowerCase().replace(/ё/g,'е'):'';
  if(['какая температура в сауне?','какая температура в сауне','сауна готова?','готова ли сауна?'].includes(text)){
   return summarizeSauna({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
+ }
+ if(['какой свет включен?','какой свет включен','какие лампы включены?','какие лампы включены','состояние освещения'].includes(text)){
+  return summarizeLightOverview({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
  }
  if(['свет в тамбуре включен?','свет в тамбуре включен','состояние света в тамбуре','какое состояние света в тамбуре?'].includes(text)){
   return summarizeTambourLight({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));

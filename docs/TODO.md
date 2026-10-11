@@ -16,6 +16,8 @@ Updated 2026-10-11. **Single current priority: deliver useful capabilities throu
 - [ ] Prepare new **immutable** V3 release candidate, verify systemd executable path and rollback procedure, preserve external SQLite claims/credentials, request owner approval before restart or production change.
 - [ ] After approved promotion, Telegram acceptance: `/sauna`, `Какая температура в сауне?`, `Сауна готова?`; validate truthful values and fallback while retaining existing tamboor `/confirm` protection.
 
+- [x] Add source-only `scripts/prepare-v3-release-candidate.sh` to package an exact clean V3 DEV commit to a new immutable-path candidate without changing live services; see `V3-SAUNA-RELEASE-CANDIDATE.md`. Candidate packaging and production switching still pending.
+
 ## P1 — subsequent user value
 - [ ] Add bounded read-only lighting overview to **V3** (not the V2 `/lights_on` implementation), reusing existing pure summary and only explicitly reviewed read scope.
 - [ ] Add trusted, limited conversation context and room status; then reuse HA Assist/ESPHome for voice. Never create independent voice authority or a second Telegram poller.

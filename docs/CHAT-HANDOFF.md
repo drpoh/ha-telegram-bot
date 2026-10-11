@@ -523,3 +523,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — Current head and light discovery tests
 - Checked canonical dev head `4425b18` (upstream work advanced beyond earlier shared-decision audit), clean before tests. Earlier unfinished audit log `/tmp/rs-shared-decision-audit-full.log` contains PASS 155/592/0; later HEAD documents full PASS 160/618/0. Added two negative light discovery tests for bounded inventory and unknown states. Dev-only, `/lights_on` remains unpromoted to running Telegram V2; full regression not repeated for test-only extension.
+
+## 2026-10-11 — New bounded read-only MCP inventory deadline
+- Latest dev-only `src/home/discovered-lights-overview.mjs` adds 5s default caller deadline and 9/9 focused regression, denied after late response; no actual request abort guarantee. Running Telegram V2/V3 remain untouched. Full regression PASS: 160 files, 622 assertions, zero failures. Production remains unchanged.

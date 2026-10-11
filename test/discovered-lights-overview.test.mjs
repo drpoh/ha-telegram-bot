@@ -29,3 +29,23 @@ test('unsupported states are unknown, never inferred off',async()=>{
  assert.equal(r.status,'partial');assert.equal(r.on.length,0);assert.equal(r.off.length,0);assert.deepEqual(r.unknown,['light.a','light.b','light.c']);
  assert.match(r.text,/Неизвестные не считаются выключенными/);
 });
+
+test('MCP search never blocks indefinitely and late on-state is not trusted',async()=>{
+ let release, calls=0;
+ const pending=new Promise(resolve=>{release=resolve;});
+ const start=Date.now();
+ const result=await summarizeDiscoveredLights({timeoutMs:25,readTool:async()=>{calls++;return pending;}});
+ assert.equal(result.status,'unavailable');assert.equal(result.authorization,false);
+ assert.equal(result.actualWrite,false);assert.equal(calls,1);
+ assert.ok(Date.now()-start<1500);
+ release(snap([e('late','on')]));
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(result.status,'unavailable');
+});
+test('MCP search timeout budget is validated before any request',async()=>{
+ for(const timeoutMs of [0,-1,30001,1.5,NaN]){
+  let calls=0;
+  const result=await summarizeDiscoveredLights({timeoutMs,readTool:async()=>{calls++;return snap();}});
+  assert.equal(result.status,'unavailable');assert.equal(calls,0);
+ }
+});

@@ -31,6 +31,9 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [x] Verify read-only `ha_get_state` structured format and complete `ha_search` result against current HA-MCP (41 lights, 21 unknown/unavailable). Dev `/lights_on` uses one complete `ha_search` snapshot and explicitly reports unknown states.
 - [ ] Review live V2 release/rollback and authorized Telegram test before installing `/lights_on`; do not edit running checkout or restart bot automatically.
 
+- [x] Dev read-only `/lights_on` inventory has a bounded 5s HA-MCP search wait; late results and invalid time budgets fail closed (9 focused tests). This is a caller deadline, **not** proof of transport cancellation.
+- [ ] Evaluate HA-MCP transport AbortSignal/actual socket cancellation separately; a late read callback may still run after the caller deadline. No automatic write retry.
+
 ## P1 — Stage 2 and operations
 - [x] Revoke exact actor/token batch consent on Stage HTTP confirm registry-read failure; deny replay after mock recovers (offline only).
 - [x] Draft conservative Node.js + systemd stage deployment design, `deploy/stage/README.md`; no service installed and no new credentials.

@@ -1,9 +1,15 @@
 // HA-MCP search inventory: pure read-only summary; unknown states are never "off".
-export async function summarizeDiscoveredLights({readTool,maxEntities=200}={}){
+export async function summarizeDiscoveredLights({readTool,maxEntities=200,timeoutMs=5000}={}){
  const deny=()=>({status:'unavailable',authorization:false,actualWrite:false,text:'Не удалось получить полный список светильников. Состояние дома неизвестно.'});
- if(typeof readTool!=='function'||!Number.isSafeInteger(maxEntities)||maxEntities<1||maxEntities>500)return deny();
+ if(typeof readTool!=='function'||!Number.isSafeInteger(maxEntities)||maxEntities<1||maxEntities>500||!Number.isSafeInteger(timeoutMs)||timeoutMs<1||timeoutMs>30000)return deny();
  let r;
- try{r=await readTool('ha_search',{query:'',domain_filter:'light',limit:maxEntities,include_hidden:false,result_fields:['entity_id','domain','state']});}catch{return deny();}
+ let deadline;
+ try{
+  r=await Promise.race([
+   Promise.resolve().then(()=>readTool('ha_search',{query:'',domain_filter:'light',limit:maxEntities,include_hidden:false,result_fields:['entity_id','domain','state']})),
+   new Promise(resolve=>{deadline=setTimeout(()=>resolve(null),timeoutMs);})
+  ]);
+ }catch{return deny();}finally{clearTimeout(deadline);}
  if(r?.isError===true)return deny();
  const d=r?.structuredContent??r;
  if(d?.success!==true||d.partial!==false||d.entity_has_more!==false||d.entity_next_offset!=null||

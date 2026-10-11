@@ -494,3 +494,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-11 — Multi-device offline Stage scope hardening
 - Stage mock batch now requires explicit schema-validated deny-default fixture scope per light, using existing operator-policy validator, and matches display names on second registry read alongside entity/device/area identity. This does not establish genuine operator policy provenance and cannot grant live execution.
 - Focused 14/14 batch HTTP and direct checks pass; full `/tmp/rs-multidevice-scope-full-20261011.log` PASS verified. Live V3 97343fa/V2 unchanged.
+
+## 2026-10-11 — HA-native multi-light registry read-only review
+- Existing official-connection injected bridge plus two-pass complete HA registry inspection suffices for source-only data-read review; no new infrastructure justified. Added negative tests for multiple lights, orphan/duplicate data and drift; all read paths remain `authorization:false`. See `docs/V3-MULTIDEVICE-REGISTRY-READINESS-2026-10-11.md`.
+- No real HA read performed. Actual authenticated source/TLS boundary and LAN 9584 negative-client test remain separately gated; full regression `/tmp/rs-ha-multilight-readonly-full-20261011.log` PASS verified.

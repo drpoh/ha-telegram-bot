@@ -6,9 +6,11 @@ Updated 2026-10-11 (GitHub-first CI workflow after PR #2). See [latest cleanup a
 | Location | Purpose | Edit policy |
 |---|---|---|
 | `/home/drpoh/projects/rs-home-ai-dev` | **Only canonical source checkout**; V3 `feature/v3-home-agent`; tests, docs, GitHub push | Edit here |
-| `/home/drpoh/projects/rs-home-ai-v3-release-97343fa` | Active **V3 production pilot** immutable release artifact; only `light.tambur_svet_l1` on/off with private Telegram `/confirm` | Read only; deploy new separately reviewed artifact, never `git pull` |
+| `/home/drpoh/projects/rs-home-ai-v3-release-c6a9812` | Active **V3 production pilot** immutable release artifact; only `light.tambur_svet_l1` on/off with private Telegram `/confirm` | Read only; deploy new separately reviewed artifact, never `git pull` |
+| `/home/drpoh/projects/rs-home-ai-v3-release-97343fa` | Previous V3 release retained for rollback | Read only |
+| `/home/drpoh/projects/archive/rs-home-ai-v3/` | Historical releases `7d9bab5` and `920585d` (archived, not deleted) | Preserve until retention audit |
 | `/home/drpoh/ha-telegram-bot` | Running V2 service's preserved Git checkout (historical commit) | Read only; no auto-pull |
-| `/home/drpoh/rs-home-ai-v3` | Historical V3 Git checkout, NOT active user-service executable | Preserve; read only |
+| `/home/drpoh/rs-home-ai-v3` | Historical V3 Git checkout, NOT active user-service executable, but USED by Gate D timers | Preserve; read only |
 | `~/.config/rs-home-ai-v3`, `~/.local/state/rs-home-ai-v3` | Live private credentials, owner policy and durable claims | Not in Git; no bulk copies, no reset |
 | `vinted-sales-agent`, `ha-backups` | Separate ownership | Out of scope |
 

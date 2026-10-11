@@ -4,10 +4,11 @@ export async function summarizeDiscoveredLights({readTool,maxEntities=200,timeou
  if(typeof readTool!=='function'||!Number.isSafeInteger(maxEntities)||maxEntities<1||maxEntities>500||!Number.isSafeInteger(timeoutMs)||timeoutMs<1||timeoutMs>30000)return deny();
  let r;
  let deadline;
+ const controller=new AbortController();
  try{
   r=await Promise.race([
-   Promise.resolve().then(()=>readTool('ha_search',{query:'',domain_filter:'light',limit:maxEntities,include_hidden:false,result_fields:['entity_id','domain','state']})),
-   new Promise(resolve=>{deadline=setTimeout(()=>resolve(null),timeoutMs);})
+   Promise.resolve().then(()=>readTool('ha_search',{query:'',domain_filter:'light',limit:maxEntities,include_hidden:false,result_fields:['entity_id','domain','state']},{signal:controller.signal})),
+   new Promise(resolve=>{deadline=setTimeout(()=>{controller.abort();resolve(null);},timeoutMs);})
   ]);
  }catch{return deny();}finally{clearTimeout(deadline);}
  if(r?.isError===true)return deny();

@@ -1103,3 +1103,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-11 — Gate C cooperative read-only cancellation (GitHub PR)
 - Added optional `{signal}` to the existing injected `readTool` request when listing lights; on timeout, AbortController aborts while caller still fails closed. This is a hint to adapters only, not proof that the live HA-MCP SDK cancels its network request.
 - Three isolated negative tests cover cooperating transport, ignored cancellation with a late result, and timer cleanup after success. GitHub Actions CI result must be inspected before merging; Raspberry Pi ARMv7 and deployment remain separate gates.
+
+## 2026-10-11 — Gate C in-flight actor guard (GitHub PR)
+- Dev source-only pilot holds an in-memory actor lock during unresolved confirmed dispatch. New request while pending returns action_in_flight; consumed token cannot be confirmed twice. Journal mark exceptions are denied without another HA write. Three focused negative tests added. Await GitHub CI result and review.
+- Limitation: lock is per process, not a cross-restart or cross-process durable claim; immutable production V3 and HA unchanged.

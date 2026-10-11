@@ -8,7 +8,8 @@
 
 ## Next useful slice
 - [ ] V3 exact read-only `/light` status and natural question for already scoped `light.tambur_svet_l1`: source-only development, mock/offline tests and Pi ARMv7 check, then new immutable release with separate owner consent. **Do not expand light registry access** without review.
-- [ ] After confirming single-lamp read behaves correctly in Telegram, design an explicitly bounded multi-light read-only overview using HA-MCP, protect ambiguous names; no write permissions added.
+- [x] Source-only bounded multi-light `/lights` overview for exact 7 tamboor/corridor IDs using existing `ha_get_state`; unknown data reported separately; NO wider write scope. GitHub offline testing pending and Pi/HA-MCP real acceptance still required. No V3 production deployment.
+- [ ] Verify actual HA entity IDs and responses for all 7 lights read-only on Pi before considering release; add clear missing/renamed entity diagnosis as needed.
 - [ ] Prioritize trusted simple room state/context and reuse HA Assist + ESPHome for voice. No separate voice authority or competing Telegram poller.
 
 ## Remaining acceptance / housekeeping

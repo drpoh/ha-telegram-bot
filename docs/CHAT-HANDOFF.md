@@ -595,3 +595,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-12 — Remote branch cleanup verified
 - Owner removed 19 ephemeral remote branches; connector independently confirmed four retained GitHub branches: `main`, `refactor/v2`, `feature/v3-home-agent`, and Gate E review. See `docs/V3-GITHUB-CLEANUP-2026-10-12.md`. V3 production unchanged. Gate D runtime health and Pi DEV resync remain to verify.
+
+## 2026-10-12 — Read-only V3 lamp status source milestone
+- Verified remote cleanup left four permanent/review branches before opening this feature branch; active release remains `c6a9812`, previous rollback `97343fa` and Gate D checkout preserved.
+- Added deterministic status-only `/light` and narrow natural-language questions for existing scoped `light.tambur_svet_l1`, without HA write or new endpoint scopes. New production release **not authorized**. No Pi/Gate D runtime verification output in current turn. See current `docs/TODO.md`.

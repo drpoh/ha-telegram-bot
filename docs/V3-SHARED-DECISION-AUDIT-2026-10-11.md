@@ -27,3 +27,8 @@
 | Voice | Not wired to the live pilot | Reference command envelope rejects asserted voice identity | Implement voice later through native Assist and shared policy only after identity/scope review |
 
 **Decision:** retain the currently shared intent-ledger primitive and explicit, separate trusted ingress adapters. A new universal adapter would add complexity without proving equivalent actor, identity, approval and durable claim semantics. First develop contract tests and keep live release unchanged.
+
+## Cross-path executable contract regression (2026-10-11)
+- `test/v3-cross-path-trust-contract.test.mjs` tests real dev-source pilot and offline joined implementations with deliberately isolated dependencies. Both reject untrusted actor claims, scope escalation, and dispatch without approval. Pilot dry-run consumes failed execution confirmation once; 60-second expiry and cross-actor attempts are denied. Joined chain does not receive authority from spoofed ingress and requires offline policy evidence.
+- **Important non-equivalence:** a policy-denied joined-chain confirmation can remain pending for a later attempt, whereas the pilot consumes its intent before dispatch. This does not permit writes without policy, but a future unification must explicitly decide fail-closed token invalidation before production adoption. Do not claim equivalent replay semantics just because the two paths share the ledger.
+- Only offline tests added; running release remains pinned at 97343fa.

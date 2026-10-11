@@ -1032,3 +1032,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-11 — Ingress contract comparison
 - Compared the pinned pilot chain with `v3-isolated-joined-chain`: both reuse the ledger, but differ in trusted ingress, strict one-device approval, durable claim and actual MCP execution vs injected simulation. Recorded explicit five-row contract table in shared decision audit. Decision: no replacement universal transport or hot swap; preserve policy boundaries.
+
+## 2026-10-11 — Cross-path trust contract regression
+- Added offline `test/v3-cross-path-trust-contract.test.mjs` for source/actor provenance, strict pilot allowlist, disabled release, confirmation TTL, replay and denied joined-chain policy. Stage/prod code and permissions untouched.
+- Focused 6 checks PASS including stage import boundaries. The joined mock retains policy-denied tokens until cancel/expiry; pilot consumes after dispatch attempt. Tracked difference in shared decision audit and TODO, rather than changing security-sensitive semantics without review.
+- Full regression evidence: `/tmp/rs-cross-path-contract-full-20261011.log` (PASS, see log).

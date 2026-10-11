@@ -14,7 +14,8 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [x] Simplify Stage single/batch consent to reuse the same pure selector for each independently fetched snapshot (13 focused tests); no new decision framework.
 - [x] Audit live V3 vs Stage selection/consent imports and source-of-trust contracts; document differences in `V3-SHARED-DECISION-AUDIT-2026-10-11.md`, with offline boundary tests.
 - [x] Compare trusted actor/action-envelope invariants in live pilot and isolated joined chain; preserve distinct trusted ingress and durable claim boundaries (`docs/V3-SHARED-DECISION-AUDIT-2026-10-11.md`).
-- [ ] Add focused cross-path contract tests for trusted actor, action scope and replay before any live refactor; no production changes without reviewed promotion.
+- [x] Add focused cross-path contract tests for trusted actor, action scope and replay before any live refactor (test/v3-cross-path-trust-contract.test.mjs); no production changes.
+- [ ] Review joined-chain policy-denied token retention vs live pilot consume-on-dispatch semantics; preserve distinct behavior until an explicit reviewed replay contract is selected.
 
 ## P0 — trust and safety before broader live control
 - [ ] Prove authoritative complete/fresh HA registry identity and secure HA-MCP transport/source restrictions; current LAN 9584 trust boundary requires independent review. Do not infer live authority from Stage mock results.

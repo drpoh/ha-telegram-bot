@@ -471,3 +471,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — Cross-path contract decision
 - Actor/action/replay comparison added to `docs/V3-SHARED-DECISION-AUDIT-2026-10-11.md`; reusing ledger is correct, but live trusted ingress + durable claim cannot be replaced by Stage fixtures. No new framework, no production changes. Next: test cross-path invariants and retain single-light scope.
+
+## 2026-10-11 — Cross-path contract checks, source-only
+- Added executable trust/scope/replay comparison `test/v3-cross-path-trust-contract.test.mjs`; 6 focused checks PASS including import boundaries. Joined policy denial retains an intent whereas pilot dispatch failures consume one; preserve separate contracts and review explicitly before consolidation. No V2, V3 or HA operations altered.
+- Full regression: `/tmp/rs-cross-path-contract-full-20261011.log` (PASS, see WORKLOG). Next P0: authoritative HA registry provenance and LAN MCP transport trust, read-only evidence first.

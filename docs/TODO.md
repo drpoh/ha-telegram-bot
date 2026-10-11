@@ -15,7 +15,7 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [x] Audit live V3 vs Stage selection/consent imports and source-of-trust contracts; document differences in `V3-SHARED-DECISION-AUDIT-2026-10-11.md`, with offline boundary tests.
 - [x] Compare trusted actor/action-envelope invariants in live pilot and isolated joined chain; preserve distinct trusted ingress and durable claim boundaries (`docs/V3-SHARED-DECISION-AUDIT-2026-10-11.md`).
 - [x] Add focused cross-path contract tests for trusted actor, action scope and replay before any live refactor (test/v3-cross-path-trust-contract.test.mjs); no production changes.
-- [ ] Review joined-chain policy-denied token retention vs live pilot consume-on-dispatch semantics; preserve distinct behavior until an explicit reviewed replay contract is selected. Added `test/v3-policy-denial-retention-contract.test.mjs` as a proposed offline regression on GitHub; execution on Pi and full regression **not yet verified**. Do not treat as a passing gate.
+- [x] Review joined-chain policy-denied token retention vs live pilot consume-on-dispatch semantics; focused offline contract test PASS on Pi. Preserve distinct behavior; no physical retry permission. See `V3-PRACTICAL-MVP-PRIORITIES-2026-10-11.md`.
 
 ## P0 — trust and safety before broader live control
 - [x] Review whether new HA-MCP/registry infrastructure is necessary: reuse existing HA-native path and source/endpoint guards; documented in `V3-MCP-TRUST-NECESSITY-REVIEW-2026-10-11.md`.

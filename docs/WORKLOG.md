@@ -1068,3 +1068,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-11 — One-shot upstream HA read lifecycle safety closeout
 - Reused `inspectOneShotRegistryConnection`; added offline tests for delayed connection creation after timeout (close once, zero registry requests) and disconnected fixture (zero requests, closes once). No connection to production HA was made. Focused upstream suite 14/14 PASS.
 - Source-only registry readiness is complete: no new transport, no authority, no service. Authenticated real registry provenance and LAN MCP isolation remain separate promotion gates. Full regression evidence `/tmp/rs-upstream-lifecycle-full-20261011.log` PASS.
+
+## 2026-10-11 — Practical MVP decision and replay contract
+- Fast-forwarded canonical dev to GitHub `8b7b7fd`; focused `v3-policy-denial-retention-contract` plus `v3-cross-path-trust-contract` executed on Raspberry Pi: 5/5 PASS. The mock policy-denied token remains pending but cannot write; the pinned one-light pilot consumes before dispatch. No refactor of production semantics warranted.
+- Prioritized real user utility and reuse of existing V2 status/control functionality over another layer of infrastructure. `V3-PRACTICAL-MVP-PRIORITIES-2026-10-11.md` records the limited next feature and promotion blocks. Full regression pending for this checkpoint.

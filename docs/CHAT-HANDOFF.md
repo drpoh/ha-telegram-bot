@@ -501,3 +501,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — Upstream native HA read lifecycle closeout
 - Added offline one-shot lifecycle tests: late connected fixture after deadline is closed without reads; disconnected fixture also closed without registry requests. Focused 14/14 tests PASS, no executable module changes or real HA reads. Full regression `/tmp/rs-upstream-lifecycle-full-20261011.log` PASS. Next real transport/registry attestation and production permission expansion require separate approval; source-only scope completed.
+
+## 2026-10-11 — Practical-MVP direction
+- `test/v3-policy-denial-retention-contract.test.mjs` synced from GitHub and focused 5/5 PASS with cross-path test. Policy-denied pending in isolated mock differs intentionally from consume-before-dispatch in the live one-light pilot; do not merge without stronger evidence. Prioritize reuse of running V2 and bounded read-only user features. Details in `docs/V3-PRACTICAL-MVP-PRIORITIES-2026-10-11.md`.
+- No production deployment. Full regression needed for checkpoint.

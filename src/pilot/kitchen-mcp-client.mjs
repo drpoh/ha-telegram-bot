@@ -3,12 +3,13 @@ import {Client} from '@modelcontextprotocol/sdk/client/index.js';
 import {StreamableHTTPClientTransport} from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import {inspectKitchenMcpEndpoint} from './kitchen-mcp-endpoint-policy.mjs';
 import {inspectKitchenLanEndpoint} from './kitchen-lan-endpoint-policy.mjs';
+import {LIGHT_OVERVIEW_IDS} from '../home/light-overview.mjs';
 export function createKitchenMcpClient({endpointFile='/home/drpoh/.config/rs-home-ai-v3/mcp-url',lanMvp=false,networkRestrictionVerified=false,credentialScopeReviewed=false,ownerApprovedLanHttpPilot=false}={}){
  return async (name,args)=>{
   const saunaReadOnly=new Set(['sensor.sauna_te_sauna_temperature','binary_sensor.sauna_sauna_te_sauna_ready']);
   const target=args?.entity_id;
   if(name==='ha_get_state'){
-   if(target!=='light.tambur_svet_l1'&&!saunaReadOnly.has(target) || Object.keys(args??{}).join(',')!=='entity_id')throw Error('scope_denied');
+   if(!LIGHT_OVERVIEW_IDS.includes(target)&&!saunaReadOnly.has(target) || Object.keys(args??{}).join(',')!=='entity_id')throw Error('scope_denied');
   }else if(name==='ha_call_service'){
    if(target!=='light.tambur_svet_l1')throw Error('scope_denied');
   }else throw Error('scope_denied');

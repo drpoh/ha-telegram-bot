@@ -414,3 +414,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — MILESTONE: V3 one-light bidirectional MVP completed
 - Both real Telegram /confirm paths succeeded on `light.tambur_svet_l1`. Independent real MCP readback off at 12:46:38 and on at 12:48:25 (2026-10-11, EEST). V3 release 97343fa active with zero restarts; existing V2 active. Keep capability restricted to exactly one target and turn_on/off confirmation; never infer whole-home readiness. Next: controlled dev/stage/prod expansion and additional fail-closed cases.
+
+## 2026-10-11 — Stage 2 begun (NO live changes)
+- User authorized next stage following real bidirectional one-light MVP. Dev remains canonical feature/v3-home-agent; prod V3 stays release 97343fa and one-light policy, V2 untouched. New stage HTTP loopback mock tests deny HA writes and simulate registry transport fault: 12 focused tests passed. See `docs/V3-NEXT-STAGE-DEV-STAGE-PROD.md`. Actual stage service and credentials NOT provisioned; multi-device scope not granted. Run full regression and commit docs/tests, then proceed offline multi-entity admission planning.
+- Full Pi regression now PASS: 146 files / 553 assertions / 0 failures, exit 0. Stage 2 baseline ready in dev, with no actual stage deployment or new permissions.

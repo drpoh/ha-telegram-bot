@@ -351,3 +351,10 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Real private Telegram turn_on plus /confirm -> independent HA-MCP `on` at 12:48:25 EEST.
 - [x] Verify V3 user service active with zero restarts; existing V2 bot active.
 - [ ] Plan next stage's dev/stage/prod separation, safe scoped target expansion, independent failure regression and Zigbee coordinator stability audit; do not enable broader live permissions without fresh owner approval.
+
+## 2026-10-11 — Stage 2 (in progress)
+- [x] Document dev/stage/prod boundaries and stage exit gates; retain existing V3 one-light prod baseline.
+- [x] Test stage mock via loopback HTTP with denied writes and forced registry connection drop (12 focused assertions/tests).
+- [x] Full Pi regression for this checkpoint: 146 isolated files / 553 assertions / 0 failed, exit 0.
+- [ ] Build registry-backed multi-device resolution in dev only (ambiguity, stale state, scope, confirmation and replay tests); no automatic live grant.
+- [ ] Plan independently provisioned stage runtime credentials/service only after explicit authorization; do not start a second poller or copy prod secrets.

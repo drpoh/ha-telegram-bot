@@ -1,0 +1,25 @@
+# RS Home AI V3 — Stage 2: environment isolation and expansion gates
+
+Status: **offline stage contract and runtime fault tests verified; no stage/prod deployment authorized** (2026-10-11).
+
+## Verified baseline
+- First V3 live, owner-confirmed one-light MVP completed on `light.tambur_svet_l1`: both on and off independently verified through HA-MCP, release 97343fa. No broad HA authority was approved.
+- V2 bot and Home Assistant must remain independent of V3. Preserve existing V3 pinned user-service artifact, trusted policy, private credentials, SQLite claims and rollback.
+
+## Environment contract
+- `dev`: canonical `/home/drpoh/projects/rs-home-ai-dev` checkout for code, offline fixtures and CI. Never bind development tests to production HA MCP or Telegram credentials.
+- `stage`: disposable local loopback `127.0.0.1` mock (`src/ops/stage-mock-ha.mjs`), no HA-MCP client/HA credentials or Telegram poller. Stage GET `/health` and `/registry` are mock-only; other routes and write HTTP methods return 403. Injected registry drop simulates a real read failure without granting authority.
+- `prod`: remains existing pinned V3 service release 97343fa; exactly one Zigbee light and Telegram private `/confirm` with durable single-use claim. No automatic promotion from stage, no second poller on the same Telegram token.
+- Manifests `config/environments/isolation.example.json` are **non-secret planning examples** only. `validateEnvironmentIsolation` enforces disjoint service IDs, credential refs, endpoint refs, ports and non-nested storage; it does not create resources.
+
+## Exit gates for stage infrastructure
+1. Offline tests enforce loopback-only binding, deny writes and real-HA read access, verify injected read failure, and leave no running mock process.
+2. Add distinct stage-only bot identity, storage, runtime service and endpoints ONLY after separately reviewed owner authorization; never share production token, private DB or MCP credential.
+3. Add deterministic multi-entity resolver and explicit registry-backed scope proof in `dev`, including ambiguous names, stale data, wrong-area, unavailable device, retry/replay and concurrent messages. All new HA capabilities default deny.
+4. Independent Zigbee coordinator failure audit. Reproduce simulated delivery failures and blocked writes without toggling live household devices.
+5. Promote a separately reviewed immutable artifact only after full regression, security review, rollback preflight and owner approval. Home Assistant remains functional if V3 is stopped.
+
+## 2026-10-11 Stage 2 checkpoint
+- `test/stage-mock-runtime-isolation.test.mjs` added. HTTP tests cover GET fixture identity, empty unauthorized registry, POST/service and API denial, invalid nonloopback binding and injected registry transport drop; combined focused environment suite 12/12 PASS.
+- This checkpoint does **not** imply actual stage deployment, HA integration or broader physical control.
+- Full `npm test` on Pi: 146 isolated files, 553 assertions, 0 failed, exit 0. Local log `/tmp/rs-v3-stage2-full-20261011.log`.

@@ -22,6 +22,9 @@ import { clearPendingConfirmations } from "../decision/pending-confirmation.mjs"
 import { getDecisionAudit, getDecisionAuditSummary } from "../decision/audit.mjs";
 
 import { getHealthStatus } from "../status/health.mjs";
+import { summarizeConfiguredLights } from "../home/on-lights-mcp-read.mjs";
+import { getKnownDevices } from "../home/entity-resolver.mjs";
+import { callHA } from "../mcp/executor.mjs";
 import {
   clearBehaviorCorrectionsForEntity,
   getBehaviorAuditSnapshot,
@@ -42,6 +45,7 @@ export function startTelegram() {
     await ctx.reply(
       "🏠 Home Assistant AI готов.\n\n" +
       "/status — состояние бота\n" +
+      "/lights_on — включённые светильники из списка известных\n" +
       "/model — AI-конфигурация\n" +
       "/clear — очистить память"
     );
@@ -62,6 +66,12 @@ bot.command("status", async (ctx) => {
     `PID: ${status.pid}`
   );
 });
+
+  bot.command("lights_on", async (ctx) => {
+    if (!isAllowed(ctx) || ctx.chat?.type !== "private" || ctx.chat?.id !== ctx.from?.id) return;
+    const result=await summarizeConfiguredLights({devices:getKnownDevices(),readTool:callHA});
+    await ctx.reply(result.text);
+  });
 
   bot.command("decisions", async (ctx) => {
     if (!isAllowed(ctx)) return;

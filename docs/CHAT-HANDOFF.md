@@ -507,4 +507,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - No production deployment. Full regression needed for checkpoint.
 
 ## 2026-10-11 — Practical light overview dev prototype
-- `src/home/on-lights-summary.mjs` provides bounded, non-authorizing read-only overview via injected readState and exact scoped light IDs, with zero-write and incomplete-result refusal tests. Four focused tests PASS. It is NOT connected to deployed Telegram or live HA and does not claim a complete house inventory. Full regression `/tmp/rs-lights-overview-full-20261011.log` pending.
+- `src/home/on-lights-summary.mjs` provides bounded, non-authorizing read-only overview via injected readState and exact scoped light IDs, with zero-write and incomplete-result refusal tests. Four focused tests PASS. It is NOT connected to deployed Telegram or live HA and does not claim a complete house inventory. Full regression `/tmp/rs-lights-overview-full-20261011.log` PASS.
+
+## 2026-10-11 — `/lights_on` dev integration
+- V2 source-only private Telegram command `/lights_on` reads up to 20 known configured lights using existing HA-MCP `ha_get_state`, with explicit partial-coverage notice and strict fail-closed response. Seven focused tests PASS. This does not affect the running `/home/drpoh/ha-telegram-bot` V2 executable until a separately reviewed deployment. No V3 or HA change. Full regression log `/tmp/rs-lights-telegram-integration-20261011.log` PASS.

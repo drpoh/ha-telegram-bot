@@ -18,7 +18,7 @@ export function createStageMockHa({host='127.0.0.1',port=0,registryFault='none',
   if(req.method==='GET'&&req.url==='/registry'){
    registryRequests++;
    if(registryFault==='drop' && registryRequests===2){req.socket.destroy();return;}
-   const respond=()=>{if(res.destroyed)return;res.writeHead(200);res.end(JSON.stringify({environment:'stage',mode:'mock',complete:true,partial:false,has_more:false,next_offset:null,capturedAt:Date.now(),entities:frozenEntities,authorization:false}));};
+   const respond=()=>{if(res.destroyed)return;res.writeHead(200);res.end(JSON.stringify({environment:'stage',mode:'mock',complete:true,partial:false,has_more:false,next_offset:null,capturedAt:Date.now(),entities:frozenEntities,devices:[],areas:[],authorization:false}));};
    if(registryFault==='delay' && registryRequests===2)setTimeout(respond,delayMs);else respond();
    return;
   }

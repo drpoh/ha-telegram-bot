@@ -431,3 +431,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — Repository hygiene audit
 - See `docs/PROJECT-AUDIT-2026-10-11.md`: active V3 uses immutable release 97343fa, source dev independent; deploy/rs-home-ai-v3.service is stale and now labeled historical; review Gate E branch is fully behind dev (113 commits, zero ahead) but was NOT deleted. Root experimental scripts are possible archive candidates (no tracked basename references), not proven unused by cron/manual; historic kitchen policy fixtures ARE referenced by a test. No files or Git branches were removed.
+
+## 2026-10-11 — Reversible root cleanup
+- Six root model experiments now under `scripts/legacy/` via git mv with explanation README. No runtime service points there according to checked systemd/current user's crontab; external manual aliases not fully proven. Root `bot.mjs`, live-capable `smoke-auto-safe.mjs`, pilot fixtures, all release/checkouts and all Git branches deliberately preserved. Run regression, push and inspect Git status. Avoid deleting remote review branch until PR/protection review.
+- Cleanup full regression DONE: 150 files / 574 assertions / zero failed, exit 0. Fixed outdated Stage fixture compatibility (two failures caught on first full run). Six experiments archived via git mv, not deleted; no branches or active services changed.

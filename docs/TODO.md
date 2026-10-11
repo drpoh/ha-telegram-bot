@@ -381,3 +381,9 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [ ] Inspect PR/protection/retention for old review branch before deletion; do not remove automatically.
 - [ ] Identify external cron/manual consumers before archiving root experimental files; keep safe rollback and production artifacts.
 - [ ] Full regression before any refactor/move of active source, with path change review.
+
+## 2026-10-11 — Safe cleanup checkpoint
+- [x] Relocate six unreferenced standalone model experiments to `scripts/legacy/` via Git rename with documentation.
+- [ ] Audit other user's cron/shell aliases/external scripts before relocating potentially live `bot.mjs` or `smoke-auto-safe.mjs`.
+- [ ] Review PR/protection before removing any remote review branch; retain commit history.
+- [x] Full Pi regression after reversible cleanup and Stage mock compatibility repair: 150 files / 574 assertions / 0 failures.

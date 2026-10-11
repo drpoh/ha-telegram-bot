@@ -986,3 +986,9 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-11 — Safe repository hygiene review
 - Audited GitHub branches, Pi checkout/runtime mapping, root scripts and references, historical pilot fixture uses and old release footprints. Documented prioritized findings in `docs/PROJECT-AUDIT-2026-10-11.md`; marked old systemd deployment template NOT INSTALLABLE AS-IS. No deletions, running service/unit changes or HA actions.
+
+## 2026-10-11 — Minimal reversible cleanup
+- Checked tracked source/scripts/config/test refs and user crontab + systemd entries for six standalone root model experimentation scripts: no exact-name consumers found in inspected paths. Preserved Vinted separate service reference, existing live bots, HA and root `smoke-auto-safe.mjs`.
+- Moved six test/model scripts into `scripts/legacy/` using `git mv`, preserving Git contents/history; added archive README. No executable code changed, live release untouched, no branches deleted. External shell aliases and unspecified manual workflows remain unverified.
+- Full Pi test run initially surfaced two pre-existing Stage fixture contract mismatches (stage-mock-ha.test and stage-gate-c-registry-bridge.test) that arose from prior `/registry` schema expansion, not the file moves. Restored `devices:[]` and `areas:[]` in mock fixture and updated old assertion to verify new schema; 12 related focused checks pass.
+- Final full `npm test` PASS: 150 isolated test files / 574 assertions / 0 failed files, exit 0. Local log `/tmp/rs-cleanup-full-final-20261011.log`. No production or Home Assistant changes.

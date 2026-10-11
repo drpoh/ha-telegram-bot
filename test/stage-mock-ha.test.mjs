@@ -12,7 +12,10 @@ test('local stage HA mock only serves fixtures and denies writes',async()=>{
   const health=await fetch(base+'/health');assert.equal(health.status,200);
   assert.deepEqual(await health.json(),{ok:true,environment:'stage',mode:'mock',haWrites:false});
   const registry=await fetch(base+'/registry');assert.equal(registry.status,200);
-  assert.deepEqual(await registry.json(),{entities:[],devices:[],areas:[],authorization:false});
+  const payload=await registry.json();
+  assert.equal(payload.environment,'stage');assert.equal(payload.mode,'mock');
+  assert.equal(payload.authorization,false);assert.equal(payload.complete,true);
+  assert.deepEqual(payload.entities,[]);assert.deepEqual(payload.devices,[]);assert.deepEqual(payload.areas,[]);
   for(const [method,path] of [['POST','/api/services/light/turn_on'],['GET','/api/states'],['DELETE','/registry'],['POST','/registry']]){
    const response=await fetch(base+path,{method});assert.equal(response.status,403);
   }

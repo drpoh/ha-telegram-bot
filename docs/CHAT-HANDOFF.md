@@ -505,3 +505,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-11 — Practical-MVP direction
 - `test/v3-policy-denial-retention-contract.test.mjs` synced from GitHub and focused 5/5 PASS with cross-path test. Policy-denied pending in isolated mock differs intentionally from consume-before-dispatch in the live one-light pilot; do not merge without stronger evidence. Prioritize reuse of running V2 and bounded read-only user features. Details in `docs/V3-PRACTICAL-MVP-PRIORITIES-2026-10-11.md`.
 - No production deployment. Full regression needed for checkpoint.
+
+## 2026-10-11 — Practical light overview dev prototype
+- `src/home/on-lights-summary.mjs` provides bounded, non-authorizing read-only overview via injected readState and exact scoped light IDs, with zero-write and incomplete-result refusal tests. Four focused tests PASS. It is NOT connected to deployed Telegram or live HA and does not claim a complete house inventory. Full regression `/tmp/rs-lights-overview-full-20261011.log` pending.

@@ -26,6 +26,9 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 
 - [x] Review HA-native multi-light registry inspection in dev with injected read-only official-connection contract and two-pass negative fixture tests; documented in `V3-MULTIDEVICE-REGISTRY-READINESS-2026-10-11.md`. One-shot late/disconnected lifecycle checks also pass; real endpoint attestation remains open.
 
+- [x] Dev-only bounded "which lights are on" summary with explicit entity scope and failure-safe reads (`src/home/on-lights-summary.mjs`); not deployed to V2/V3.
+- [ ] Attach read-only summary to reviewed authenticated HA read path and private Telegram ingress only after checking real inventory provenance; never claim unscanned rooms.
+
 ## P1 — Stage 2 and operations
 - [x] Revoke exact actor/token batch consent on Stage HTTP confirm registry-read failure; deny replay after mock recovers (offline only).
 - [x] Draft conservative Node.js + systemd stage deployment design, `deploy/stage/README.md`; no service installed and no new credentials.

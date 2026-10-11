@@ -1072,3 +1072,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-11 — Practical MVP decision and replay contract
 - Fast-forwarded canonical dev to GitHub `8b7b7fd`; focused `v3-policy-denial-retention-contract` plus `v3-cross-path-trust-contract` executed on Raspberry Pi: 5/5 PASS. The mock policy-denied token remains pending but cannot write; the pinned one-light pilot consumes before dispatch. No refactor of production semantics warranted.
 - Prioritized real user utility and reuse of existing V2 status/control functionality over another layer of infrastructure. `V3-PRACTICAL-MVP-PRIORITIES-2026-10-11.md` records the limited next feature and promotion blocks. Full regression pending for this checkpoint.
+
+## 2026-10-11 — Practical read-only lights overview (dev)
+- Added small pure `src/home/on-lights-summary.mjs` which summarizes only explicitly supplied `light.*` entity IDs through an injected readState function. Never calls HA itself or any write service. Rejects duplicate/invalid scope and incomplete or mismatched states without a misleading partial "all off" answer. Four focused tests PASS.
+- This is a dev library building block, NOT wired to live Telegram; a trusted HA read adapter, scoped inventory and reviewed deployment are still prerequisites. No added dependencies or daemon. Full regression log `/tmp/rs-lights-overview-full-20261011.log` pending.

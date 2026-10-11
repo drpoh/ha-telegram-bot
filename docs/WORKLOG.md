@@ -1041,3 +1041,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-11 — HA-MCP trust necessity audit (read-only)
 - Checked canonical dev branch and actual user-service `ExecStart`: immutable V3 97343fa active, V2 system service active. Reviewed existing registry-source, endpoint and capability fail-closed guards. Historical HA integration evidence identifies `ha_mcp_tools` bound on 0.0.0.0:9584, but server-side network isolation and independent denied-client proof are not established.
 - Decision documented in `V3-MCP-TRUST-NECESSITY-REVIEW-2026-10-11.md`: reuse native HA registry and supported authentication rather than create new infrastructure. Complete source-only review; real network restriction and HA registry attestation remain prerequisites for wider production scope, NOT prerequisites for further isolated dev tests.
+
+## 2026-10-11 — Source navigation and cleanup review
+- Canonical dev is clean at baseline `4b0da51`; read-only Pi inventory confirms active V2 checkout and pinned V3 `97343fa` distinct from dev. Inspected 77 `src/decision` modules, 44 documentation entries, root legacy scripts and test/service entrypoints.
+- Added `docs/STRUCTURE-INDEX.md` and entry links from README/PROJECT-MAP. Chose logical responsibility grouping instead of mass-moving source, historical records or retained service artifacts; `npm start` remains V2, and the old deploy template is not installable.
+- No executable changes, HA interaction, process restart, branch deletion or token inspection.

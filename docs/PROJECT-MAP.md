@@ -14,7 +14,7 @@ Updated 2026-10-11. See [latest cleanup audit](PROJECT-AUDIT-2026-10-11.md) befo
 
 **Do not force all Git checkout HEADs to match.** A checkout on `feature/v3-home-agent` is not necessarily the running release. Get actual `ExecStart` from systemd before any action.
 
-Engineering direction: [reuse-first ADR](ADR-REUSE-FIRST-2026-10-11.md).
+Engineering direction: [reuse-first ADR](ADR-REUSE-FIRST-2026-10-11.md). For code/document grouping and safe cleanup decisions see [structure index](STRUCTURE-INDEX.md).
 
 ## Repository navigation
 | Path | Role |

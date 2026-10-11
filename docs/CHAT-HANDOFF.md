@@ -479,3 +479,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-11 — MCP trust work rationalized
 - Reviewed need for separate infrastructure: NOT needed. Existing offline registry provenance/endpoint/capability guards are present and deliberately non-authorizing. Historical `ha_mcp_tools` exposure on 0.0.0.0:9584 still lacks independently verified source access control and negative LAN-client test; this requires separately authorized HA/network changes prior to wider production promotion. See `docs/V3-MCP-TRUST-NECESSITY-REVIEW-2026-10-11.md`.
 - No active service, HA or secret changes. Continue offline scope/actor failure testing; do not treat the environment as ready for production expansion.
+
+## 2026-10-11 — Structure/cleanup checkpoint
+- `docs/STRUCTURE-INDEX.md` maps V2, pinned V3, stage mock, decision clusters, operational scripts and historical documents without relocating code. README and PROJECT-MAP link to it. Root legacy monolith/manual smoke, historic branch and pinned releases remain preserved pending separate external consumer/rollback audit. Runtime untouched.

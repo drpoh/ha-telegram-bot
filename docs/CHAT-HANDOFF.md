@@ -546,3 +546,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-11 — Joined-chain / Stage handoff PR
 - Source-only joined Gate C actor → consent → durable journal → unknown MCP fixture tests added. CI result and merge must be inspected. Corrected confusing SQLite journal comment: journal is used by pinned pilot through an adapter but does not authorize actions by itself.
 - Gate C offline requirements may be accepted when CI passes; Gate C **real system** remains unapproved. Next Stage work is isolated source-only fault readiness, not installation.
+
+## 2026-10-11 — Stage source-only milestone started
+- New isolated negative-route HTTP tests for `src/ops/stage-mock-ha.mjs`; assert loopback-only bind and denial of HA-like write requests. Await CI. Stage is not deployed; actual systemd/network isolation not verified.

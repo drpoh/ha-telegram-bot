@@ -1121,3 +1121,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Added single-chain pilot test using private actor, exact action, one-time intent, SQLite journal and unknown MCP outcome fixture. Corrected stale execution journal comment that falsely claimed the journal was never used by the pilot. No production path/code behavior changed.
 - Gate C offline regression is ready for GitHub CI; **operational Gate C remains open** pending real boundary attestation, Pi ARMv7 test, source/identity and owner-authorized fault acceptance.
 - Stage next: use existing loopback mock and reviewed systemd template, not a new server or live HA; installation requires separate owner-controlled boundary acceptance.
+
+## 2026-10-11 — Stage mock write-denial regression PR
+- Added HTTP tests for service/MCP POST, registry mutations, and unsupported HA endpoints; mock denies all, with synthetic read-only empty registry and loopback binding. No Stage process installed, no real HA/Telegram access, no network firewall acceptance inferred. GitHub CI pending.

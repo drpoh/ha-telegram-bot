@@ -20,7 +20,8 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 ## P0 — trust and safety before broader live control
 - [x] Review whether new HA-MCP/registry infrastructure is necessary: reuse existing HA-native path and source/endpoint guards; documented in `V3-MCP-TRUST-NECESSITY-REVIEW-2026-10-11.md`.
 - [ ] **Promotion gate, not dev blocker:** independently prove authoritative complete/fresh HA registry and secure HA-MCP source restriction, including unrelated-LAN-client denial. HA/network changes need separate approval; LAN 9584 remains unverified.
-- [ ] Extend strict actor, command provenance, device identity, policy and confirmation gates from single light to an owner-reviewed set in **dev/stage only**. Block ambiguity, room/domain mismatch, missing/renamed/unavailable entities, replay and partial failures.
+- [x] Complete offline Stage batch fixture scope/identity hardening: existing deny-default policy schema, exact per-light two-service mock scope, fresh identity/name check, group-wide failure, token replay/transport tests. This is **non-authorizing**, not approved real multi-device control.
+- [ ] Real owner-reviewed multi-device permissions and authenticated complete HA registry remain separately gated; no live scope expansion.
 - [ ] Preserve Home Assistant Green and native automations when AI, Pi, Zigbee2MQTT or HA-MCP fails. Any real failure testing needs a reviewed maintenance window, backup and operator authorization.
 
 ## P1 — Stage 2 and operations

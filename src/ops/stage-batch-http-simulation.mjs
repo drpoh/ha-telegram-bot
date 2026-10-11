@@ -1,8 +1,8 @@
 import {createStageBatchConsent} from './stage-batch-consent.mjs';
 
 // Stage-only transport. Never imports MCP, HA control or production credentials.
-export function createStageBatchHttpSimulation({baseUrl,clock=Date.now,fetchImpl=fetch}={}){
- const stage=createStageBatchConsent({clock});
+export function createStageBatchHttpSimulation({baseUrl,clock=Date.now,fetchImpl=fetch,policy}={}){
+ const stage=createStageBatchConsent({clock,policy});
  const deny=reason=>({status:'denied',reason,authorized:false,actualWrite:false});
  let endpoint;
  try{

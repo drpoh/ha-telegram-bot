@@ -490,3 +490,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-11 — Stage batch transport-failure replay hardening
 - Source-only Stage batch now consumes matching pending confirmation if confirmation-time mock HTTP registry read fails, blocking delayed retry after recovery. Uses existing intent ledger, no new infrastructure. Actor/token mismatches do not cancel legitimate pending intent. Focused 15/15 tests PASS; full log `/tmp/rs-stage-batch-revoke-full-20261011.log` (PASS).
 - Next: dev-only multi-device scope policy/identity tests; no live promotion or HA changes.
+
+## 2026-10-11 — Multi-device offline Stage scope hardening
+- Stage mock batch now requires explicit schema-validated deny-default fixture scope per light, using existing operator-policy validator, and matches display names on second registry read alongside entity/device/area identity. This does not establish genuine operator policy provenance and cannot grant live execution.
+- Focused 14/14 batch HTTP and direct checks pass; full `/tmp/rs-multidevice-scope-full-20261011.log` PASS verified. Live V3 97343fa/V2 unchanged.

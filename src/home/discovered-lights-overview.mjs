@@ -1,0 +1,22 @@
+// HA-MCP search inventory: pure read-only summary; unknown states are never "off".
+export async function summarizeDiscoveredLights({readTool,maxEntities=200}={}){
+ const deny=()=>({status:'unavailable',authorization:false,actualWrite:false,text:'Не удалось получить полный список светильников. Состояние дома неизвестно.'});
+ if(typeof readTool!=='function'||!Number.isSafeInteger(maxEntities)||maxEntities<1||maxEntities>500)return deny();
+ let r;
+ try{r=await readTool('ha_search',{query:'',domain_filter:'light',limit:maxEntities,include_hidden:false,result_fields:['entity_id','domain','state']});}catch{return deny();}
+ if(r?.isError===true)return deny();
+ const d=r?.structuredContent??r;
+ if(d?.success!==true||d.partial!==false||d.entity_has_more!==false||d.entity_next_offset!=null||
+  !Number.isSafeInteger(d.entity_total_matches)||d.entity_total_matches<1||
+  !Array.isArray(d.entities)||d.entities.length!==d.entity_total_matches||d.entities.length>maxEntities)return deny();
+ const seen=new Set(),on=[],off=[],unknown=[];
+ for(const e of d.entities){
+  if(typeof e?.entity_id!=='string'||!/^light\.[a-z0-9_]+$/.test(e.entity_id)||
+    e.domain!=='light'||seen.has(e.entity_id)||typeof e.state!=='string')return deny();
+  seen.add(e.entity_id);
+  (e.state==='on'?on:e.state==='off'?off:unknown).push(e.entity_id);
+ }
+ const summary=`Из ${d.entities.length} найденных светильников: включено ${on.length}, выключено ${off.length}, состояние неизвестно у ${unknown.length}.`;
+ const details=on.length?` Включены: ${on.join(', ')}.`:' Подтверждённых включённых светильников нет.';
+ return {status:unknown.length?'partial':'complete',authorization:false,actualWrite:false,checked:d.entities.length,on,off,unknown,text:summary+details+(unknown.length?' Неизвестные не считаются выключенными.':'')};
+}

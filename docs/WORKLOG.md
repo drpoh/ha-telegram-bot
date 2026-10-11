@@ -1083,3 +1083,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-11 — `/lights_on` response shape and live gate
 - Added strict JSON text-content MCP response parsing while retaining matching entity IDs, zero-write behavior and fail-closed errors. Four focused adapter tests PASS. Known device inventory contains only three lights; no live HA read performed. See `V3-LIGHTS-ON-ACCEPTANCE-2026-10-11.md` for prerequisites.
+
+## 2026-10-11 — Practical full light inventory from existing HA-MCP
+- Real read-only HA-MCP `ha_get_state` on the 3 configured lights: response has `structuredContent` with matching entity IDs; only one had on/off, two lacked a known state. No state values or credentials stored.
+- Real read-only `ha_search` on existing V2 MCP endpoint returned complete 41 light entities (6 on, 14 off, 19 unavailable, 2 unknown) at inspection time. Used existing search rather than inventing registry infrastructure.
+- Dev Telegram `/lights_on` now uses strict one-shot `ha_search` inventory with fail-closed pagination/duplicates and reports unknowns separately from off. No production V2 restart or deployment. Added three focused tests PASS; full regression pending.

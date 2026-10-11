@@ -514,3 +514,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — `/lights_on` response shape checkpoint
 - Dev adapter supports strict matching-identity structured or JSON text MCP state. Four focused adapter tests PASS. Real HA response shape and V2 production rollout NOT verified. Inventory is three known lights, not whole house. See `docs/V3-LIGHTS-ON-ACCEPTANCE-2026-10-11.md`.
+
+## 2026-10-11 — Whole-home light status, real read-only evidence
+- Existing HA-MCP live read-only `ha_search` returned full 41-light subset (6 on, 14 off, 21 unavailable/unknown) at inspection; no device writes. Dev `/lights_on` now summarizes explicit unknowns, rejects incomplete/ambiguous inventory; three focused tests PASS. Running V2/V3 unchanged; full regression and deployment review still required.

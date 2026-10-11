@@ -28,7 +28,8 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 
 - [x] Dev-only bounded "which lights are on" summary with explicit entity scope and failure-safe reads (`src/home/on-lights-summary.mjs`); not deployed to V2/V3.
 - [x] Wire `/lights_on` in dev Telegram V2 source to existing `ha_get_state` for the bounded configured light subset; strictly label partial house coverage; not deployed.
-- [ ] Verify source-only `/lights_on` against real authenticated HA-MCP read response and owner-reviewed inventory before any production deployment; do not change active V2 service without a rollback plan.
+- [x] Verify read-only `ha_get_state` structured format and complete `ha_search` result against current HA-MCP (41 lights, 21 unknown/unavailable). Dev `/lights_on` uses one complete `ha_search` snapshot and explicitly reports unknown states.
+- [ ] Review live V2 release/rollback and authorized Telegram test before installing `/lights_on`; do not edit running checkout or restart bot automatically.
 
 ## P1 — Stage 2 and operations
 - [x] Revoke exact actor/token batch consent on Stage HTTP confirm registry-read failure; deny replay after mock recovers (offline only).

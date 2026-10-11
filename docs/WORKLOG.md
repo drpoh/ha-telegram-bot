@@ -1159,3 +1159,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-11 — Live V3 post-switch cancellation / cleanup checkpoint
 - Owner tested pending tamboor light request → `/cancel` → `/confirm` in active `c6a9812`; responses pending, cancelled, missing. No confirmed device write. Real physical state not independently checked. `docs/V3-CLEANUP-CHECKPOINT-2026-10-11.md` classifies cleanup by runtime/rollback consumers and requires read-only Pi inventory before deletion. No service or HA changes.
+
+## 2026-10-11 — Historical V3 release folders archived
+- Owner ran reversible move of `rs-home-ai-v3-release-7d9bab5` and `rs-home-ai-v3-release-920585d` to `~/projects/archive/rs-home-ai-v3/`; verified both target directories exist with private permissions and `systemctl --user is-active rs-home-ai-v3.service` is `active` afterwards.
+- Prior scan showed historic systemd backup unit references to old paths and active Gate D timers bound to **separate historical checkout** `/home/drpoh/rs-home-ai-v3`; keep this checkout and its timers. No source code or live production unit changed. Archive move is reversible and does not reclaim disk capacity.

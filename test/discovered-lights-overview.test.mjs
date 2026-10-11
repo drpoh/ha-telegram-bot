@@ -18,3 +18,14 @@ test('empty inventory and wrong member identity are not a clean all-off result',
   assert.equal(r.status,'unavailable');assert.equal(r.authorization,false);
  }
 });
+test('bounded discovery never silently truncates excessive light inventory',async()=>{
+ let seenArgs;
+ const r=await summarizeDiscoveredLights({maxEntities:2,readTool:async(_name,args)=>{seenArgs=args;return snap([e('a','on'),e('b','off'),e('c','on')]);}});
+ assert.equal(seenArgs.limit,2);assert.equal(seenArgs.domain_filter,'light');
+ assert.equal(r.status,'unavailable');assert.equal(r.actualWrite,false);
+});
+test('unsupported states are unknown, never inferred off',async()=>{
+ const r=await summarizeDiscoveredLights({readTool:async()=>snap([e('a','unavailable'),e('b','unknown'),e('c','idle')])});
+ assert.equal(r.status,'partial');assert.equal(r.on.length,0);assert.equal(r.off.length,0);assert.deepEqual(r.unknown,['light.a','light.b','light.c']);
+ assert.match(r.text,/Неизвестные не считаются выключенными/);
+});

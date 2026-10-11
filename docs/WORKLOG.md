@@ -1091,3 +1091,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-11 — Read-only light discovery negative contract extension
 - Verified clean canonical dev baseline `6eded60` had previous stage/production audit already committed. Added 2 negative tests for incomplete HA-MCP light search identity/pagination proof and empty/duplicate/foreign-domain registry entries, plus updated stale `/lights_on` acceptance documentation to reflect current complete `ha_search` read-only adapter. Focused 5/5 pass; full `npm test` 160 files, 618 assertions, zero failed, exit 0 (`/tmp/rs-discovery-guard-full-20261011.log`). No runtime service touched.
+
+## 2026-10-11 — Read-only lighting overview contract reinforcement
+- On current `4425b18` dev HEAD, verified earlier Stage/production audit full regression evidence exists (155/592/0); newer `/lights_on` work already committed by separate checkpoints (see recent git history). Added only pure read-only contract tests: hard maximum inventory limit must deny oversized response; unsupported light states always stay in `unknown`, never silently converted to `off`. Focused `discovered-lights-overview` tests PASS 7/7. No source action path or live bot service modified.

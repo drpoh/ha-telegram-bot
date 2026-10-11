@@ -520,3 +520,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — Read-only lights discovery safety extension
 - Full latest dev regression PASS 160 files / 618 assertions / zero failed. Enhanced `test/discovered-lights-overview.test.mjs` denial assertions for incomplete inventory, empty data and identity ambiguity; updated acceptance documentation superseding earlier 3-light adapter design. Real bot V2/V3 remain separate and not deployed from this change. Next meaningful gate is owner-reviewed `/lights_on` deployment and read-only user acceptance, or independent trusted HA registry boundary work.
+
+## 2026-10-11 — Current head and light discovery tests
+- Checked canonical dev head `4425b18` (upstream work advanced beyond earlier shared-decision audit), clean before tests. Earlier unfinished audit log `/tmp/rs-shared-decision-audit-full.log` contains PASS 155/592/0; later HEAD documents full PASS 160/618/0. Added two negative light discovery tests for bounded inventory and unknown states. Dev-only, `/lights_on` remains unpromoted to running Telegram V2; full regression not repeated for test-only extension.

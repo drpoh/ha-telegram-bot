@@ -49,3 +49,29 @@ test('MCP search timeout budget is validated before any request',async()=>{
   assert.equal(result.status,'unavailable');assert.equal(calls,0);
  }
 });
+
+test('deadline emits abort signal to cooperating read transport',async()=>{
+ let signal, calls=0;
+ const result=await summarizeDiscoveredLights({timeoutMs:25,readTool:(_name,_args,options)=>{
+  calls++;signal=options.signal;
+  return new Promise((_resolve,reject)=>signal.addEventListener('abort',()=>reject(new Error('aborted')),{once:true}));
+ }});
+ assert.equal(calls,1);assert.equal(signal.aborted,true);
+ assert.equal(result.status,'unavailable');assert.equal(result.authorization,false);assert.equal(result.actualWrite,false);
+});
+test('successful read does not abort transport after timer cleanup',async()=>{
+ let signal;
+ const result=await summarizeDiscoveredLights({timeoutMs:25,readTool:async(_name,_args,options)=>{signal=options.signal;return snap([e('a','on')]);}});
+ assert.equal(result.status,'complete');assert.equal(signal.aborted,false);
+ await new Promise(resolve=>setTimeout(resolve,45));
+ assert.equal(signal.aborted,false);
+});
+test('ignored cancellation yields denial, not a retried search',async()=>{
+ let resolveRead,signal,calls=0;
+ const eventual=new Promise(resolve=>{resolveRead=resolve;});
+ const result=await summarizeDiscoveredLights({timeoutMs:25,readTool:async(_name,_args,options)=>{signal=options.signal;calls++;return eventual;}});
+ assert.equal(result.status,'unavailable');assert.equal(signal.aborted,true);assert.equal(calls,1);
+ resolveRead(snap([e('a','on')]));
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(result.status,'unavailable');assert.equal(calls,1);
+});

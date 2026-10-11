@@ -5,7 +5,13 @@ import {inspectKitchenMcpEndpoint} from './kitchen-mcp-endpoint-policy.mjs';
 import {inspectKitchenLanEndpoint} from './kitchen-lan-endpoint-policy.mjs';
 export function createKitchenMcpClient({endpointFile='/home/drpoh/.config/rs-home-ai-v3/mcp-url',lanMvp=false,networkRestrictionVerified=false,credentialScopeReviewed=false,ownerApprovedLanHttpPilot=false}={}){
  return async (name,args)=>{
-  if(!['ha_get_state','ha_call_service'].includes(name) || args?.entity_id!=='light.tambur_svet_l1')throw Error('scope_denied');
+  const saunaReadOnly=new Set(['sensor.sauna_te_sauna_temperature','binary_sensor.sauna_sauna_te_sauna_ready']);
+  const target=args?.entity_id;
+  if(name==='ha_get_state'){
+   if(target!=='light.tambur_svet_l1'&&!saunaReadOnly.has(target) || Object.keys(args??{}).join(',')!=='entity_id')throw Error('scope_denied');
+  }else if(name==='ha_call_service'){
+   if(target!=='light.tambur_svet_l1')throw Error('scope_denied');
+  }else throw Error('scope_denied');
   if(name==='ha_call_service'&&(args.domain!=='light'||!['turn_on','turn_off'].includes(args.service)))throw Error('scope_denied');
   const configured=readFileSync(endpointFile,'utf8').trim();
   const endpoint=lanMvp===true

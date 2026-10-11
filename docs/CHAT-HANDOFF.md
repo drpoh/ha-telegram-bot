@@ -511,3 +511,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — `/lights_on` dev integration
 - V2 source-only private Telegram command `/lights_on` reads up to 20 known configured lights using existing HA-MCP `ha_get_state`, with explicit partial-coverage notice and strict fail-closed response. Seven focused tests PASS. This does not affect the running `/home/drpoh/ha-telegram-bot` V2 executable until a separately reviewed deployment. No V3 or HA change. Full regression log `/tmp/rs-lights-telegram-integration-20261011.log` PASS.
+
+## 2026-10-11 — `/lights_on` response shape checkpoint
+- Dev adapter supports strict matching-identity structured or JSON text MCP state. Four focused adapter tests PASS. Real HA response shape and V2 production rollout NOT verified. Inventory is three known lights, not whole house. See `docs/V3-LIGHTS-ON-ACCEPTANCE-2026-10-11.md`.

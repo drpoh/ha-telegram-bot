@@ -17,3 +17,12 @@ test('empty and overbroad device lists refuse before any MCP read',async()=>{
  const broad=Object.fromEntries(Array.from({length:21},(_,i)=>[String(i),{domain:'light',entity_id:'light.x'+i}]));
  assert.equal((await summarizeConfiguredLights({devices:broad,readTool})).status,'unavailable');assert.equal(calls,0);
 });
+
+test('plain MCP text JSON with matching identity is accepted, malformed data denied',async()=>{
+ const ok=await summarizeConfiguredLights({devices,readTool:async (_,args)=>({content:[{type:'text',text:JSON.stringify({entity_id:args.entity_id,state:'on'})}]})});
+ assert.equal(ok.status,'complete');assert.deepEqual(ok.on,['light.a','light.b']);
+ for(const text of ['not-json',JSON.stringify({entity_id:'light.other',state:'on'})]){
+  const result=await summarizeConfiguredLights({devices,readTool:async()=>({content:[{type:'text',text}]})});
+  assert.equal(result.status,'unavailable');
+ }
+});

@@ -549,3 +549,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — Stage source-only milestone started
 - New isolated negative-route HTTP tests for `src/ops/stage-mock-ha.mjs`; assert loopback-only bind and denial of HA-like write requests. Await CI. Stage is not deployed; actual systemd/network isolation not verified.
+
+## 2026-10-11 — Repository Maintenance branch audit
+- GitHub read-only inventory: 11 branches prior to maintenance PR. Seven are historical heads of squash-merged PRs #2–#8. Do not confuse their diverged Git ancestry with unique unmerged content. `docs/REPOSITORY-MAINTENANCE-2026-10-11.md` records explicit keep/delete candidates and prerequisites.
+- Gate E historical review branch is ancestor of current feature V3 in GitHub comparison (0 behind), but is preserved pending external use review. No remote branches, local Pi files or active services deleted.

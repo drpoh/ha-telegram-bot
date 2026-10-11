@@ -457,3 +457,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-11 — Stage deployment template source review
 - Canonical dev Stage template `deploy/stage/rs-home-ai-stage.service.template` is inert until explicit path replacement and separately approved install. Source tests 2/2, temporary rendered systemd-analyze verification no errors. No systemd registration/start/production update. Next deployment gate requires immutable stage artifact, actual sandbox/network denial evidence and owner approval.
 - Stage deployment template checkpoint full npm test PASS 154 files / 590 assertions / 0 failed. Only source template validated, no actual service installed, no real IP isolation tested. Next gate is explicitly authorized immutable Stage provisioning and live sandbox verification; never deploy automatically from dev.
+
+## 2026-10-11 — Reuse-first decision
+- Owner selected existing HA/Assist/ESPHome/HA-MCP/systemd and maintained libraries; create only shared decision/policy adapters. Decision formally recorded at `docs/ADR-REUSE-FIRST-2026-10-11.md`, linked from PROJECT-MAP, active TODO updated. Do not expand Stage mock into a substitute for Home Assistant; review duplicate policy modules before next code addition. No production modifications authorized.

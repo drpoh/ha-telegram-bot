@@ -9,6 +9,10 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [x] Dev Stage 2 mock isolation, exact light selection, stale/replaced target revalidation, one-use consent and transport-failure checks; full Pi regression after cleanup: 150 test files, 574 assertions, 0 failures (2026-10-11).
 - [x] Six historical standalone model experiments moved to `scripts/legacy/` with Git rename; root live-capable `smoke-auto-safe.mjs` and old `bot.mjs` retained.
 
+## Engineering principle
+- [x] Reuse-first architecture accepted and documented in [ADR-REUSE-FIRST-2026-10-11.md](ADR-REUSE-FIRST-2026-10-11.md): Home Assistant/Assist/ESPHome/HA-MCP/systemd/Node.js own infrastructure; write only missing deterministic policy and adapters.
+- [ ] Audit duplicated Stage/production selection and confirmation policy modules before creating another adapter; retain safety invariants.
+
 ## P0 — trust and safety before broader live control
 - [ ] Prove authoritative complete/fresh HA registry identity and secure HA-MCP transport/source restrictions; current LAN 9584 trust boundary requires independent review. Do not infer live authority from Stage mock results.
 - [ ] Extend strict actor, command provenance, device identity, policy and confirmation gates from single light to an owner-reviewed set in **dev/stage only**. Block ambiguity, room/domain mismatch, missing/renamed/unavailable entities, replay and partial failures.
@@ -22,7 +26,7 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [x] Create inert systemd Stage template and validate policy directives (2 unit tests and rendered syntax check; not installed).
 - [ ] Provision/install isolated Stage service only after independent owner-approved sandbox, effective IP isolation and identity review; no service deployed.
 - [x] Dev-only batch confirmation for 2–12 exact light targets, revalidation, one-use claim and all-or-nothing denial (13 focused tests including existing gates).
-- [ ] Connect batch simulation to independently refreshed stage HTTP registry at issue and confirmation, injecting network failures; no real writes.
+- [x] Batch simulation uses independent Stage HTTP registry reads at issue/confirmation, rejects dropped connection and real HA LAN address (test/stage-batch-http-simulation.test.mjs).
 - [ ] Address historical Zigbee2MQTT Ember coordinator ASH disconnect issue independently from V3; verify coordinator/serial connectivity before any network reconfiguration or firmware change.
 - [ ] Validate isolated restore/rollback and backup procedures, preserving external V3 SQLite claims and HA Green independence. Do not handle production secrets or schedule backups without approval.
 - [ ] Evaluate authenticated HA webhook/loopback migration and other MCP consumers before modifying the currently configured server listener.

@@ -1116,3 +1116,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-11 — Gate C durable journal process replay tests (GitHub PR)
 - New offline subprocess tests for the already-existing SQLite PRIMARY KEY journal: crash with unknown reserved claim before outcome mark, five competing OS processes, and terminal verified/unverified outcome cannot be re-claimed. Does not change production implementation, launch configuration, privileges or runtime storage. CI result pending.
 - Separate requirement remains: trusted actor/action binding, recovery behavior and real integration acceptance before any live multi-device expansion.
+
+## 2026-10-11 — Joined Gate C offline review and Stage handoff
+- Added single-chain pilot test using private actor, exact action, one-time intent, SQLite journal and unknown MCP outcome fixture. Corrected stale execution journal comment that falsely claimed the journal was never used by the pilot. No production path/code behavior changed.
+- Gate C offline regression is ready for GitHub CI; **operational Gate C remains open** pending real boundary attestation, Pi ARMv7 test, source/identity and owner-authorized fault acceptance.
+- Stage next: use existing loopback mock and reviewed systemd template, not a new server or live HA; installation requires separate owner-controlled boundary acceptance.

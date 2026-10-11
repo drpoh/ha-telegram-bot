@@ -4,7 +4,7 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 
 ## Verified baseline
 - [x] GitHub-first offline CI introduced by PR #2 (`a4a07ae`), GitHub CI passed 160 files / 622 assertions / 0 failures. PR #3 (`142dfec`) passed 160/625/0; PR #4 (`a1ee64c`) passed 161/628/0; all merged 2026-10-11. **Not Raspberry Pi release acceptance.**
-- [ ] Canonical Pi DEV last explicitly observed clean at `2a71552`; GitHub is three commits ahead. Check local status and fast-forward only the DEV checkout after reviewing local changes; do not change pinned runtimes.
+- [ ] Canonical Pi DEV last explicitly observed clean at `2a71552`; GitHub has advanced beyond the last observed Pi DEV head; exact current divergence needs a new Pi read-only check. Check local status and fast-forward only the DEV checkout after reviewing local changes; do not change pinned runtimes.
 
 - [x] Live V3 one-light Telegram MVP on `light.tambur_svet_l1`: both `turn_off` and `turn_on` were confirmed via independent HA-MCP reads on 2026-10-11. Active pinned release: `97343fa`, not the canonical dev branch.
 - [x] Existing Telegram V2 and V3 services remained active during the latest cleanup. No broader Home Assistant permission was granted.
@@ -41,7 +41,10 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [x] Gate C offline pilot actor in-flight lock: reject new Telegram intent during unresolved dispatch, deny concurrent confirmation and never retry an unknown MCP outcome. PR #4 merged; 161 files / 628 assertions / 0 failures on GitHub CI. Not cross-process or deployed.
 - [ ] Cross-process unknown-result lock needs durable journal/state admission review before any additional live action; this in-memory guard is not a deployment upgrade.
 
-- [x] Offline SQLite Gate C journal acceptance tests cover crash before mark, 5 independent racing processes, and terminal outcome replay (GitHub PR CI pending). This verifies duplicate-action-id rejection, not full actor/command authorization or live failover.
+- [x] Offline SQLite Gate C journal acceptance tests cover crash before mark, 5 independent racing processes, and terminal outcome replay (PR #6 merged, CI 162 files / 631 assertions / 0 failed). This verifies duplicate-action-id rejection, not full actor/command authorization or live failover.
+
+- [x] Gate C joined offline pilot regression combines private-actor check, exact tambour consent, one-use confirm, deny-on-journal-fault and unknown MCP result without retry. This is offline proof only, not Stage/prod signoff.
+- [ ] Full Gate C closure requires live endpoint admission/security evidence, durable identity/action binding across restarts, independent ARMv7 validation and owner-approved fault acceptance. Do not imply completion of this operational gate from offline CI.
 
 ## P1 — Stage 2 and operations
 - [x] Revoke exact actor/token batch consent on Stage HTTP confirm registry-read failure; deny replay after mock recovers (offline only).

@@ -1,8 +1,9 @@
 import {resolve,isAbsolute} from 'node:path';
 import {executeSql,escapeSql} from '../db/database.mjs';
 
-// Offline acceptance reference only. The journal is never connected to live
-// HA-MCP or the pilot. SQLite PRIMARY KEY provides cross-process atomic claim.
+// SQLite PRIMARY KEY provides cross-process atomic claims. The separately
+// approved pinned V3 pilot may use this through its deployment storage adapter;
+// this module itself has no HA-MCP client or authorization authority.
 export function createGateCExecutionJournal({dbPath}={}){
  if(typeof dbPath!=='string'||!isAbsolute(dbPath)||resolve(dbPath)!==dbPath||
     dbPath==='/'||!dbPath.endsWith('.db'))throw Error('invalid_journal_path');

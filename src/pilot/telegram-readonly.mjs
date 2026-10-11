@@ -5,6 +5,7 @@ import {createKitchenMcpDispatchBoundary} from './kitchen-mcp-dispatch-boundary.
 import {createKitchenLiveAdmission} from './kitchen-live-admission.mjs';
 import {createKitchenMcpClient} from './kitchen-mcp-client.mjs';
 import {prepareV3PilotExecutionJournal} from '../ops/v3-pilot-execution-journal.mjs';
+import {summarizeSauna} from '../home/sauna-status.mjs';
 const base='/home/drpoh/.config/rs-home-ai-v3/';
 const token=readFileSync(base+'telegram-token','utf8').trim();
 const userId=Number(readFileSync(base+'allowed-user-id','utf8').trim());
@@ -19,6 +20,7 @@ const boundary=createKitchenMcpDispatchBoundary({
 const claimsPath='/home/drpoh/.local/state/rs-home-ai-v3/claims.db';
 const storage=prepareV3PilotExecutionJournal({dbPath:claimsPath,rollbackRoot:'/home/drpoh/rs-home-ai-v3'});
 const executionJournal=storage.journal;
+const saunaRead=createKitchenMcpClient({lanMvp:true,ownerApprovedLanHttpPilot:true});
 const pilot=createKitchenDryrunConsent({
  executionJournal,
  dispatch:({action})=>boundary.dispatch({action})
@@ -33,8 +35,17 @@ bot.command('confirm',async ctx=>{
  return ctx.reply(result.status==='missing'?'Нет действующего запроса для подтверждения.':result.status==='verified'?'Home Assistant подтвердил состояние светильника после команды.':result.status==='unverified'?'Команда отправлена, но итоговое состояние не подтверждено: '+result.reason:result.reason==='replay_claim_unavailable'?'Команда заблокирована: защищённый журнал подтверждений недоступен.':'Команда не выполнена или результат неизвестен: '+(result.reason||result.status));
 });
 bot.command('cancel',ctx=>allow(ctx)?ctx.reply(pilot.cancel(actor(ctx))?'Запрос отменён.':'Активного запроса нет.'):undefined);
+bot.command('sauna',async ctx=>{
+ if(!allow(ctx))return;
+ const result=await summarizeSauna({readState:id=>saunaRead('ha_get_state',{entity_id:id})});
+ return ctx.reply(result.text);
+});
 bot.on('message',ctx=>{
  if(!allow(ctx))return;
+ const text=typeof ctx.message?.text==='string'?ctx.message.text.trim().toLowerCase().replace(/ё/g,'е'):'';
+ if(['какая температура в сауне?','какая температура в сауне','сауна готова?','готова ли сауна?'].includes(text)){
+  return summarizeSauna({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
+ }
  const r=pilot.request(actor(ctx),ctx.message?.text);
  return ctx.reply(r.status==='pending'?'Цель: light.tambur_svet_l1. Действие: '+(ctx.message.text.toLowerCase().startsWith('включи')?'ВКЛЮЧИТЬ':'ВЫКЛЮЧИТЬ')+'. Для РЕАЛЬНОГО переключения отправь /confirm в течение 60 секунд либо /cancel.':'Режим тестирования. Попробуй: «Включи свет в тамбуре» или «Выключи свет в тамбуре».');
 });

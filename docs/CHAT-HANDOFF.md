@@ -408,3 +408,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — Owner switched pilot target to light.tambur_svet_l1
 - Real HA MCP returns on for new target. Registry unique_id `0xa4c13898b491c3ca_light_l1_zigbee2mqtt`, device `4cbaab0f1663e40a638b7636f938a7e7`, area `koridor_1_etazh`; live admission valid=true with updated hash. Owner Telegram prompts are «Выключи свет в тамбуре» then /confirm (current state on), or «Включи свет в тамбуре» then /confirm. No physical write performed in validation. Old policy backed up at `~/.config/rs-home-ai-v3/kitchen-operator-policy.json.before-tambur`.
+
+## 2026-10-11 — FIRST V3 LIVE PASS
+- User's private Telegram confirmed V3 /confirm for turn_off of `light.tambur_svet_l1`. Bot confirmed; independently read HA-MCP on release 97343fa gives state `off` and last_updated 2026-10-11T12:46:38+03. V3 active, zero restarts; V2 active. Need one turn_on with fresh intent and /confirm for bidirectional MVP acceptance. Preserve all rollback and SQLite claims.

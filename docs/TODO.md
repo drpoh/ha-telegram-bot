@@ -341,3 +341,7 @@ A task can be marked done only with a file/commit reference, verification eviden
 ## 2026-10-11 — Tambur V3 pilot
 - [x] Replace failed IKEA test target with `light.tambur_svet_l1` across pilot gates and trusted operator policy; verify live MCP state on, registry identity and 28 focused tests.
 - [ ] Complete a real owner Telegram /confirm turn_off with verified state, then turn_on with verified state; preserve rollback.
+
+## 2026-10-11 — Live pilot acceptance
+- [x] Real owner Telegram V3 `/confirm` turn_off `light.tambur_svet_l1`: verified `off` independently via HA-MCP; both services active.
+- [ ] Complete fresh turn_on via Telegram and independently verify on; then close bidirectional pilot acceptance.

@@ -1029,3 +1029,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Audited actual V3 pilot imports, separate mock stage consent modules, `createV3IntentLedger`, isolated joined chain and offline confirmed-action gate. They share primitive ledger semantics but different trusted ingress and execution boundaries. Did not equate an offline reference gate with live authorization or modify the pinned production release.
 - Added `docs/V3-SHARED-DECISION-AUDIT-2026-10-11.md` and import-boundary tests asserting no Stage mock use in the live pilot entry and no real pilot dispatcher in Stage consent. 9/9 focused checks pass. Next is careful common actor/action contract comparison, not adding another framework.
 - Full Pi regression after source boundary audit PASS: 155 isolated test files, 592 assertions, 0 failed, exit 0. Evidence `/tmp/rs-shared-decision-audit-full.log`.
+
+## 2026-10-11 — Ingress contract comparison
+- Compared the pinned pilot chain with `v3-isolated-joined-chain`: both reuse the ledger, but differ in trusted ingress, strict one-device approval, durable claim and actual MCP execution vs injected simulation. Recorded explicit five-row contract table in shared decision audit. Decision: no replacement universal transport or hot swap; preserve policy boundaries.

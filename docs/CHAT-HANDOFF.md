@@ -468,3 +468,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-11 — Shared decision audit checkpoint
 - Audited source separation and documented in `docs/V3-SHARED-DECISION-AUDIT-2026-10-11.md`: live pilot imports reviewed MCP dispatcher/journal; Stage simulation imports pure selector/ledger only; offline confirmed gate is not live pilot. Import-boundary tests 9/9 pass. Do not unify trusted ingress or route mock candidates into live execution without source-policy audit and owner release gate.
 - Full regression PASS 155 files / 592 assertions / 0 failed. Finish this audit without touching the pinned live pilot or adding new execution grants.
+
+## 2026-10-11 — Cross-path contract decision
+- Actor/action/replay comparison added to `docs/V3-SHARED-DECISION-AUDIT-2026-10-11.md`; reusing ledger is correct, but live trusted ingress + durable claim cannot be replaced by Stage fixtures. No new framework, no production changes. Next: test cross-path invariants and retain single-light scope.

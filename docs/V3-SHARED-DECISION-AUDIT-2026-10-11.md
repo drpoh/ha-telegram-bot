@@ -16,3 +16,14 @@
 - Build a precise comparison of source/actor and action-envelope invariants between `kitchen-dryrun-consent` and `v3-isolated-joined-chain` before extracting a shared contract.
 - Stage production-target expansion is NOT authorized by this review; live coverage remains a single approved light.
 - Plan Assist channel reuse through Home Assistant's native pipeline; avoid bespoke voice transport.
+
+## Trusted ingress and action contract comparison (2026-10-11)
+| Boundary | Live pinned pilot source path | Isolated joined chain | Implication |
+|---|---|---|---|
+| Actor origin | Telegram handler validates owner and private chat before `createKitchenDryrunConsent` request | `normalizeV3Command` accepts only authenticated Telegram transport through a private injected issue capability | Do not accept actor identity or `authenticated=true` from LLM/voice text; preserve trusted adapter gate |
+| Approved target | Exact `light.tambur_svet_l1`, `light` domain, on/off only, checked again inside MCP dispatcher | Action envelope passes deterministic boundary and policy; offline mock dispatcher only | No shared generic selector may widen the live pilot's target allowlist |
+| Confirmation | Common `createV3IntentLedger`, one-time token limited to 60s, locally keyed by actor | Common ledger and transport-bound issue, mock dispatcher validates authorization | Reuse ledger primitive; transport-specific actor verification stays separate |
+| Execution | Trusted admission, persistent claim journal and HA state preflight/readback (no write retry) | In-memory mock ledger + injected simulatedWrite; no live MCP client | Do not replace durable live replay protection with fixture memory |
+| Voice | Not wired to the live pilot | Reference command envelope rejects asserted voice identity | Implement voice later through native Assist and shared policy only after identity/scope review |
+
+**Decision:** retain the currently shared intent-ledger primitive and explicit, separate trusted ingress adapters. A new universal adapter would add complexity without proving equivalent actor, identity, approval and durable claim semantics. First develop contract tests and keep live release unchanged.

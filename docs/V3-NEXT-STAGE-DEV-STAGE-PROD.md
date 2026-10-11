@@ -23,3 +23,8 @@ Status: **offline stage contract and runtime fault tests verified; no stage/prod
 - `test/stage-mock-runtime-isolation.test.mjs` added. HTTP tests cover GET fixture identity, empty unauthorized registry, POST/service and API denial, invalid nonloopback binding and injected registry transport drop; combined focused environment suite 12/12 PASS.
 - This checkpoint does **not** imply actual stage deployment, HA integration or broader physical control.
 - Full `npm test` on Pi: 146 isolated files, 553 assertions, 0 failed, exit 0. Local log `/tmp/rs-v3-stage2-full-20261011.log`.
+
+## Offline deterministic target selection (2026-10-11)
+- `src/decision/v3-stage-target-resolution.mjs` validates a complete, fresh, non-paginated trusted light inventory before returning only `{status:'candidate', authorized:false}`; it cannot call HA or authorize writes.
+- It demands exact name or entity ID, exact area, a unique match and an available/enabled target. Duplicates, stale/partial snapshots, cross-area names, fuzzy strings and ambiguous identical names fail closed.
+- `test/v3-stage-target-resolution.test.mjs`: seven independent tests passed. A candidate still requires a separately trusted source/identity, reviewed policy, real HA state and user confirmation before ever reaching a production dispatcher. Production remains pinned at 97343fa.

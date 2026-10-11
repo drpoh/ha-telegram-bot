@@ -358,3 +358,5 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [x] Full Pi regression for this checkpoint: 146 isolated files / 553 assertions / 0 failed, exit 0.
 - [ ] Build registry-backed multi-device resolution in dev only (ambiguity, stale state, scope, confirmation and replay tests); no automatic live grant.
 - [ ] Plan independently provisioned stage runtime credentials/service only after explicit authorization; do not start a second poller or copy prod secrets.
+- [x] Pure Stage 2 multi-device selection candidate implementation, seven offline tests passing; exact name/ID + area, stale/ambiguous/disabled deny, no live authority.
+- [ ] Wire only into mock stage's read path and test attack/fault cases before proposing any production support.

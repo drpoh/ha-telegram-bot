@@ -542,3 +542,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — Offline SQLite cross-process replay test PR
 - Added three tests of existing durable Gate C journal across Node subprocess crashes/races; GitHub CI not yet verified. Tests are offline, use temporary SQLite databases and fake identities. No production change or proof of live end-to-end identity admission.
+
+## 2026-10-11 — Joined-chain / Stage handoff PR
+- Source-only joined Gate C actor → consent → durable journal → unknown MCP fixture tests added. CI result and merge must be inspected. Corrected confusing SQLite journal comment: journal is used by pinned pilot through an adapter but does not authorize actions by itself.
+- Gate C offline requirements may be accepted when CI passes; Gate C **real system** remains unapproved. Next Stage work is isolated source-only fault readiness, not installation.

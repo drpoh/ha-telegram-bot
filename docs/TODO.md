@@ -16,7 +16,8 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 
 ## P1 — Stage 2 and operations
 - [ ] Design actual separate stage identity, token, service, isolated storage and mock HA endpoint. **No deployment** until the operator approves and shared production credentials are ruled out.
-- [ ] Simulate end-to-end multi-light requests and registry changes during confirmation; require only non-authorizing results without a real actuator.
+- [x] Dev-only batch confirmation for 2–12 exact light targets, revalidation, one-use claim and all-or-nothing denial (13 focused tests including existing gates).
+- [ ] Connect batch simulation to independently refreshed stage HTTP registry at issue and confirmation, injecting network failures; no real writes.
 - [ ] Address historical Zigbee2MQTT Ember coordinator ASH disconnect issue independently from V3; verify coordinator/serial connectivity before any network reconfiguration or firmware change.
 - [ ] Validate isolated restore/rollback and backup procedures, preserving external V3 SQLite claims and HA Green independence. Do not handle production secrets or schedule backups without approval.
 - [ ] Evaluate authenticated HA webhook/loopback migration and other MCP consumers before modifying the currently configured server listener.

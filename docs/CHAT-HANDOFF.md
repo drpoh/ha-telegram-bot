@@ -438,3 +438,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — Short authoritative TODO plus archived history
 - New `docs/TODO.md` is the prioritized active queue (P0/P1/P2). Historical 389-line TODO retained by Git rename at `docs/archive/TODO-history-through-2026-10-11.md` so earlier evidence is not erased. GitHub review Gate E branch is 115 commits behind active V3, 0 ahead, and no associated/open PR was returned; DO NOT delete until branch protection and retention decision are confirmed. No live service/HA changes.
+
+## 2026-10-11 — Stage batch consent resumed
+- Existing previously uncommitted `src/ops/stage-batch-consent.mjs` and tests verified 13/13 focused checks. Batch is dev/mock-only and never authorizes HA writes. Next connect independent Stage HTTP registry reads and test transport failures, before any broader live capability.

@@ -996,3 +996,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-11 — Current TODO normalized without discarding history
 - Original append-only `docs/TODO.md` (389 lines) was preserved via `git mv` to `docs/archive/TODO-history-through-2026-10-11.md`; new `docs/TODO.md` lists current P0/P1/P2 work and a separately verified baseline. This is backlog triage, not proof all old entries are completed; unresolved older tasks may require later triage.
 - GitHub comparison confirms `review/gate-e-target-snapshot-hardening-20261009` has 0 commits ahead and 115 behind active V3, as of this audit. GitHub PR search found no matching and no open PRs. Remote branch not deleted because protection/retention policy was not independently established.
+
+## 2026-10-11 — Stage batch consent checkpoint
+- Resumed after an earlier blocked Git operation. `src/ops/stage-batch-consent.mjs` and `test/stage-batch-consent.test.mjs` exist in canonical dev only and were not previously committed. Verified 13/13 focused tests across batch, single-consent and registry revalidation. Batches of 2–12 distinct exact light entities yield only `authorized:false, actualWrite:false`, and block the entire simulated action on a missing/replaced/stale/unavailable member. No live HA client or production update.

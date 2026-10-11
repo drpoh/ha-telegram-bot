@@ -26,3 +26,9 @@ The current `src/ops/stage-mock-ha.mjs` exports a test fixture lifecycle and is 
 - `deploy/stage/stage-unit.review.txt` is a non-installable checklist, **not** a `.service` file. No live systemd modifications.
 - Process subprocess checks cover loopback health and graceful SIGTERM, HA/AI/Telegram environment rejection and invalid/privileged port rejection. No hidden production credentials were copied or read.
 - Closure here means **source-only mock runtime ready for separately approved provisioning**, not a deployed Stage service. Real sandboxing and isolation remain explicit deployment acceptance gates.
+
+## Installable format, uninstalled template (2026-10-11)
+- `rs-home-ai-stage.service.template` is intentionally NOT a `.service` file and still has an unresolved `__STAGE_RELEASE_DIR__`; it cannot be used without a reviewed immutable Stage artifact path.
+- Template supplies standard systemd networking/privilege directives; source-only tests validate expected restraints and lack of production references.
+- Before installation, render into a temporary `rs-home-ai-stage.service`, run `systemd-analyze verify`, check runtime effective directives using `systemctl --user show`, and do a live loopback/negative egress test. The host user-service manager's actual support for IPAddressDeny/Allow has **not** been accepted by merely verifying the unit syntax.
+- Installation, enabling and any persistent daemon remain outside this source-only milestone pending separate authorization and runtime isolation acceptance.

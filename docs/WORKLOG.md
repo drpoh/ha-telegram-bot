@@ -1012,3 +1012,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-11 — Stage 3 subprocess safety checkpoint
 - Added subprocess rejection cases for invalid/privileged ports and HA/MCP/AI credential environment variables. Stage process tests 4/4 pass. Prepared review-only, non-installable systemd checklist `deploy/stage/stage-unit.review.txt`; no actual unit installed, no ports reserved, no prod changes. Full regression pending.
 - Final full Pi regression passed: 153 isolated test files, 588 assertions, zero failed, exit 0; local evidence `/tmp/rs-stage3-full-20261011.log`. Stage 3 **source-only readiness milestone** complete. Persistent stage installation and real host network sandbox validation remain separately gated.
+
+## 2026-10-11 — Stage isolation template review
+- Created inert, unresolved `deploy/stage/rs-home-ai-stage.service.template` using standard systemd restrictions and a test asserting no prod path/secrets. 2/2 source tests pass. A sample rendered unit was syntax-checked with local systemd-analyze verify; no unit was installed or started. Effective kernel/cgroup IP isolation and fresh immutable artifact remain unverified; stage deployment NOT approved by this validation.
+- Full regression after inert Stage systemd template PASS: 154 isolated files / 590 assertions / 0 failures, exit 0. Evidence `/tmp/rs-stage3-unit-final.log`. Separate stage installation/network enforcement approval remains OPEN. No active service edited.

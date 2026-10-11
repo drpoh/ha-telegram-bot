@@ -1132,3 +1132,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Maintenance audit PR #9 was merged as `83d5905`, and Gate C journal fail-closed PR #10 as `92846a5`, with GitHub offline CI 164 files / 636 assertions / 0 failed. Remote branch deletion is still pending because the connected GitHub action cannot delete refs. Do not misreport 11-branch inventory as current after new temporary PR branches.
 - Freeze cosmetic source moves/renames. Stop building new Gate C framework unless an actual issue blocks owner-reviewed release. Prioritize bounded read-only lighting status using the existing bot and HA-MCP, before voice/general automation.
 - Dev-only bounded listing now displays at most 20 ON entity IDs, retaining total ON/OFF/unknown counts; no new HA writes. Await GitHub CI and Pi compatibility check before release.
+
+## 2026-10-11 — Practical MVP /lights_on release candidate review
+- Read-only `/lights_on` Pi acceptance and reversible release plan is in `docs/LIGHTS-ON-RELEASE-GATE-2026-10-11.md`. Current `callHA` ignores AbortSignal and can update memory on a late read; fix/review before production. Offline PR CI pending. No Pi or HA changes.

@@ -122,3 +122,26 @@ test('one-shot official client bridge closes rejected and disconnected fixtures'
  const result=await inspectOneShotRegistryConnection({createConnected:async()=>connection});
  assert.equal(result.ready,false);assert.equal(result.authorization,false);assert.equal(closes,1);
 });
+
+test('one-shot connection timeout discards and closes a late fixture without registry commands',async()=>{
+ const {inspectOneShotRegistryConnection}=await import('../src/decision/v3-ha-upstream-read-bridge.mjs');
+ let supply,calls=0,closes=0;
+ const pending=new Promise(resolve=>{supply=resolve;});
+ const result=await inspectOneShotRegistryConnection({createConnected:()=>pending,connectTimeoutMs:10});
+ assert.equal(result.authorization,false);
+ assert.equal(result.reason,'connection_failed_or_timed_out');
+ supply({connected:true,socket:{},sendMessagePromise(){calls++;return [];},close(){closes++;}});
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(calls,0);assert.equal(closes,1);
+});
+
+test('one-shot disconnected upstream refuses all requests but closes fixture',async()=>{
+ const {inspectOneShotRegistryConnection}=await import('../src/decision/v3-ha-upstream-read-bridge.mjs');
+ let calls=0,closes=0;
+ const result=await inspectOneShotRegistryConnection({createConnected:async()=>({
+  connected:false,socket:{},sendMessagePromise(){calls++;return [];},close(){closes++;}
+ })});
+ assert.equal(result.reason,'upstream_not_connected');
+ assert.equal(result.authorization,false);
+ assert.equal(calls,0);assert.equal(closes,1);
+});

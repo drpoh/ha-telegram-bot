@@ -24,7 +24,7 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [ ] Real owner-reviewed multi-device permissions and authenticated complete HA registry remain separately gated; no live scope expansion.
 - [ ] Preserve Home Assistant Green and native automations when AI, Pi, Zigbee2MQTT or HA-MCP fails. Any real failure testing needs a reviewed maintenance window, backup and operator authorization.
 
-- [x] Review HA-native multi-light registry inspection in dev with injected read-only official-connection contract and two-pass negative fixture tests; documented in `V3-MULTIDEVICE-REGISTRY-READINESS-2026-10-11.md`. Real endpoint attestation remains open.
+- [x] Review HA-native multi-light registry inspection in dev with injected read-only official-connection contract and two-pass negative fixture tests; documented in `V3-MULTIDEVICE-REGISTRY-READINESS-2026-10-11.md`. One-shot late/disconnected lifecycle checks also pass; real endpoint attestation remains open.
 
 ## P1 — Stage 2 and operations
 - [x] Revoke exact actor/token batch consent on Stage HTTP confirm registry-read failure; deny replay after mock recovers (offline only).

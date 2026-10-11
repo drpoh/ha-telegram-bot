@@ -196,7 +196,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Full npm regression 124 files / 495 passing assertions / 0 failures, exit 0.
 
 ## Gate B one-shot read bridge — 2026-10-10
-- Existing `v3-ha-upstream-read-bridge.mjs` now provides `inspectOneShotRegistryConnection` for operator-supplied official `Connection`: bounded acquisition, fixed registry-only reads, best-effort close, never authorizes. Focused 12/12; full test `/tmp/rs-v3-gateb-one-shot-full.log` pending. Offline only; Gate B OPEN pending authenticated TLS source/operator policy and read-only acceptance.
+- Existing `v3-ha-upstream-read-bridge.mjs` now provides `inspectOneShotRegistryConnection` for operator-supplied official `Connection`: bounded acquisition, fixed registry-only reads, best-effort close, never authorizes. Focused 12/12; full test `/tmp/rs-v3-gateb-one-shot-full.log` PASS. Offline only; Gate B OPEN pending authenticated TLS source/operator policy and read-only acceptance.
 
 - Full isolated regression: 124 files / 497 passed assertions / 0 failures, exit 0.
 
@@ -498,3 +498,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-11 — HA-native multi-light registry read-only review
 - Existing official-connection injected bridge plus two-pass complete HA registry inspection suffices for source-only data-read review; no new infrastructure justified. Added negative tests for multiple lights, orphan/duplicate data and drift; all read paths remain `authorization:false`. See `docs/V3-MULTIDEVICE-REGISTRY-READINESS-2026-10-11.md`.
 - No real HA read performed. Actual authenticated source/TLS boundary and LAN 9584 negative-client test remain separately gated; full regression `/tmp/rs-ha-multilight-readonly-full-20261011.log` PASS verified.
+
+## 2026-10-11 — Upstream native HA read lifecycle closeout
+- Added offline one-shot lifecycle tests: late connected fixture after deadline is closed without reads; disconnected fixture also closed without registry requests. Focused 14/14 tests PASS, no executable module changes or real HA reads. Full regression `/tmp/rs-upstream-lifecycle-full-20261011.log` PASS. Next real transport/registry attestation and production permission expansion require separate approval; source-only scope completed.

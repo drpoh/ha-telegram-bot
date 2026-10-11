@@ -1064,3 +1064,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-11 — Native HA multi-light read-only inspection readiness
 - Reused existing native websocket registry bridge and two-pass inspection; confirmed there is no need to build another HA reader or Stage network service. Added mock multi-light tests to `v3-ha-registry-read-adapter.test.mjs` for six allowlisted read requests, no grant, duplicate/orphan failures and second-pass replacement rejection (5 focused tests PASS).
 - Detailed remaining provenance and network restrictions in `V3-MULTIDEVICE-REGISTRY-READINESS-2026-10-11.md`. No live registry connection or actual device action was performed. Full regression evidence: `/tmp/rs-ha-multilight-readonly-full-20261011.log` (PASS).
+
+## 2026-10-11 — One-shot upstream HA read lifecycle safety closeout
+- Reused `inspectOneShotRegistryConnection`; added offline tests for delayed connection creation after timeout (close once, zero registry requests) and disconnected fixture (zero requests, closes once). No connection to production HA was made. Focused upstream suite 14/14 PASS.
+- Source-only registry readiness is complete: no new transport, no authority, no service. Authenticated real registry provenance and LAN MCP isolation remain separate promotion gates. Full regression evidence `/tmp/rs-upstream-lifecycle-full-20261011.log` PASS.

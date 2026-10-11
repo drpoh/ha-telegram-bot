@@ -18,6 +18,9 @@ Updated 2026-10-11. **Single current priority: deliver useful capabilities throu
 
 - [x] Add source-only `scripts/prepare-v3-release-candidate.sh` to package an exact clean V3 DEV commit to a new immutable-path candidate without changing live services; see `V3-SAUNA-RELEASE-CANDIDATE.md`. Candidate packaging and production switching still pending.
 
+- [x] Owner-approved V3 sauna candidate switched and Telegram functional acceptance **4/4**: `/status`, `/sauna`, temperature question and readiness question (all successful). Actual effective systemd release path and post-switch rollback/write protections still require read-only verification.
+- [ ] Verify post-switch `systemctl --user show ... -p ExecStart -p WorkingDirectory`, no second Telegram poller, and old release retained. Confirm request→cancel→confirm after switch without performing physical write.
+
 ## P1 — subsequent user value
 - [ ] Add bounded read-only lighting overview to **V3** (not the V2 `/lights_on` implementation), reusing existing pure summary and only explicitly reviewed read scope.
 - [ ] Add trusted, limited conversation context and room status; then reuse HA Assist/ESPHome for voice. Never create independent voice authority or a second Telegram poller.

@@ -1149,3 +1149,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-11 — Sauna candidate preparation
 - Added source-only guarded packaging script and `docs/V3-SAUNA-RELEASE-CANDIDATE.md`: exact Git ref, clean DEV, no overwrite of existing release, no Telegram poller or systemd changes. GitHub CI pending; operator still needs Pi acceptance and separate production switch authorization.
+
+## 2026-10-11 — Live V3 sauna Telegram functional acceptance
+- Owner confirmed live V3 Telegram responses after approved switch to candidate c6a9812: /status journal available, /sauna 87.625 °C ready, natural-language temperature 87.8125 °C ready, readiness question 87.875 °C ready. This validates functional Telegram read-only sauna path, not independently the effective systemd target nor rollback and write-regression after switch.
+- Source-only documentation milestone. Preserve current working release and previous rollback. No code or services modified by this commit.

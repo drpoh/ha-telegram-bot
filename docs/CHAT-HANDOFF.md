@@ -441,3 +441,4 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — Stage batch consent resumed
 - Existing previously uncommitted `src/ops/stage-batch-consent.mjs` and tests verified 13/13 focused checks. Batch is dev/mock-only and never authorizes HA writes. Next connect independent Stage HTTP registry reads and test transport failures, before any broader live capability.
+- Added dev-only `stage-batch-http-simulation.mjs`, 3/3 HTTP tests pass. Uses separate mock snapshots for issue and confirm; no real HA endpoint accepted or actuation. Further Stage race/timeout tests and full regression needed before candidate release. Active V3 still pinned at 97343fa.

@@ -999,3 +999,4 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-11 — Stage batch consent checkpoint
 - Resumed after an earlier blocked Git operation. `src/ops/stage-batch-consent.mjs` and `test/stage-batch-consent.test.mjs` exist in canonical dev only and were not previously committed. Verified 13/13 focused tests across batch, single-consent and registry revalidation. Batches of 2–12 distinct exact light entities yield only `authorized:false, actualWrite:false`, and block the entire simulated action on a missing/replaced/stale/unavailable member. No live HA client or production update.
+- Added `src/ops/stage-batch-http-simulation.mjs`, which requests fresh registry JSON separately for issue/confirmation, accepts only 127.0.0.1 Stage mocks and never dispatches real HA actions. Three HTTP integration tests passed including a dropped second registry read and rejected live HA LAN endpoint. No prod credentials/services touched.

@@ -16,7 +16,8 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 
 ## P1 — Stage 2 and operations
 - [x] Draft conservative Node.js + systemd stage deployment design, `deploy/stage/README.md`; no service installed and no new credentials.
-- [ ] Implement safe standalone stage daemon only after independent launch/scope review; **no deployment** until explicit approval.
+- [x] Implement source-only mock Stage entry with loopback bind, no live HA/Telegram imports and SIGTERM exit; two subprocess tests pass.
+- [ ] Review stage service sandbox and provisioning before a separately authorized installation; no service deployed.
 - [x] Dev-only batch confirmation for 2–12 exact light targets, revalidation, one-use claim and all-or-nothing denial (13 focused tests including existing gates).
 - [ ] Connect batch simulation to independently refreshed stage HTTP registry at issue and confirmation, injecting network failures; no real writes.
 - [ ] Address historical Zigbee2MQTT Ember coordinator ASH disconnect issue independently from V3; verify coordinator/serial connectivity before any network reconfiguration or firmware change.

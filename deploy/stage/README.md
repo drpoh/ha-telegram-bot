@@ -16,3 +16,8 @@ Use **systemd user services** and the Node.js built-in HTTP stage mock. Avoid Do
 
 ## No premature deployment
 The current `src/ops/stage-mock-ha.mjs` exports a test fixture lifecycle and is NOT yet a standalone supervised daemon. This runbook does not claim it can be installed as a real stage service yet. Do not reuse the old `deploy/rs-home-ai-v3.service` template (marked outdated).
+
+## Standalone entry now available (source only)
+- `scripts/stage/mock-server.mjs`: explicit mock-only entry with Node HTTP, bound `127.0.0.1` and a stage-only optional `RS_STAGE_PORT` (0 selects ephemeral). Rejects known HA/MCP/Telegram/AI credential environment variable names. Empty synthetic registry; no HA clients or Telegram poller. Refuses invalid port, supports SIGTERM/SIGINT shutdown.
+- `test/stage-process-entry.test.mjs` spawns and terminates it, checks HTTP `/health`, loopback address and refusal of a Telegram token variable. This is **not installed or running persistently**; environment key checks alone are not a substitute for process isolation or permissions review.
+- Separate operator review still needed before writing or enabling a systemd service, even when the standalone entry exists.

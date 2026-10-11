@@ -446,3 +446,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-11 — Stage 2 mock HTTP closure and next phase
 - Expanded `stage-batch-http-simulation.test.mjs` to expiration and actor mismatch; six HTTP-focused tests pass. Next phase design `deploy/stage/README.md` recommends Node.js built-in HTTP and a separately approved systemd user service; no daemon installed, no extra Telegram poller, no real HA credentials or prod code touched. Run full regression and commit/push before calling Stage 2 offline milestone closed.
 - Stage 2 offline full regression PASS: 152 files / 584 assertions / zero failed, exit 0. No live deployment or broader HA permissions. Next stage: implement isolated standalone mock process and review its runtime boundaries before separately authorized systemd installation.
+
+## 2026-10-11 — New phase: source-only Stage process
+- Implemented and tested `scripts/stage/mock-server.mjs` for loopback-only empty Stage HTTP mock, no real HA or Telegram. Two subprocess tests pass; `deploy/stage/README.md` documents launch/isolation limitations. No live service deployment, credentials, runtime path or policy changes. Next: further hostile environment/port tests, separately authorized stage systemd rollout and full regression before any production promotion.

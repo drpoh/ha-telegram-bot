@@ -1005,3 +1005,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Extended mock-only HTTP batch confirmation tests to expiration and actor mismatch; initial test fixture clock ahead/behind discrepancy correctly denied and was fixed in test setup rather than weakening freshness logic. 6/6 HTTP tests pass. No HA client or service dispatcher added.
 - Wrote `deploy/stage/README.md` for future low-complexity Node.js built-in HTTP + systemd deployment, no Docker, separate identity/state and no production credentials. Planning document only, not an installed service or authorization.
 - Full Stage 2 Pi regression passed: 152 isolated test files / 584 assertions / zero failed, exit 0. Offline mock milestone closed; independent persistent Stage deployment remains future work. Evidence: `/tmp/rs-stage2-final-regression-20261011.log`.
+
+## 2026-10-11 — Next phase: standalone mock Stage entry
+- Began next phase after Stage 2 mock batch gate full regression PASS (152 test files/584 assertions/0 failed). Added `scripts/stage/mock-server.mjs`: minimal Node built-in HTTP standalone test entry, loopback-only, empty fixtures, no MCP/Telegram/HA imports, denies known live credential env keys, signal shutdown. No unit deployed. Two focused subprocess tests PASS (test token rejection, loopback /health and clean SIGTERM).

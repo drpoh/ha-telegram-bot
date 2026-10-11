@@ -464,3 +464,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-11 — Reuse-first Stage simplification
 - Both `stage-consent-simulation.mjs` and `stage-batch-consent.mjs` now reuse the single `resolveStageLight()` policy on each independently supplied snapshot, rather than same-snapshot two-pass revalidation. Separate HTTP reads, device identity comparison and token consumption remain unchanged; 13 focused tests passed. Full regression before promotion required. Never modify pinned live V3 release for this mock refactor.
 - Shared selector simplification full `npm test` passed: 154 test files/590 assertions/zero failures. No policy grant widened and no service deployed. Next: inspect actual production policy for opportunities to reuse shared deterministic interfaces, without live wiring.
+
+## 2026-10-11 — Shared decision audit checkpoint
+- Audited source separation and documented in `docs/V3-SHARED-DECISION-AUDIT-2026-10-11.md`: live pilot imports reviewed MCP dispatcher/journal; Stage simulation imports pure selector/ledger only; offline confirmed gate is not live pilot. Import-boundary tests 9/9 pass. Do not unify trusted ingress or route mock candidates into live execution without source-policy audit and owner release gate.
+- Full regression PASS 155 files / 592 assertions / 0 failed. Finish this audit without touching the pinned live pilot or adding new execution grants.

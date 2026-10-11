@@ -1024,3 +1024,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-11 — Shared Stage selector simplification
 - Reused existing pure `resolveStageLight()` directly for both single-light and batch mock consent issue/confirm snapshots, rather than artificially passing the same snapshot twice into `revalidateStageTarget()`. At both phases the actual separate registry snapshot is still checked, actor and single-use gates are unchanged, no additional authority is granted. Focused batch/single/HTTP tests: 13/13 pass. This avoids duplicative policy evaluation while preserving fail-closed behavior.
 - Full regression after simplification PASS: 154 isolated test files, 590 assertions, 0 failed, exit 0. Evidence `/tmp/rs-shared-selector-full-20261011.log`. Stage/production boundaries unchanged.
+
+## 2026-10-11 — Stage/production shared-decision review
+- Audited actual V3 pilot imports, separate mock stage consent modules, `createV3IntentLedger`, isolated joined chain and offline confirmed-action gate. They share primitive ledger semantics but different trusted ingress and execution boundaries. Did not equate an offline reference gate with live authorization or modify the pinned production release.
+- Added `docs/V3-SHARED-DECISION-AUDIT-2026-10-11.md` and import-boundary tests asserting no Stage mock use in the live pilot entry and no real pilot dispatcher in Stage consent. 9/9 focused checks pass. Next is careful common actor/action contract comparison, not adding another framework.
+- Full Pi regression after source boundary audit PASS: 155 isolated test files, 592 assertions, 0 failed, exit 0. Evidence `/tmp/rs-shared-decision-audit-full.log`.

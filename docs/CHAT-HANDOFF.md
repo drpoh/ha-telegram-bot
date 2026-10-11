@@ -449,3 +449,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — New phase: source-only Stage process
 - Implemented and tested `scripts/stage/mock-server.mjs` for loopback-only empty Stage HTTP mock, no real HA or Telegram. Two subprocess tests pass; `deploy/stage/README.md` documents launch/isolation limitations. No live service deployment, credentials, runtime path or policy changes. Next: further hostile environment/port tests, separately authorized stage systemd rollout and full regression before any production promotion.
+
+## 2026-10-11 — Stage 3 source-only readiness
+- `test/stage-process-entry.test.mjs` now exercises valid ephemeral loopback lifecycle, SIGTERM and two classes of denied configuration (port and sensitive env), 4/4 PASS. `deploy/stage/stage-unit.review.txt` is review-only, NOT a `.service` file. Full suite must pass before source-only Stage 3 closure; actual persistent stage requires separate permission and identity/sandbox verification.
+- Full Pi regression Stage 3 source-only readiness: PASS 153 test files / 588 assertions / zero failures, exit 0. Source-only scope closed; no Stage unit actually installed, no permission to expand prod. Next: independently reviewed immutable Stage artifact + systemd user-service provisioning, require explicit approval and sandbox isolation test first.

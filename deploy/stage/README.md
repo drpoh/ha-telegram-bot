@@ -21,3 +21,8 @@ The current `src/ops/stage-mock-ha.mjs` exports a test fixture lifecycle and is 
 - `scripts/stage/mock-server.mjs`: explicit mock-only entry with Node HTTP, bound `127.0.0.1` and a stage-only optional `RS_STAGE_PORT` (0 selects ephemeral). Rejects known HA/MCP/Telegram/AI credential environment variable names. Empty synthetic registry; no HA clients or Telegram poller. Refuses invalid port, supports SIGTERM/SIGINT shutdown.
 - `test/stage-process-entry.test.mjs` spawns and terminates it, checks HTTP `/health`, loopback address and refusal of a Telegram token variable. This is **not installed or running persistently**; environment key checks alone are not a substitute for process isolation or permissions review.
 - Separate operator review still needed before writing or enabling a systemd service, even when the standalone entry exists.
+
+## Stage 3 review checkpoint
+- `deploy/stage/stage-unit.review.txt` is a non-installable checklist, **not** a `.service` file. No live systemd modifications.
+- Process subprocess checks cover loopback health and graceful SIGTERM, HA/AI/Telegram environment rejection and invalid/privileged port rejection. No hidden production credentials were copied or read.
+- Closure here means **source-only mock runtime ready for separately approved provisioning**, not a deployed Stage service. Real sandboxing and isolation remain explicit deployment acceptance gates.

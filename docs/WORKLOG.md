@@ -1008,3 +1008,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-11 — Next phase: standalone mock Stage entry
 - Began next phase after Stage 2 mock batch gate full regression PASS (152 test files/584 assertions/0 failed). Added `scripts/stage/mock-server.mjs`: minimal Node built-in HTTP standalone test entry, loopback-only, empty fixtures, no MCP/Telegram/HA imports, denies known live credential env keys, signal shutdown. No unit deployed. Two focused subprocess tests PASS (test token rejection, loopback /health and clean SIGTERM).
+
+## 2026-10-11 — Stage 3 subprocess safety checkpoint
+- Added subprocess rejection cases for invalid/privileged ports and HA/MCP/AI credential environment variables. Stage process tests 4/4 pass. Prepared review-only, non-installable systemd checklist `deploy/stage/stage-unit.review.txt`; no actual unit installed, no ports reserved, no prod changes. Full regression pending.
+- Final full Pi regression passed: 153 isolated test files, 588 assertions, zero failed, exit 0; local evidence `/tmp/rs-stage3-full-20261011.log`. Stage 3 **source-only readiness milestone** complete. Persistent stage installation and real host network sandbox validation remain separately gated.

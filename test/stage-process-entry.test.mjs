@@ -14,3 +14,15 @@ test('standalone stage binds loopback only and exits on SIGTERM',async()=>{
   child.kill('SIGTERM');assert.equal(await new Promise(resolve=>child.once('exit',resolve)),0);
  }finally{if(child.exitCode===null)child.kill('SIGKILL');}
 });
+test('reject invalid port configuration',async()=>{
+ for(const port of ['80','65536','abc']){
+  const child=spawn(process.execPath,[entry.pathname],{env:{...env,RS_STAGE_PORT:port},stdio:'ignore'});
+  assert.equal(await new Promise(resolve=>child.once('exit',resolve)),64);
+ }
+});
+test('reject presence of HA and AI credential environment keys',async()=>{
+ for(const key of ['HA_TOKEN','MCP_URL','GEMINI_API_KEY']){
+  const child=spawn(process.execPath,[entry.pathname],{env:{...env,[key]:'fixture-only'},stdio:'ignore'});
+  assert.equal(await new Promise(resolve=>child.once('exit',resolve)),64);
+ }
+});

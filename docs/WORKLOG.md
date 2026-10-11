@@ -1135,3 +1135,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-11 — Practical MVP /lights_on release candidate review
 - Read-only `/lights_on` Pi acceptance and reversible release plan is in `docs/LIGHTS-ON-RELEASE-GATE-2026-10-11.md`. Current `callHA` ignores AbortSignal and can update memory on a late read; fix/review before production. Offline PR CI pending. No Pi or HA changes.
+
+## 2026-10-11 — V3 sauna status practical feature
+- V3 sauna read-only candidate: exact `ha_get_state` allowlist for `sensor.sauna_te_sauna_temperature` and `binary_sensor.sauna_sauna_te_sauna_ready`; `/sauna` and four explicit Russian requests. Wrong entity, unknown, unavailable or impossible values fail closed. No wider write scope, no runtime deployment. CI pending.
+- Owner reported pending tamboor light → cancel → confirm returned missing, as expected. Live process remains pinned to release `97343fa`; do not treat this GitHub feature branch as deployed.

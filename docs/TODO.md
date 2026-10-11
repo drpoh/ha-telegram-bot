@@ -80,6 +80,9 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [x] Audit GitHub branch topology and squash-merge ancestry; see `REPOSITORY-MAINTENANCE-2026-10-11.md`. Seven merged PR branches are deletion candidates; no supported GitHub branch-delete action available in this session.
 - [ ] Verify merged PR head SHAs and branch protections, delete seven obsolete remote PR heads, then re-list; preserve `main`, `refactor/v2`, `feature/v3-home-agent` and the historical Gate E branch pending external-reference review.
 
+- [x] Live Telegram V3 `/start`, `/status`, missing `/confirm`, `/cancel`, and pending → `/cancel` → `/confirm` checked by owner on pinned release `97343fa`; no cancelled command executed. Read-only sauna candidate developed separately; not deployed.
+- [ ] V3 read-only sauna feature PR: run CI and ARMv7 tests, verify HA-MCP sensor structured response, review immutable V3 release and rollback, explicit operator approval before deployment.
+
 ## Focus after maintenance: actual user value
 - [x] Repository hygiene audit recorded; no risky mass moves, duplicate deletion or active service changes. Seven squash-merged PR branches remain remote pending exact-head UI cleanup; historical Gate E branch retained. Do not call physical cleanup complete.
 - [x] Read-only dev `/lights_on` output now caps listed ON lights at 20 while retaining complete counts and unknown-state reporting; offline CI acceptance pending.

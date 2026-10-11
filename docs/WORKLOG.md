@@ -1046,3 +1046,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Canonical dev is clean at baseline `4b0da51`; read-only Pi inventory confirms active V2 checkout and pinned V3 `97343fa` distinct from dev. Inspected 77 `src/decision` modules, 44 documentation entries, root legacy scripts and test/service entrypoints.
 - Added `docs/STRUCTURE-INDEX.md` and entry links from README/PROJECT-MAP. Chose logical responsibility grouping instead of mass-moving source, historical records or retained service artifacts; `npm start` remains V2, and the old deploy template is not installable.
 - No executable changes, HA interaction, process restart, branch deletion or token inspection.
+
+## 2026-10-11 — Dependency audit of decision modules
+- Node built-in, read-only relative-import traversal across 317 `.mjs` files found 415 import edges, no unresolved matched paths, 77 decision modules all with inbound refs and 76 directly imported by tests. V2 source entry transitively reaches 16 decision modules; V3 source entry reaches 5.
+- Added `V3-DECISION-DEPENDENCY-AUDIT-2026-10-11.md`, updated structure index and TODO. No executable change, module move, service update or production write. Decision: no justified `src/decision` deletion or bulk restructure; preserve historical mock regression evidence. Full regression not needed for document-only modifications.

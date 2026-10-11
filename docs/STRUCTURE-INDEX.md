@@ -34,4 +34,6 @@ Reviewed 2026-10-11. This is a navigation aid, **not** permission to rename, del
 3. **Later after import-map and representative integration tests:** consider physically grouping `src/decision/` by ingress, registry, approval and execution. Reduce duplicate behavior only when source-trust and replay contracts are equivalent. Prioritize smaller additions over large refactors.
 4. **Never clean solely for aesthetics:** pinned releases, operator policy, claims databases, secrets, backups, Git history/branches, shared Home Assistant services and preserved V2 checkout. Use an explicit, separately approved retention/promotion plan first.
 
+Dependency evidence: [decision graph audit](V3-DECISION-DEPENDENCY-AUDIT-2026-10-11.md) — all 77 decision modules have incoming static references, with 76 directly tested; physical deletion is not justified.
+
 No reduction in source file count is claimed: this milestone reduces navigation ambiguity without risking the active safety boundary.

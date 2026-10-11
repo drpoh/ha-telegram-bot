@@ -482,3 +482,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — Structure/cleanup checkpoint
 - `docs/STRUCTURE-INDEX.md` maps V2, pinned V3, stage mock, decision clusters, operational scripts and historical documents without relocating code. README and PROJECT-MAP link to it. Root legacy monolith/manual smoke, historic branch and pinned releases remain preserved pending separate external consumer/rollback audit. Runtime untouched.
+
+## 2026-10-11 — Decision dependency graph audited
+- One-time offline static graph: 317 source/test/script `.mjs` files, 415 edges, 77/77 decision modules statically referenced, 76/77 directly tested, no matched unresolved imports. V2 source reaches 16, V3 source reaches 5 decision modules; these do not imply which modules are loaded by pinned runtime artifacts. No safe deletion candidate identified. See `docs/V3-DECISION-DEPENDENCY-AUDIT-2026-10-11.md`.
+- Physical relocation and deletion deferred; next focus returns to dev-only permission/identity contracts and required production trust gates.

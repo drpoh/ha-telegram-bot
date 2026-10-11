@@ -38,7 +38,8 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 
 ## P2 — repository and architecture hygiene
 - [x] Group source and document responsibilities in `docs/STRUCTURE-INDEX.md` without mass-moving imports or changing live file ownership.
-- [ ] Before physical move of `src/decision/`, inventory imports and integration fixtures; only consolidate proven-equivalent policy logic and separately run full regression.
+- [x] Inventory static imports and test/entrypoint reachability of `src/decision/` (`V3-DECISION-DEPENDENCY-AUDIT-2026-10-11.md`): all 77 referenced, no safe deletion candidates.
+- [ ] Defer physical `src/decision/` moves pending concrete benefit, dynamic/external-consumer review and complete regression; consolidate only proven-equivalent policy logic.
 - [ ] Confirm GitHub branch protection/PR policy, then decide whether to delete `review/gate-e-target-snapshot-hardening-20261009`; comparison shows no unique commits relative to active V3 and GitHub search returned no PRs. Do not delete automatically.
 - [ ] Audit manual/cron/external invocation before moving root `bot.mjs` and `smoke-auto-safe.mjs`. Keep historical kitchen policy fixture files referenced by tests.
 - [ ] Replace historical `deploy/rs-home-ai-v3.service` with an operator-reviewed, immutable-artifact template; current one is explicitly **NOT INSTALLABLE AS-IS**.

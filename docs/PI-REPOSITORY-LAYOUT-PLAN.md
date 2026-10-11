@@ -7,7 +7,7 @@ Status: **planning + read-only inventory tool only**. No files moved, no product
 | Current path | Role and provenance | Migration rule |
 |---|---|---|
 | `/home/drpoh/ha-telegram-bot` | Git checkout of `drpoh/ha-telegram-bot`, branch `feature/v3-home-agent` at audit `e199770`; **system v2 unit starts** `src/index.mjs` in this directory | Critical: not a disposable dev checkout despite feature branch. Do not rename, reset, change active dependencies, relocate or delete |
-| `/home/drpoh/rs-home-ai-v3` | **Second checkout of the SAME remote and branch**, older HEAD `a7fc446` (28 commits behind `8093db0` at prior comparison); **user V3 pilot unit starts** `src/pilot/telegram-readonly.mjs` here | Critical: distinct live runtime snapshot. Never auto-pull/merge/rebase/update dependencies, delete or redirect live unit |
+| `/home/drpoh/rs-home-ai-v3` | Preserved historical checkout of the same remote; prior HEAD `a7fc446`. **Not the active V3 executable according to the last verified deployment** | Preserve read-only; never auto-update or delete |
 | `/home/drpoh/vinted-sales-agent` | Independent Git remote `drpoh/vinted-sales-agent`, unrelated service/project; has local changes | Out of scope. Do not reorganize |
 | `/home/drpoh/ha-backups` | Existing backups, no inventory of contents performed | Preserve; no move or cleanup |
 | `/home/drpoh/.config/rs-home-ai-v3` | Operator local V3 config | Keep private; no copying into Git |
@@ -22,6 +22,11 @@ Two checkouts of the same remote are **not** duplicate junk. One is directly use
 - Installed application dependencies in that dev clone via `npm ci --ignore-scripts --no-audit --no-fund` (149 packages; exit 0). No `.env` or production credentials were copied. Full offline test result is recorded in WORKLOG once finished.
 - **Authoritative development workspace from this point:** `/home/drpoh/projects/rs-home-ai-dev`. Push source changes from this location. `~/ha-telegram-bot` is a **live v2 execution directory**, and `~/rs-home-ai-v3` is a **live V3 pilot execution directory**. Never pull/rebase/reset either on routine development requests.
 - `dev` remains a **code/testing checkout only**, not a running dev service or a complete isolated infrastructure environment. Stage and prod migration still require separate acceptance and deployment authorization.
+
+## Updated V3 runtime evidence (2026-10-11)
+- Later verified deployment ran the V3 user service from immutable `/home/drpoh/projects/rs-home-ai-v3-release-97343fa`, separate from preserved `/home/drpoh/rs-home-ai-v3`. See `PROJECT-MAP.md` and `CHAT-HANDOFF.md`.
+- These are dated observations, **not** a new live `systemctl show` inspection. Verify current `ExecStart` before a production change. No runtime directory or service is modified by this documentation correction.
+- The canonical DEV checkout is `/home/drpoh/projects/rs-home-ai-dev`; GitHub may be ahead while Remote Desktop Commander is unavailable. Never force-update local uncommitted work.
 
 ## Future layout — only after explicit deployment review
 

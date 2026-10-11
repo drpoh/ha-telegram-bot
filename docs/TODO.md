@@ -72,5 +72,8 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [ ] Review release artifact retention/rollback before deleting any former V3 releases or checkout.
 - [ ] Build Gate E Assist/voice adapter on the shared policy and confirmation engine; do not establish separate voice authority.
 
+- [x] Audit GitHub branch topology and squash-merge ancestry; see `REPOSITORY-MAINTENANCE-2026-10-11.md`. Seven merged PR branches are deletion candidates; no supported GitHub branch-delete action available in this session.
+- [ ] Verify merged PR head SHAs and branch protections, delete seven obsolete remote PR heads, then re-list; preserve `main`, `refactor/v2`, `feature/v3-home-agent` and the historical Gate E branch pending external-reference review.
+
 ## Working protocol
 At each new chat, read `AGENTS.md`, `PROJECT-MAP.md`, `CHAT-HANDOFF.md`, this TODO and the latest WORKLOG. Verify canonical dev Git status and actual service `ExecStart`. Use focused tests while implementing, full isolated regression at release-worthy milestones, then append evidence to WORKLOG/HANDOFF and commit/push. Production changes require separate explicit approval; tests do not automatically promote builds.

@@ -532,3 +532,10 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-11 — Gate C pending-dispatch guard proposal
 - Proposed source-only in-flight actor guard and tests for unknown MCP outcome, competing /confirm and journal mark errors; GitHub PR CI pending. No production deployment. Existing durable journal remains separate; do not infer cross-process protection from an in-memory lock.
+
+## 2026-10-11 — Verified GitHub-first checkpoint (supersedes PR pending notes above)
+- PR #2 `a4a07ae`: merged, GitHub CI run `38151447467` PASS 160 files / 622 assertions / 0 failed.
+- PR #3 `142dfec`: merged, run `38151750491` PASS 160 / 625 / 0; AbortSignal is cooperative only, live HA-MCP network cancellation unverified.
+- PR #4 `a1ee64c`: merged, run `38152097367` PASS 161 / 628 / 0; pilot in-flight actor lock is in-memory, not durable across processes/restarts.
+- Last owner-verified Pi DEV: `2a71552` clean, GitHub ahead 3 commits as of audit; do not assume current Pi status. Verify and fast-forward **DEV only** when possible. Active V3 immutable release previously `97343fa`, production remains untouched, confirm current ExecStart before any change.
+- Next: durable replay/unknown-outcome acceptance review, Stage isolation and authorized release boundaries. Gate B stays open; no broad live HA permissions.

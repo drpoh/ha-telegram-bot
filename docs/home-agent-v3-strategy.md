@@ -46,3 +46,10 @@ Scope freeze until Gate B closes: no expanded autonomy or extra integrations. En
 ## 2026-10-08 — Owner-approved channel-neutral engine
 
 Prioritize a shared command envelope and deterministic decision/policy/confirmation engine over Telegram-specific production integration. Telegram transport integration moves to a later adapter milestone; Atom Echo/ESPHome Assist and similar satellites become first-class planned channels. Each adapter must bind original text, device/channel provenance and any actually verified user identity, never promote speaker inference or device location to authenticated user identity. Voice/device-only inputs cannot authorize high-risk or identity-required actions. Safe low-risk candidates still require every independent policy/scope/precondition gate. Voice confirmations need their own reviewed protocol, not Telegram token assumptions. No HA actuation or production deployment until explicit owner approval; HA Green must remain independent of agent availability.
+
+## 2026-10-11 — Current verified development gates
+- Practical MVP: Telegram confirmed turn_off and turn_on for exactly `light.tambur_svet_l1`; this is **not** whole-home or voice acceptance.
+- Gate B remains open: authoritative complete live registry, trusted identity and operator-reviewed policy/source restriction not independently accepted for wider scopes.
+- Gate C isolated fault and concurrency tests have advanced through GitHub PR #3–#4 (GitHub CI 161 files / 628 assertions, zero failures). Cooperative AbortSignal and per-process in-flight guards are **not** verified network cancellation, durable replay protection, or release approval.
+- Stage is a source-only loopback mock, not a deployed isolated environment. Gate E Assist/Atom Echo must reuse shared policy and trusted identity; no independent voice authority.
+- GitHub CI is development evidence, not ARMv7 Pi validation or authorization for real HA actions. Maintain Home Assistant Green autonomy and immutable active pilot scope.

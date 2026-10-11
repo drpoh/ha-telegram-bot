@@ -1107,3 +1107,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-11 — Gate C in-flight actor guard (GitHub PR)
 - Dev source-only pilot holds an in-memory actor lock during unresolved confirmed dispatch. New request while pending returns action_in_flight; consumed token cannot be confirmed twice. Journal mark exceptions are denied without another HA write. Three focused negative tests added. Await GitHub CI result and review.
 - Limitation: lock is per process, not a cross-restart or cross-process durable claim; immutable production V3 and HA unchanged.
+
+## 2026-10-11 — Documentation verification and GitHub sync audit
+- PR #2 merged `a4a07ae`, GitHub Actions run `38151447467` PASS 160 files / 622 assertions. PR #3 merged `142dfec`, run `38151750491` PASS 160 / 625. PR #4 merged `a1ee64c`, run `38152097367` PASS 161 / 628. All zero failed files.
+- Prior statements that these PR checks are pending are historical records, now superseded by this entry. Active project documents are corrected accordingly. No live Pi inspection or ARMv7 regression performed for these latest three commits.
+- Last owner-provided canonical Pi DEV Git status: clean `2a71552` before GitHub added three commits. Pi status may since have changed; verify before any fast-forward. Preserve both runtime checkouts, immutable V3 release, HA Green and deployment-owned secrets.

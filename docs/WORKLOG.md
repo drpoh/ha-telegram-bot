@@ -1139,3 +1139,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-11 — V3 sauna status practical feature
 - V3 sauna read-only candidate: exact `ha_get_state` allowlist for `sensor.sauna_te_sauna_temperature` and `binary_sensor.sauna_sauna_te_sauna_ready`; `/sauna` and four explicit Russian requests. Wrong entity, unknown, unavailable or impossible values fail closed. No wider write scope, no runtime deployment. CI pending.
 - Owner reported pending tamboor light → cancel → confirm returned missing, as expected. Live process remains pinned to release `97343fa`; do not treat this GitHub feature branch as deployed.
+
+## 2026-10-11 — V3 practical scope and backlog consolidation
+- Live @RSHomeAI_v3_bot confirmed at immutable `97343fa`, running. Owner-confirmed `/start`, `/status`, missing confirmations, and request→cancel→confirm behavior. Pi DEV `5621292` passed 165 files/640 checks. Subsequent sauna feature PR #13 merged `aa5af27` (GitHub CI 166 files/643 assertions), but Pi DEV and live release have NOT been updated to it.
+- `docs/TODO.md` replaced with short authoritative V3 delivery queue. Earlier text remains retrievable in Git history; GitHub branches and Pi runtime files were not deleted. `src/decision` remains referenced and is not a safe deletion target. No runtime or permission changes.

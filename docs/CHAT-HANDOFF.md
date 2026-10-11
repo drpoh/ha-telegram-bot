@@ -539,3 +539,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - PR #4 `a1ee64c`: merged, run `38152097367` PASS 161 / 628 / 0; pilot in-flight actor lock is in-memory, not durable across processes/restarts.
 - Last owner-verified Pi DEV: `2a71552` clean, GitHub ahead 3 commits as of audit; do not assume current Pi status. Verify and fast-forward **DEV only** when possible. Active V3 immutable release previously `97343fa`, production remains untouched, confirm current ExecStart before any change.
 - Next: durable replay/unknown-outcome acceptance review, Stage isolation and authorized release boundaries. Gate B stays open; no broad live HA permissions.
+
+## 2026-10-11 — Offline SQLite cross-process replay test PR
+- Added three tests of existing durable Gate C journal across Node subprocess crashes/races; GitHub CI not yet verified. Tests are offline, use temporary SQLite databases and fake identities. No production change or proof of live end-to-end identity admission.

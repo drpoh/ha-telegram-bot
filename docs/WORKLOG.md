@@ -1112,3 +1112,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - PR #2 merged `a4a07ae`, GitHub Actions run `38151447467` PASS 160 files / 622 assertions. PR #3 merged `142dfec`, run `38151750491` PASS 160 / 625. PR #4 merged `a1ee64c`, run `38152097367` PASS 161 / 628. All zero failed files.
 - Prior statements that these PR checks are pending are historical records, now superseded by this entry. Active project documents are corrected accordingly. No live Pi inspection or ARMv7 regression performed for these latest three commits.
 - Last owner-provided canonical Pi DEV Git status: clean `2a71552` before GitHub added three commits. Pi status may since have changed; verify before any fast-forward. Preserve both runtime checkouts, immutable V3 release, HA Green and deployment-owned secrets.
+
+## 2026-10-11 — Gate C durable journal process replay tests (GitHub PR)
+- New offline subprocess tests for the already-existing SQLite PRIMARY KEY journal: crash with unknown reserved claim before outcome mark, five competing OS processes, and terminal verified/unverified outcome cannot be re-claimed. Does not change production implementation, launch configuration, privileges or runtime storage. CI result pending.
+- Separate requirement remains: trusted actor/action binding, recovery behavior and real integration acceptance before any live multi-device expansion.

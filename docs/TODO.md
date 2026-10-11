@@ -41,6 +41,8 @@ Reviewed 2026-10-11. **This is the current queue**, not the historical running l
 - [x] Gate C offline pilot actor in-flight lock: reject new Telegram intent during unresolved dispatch, deny concurrent confirmation and never retry an unknown MCP outcome. PR #4 merged; 161 files / 628 assertions / 0 failures on GitHub CI. Not cross-process or deployed.
 - [ ] Cross-process unknown-result lock needs durable journal/state admission review before any additional live action; this in-memory guard is not a deployment upgrade.
 
+- [x] Offline SQLite Gate C journal acceptance tests cover crash before mark, 5 independent racing processes, and terminal outcome replay (GitHub PR CI pending). This verifies duplicate-action-id rejection, not full actor/command authorization or live failover.
+
 ## P1 — Stage 2 and operations
 - [x] Revoke exact actor/token batch consent on Stage HTTP confirm registry-read failure; deny replay after mock recovers (offline only).
 - [x] Draft conservative Node.js + systemd stage deployment design, `deploy/stage/README.md`; no service installed and no new credentials.

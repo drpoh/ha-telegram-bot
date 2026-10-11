@@ -19,7 +19,7 @@ Updated 2026-10-11. See [latest cleanup audit](PROJECT-AUDIT-2026-10-11.md) befo
 |---|---|
 | `AGENTS.md` | Must-follow operating rules |
 | `docs/CHAT-HANDOFF.md` | Latest verified runtime and continuation point |
-| `docs/TODO.md` | Open/finished tasks; latest section wins over historical entries |
+| `docs/TODO.md` | Short authoritative current backlog; previous append-only register archived at `docs/archive/TODO-history-through-2026-10-11.md` |
 | `docs/WORKLOG.md` | Append-only evidence and commits |
 | `docs/V3-NEXT-STAGE-DEV-STAGE-PROD.md` | Current Stage 2 plan and acceptance gates |
 | `docs/ADR-*.md`, `docs/GATE-*.md`, `docs/REVIEW-*.md` | Historical decisions and evidence; may describe older states |

@@ -54,7 +54,7 @@ Development checkout: `/home/drpoh/projects/rs-home-ai-dev` (separate clone, no 
 
 ## Development status and handoff
 
-- [Current open tasks](docs/TODO.md)
+- [Current open tasks](docs/TODO.md) (prior log: [historical archive](docs/archive/TODO-history-through-2026-10-11.md))
 - [Session worklog](docs/WORKLOG.md)
 - [v3 strategy and release gates](docs/home-agent-v3-strategy.md)
 - [Longer-term progress](docs/PROGRESS.md)

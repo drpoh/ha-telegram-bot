@@ -435,3 +435,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-11 — Reversible root cleanup
 - Six root model experiments now under `scripts/legacy/` via git mv with explanation README. No runtime service points there according to checked systemd/current user's crontab; external manual aliases not fully proven. Root `bot.mjs`, live-capable `smoke-auto-safe.mjs`, pilot fixtures, all release/checkouts and all Git branches deliberately preserved. Run regression, push and inspect Git status. Avoid deleting remote review branch until PR/protection review.
 - Cleanup full regression DONE: 150 files / 574 assertions / zero failed, exit 0. Fixed outdated Stage fixture compatibility (two failures caught on first full run). Six experiments archived via git mv, not deleted; no branches or active services changed.
+
+## 2026-10-11 — Short authoritative TODO plus archived history
+- New `docs/TODO.md` is the prioritized active queue (P0/P1/P2). Historical 389-line TODO retained by Git rename at `docs/archive/TODO-history-through-2026-10-11.md` so earlier evidence is not erased. GitHub review Gate E branch is 115 commits behind active V3, 0 ahead, and no associated/open PR was returned; DO NOT delete until branch protection and retention decision are confirmed. No live service/HA changes.

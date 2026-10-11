@@ -362,3 +362,9 @@ A task can be marked done only with a file/commit reference, verification eviden
 - [ ] Wire only into mock stage's read path and test attack/fault cases before proposing any production support.
 - [x] Connect candidate resolver to stage mock HTTP `/registry`: loopback-only endpoint, explicit mock provenance, read timeout, ambiguity/fault/forged-grant tests (14 focused tests pass).
 - [ ] Simulate concurrent confirmations and stale registry changes in stage; evaluate trusted registry-binding before live device expansion.
+
+## 2026-10-11 — Latest audit and Stage revalidation
+- [x] Verify GitHub heads, canonical dev branch sync, status of both running services and retained checkouts; preserve deliberate version pinning.
+- [x] Add two-snapshot identity revalidation and concurrency/replay offline tests (6/6).
+- [ ] Integrate with mock-only staged confirmation flow; model registry changes between intent and dispatch without ever writing to HA.
+- [ ] Repeat full regression before any release candidate, review stage service/credentials separately and do not promote automatically.

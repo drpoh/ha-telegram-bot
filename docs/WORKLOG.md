@@ -974,3 +974,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-11 — Stage registry reader integrated, mock only
 - Added non-authorizing loopback-only stage registry read adapter, extended disposable mock with a complete fixture snapshot, and five HTTP integration tests. Initial tests found clock-order problem (`now` measured before HTTP response), corrected to sample receive time. Combined 14/14 focused tests pass. No production changes; no actual stage credentials or continuous service.
+
+## 2026-10-11 — Branch/file audit plus Stage revalidation
+- Git fetch/prune, status and ls-remote confirmed `feature/v3-home-agent` aligned with origin and clean before edits. GitHub branches main, refactor/v2, feature/v3-home-agent and review/gate-e-target-snapshot-hardening-20261009 exist. Required AGENTS/HANDOFF/TODO/WORKLOG/Stage-2 plan present. Live V2 service active; live V3 user service active at immutable 97343fa; old V2 and V3 checkouts intentionally at different revisions 32b5299 and a7fc446. Not a sync fault; avoid risky auto-pulls of service-owned repositories.
+- Added offline two-snapshot identity revalidation and 20-attempt concurrent token consumption tests, 6/6 pass. Revalidation remains NON-AUTHORIZING. No running services, credentials or physical HA targets changed.

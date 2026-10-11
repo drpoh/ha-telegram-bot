@@ -1124,3 +1124,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-11 — Stage mock write-denial regression PR
 - Added HTTP tests for service/MCP POST, registry mutations, and unsupported HA endpoints; mock denies all, with synthetic read-only empty registry and loopback binding. No Stage process installed, no real HA/Telegram access, no network firewall acceptance inferred. GitHub CI pending.
+
+## 2026-10-11 — Gate C journal mark return-value hardening PR
+- Found pilot confirm returned `verified` if `executionJournal.mark()` silently returned false. Source-only fix reports `failed:journal_mark_unavailable`, never repeats dispatch, and treats missing `mark` as failure when journal enabled. Updated throw-case assertion and negative tests. CI acceptance pending; live V3 pinned artifact untouched.

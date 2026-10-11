@@ -31,7 +31,8 @@ test('trusted private actor, exact intent, one-use confirmation, durable claim a
   assert.equal((await pilot.confirm(actor)).status,'missing');
   assert.equal(calls,1);
   // Fresh in-memory consent cannot reuse prior token after a process-level restart.
-  assert.equal(createKitchenDryrunConsent({executionJournal:createGateCExecutionJournal({dbPath:path}),dispatch:async()=>{calls++;}}).confirm(actor) instanceof Promise,true);
+  const restarted=createKitchenDryrunConsent({executionJournal:createGateCExecutionJournal({dbPath:path}),dispatch:async()=>{calls++;}});
+  assert.equal((await restarted.confirm(actor)).status,'missing');
   assert.equal(calls,1);
  }finally{rmSync(dir,{recursive:true,force:true});}
 });
@@ -45,6 +46,6 @@ test('claim failure closes the joined chain before dispatch, including fresh int
   assert.deepEqual(await pilot.confirm(actor),{status:'denied',reason:'replay_claim_unavailable'});
   assert.equal(calls,0);
   assert.equal((await pilot.confirm(actor)).status,'missing');
-  assert.equal(journal.inspect('nonexistent'),'null'===null?null:null);
+  assert.equal(journal.inspect('nonexistent'),null);
  }finally{rmSync(dir,{recursive:true,force:true});}
 });

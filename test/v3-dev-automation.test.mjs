@@ -29,3 +29,13 @@ test('installer cannot silently overwrite a differing user unit',()=>{
  assert.match(installer,/enable --now rs-home-ai-dev-check\.timer/);
  assert.doesNotMatch(installer,/systemctl --user restart|rs-home-ai-v3\.service/);
 });
+
+test('SSH failures are classified without showing raw remote errors',()=>{
+ const script=load('scripts/automation/dev-validate.sh');
+ assert.match(script,/ssh_publickey_denied/);
+ assert.match(script,/ssh_host_key_untrusted/);
+ assert.match(script,/ssh_agent_unavailable/);
+ assert.match(script,/fetch-reason\.txt/);
+ assert.match(script,/2>"\$fetch_errors"/);
+ assert.doesNotMatch(script,/cat "\$fetch_errors"|tee "\$fetch_errors"/);
+});

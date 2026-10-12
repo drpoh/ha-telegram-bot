@@ -1229,3 +1229,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-12 — Real read-only Pi acceptance (partial)
 - Owner ran `scripts/manual/v3-live-readonly-preflight.mjs`: SAUNA complete 27.125 °C/ready false, TAMBOUR complete/on, LIGHTS partial 1 on/3 off/3 unknown. Unknown IDs: `light.koridor_2`, `light.koridor_1_etazh_2`, `light.koridor_spot_2`.
 - Extended explicit read-only preflight to classify error reason for fixed seven IDs, without raw HA payloads, registry search or writes. New Pi run and validation pending. Production release unchanged.
+
+## 2026-10-12 — classified review of lighting inventory
+- Owner observed `unavailable` on `light.koridor_2`, `light.koridor_1_etazh_2`, `light.koridor_spot_2` and clarified some items are switches/auxiliary. Limited Pi inventory enhanced to print all seven exact read-only IDs. Existing `lighting-classification.mjs` supports switches/exclusions. See `docs/V3-LIGHT-ENTITY-REVIEW-2026-10-12.md`; no live classification proof or prod promotion.

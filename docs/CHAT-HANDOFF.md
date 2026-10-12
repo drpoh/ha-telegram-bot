@@ -635,3 +635,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Owner-confirmed HA-MCP preflight 2026-10-12
 - SAUNA_STATUS=complete, temperature 27.125°C, ready false, 85°C threshold; TAMBOUR_STATUS=complete/on; LIGHTS_STATUS=partial (1 on/3 off/3 unknown): `light.koridor_2`, `light.koridor_1_etazh_2`, `light.koridor_spot_2`. Do not call all lights accepted. A diagnostic-only next step is in progress; wait for actual Pi failure classifications. No broader room authorization.
+
+## 2026-10-12 lighting physical-entity review
+- Owner notes apparent lamp entities can be switches or auxiliary. Real Pi HA-MCP reads confirmed exactly three `unavailable`: `light.koridor_2`, `light.koridor_1_etazh_2`, `light.koridor_spot_2`. Do not assume ID domain proves physical purpose. Scoped inventory now outputs every known light's state for manual review; existing classification schema supports `light_ids`/`switch_light_ids`/`excluded_light_ids`. No whole-home discovery or write expansion approved.

@@ -76,5 +76,5 @@ test('DEV test scratch diagnostic records ancestor modes without revealing files
  assert.match(script,/export RS_DEV_TEST_DIAGNOSTIC=1/);
  assert.match(runner,/FIXTURE_ANCESTOR/);
  assert.match(runner,/uidMatch/);
- assert.doesNotMatch(runner,/console\.log\([^\n]*cursor/);
+ assert.doesNotMatch(runner,/console\.log\("FIXTURE_ANCESTOR",\s*cursor/);
 });

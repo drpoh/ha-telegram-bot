@@ -26,3 +26,6 @@
 - **Do not force push or prune unknown/working branches**. Before deleting any branch, verify no open PR uses it, commits are merged/reachable, and user has not designated it historical. GitHub branch cleanup is independent from deleting files on Raspberry Pi.
 - No duplication of historical HA snapshots into runtime caches. Never commit credentials or full private entity export.
 - GitHub Actions CI alone does not prove Pi ARMv7 or HA availability; only owner-provided runtime evidence does.
+
+## Later checkpoint — room diagnostic
+- PR #75 passed exact-head GitHub Node offline CI for `0b97379dbfcd0af4c7a07e3391ca678b0e424a9d` and merged DEV `b56b8cdf5c81baf5ab6c2cabaffd22a07f77c626`. The operator-only `scripts/manual/v3-new-lights-readonly-preflight.mjs` now prints `NEW_LIGHT_AREA` per-area ON/OFF/unknown totals based solely on the just-completed 19-entity `ha_get_state` results. It does not activate a Telegram handler, change existing six read permissions or grant physical writes. Pi has not yet run this updated code. Jules issue #72 remains acknowledged but has no confirmed ready PR linked as of this checkpoint. No branch deletions.

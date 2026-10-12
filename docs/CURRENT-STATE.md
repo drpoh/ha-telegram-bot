@@ -54,3 +54,6 @@ GitHub API can check repository tree, ref counts, test workflow reports and file
 
 ## 2026-10-12 — Telegram V3 post-switch real smoke (partial acceptance)
 - Owner screenshot at 16:39–16:40 EEST demonstrates actual production Telegram replies on approved 9dd5964 deployment: `/status` journal ready; empty `/confirm` missing; `/sauna` 28.4375 °C not ready (85 °C); `/light` tamboor on; `/lights` four selected HA entities (on 1/off 3/unknown 0); Russian «Какой свет выключен?» and «Весь ли свет выключен?» successfully routed. Pending explicit pending-intent → `/cancel` → `/confirm` regression; do not mark full acceptance yet.
+
+## 2026-10-12 — Production confirmed-action live acceptance (owner Telegram transcript)
+- Operator requested `Включи свет в тамбуре`, received pending exact `light.tambur_svet_l1` + explicit `/confirm` prompt; `/confirm` returned `Home Assistant подтвердил состояние светильника после команды.` Repeated for OFF, again verified by HA response. This proves confirmed on/off flow for existing authorized target, but independent physical observation and request→`/cancel`→`/confirm` regression are not yet supplied. No broader authority established. Active V3 release last observed `9dd5964`, rollback `c6a9812` preserved.

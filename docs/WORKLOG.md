@@ -1274,3 +1274,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — PR #50 GitHub acceptance
 - Node 20 isolated suite GitHub job succeeded on head `6989fe3`; PR #50 squash merged `9cbb695`. Four fixed HA light IDs only; OFF names and Russian queries now source-available. No ARMv7/Pi run or production release performed in this chat.
+
+## 2026-10-12 — PR #51 accepted
+- PR #51 merged as `d7aad8c` after GitHub Node 20 offline CI succeeded on exact head `668a357`. Four selected lights: all OFF vs any ON vs unknown is now explicit and read-only. Pi ARMv7 DEV/STAGE unverified; production not changed. Next: exact-SHA Pi candidate gate and owner-approved release.

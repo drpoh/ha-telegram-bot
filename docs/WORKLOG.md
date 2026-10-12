@@ -1198,3 +1198,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — Pi test temp ancestry diagnostics
 - Pi user verified `~/.rs-home-ai-dev-test-tmp` and all ancestors are safe, and systemd has the correct `ReadWritePaths`, yet 4 policy/security test files still fail. Added opt-in diagnostic output in the isolated test runner to record only each temporary root ancestor's depth, ownership relation, mode, and policy compatibility, never raw paths or tokens. DEV runner enables it and preserves output in private last-test.log. Root cause remains unverified pending Pi run; no sandbox weakening or prod change.
+
+## 2026-10-12 — split exact-SHA GitHub CI / Pi immutable candidate
+- Owner confirmed systemd user namespaces show root / and /home with UID 65534, while user home is UID 1000; security suite intentionally rejects unmapped root owners. Switched DEV runner to verify a completed successful private-repo GitHub Actions push workflow for exact HEAD SHA, correct repo/branch/workflow, using local read-only PAT in a 0600 file; no local security tests under remapped Pi. New workflow runs full npm test on feature branch push. Pi candidate remains blocked if gate unavailable. One-time read-only token configuration required. Production untouched.

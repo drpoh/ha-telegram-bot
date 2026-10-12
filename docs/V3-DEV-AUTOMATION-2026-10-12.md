@@ -1,6 +1,6 @@
 # V3 DEV automation — GitHub + systemd (2026-10-12)
 
-Goal: remove routine manual Pi commands with a **pull-only, production-isolated** user systemd timer. It polls the approved GitHub feature branch every six hours, fast-forwards a clean canonical DEV checkout, runs `npm test` with a 15-minute timeout and, only after success, packages an immutable candidate under `~/projects/rs-home-ai-v3-candidates/`. A lock prevents overlapping runs. The job writes only `~/.local/state/rs-home-ai-dev-automation/latest.txt`; inspect status with `cat`, or `journalctl --user -u rs-home-ai-dev-check.service`. Nothing automatically starts candidate or modifies V2/V3 services.
+Goal: remove routine manual Pi commands with a **pull-only, production-isolated** user systemd timer. It polls the approved GitHub feature branch every six hours, fast-forwards a clean canonical DEV checkout, verifies a successful exact-SHA GitHub Actions push run using a read-only GitHub API token, and only after success packages an immutable candidate under `~/projects/rs-home-ai-v3-candidates/`. A lock prevents overlapping runs. The job writes only `~/.local/state/rs-home-ai-dev-automation/latest.txt`; inspect status with `cat`, or `journalctl --user -u rs-home-ai-dev-check.service`. Nothing automatically starts candidate or modifies V2/V3 services.
 
 ## One-time owner installation (after CI and Pi verification)
 
@@ -35,3 +35,21 @@ systemctl --user disable --now rs-home-ai-dev-check.timer
 ```
 
 The timer is initially a **candidate** until the owner runs the one-time install; no claim of installed Pi state is made here.
+
+## Verified GitHub CI split (2026-10-12 update)
+The private repo needs authenticated read-only GitHub Actions metadata. The new `.github/workflows/v3-dev-verified-gate.yml` runs all offline tests on every push to `feature/v3-home-agent`. The Pi runner verifies the **same SHA**, branch, `push` event, workflow path, repository, completed status and success conclusion via official GitHub API. If there is no matching run or the API is inaccessible, candidate generation is denied. `workflow_dispatch` runs never satisfy this gate.
+
+**One-time credential**: create a fine-grained GitHub PAT for **only** `drpoh/ha-telegram-bot` with **Actions: Read-only** and **Metadata: Read-only**, preferably with an expiration. Store the value locally, never paste it into ChatGPT or commit it:
+```bash
+install -d -m 700 ~/.config/rs-home-ai-dev
+umask 077
+read -rsp 'GitHub read-only fine-grained token: ' GH_RO_TOKEN; echo
+printf '%s' "$GH_RO_TOKEN" > ~/.config/rs-home-ai-dev/ci-token
+unset GH_RO_TOKEN
+chmod 600 ~/.config/rs-home-ai-dev/ci-token
+```
+The token file is read by the job under `ProtectHome=read-only`; file mode/owner are checked before use. No write credentials are needed on Pi. Do not use a broad classic PAT, user SSH private key, or CI token shared in chat.
+
+To apply GitHub updates in the canonical DEV checkout, run `git fetch origin feature/v3-home-agent && git merge --ff-only origin/feature/v3-home-agent`. The existing installed user unit can remain; its script path follows DEV checkout. No production service is modified. Check `latest.txt` for `stage=ci_gate` while GitHub's push run is pending or token is missing. Wait for GitHub CI to pass rather than bypassing the check.
+
+**Why split:** systemd's user sandbox maps root-owned `/` and `/home` to UID 65534; real security policy tests deliberately reject that ownership and must not be weakened. GitHub Actions runs the full test suite instead; Pi runs the existing isolated immutable candidate preparation with node syntax checks and `npm ci --ignore-scripts`. Full Pi hardware integration testing and production approval remain separate gates.

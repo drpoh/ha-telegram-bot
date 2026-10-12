@@ -174,3 +174,9 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - [x] PR #61 source-only `assessReadonlyInventory` for HA-MCP `ha_search` response envelopes in light, switch, sensor and binary_sensor domains. Strict complete pagination/identity/duplicate validation, candidate-only (authorization:false, actualWrite:false). CI Node 20 offline checks passed exact PR SHA 03ffb3d, squash merged `f416e60`. No additional live MCP client tools or pilot IDs, no physical action, production unchanged.
 - [ ] Obtain current read-only HA entity + area + device-class inventory from real HA via owner-approved manual read-only method; screen out helpers, derived sensors, hidden/unavailable and privacy-sensitive entities. Classify each with existing HA area registry and `lighting-classification.mjs` instead of inventing a device registry.
 - [ ] Add reviewed read-only allowlists in small slices and tests; **new physical writes remain denied** until separately approved.
+
+## 2026-10-12 — Owner light-only priority, Browser Mod excluded
+- [x] PR #63 19 new HA light candidates selected from owner export, with ALL `light.browser_mod*` excluded, and deferred LED indicators, appliance lights, groups and uncertain aliases; exact-head Node 20 offline CI PASS, merged `4211c59945aa7776fdb605d4b29add467da2a912`. Candidate list is NOT HA authorization or verified physical lights.
+- [ ] PR #64 offline-only checked state review (19 IDs, ON/OFF/unknown, exact entity identity), awaiting exact-head CI and merge; it does not contact HA or modify scope.
+- [ ] Later, verify new lighting HA entity/area/source and availability with bounded read-only operator diagnostics; only then propose extending the read allowlist and `/lights` in DEV. Do not widen physical write permissions without separate owner approval.
+- [ ] Suspend sensors, switches, and `light.browser_mod*` until owner changes priorities. Production stays pinned `9dd5964`.

@@ -38,3 +38,23 @@ test('invalid inventories and missing reader reject all reads',async()=>{
  assert.equal(called,0);
  assert.equal((await inspectNewLights()).status,'invalid_inventory');
 });
+
+test('unknown reasons distinguish unavailable, identity mismatch, MCP and transport errors',async()=>{
+ let i=0;
+ const r=await inspectNewLights({readState:async id=>{
+  i++;
+  if(i===1)return {data:{entity_id:id,state:'unavailable'}};
+  if(i===2)return {data:{entity_id:id,state:'unknown'}};
+  if(i===3)return {data:{entity_id:'light.spoof',state:'off'}};
+  if(i===4)return {isError:true};
+  if(i===5)throw Error('network');
+  if(i===6)return {data:{entity_id:id,state:'unexpected'}};
+  return {data:{entity_id:id,state:'off'}};
+ }});
+ assert.deepEqual(r.entries.slice(0,6).map(x=>x.reason),[
+  'unavailable','unknown','identity_mismatch','mcp_error','read_error','invalid_state'
+ ]);
+ assert.deepEqual(r.counts,{on:0,off:13,unknown:6});
+ assert.ok(r.entries.every(x=>x.review==='unverified'));
+ assert.equal(r.authorization,false);assert.equal(r.actualWrite,false);
+});

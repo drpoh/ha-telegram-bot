@@ -53,7 +53,15 @@ git merge-base --is-ancestor "$head" "$remote" || { echo "DENY: diverged DEV"; e
 git merge --ff-only "$remote"
 head="$(git rev-parse HEAD)"
 stage="tests"
-timeout --signal=TERM --kill-after=10s 900s npm test
+# Preserve diagnostic output privately; systemd may have no persistent journal.
+test_log="$state/last-test.log"
+if timeout --signal=TERM --kill-after=10s 900s npm test >"$test_log" 2>&1; then
+ echo "DEV tests passed"
+else
+ rc=$?
+ echo "DENY: DEV tests failed (exit=$rc); private log: $test_log"
+ exit "$rc"
+fi
 stage="candidate"
 target="$HOME/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-${head:0:7}"
 if [[ -e "$target" ]]; then

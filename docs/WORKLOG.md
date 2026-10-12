@@ -1240,3 +1240,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — Branch and duplicate PR housekeeping
 - Live GitHub inventory revealed 27 refs; 23 temporary PR heads (#22–#44), of which 21 merged, two documentation duplicates closed unmerged (#42, #43). Closed redundant open #43 after inspecting diff. Prepared exact safe remote-prune command in existing V3-GITHUB-CLEANUP document. Branch deletion not executed; connector has no delete-ref action and Desktop Commander quota blocks remote shell. Production untouched.
+
+## 2026-10-12 — Remote branch deletion independently verified
+- Owner executed approved GitHub temporary branch deletion. Connector returned exactly 4 remote branch refs: main, refactor/v2, feature/v3-home-agent, review/gate-e-target-snapshot-hardening-20261009. Cleanup complete. No production changes. See docs/V3-GITHUB-CLEANUP-2026-10-12.md.

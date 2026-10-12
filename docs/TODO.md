@@ -20,3 +20,6 @@
 
 ## Safety & navigation
 Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.md`, `docs/home-agent-v3-strategy.md`, and `docs/V3-GITHUB-CLEANUP-2026-10-12.md`. Historical tasks are in `docs/archive/TODO-history-through-2026-10-11.md` and dated checkpoint docs. Never conflate source branch with running release; protect external credentials and SQLite journal.
+
+## 2026-10-12 — Lights candidate preflight
+- Prepared release gate `docs/V3-LIGHTS-RELEASE-GATE-2026-10-12.md`; immutable candidate packaging now syntax-checks both light modules. User Pi full test and actual HA-MCP seven-ID acceptance are **not yet provided**; production V3 `c6a9812` unchanged. V2/Gate D runtime result remains unconfirmed. Owner approval is required for any systemd switch.

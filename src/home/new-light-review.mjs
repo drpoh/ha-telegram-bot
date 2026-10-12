@@ -10,14 +10,19 @@ export async function inspectNewLights({readState,candidates=NEW_LIGHT_CANDIDATE
  const counts={on:0,off:0,unknown:0};
  for(const candidate of candidates){
   let state='unknown';
+  let reason='read_error';
   try{
    const raw=await readState(candidate.id);
    const body=raw?.structuredContent??raw;
    const value=body?.data??body;
-   if(raw?.isError!==true && value?.entity_id===candidate.id && ['on','off'].includes(value.state))state=value.state;
+   if(raw?.isError===true)reason='mcp_error';
+   else if(value?.entity_id!==candidate.id)reason='identity_mismatch';
+   else if(['on','off'].includes(value.state)){state=value.state;reason='ok';}
+   else if(['unknown','unavailable'].includes(value.state))reason=value.state;
+   else reason='invalid_state';
   }catch{}
   counts[state]++;
-  entries.push(Object.freeze({id:candidate.id,area:candidate.area,label:candidate.label,state,review:'unverified'}));
+  entries.push(Object.freeze({id:candidate.id,area:candidate.area,label:candidate.label,state,reason,review:'unverified'}));
  }
  return {status:counts.unknown?'partial':'complete',authorization:false,actualWrite:false,entries,counts};
 }

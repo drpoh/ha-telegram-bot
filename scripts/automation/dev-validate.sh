@@ -7,7 +7,8 @@ export GIT_CONFIG_NOSYSTEM=0
 umask 077
 repo="$HOME/projects/rs-home-ai-dev"
 state="$HOME/.local/state/rs-home-ai-dev-automation"
-mkdir -p "$state"
+mkdir -p "$state" "$HOME/projects/rs-home-ai-v3-candidates"
+export npm_config_cache="$state/npm-cache"
 exec 9>"$state/lock"
 flock -n 9 || { echo "Another DEV validation is running"; exit 0; }
 stamp="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -37,12 +38,12 @@ head="$(git rev-parse HEAD)"
 stage="tests"
 timeout --signal=TERM --kill-after=10s 900s npm test
 stage="candidate"
-target="$HOME/projects/rs-home-ai-v3-release-${head:0:7}"
+target="$HOME/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-${head:0:7}"
 if [[ -e "$target" ]]; then
  [[ -f "$target/RELEASE_COMMIT" && "$(cat "$target/RELEASE_COMMIT")" == "$head" ]] || { echo "DENY: candidate collision"; exit 1; }
  echo "Candidate exists for commit; leave unchanged"
 else
- timeout --signal=TERM --kill-after=10s 240s bash scripts/prepare-v3-release-candidate.sh
+ timeout --signal=TERM --kill-after=10s 240s env RS_V3_CANDIDATE_ROOT="$HOME/projects/rs-home-ai-v3-candidates" bash scripts/prepare-v3-release-candidate.sh
 fi
 stage="complete"
 echo "Candidate ready for MANUAL REVIEW ONLY; production not modified."

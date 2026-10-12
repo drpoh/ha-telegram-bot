@@ -55,3 +55,10 @@ test('systemd test errors are retained only in private state',()=>{
  assert.match(script,/umask 077/);
  assert.doesNotMatch(script,/tail .*last-test\.log|cat .*last-test\.log/);
 });
+
+test('Pi sandbox security tests use private TMPDIR',()=>{
+ const script=load('scripts/automation/dev-validate.sh');
+ assert.match(script,/export TMPDIR="\$test_tmp"/);
+ assert.match(script,/chmod 700 "\$test_tmp"/);
+ assert.match(script,/test_tmp="\$state\/test-tmp"/);
+});

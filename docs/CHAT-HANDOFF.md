@@ -2,6 +2,9 @@
 
 # RS Home AI V3 — new-chat handoff
 
+**Latest owner-confirmed offline stage acceptance (2026-10-12):** `rs-home-ai-dev-check.service` status `passed`, `stage=complete`, `source_sha=46ce492033fb6c830a37ef95ba6efdb3ed632470`, `exit_code=0`, recorded UTC 07:56:27; `last-stage.log`: `STAGE_PASS sha=46ce492033fb6c830a37ef95ba6efdb3ed632470 mode=offline_mock tests=identity,health,registry,deny`. Last V3 prod active at immutable `c6a9812`, not promoted. Next practical slice: read-only Russian light/sauna questions. Do not conflate offline stage mock with real HA acceptance.
+
+
 ## CURRENT checkpoint — owner-confirmed 2026-10-12 (supersedes older dated status below)
 - GitHub canonical branch `feature/v3-home-agent`, tested merged SHA `b1122bdb274931b5d89e745c9ce171ac4e3addbe` (PR #33). Owner fast-forwarded Pi DEV to `b1122bd`; later git status and unattended runs not independently observed.
 - User-systemd `rs-home-ai-dev-check.service` ran successfully: `time_utc=2026-10-12T07:10:00Z`, `status=passed`, `stage=complete`, `exit_code=0`, source SHA `b1122bd...`. The candidate `~/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-b1122bd/RELEASE_COMMIT` was observed with exact full SHA.

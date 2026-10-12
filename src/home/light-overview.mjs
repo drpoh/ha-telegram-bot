@@ -27,10 +27,10 @@ export async function summarizeLightOverview({readState}={}){
   try{state=readValue(await readState(target.id),target.id);}catch{}
   if(state==='on')on.push(target.label);
   else if(state==='off')off++;
-  else unknown.push(target.label);
+  else unknown.push(target.id);
  }
- const summary=`Освещение (выбранные 7 устройств): включено ${on.length}, выключено ${off}, состояние неизвестно ${unknown.length}.`;
- const detail=on.length?` Включены: ${on.join(', ')}.`:'';
- const caveat=unknown.length?` Нет данных: ${unknown.join(', ')}.`:'';
+ const summary=`Освещение (состояния 7 выбранных сущностей HA, не число физических ламп): on ${on.length}, off ${off}, недоступны или неизвестны ${unknown.length}.`;
+ const detail=on.length?` В состоянии on: ${on.join(', ')}.`:'';
+ const caveat=unknown.length?` Требуют проверки: ${unknown.join(', ')}.`:'';
  return {status:unknown.length?'partial':'complete',authorization:false,actualWrite:false,onCount:on.length,offCount:off,unknownCount:unknown.length,text:summary+detail+caveat};
 }

@@ -646,3 +646,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-12 — GitHub housekeeping handoff
 - 27 GitHub branches audited: retain main, refactor/v2, feature/v3-home-agent, Gate E review. 23 old PR heads suitable for reviewed remote deletion; documentation-cleanup PR adds one temporary head until merged. Duplicate PR #42/#43 closed. Owner execution and GitHub verification still needed; see docs/V3-GITHUB-CLEANUP-2026-10-12.md. No actual branch deletion or Pi live changes performed.
+
+## Latest branch cleanup verified — 2026-10-12
+- Owner completed remote temporary-ref removal; GitHub connector verified **four** remote branches remain (main, refactor/v2, feature/v3-home-agent, Gate E review). Branch cleanup closed; do not request repeat deletion. Resume practical V3 light/switch/helper identity classification. Runtime V3 remains last owner-confirmed c6a9812.

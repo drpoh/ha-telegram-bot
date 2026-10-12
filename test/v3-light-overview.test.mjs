@@ -44,3 +44,43 @@ test('All-off conclusion stays bounded and unknown never implies all off',async(
  const partial=await fixture(id=>id===LIGHT_OVERVIEW_IDS[0]?'unavailable':'off');assert.match(partial.text,/нельзя достоверно сказать/);assert.doesNotMatch(partial.text,/\. Весь выбранный свет выключен\./);
  assert.equal(partial.actualWrite,false);assert.equal(partial.authorization,false);
 });
+
+test('focused OFF answer lists only confirmed OFF states, not the full overview',async()=>{
+ const seen=[];
+ const r=await summarizeLightOverview({mode:'off',readState:async id=>{
+  seen.push(id);
+  return {data:{entity_id:id,state:id===LIGHT_OVERVIEW_IDS[0]?'on':'off'}};
+ }});
+ assert.deepEqual(seen,LIGHT_OVERVIEW_IDS);
+ assert.equal(r.status,'complete');
+ assert.equal(r.authorization,false);assert.equal(r.actualWrite,false);
+ assert.match(r.text,/Выключены: Коридор, Коридор, первый этаж, Коридор, споты/);
+ assert.doesNotMatch(r.text,/Включены: Тамбур|on 1/);
+ assert.match(r.text,/только 4 выбранные сущности HA, не весь дом/);
+});
+test('focused OFF answer exposes unknown states instead of treating them as off',async()=>{
+ const r=await summarizeLightOverview({mode:'off',readState:async id=>({data:{entity_id:id,state:id===LIGHT_OVERVIEW_IDS[1]?'off':'unavailable'}})});
+ assert.equal(r.status,'partial');assert.equal(r.offCount,1);assert.equal(r.unknownCount,3);
+ assert.match(r.text,/Выключены: Коридор\./);
+ assert.match(r.text,/Неизвестны: light\.tambur_svet_l1/);
+ assert.doesNotMatch(r.text,/Выключены: Тамбур/);
+ assert.equal(r.actualWrite,false);assert.equal(r.authorization,false);
+});
+test('focused all-off answer stays truthful across on, off, and unknown',async()=>{
+ const read=state=>summarizeLightOverview({mode:'all_off',readState:async id=>({data:{entity_id:id,state:typeof state==='function'?state(id):state}})});
+ const off=await read('off');
+ assert.match(off.text,/Да, весь выбранный свет выключен/);
+ assert.equal(off.unknownCount,0);
+ const on=await read(id=>id===LIGHT_OVERVIEW_IDS[0]?'on':'off');
+ assert.match(on.text,/Нет, не весь выбранный свет выключен/);
+ assert.match(on.text,/Включены: Тамбур/);
+ const unknown=await read(id=>id===LIGHT_OVERVIEW_IDS[2]?'unknown':'off');
+ assert.equal(unknown.status,'partial');
+ assert.match(unknown.text,/Не могу подтвердить/);
+ assert.match(unknown.text,/light\.koridor_1_etazh/);
+ assert.doesNotMatch(unknown.text,/Да, весь выбранный свет выключен/);
+ const mixed=await read(id=>id===LIGHT_OVERVIEW_IDS[0]?'on':'unavailable');
+ assert.match(mixed.text,/Нет, не весь выбранный свет выключен/);
+ assert.match(mixed.text,/Неизвестны:/);
+ assert.equal(mixed.actualWrite,false);assert.equal(mixed.authorization,false);
+});

@@ -23,3 +23,8 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 
 ## 2026-10-12 — Lights candidate preflight
 - Prepared release gate `docs/V3-LIGHTS-RELEASE-GATE-2026-10-12.md`; immutable candidate packaging now syntax-checks both light modules. User Pi full test and actual HA-MCP seven-ID acceptance are **not yet provided**; production V3 `c6a9812` unchanged. V2/Gate D runtime result remains unconfirmed. Owner approval is required for any systemd switch.
+
+## 2026-10-12 — DEV automation (source prepared)
+- [x] Added narrow user-systemd pull-only DEV timer, guarded fast-forward, Pi test, separate immutable candidate directory, lock, protected status and explicit prod isolation; see `docs/V3-DEV-AUTOMATION-2026-10-12.md`.
+- [ ] Run owner one-time installer, verify Pi user systemd namespace protections and first job's actual output; do not claim installed before evidence.
+- [ ] Direct ChatGPT→Pi remains blocked by Desktop Commander remote-call quota (0% left when last checked). No public SSH/webhook or remote-shell bot fallback approved.

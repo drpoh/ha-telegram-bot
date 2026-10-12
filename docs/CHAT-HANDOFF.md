@@ -603,3 +603,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-12 — Bounded V3 lighting overview source
 - New source-only `/lights` and explicit natural-language lighting questions check exactly 7 fixed entities (tambour and six corridor lights) through existing HA-MCP `ha_get_state`, no search, no writes. Three offline tests cover complete, partial, MCP errors. GitHub CI pending; hardware read-only ID validation and owner-authorized immutable release still pending.
 - Gate D timers were confirmed **enabled and scheduled** in earlier Pi output, but successful latest job exit and recent V2 live state were not provided. Thus V2/Gate D checkpoint is **provisionally documented, NOT health-certified**. Ask only for bounded read-only `systemctl` output to close operational acceptance.
+
+## 2026-10-12 — Lights candidate preflight
+- Prepared release gate `docs/V3-LIGHTS-RELEASE-GATE-2026-10-12.md`; immutable candidate packaging now syntax-checks both light modules. User Pi full test and actual HA-MCP seven-ID acceptance are **not yet provided**; production V3 `c6a9812` unchanged. V2/Gate D runtime result remains unconfirmed. Owner approval is required for any systemd switch.

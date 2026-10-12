@@ -32,3 +32,43 @@ test('real HA-MCP data envelope accepts long-unchanged readiness state',async()=
  assert.equal(result.ready,false);
  assert.equal(result.actualWrite,false);
 });
+
+test('focused temperature question reports only the scoped sensor value',async()=>{
+ const ids=[];
+ const r=await summarizeSauna({mode:'temperature',readState:async id=>{
+  ids.push(id);
+  return {structuredContent:{data:{entity_id:id,state:id===temp?'28.4375':'off'}}};
+ }});
+ assert.deepEqual(ids,[temp,ready]);
+ assert.equal(r.status,'complete');assert.equal(r.temperature,28.4375);
+ assert.equal(r.text,'Температура сауны: 28.4375 °C.');
+ assert.equal(r.actualWrite,false);assert.equal(r.authorization,false);
+});
+
+test('focused readiness answer uses authoritative sensor and accepted threshold',async()=>{
+ const read=state=>summarizeSauna({mode:'ready',readState:async id=>({data:{entity_id:id,state:id===temp?'84':state}})});
+ const no=await read('off');
+ assert.equal(no.text,'Сауна ещё не готова. Порог готовности: 85 °C.');
+ const yes=await read('on');
+ assert.equal(yes.text,'Сауна готова. Порог готовности: 85 °C.');
+ assert.equal(yes.actualWrite,false);assert.equal(yes.authorization,false);
+});
+
+test('partial/incorrect HA results cannot fabricate focused sauna readiness',async()=>{
+ for(const mode of ['temperature','ready','status']){
+  const r=await summarizeSauna({mode,readState:async id=>({
+   data:{entity_id:id===ready?'binary_sensor.spoof':id,state:id===temp?'87':'on'}
+  })});
+  assert.equal(r.status,'unavailable');
+  assert.equal(r.text,'Не удалось получить достоверное состояние сауны.');
+  assert.equal(r.actualWrite,false);assert.equal(r.authorization,false);
+ }
+});
+
+test('existing full sauna status remains unchanged for /sauna and default mode',async()=>{
+ const readState=async id=>({data:{entity_id:id,state:id===temp?'30.5':'off'}});
+ const a=await summarizeSauna({readState});
+ const b=await summarizeSauna({readState,mode:'status'});
+ assert.equal(a.text,b.text);
+ assert.equal(a.text,'Температура сауны: 30.5 °C. Сауна ещё не готова. Порог готовности: 85 °C.');
+});

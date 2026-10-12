@@ -1183,3 +1183,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — First Pi DEV automation run
 - Owner installed the user timer and ran DEV check. It exited 128 at fetch; no npm test or candidate built. V2 active; pinned V3 c6a9812 active; Gate D health and alerts unit Results=success and ExecMainStatus=0, but timestamps/incident recovery not confirmed. Sandbox shows ProtectHome=read-only, ProtectSystem=strict, expected scoped ReadWritePaths and private InaccessiblePaths. No unit journal entries available. Added private fetch-error classification to aid actual SSH diagnosis without secrets. Do not claim runner passing until Pi recheck.
+
+## 2026-10-12 — DEV fetch root cause
+- Owner supplied sanitized error: `Bad owner or permissions on /etc/ssh/ssh_config.d/20-systemd-ssh-proxy.conf`. Script now uses `GIT_SSH_COMMAND` with `ssh -F none`, mandatory strict host-key checking, and batch mode only inside DEV script; no global SSH changes or production changes. Pi validation remains pending, as default SSH key/known_hosts access may still need checking.

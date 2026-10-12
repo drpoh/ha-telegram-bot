@@ -8,6 +8,7 @@ import {StreamableHTTPClientTransport} from '@modelcontextprotocol/sdk/client/st
 import {inspectKitchenLanEndpoint} from '../../src/pilot/kitchen-lan-endpoint-policy.mjs';
 import {NEW_LIGHT_IDS} from '../../src/home/new-light-candidates.mjs';
 import {inspectNewLights} from '../../src/home/new-light-review.mjs';
+import {summarizeNewLightsByArea} from '../../src/home/new-light-area-summary.mjs';
 
 if(process.argv.slice(2).join(' ')!=='--readonly --operator-approved'){
  console.error('USAGE: node scripts/manual/v3-new-lights-readonly-preflight.mjs --readonly --operator-approved');
@@ -41,6 +42,10 @@ if(process.argv.slice(2).join(' ')!=='--readonly --operator-approved'){
   }
   console.log('NEW_LIGHT_REVIEW='+result.status);
   console.log('NEW_LIGHT_COUNTS='+JSON.stringify(result.counts));
+  const byArea=summarizeNewLightsByArea(result);
+  if(byArea.status==='invalid'||byArea.authorization!==false||byArea.actualWrite!==false)throw Error('area_summary_invalid');
+  for(const area of byArea.areas)console.log('NEW_LIGHT_AREA '+area.area+' on='+area.on+' off='+area.off+' unknown='+area.unknown);
+  console.log('NEW_LIGHT_AREA_SCOPE=19_CANDIDATES_ONLY');
   console.log('NEW_LIGHT_READ_SCOPE=19_CANDIDATES_ONLY');
   process.exitCode=result.status==='complete'?0:1;
  }catch{

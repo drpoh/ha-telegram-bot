@@ -697,3 +697,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Production executable `rs-home-ai-v3-candidates/rs-home-ai-v3-release-9dd5964/src/pilot/telegram-readonly.mjs` (exact SHA `9dd5964a4956b88227ec4002ac80ef46a186d632`) owner-approved, live functional tests passed, including confirmed ON/OFF and cancelled request → `/confirm` missing. Previous `c6a9812` is rollback; V2/Gate D must remain untouched. Stop referring to c6a9812 as active.
 - GitHub source checkpoint recorded in docs/CURRENT-STATE.md. Current remote branch audit: eleven total, seven merged temporary PR #46–52 heads not yet deleted. No Pi local cleanup done; Desktop Commander remote shell quota blocked. Pi DEV may lag latest doc commits: sync read-only/clean fast-forward independently, leave production immutable.
 - Next: remove only exact verified merged GitHub refs after independent final ref check; inspect Pi old files by dependency before any archive/deletion. Then prioritize concise useful Russian device answers and context in DEV.
+
+## 2026-10-12 cleanup checkpoint
+- User confirmed CLEANUP=PASS after removing eight obsolete Raspberry Pi build folders; both V2 and V3 services remain active. Current immutable V3 release 9dd5964 and retained rollback directories were not deleted. Source synchronization remains separate from production deployment.

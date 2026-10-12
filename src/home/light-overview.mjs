@@ -29,6 +29,7 @@ export async function summarizeLightOverview({readState}={}){
  const summary=`Освещение (состояния ${LIGHT_OVERVIEW_TARGETS.length} выбранных сущностей HA, не число физических ламп): on ${on.length}, off ${off.length}, недоступны или неизвестны ${unknown.length}.`;
  const detail=on.length?` В состоянии on: ${on.join(', ')}.`:'';
  const offDetail=off.length?` В состоянии off: ${off.join(', ')}.`:'';
+ const allOff=unknown.length?' Не все состояния известны: нельзя достоверно сказать, что весь выбранный свет выключен.':on.length?' Не весь выбранный свет выключен.':' Весь выбранный свет выключен.';
  const caveat=unknown.length?` Требуют проверки: ${unknown.join(', ')}.`:'';
- return {status:unknown.length?'partial':'complete',authorization:false,actualWrite:false,onCount:on.length,offCount:off.length,unknownCount:unknown.length,text:summary+detail+offDetail+caveat};
+ return {status:unknown.length?'partial':'complete',authorization:false,actualWrite:false,onCount:on.length,offCount:off.length,unknownCount:unknown.length,text:summary+detail+offDetail+allOff+caveat};
 }

@@ -169,3 +169,8 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - [x] Jules Free issue #58 assigned and acknowledged (`https://jules.google.com/task/17124109062565898142`): pure trusted-context read-only follow-ups; must base on feature/v3-home-agent and halt if it defaults to main. Await its small PR; never auto-merge or use paid services.
 - [x] In parallel ChatGPT implemented independent tambour yes/no read-only replies. PR #59 exact head d4d45ce passed GitHub Node 20 isolated CI; merged squash `acc5e0b`. No new HA scope, no production change.
 - [ ] Pi clean DEV fast-forward and CI-gated offline STAGE before any release candidate consideration. Production `9dd5964` remains immutable; owner approval required for switch.
+
+## 2026-10-12 — Expand lights and sensors by existing HA registries (read-only first)
+- [x] PR #61 source-only `assessReadonlyInventory` for HA-MCP `ha_search` response envelopes in light, switch, sensor and binary_sensor domains. Strict complete pagination/identity/duplicate validation, candidate-only (authorization:false, actualWrite:false). CI Node 20 offline checks passed exact PR SHA 03ffb3d, squash merged `f416e60`. No additional live MCP client tools or pilot IDs, no physical action, production unchanged.
+- [ ] Obtain current read-only HA entity + area + device-class inventory from real HA via owner-approved manual read-only method; screen out helpers, derived sensors, hidden/unavailable and privacy-sensitive entities. Classify each with existing HA area registry and `lighting-classification.mjs` instead of inventing a device registry.
+- [ ] Add reviewed read-only allowlists in small slices and tests; **new physical writes remain denied** until separately approved.

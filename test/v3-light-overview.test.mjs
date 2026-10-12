@@ -21,7 +21,7 @@ test('unavailable entity IDs stay explicitly visible, not counted as physical li
  assert.equal(r.status,'partial');
  assert.equal(r.unknownCount,1);
  assert.equal(r.offCount,6);
- assert.match(r.text,/light\\.koridor_2/);
+ assert.ok(r.text.includes('light.koridor_2'));
  assert.match(r.text,/не число физических ламп/);
  assert.equal(r.authorization,false);
  assert.equal(r.actualWrite,false);

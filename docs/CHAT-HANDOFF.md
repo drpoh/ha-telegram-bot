@@ -620,3 +620,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-12 — Safe combined automation milestone
 - Source-only DEV automation added: approved-branch clean fast-forward, locked/tested immutable candidate in `~/projects/rs-home-ai-v3-candidates/`, user systemd 6-hour timer, read-write scope limited to DEV/candidates/job state, inaccessible runtime credentials and V2/Gate D checkouts. A one-time owner installer is provided. No production switch, timer installation or Pi verification performed by this GitHub change. Direct remote Desktop Commander quota is 0%; do not claim live ChatGPT shell access. See `docs/V3-DEV-AUTOMATION-2026-10-12.md`.
+
+## Pending STAGE source work — 2026-10-12
+- New source-only offline candidate STAGE smoke is developed via GitHub PR after b1122bd candidate; exact merged SHA and CI status must be checked. The owner has NOT yet supplied Pi stage pass evidence. Full identity, read-only loopback mock and write denial, no real home actuation. Production remains c6a9812 unless separately observed/approved.

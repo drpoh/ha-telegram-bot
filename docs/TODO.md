@@ -61,3 +61,8 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - [x] Actual Pi live HA-MCP: three fixed light IDs returned `unavailable`; sauna and tamboor complete. Owner clarified switches/auxiliary entities may be mixed with actual lamps.
 - [x] Reuse existing lighting-classification schema. Added bounded individual state inventory for seven scoped IDs, no registry discovery or actuation.
 - [ ] Obtain HA's actual area, physical-purpose and `switch.*` aliases via reviewed source; classification must not be guessed from a `light.*` ID.
+
+## 2026-10-12 — reconciled active phase (supersedes older unchecked checkpoints)
+- [x] Historical audit reconciled production c6a9812, verified mock STAGE, live Pi HA-MCP and the three unavailable entities; see docs/V3-HISTORY-STAGE-AUDIT-2026-10-12.md.
+- [ ] NEXT: scoped authoritative HA entity metadata for physical light/switch/helper classification in corridor/tambour; no guessed aliases or authorization changes.
+- [ ] Then tested bounded /lights summaries, fresh exact-SHA candidate, ARMv7/CI and separate owner-approved promotion. Gate B/C/D/E wider acceptance OPEN.

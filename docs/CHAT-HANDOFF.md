@@ -653,3 +653,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 ## 2026-10-12 — Integrity audit handoff
 - Start with docs/CURRENT-STATE.md (new concise truth/navigation point). Last owner-verified live V3 release is immutable c6a9812, rollback 97343fa. Historical /home/drpoh/rs-home-ai-v3 serves Gate D timers; it is NOT active V3 executable. Canonical Pi DEV /home/drpoh/projects/rs-home-ai-dev.
 - GitHub tree and branches checked; Pi runtime and current SHA still unverified in this audit. Existing priority remains read-only lighting fixture/switch/helper area review before /lights redesign. No service or write-policy changes.
+
+## 2026-10-12 — Gate D operational evidence (newer than earlier pending checks)
+- Pi owner output: Gate D health and alerts user timers ran 13:17:17 EEST, end timestamps 13:17:19 and 13:17:18; previous reported Result=success and ExecMainStatus=0 for each. Both next due 13:32:17 EEST. DEV timer last 12:13:16, next 18:13:07; **do not infer DEV job success** from timer. Pi DEV was e231afb vs fetched origin 115c6b3 before a user-confirmed fast-forward; await current HEAD and latest.txt. Actual V3 systemd ExecStart points to immutable c6a9812, V2 and V3 active.

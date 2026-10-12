@@ -1189,3 +1189,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — First systemd test-stage failure
 - Pi owner confirmed Git fetch works after SSH override: job reached `stage=tests`, SHA `2b61a72`, exit 1, no candidate; pinned V3 `c6a9812` active. Added private test-output capture for follow-up. Root cause of `npm test` under namespace still unknown; do not claim Pi tests passed or relax sandbox.
+
+## 2026-10-12 — Pi sandbox security-test fixture remediation
+- Owner-provided test failures were `policy_unsafe_ancestor` and `untrusted_secret_parent`, consistent with test fixtures beneath world-writable `/tmp`. DEV automation now exports private `TMPDIR` under its 0700 automation state before `npm test`; no security policy checks or production isolation weakened. Await real Pi validation; CI alone cannot prove Pi systemd compatibility.

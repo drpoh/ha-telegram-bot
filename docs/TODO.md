@@ -48,3 +48,7 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 ## 2026-10-12 — Russian read-only question routing (source only)
 - Added pure bounded Russian question classifier for existing sauna temperature/ready, seven selected lights and tamboor light; unsupported questions never fall into write intent. No new authority or live deployment.
 - [ ] GitHub CI, Pi candidate STAGE, and owner-approved real read-only HA acceptance before prod promotion.
+
+## 2026-10-12 — Live read-only preflight tool
+- [x] Added operator-only explicit HA-MCP read smoke script (sauna/7 scoped lights/tambour), no service calls or bot. CI proof pending; Pi real response not yet verified.
+- [ ] Run once with operator consent on Pi, capture bounded statuses (not credentials); unresolved/unknown identities fail acceptance without allowing new action scopes.

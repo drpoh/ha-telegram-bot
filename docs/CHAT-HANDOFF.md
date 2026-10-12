@@ -643,3 +643,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 - Read docs/V3-HISTORY-STAGE-AUDIT-2026-10-12.md before resuming. Active slice: classify real corridor/tambour light vs switch vs helper via read-only HA metadata, then improve bounded Russian lighting status.
 - Real Pi scoped readings: sauna 27.125 C not ready; tamboor on; three corridor light IDs unavailable. Production last owner-confirmed c6a9812; prior rollback 97343fa. Offline mock STAGE passed earlier; real Gate B/C/D/E broader acceptance remains open.
 - Do not confuse V2 /lights_on with V3 /lights; don't infer renamed switch IDs or silently widen MCP writes. Next source release still requires owner approval.
+
+## 2026-10-12 — GitHub housekeeping handoff
+- 27 GitHub branches audited: retain main, refactor/v2, feature/v3-home-agent, Gate E review. 23 old PR heads suitable for reviewed remote deletion; documentation-cleanup PR adds one temporary head until merged. Duplicate PR #42/#43 closed. Owner execution and GitHub verification still needed; see docs/V3-GITHUB-CLEANUP-2026-10-12.md. No actual branch deletion or Pi live changes performed.

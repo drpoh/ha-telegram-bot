@@ -15,7 +15,7 @@ test('identity evidence is fail-closed for mismatched entity, unsupported state 
  assert.equal(describeScopedLightIdentity(id,{isError:true}).status,'mcp_error');
 });
 test('friendly names stay bounded and do not inject lines',()=>{
- const r=describeScopedLightIdentity(id,{data:{entity_id:id,state:'off',attributes:{friendly_name:'\\nSECRET\\t'.repeat(25)}}});
- assert.equal(r.text.split('\\n').length,1);
+ const r=describeScopedLightIdentity(id,{data:{entity_id:id,state:'off',attributes:{friendly_name:(String.fromCharCode(10)+'SECRET'+String.fromCharCode(9)).repeat(25)}}});
+ assert.equal(r.text.split(String.fromCharCode(10)).length,1);
  assert.ok(r.text.length<180);
 });

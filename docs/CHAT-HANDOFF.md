@@ -638,3 +638,8 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-12 lighting physical-entity review
 - Owner notes apparent lamp entities can be switches or auxiliary. Real Pi HA-MCP reads confirmed exactly three `unavailable`: `light.koridor_2`, `light.koridor_1_etazh_2`, `light.koridor_spot_2`. Do not assume ID domain proves physical purpose. Scoped inventory now outputs every known light's state for manual review; existing classification schema supports `light_ids`/`switch_light_ids`/`excluded_light_ids`. No whole-home discovery or write expansion approved.
+
+## Latest authoritative reconciliation — 2026-10-12
+- Read docs/V3-HISTORY-STAGE-AUDIT-2026-10-12.md before resuming. Active slice: classify real corridor/tambour light vs switch vs helper via read-only HA metadata, then improve bounded Russian lighting status.
+- Real Pi scoped readings: sauna 27.125 C not ready; tamboor on; three corridor light IDs unavailable. Production last owner-confirmed c6a9812; prior rollback 97343fa. Offline mock STAGE passed earlier; real Gate B/C/D/E broader acceptance remains open.
+- Do not confuse V2 /lights_on with V3 /lights; don't infer renamed switch IDs or silently widen MCP writes. Next source release still requires owner approval.

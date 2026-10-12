@@ -1232,3 +1232,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — classified review of lighting inventory
 - Owner observed `unavailable` on `light.koridor_2`, `light.koridor_1_etazh_2`, `light.koridor_spot_2` and clarified some items are switches/auxiliary. Limited Pi inventory enhanced to print all seven exact read-only IDs. Existing `lighting-classification.mjs` supports switches/exclusions. See `docs/V3-LIGHT-ENTITY-REVIEW-2026-10-12.md`; no live classification proof or prod promotion.
+
+## 2026-10-12 — Cross-chat history and gate evidence reconciliation
+- Inspected AGENTS, PROJECT-MAP, HANDOFF, TODO, STRATEGY, stage plan and lighting review. Current phase: practical narrow MVP inventory/read-only before deployment, NOT general Gate B completion.
+- Corrected stale 97343fa production reference in current stage plan; last owner-confirmed live release c6a9812. Mock STAGE and physical HA-MCP scoped read are separate evidence.
+- See docs/V3-HISTORY-STAGE-AUDIT-2026-10-12.md. No Pi execution or service changes as part of this documentation audit.

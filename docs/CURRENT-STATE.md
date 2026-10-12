@@ -51,3 +51,6 @@ GitHub API can check repository tree, ref counts, test workflow reports and file
 
 ## 2026-10-12 — V3 production startup at 9dd5964 (Telegram smoke pending)
 - Owner explicitly approved switching to immutable candidate SHA `9dd5964a4956b88227ec4002ac80ef46a186d632`. Operator confirmed systemd `ExecStart` at `/home/drpoh/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-9dd5964/src/pilot/telegram-readonly.mjs`; service `active/running`, PID 3713, started 2026-10-12 14:49 EEST. Original release `c6a9812` retained for rollback. This is startup evidence, not Telegram functional acceptance; `journalctl --user` returned no journal files. Pending private Telegram read-only and cancel→confirm smoke before marking release accepted. No V2 or HA device write operation reported.
+
+## 2026-10-12 — Telegram V3 post-switch real smoke (partial acceptance)
+- Owner screenshot at 16:39–16:40 EEST demonstrates actual production Telegram replies on approved 9dd5964 deployment: `/status` journal ready; empty `/confirm` missing; `/sauna` 28.4375 °C not ready (85 °C); `/light` tamboor on; `/lights` four selected HA entities (on 1/off 3/unknown 0); Russian «Какой свет выключен?» and «Весь ли свет выключен?» successfully routed. Pending explicit pending-intent → `/cancel` → `/confirm` regression; do not mark full acceptance yet.

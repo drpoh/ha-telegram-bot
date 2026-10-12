@@ -1237,3 +1237,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Inspected AGENTS, PROJECT-MAP, HANDOFF, TODO, STRATEGY, stage plan and lighting review. Current phase: practical narrow MVP inventory/read-only before deployment, NOT general Gate B completion.
 - Corrected stale 97343fa production reference in current stage plan; last owner-confirmed live release c6a9812. Mock STAGE and physical HA-MCP scoped read are separate evidence.
 - See docs/V3-HISTORY-STAGE-AUDIT-2026-10-12.md. No Pi execution or service changes as part of this documentation audit.
+
+## 2026-10-12 — Branch and duplicate PR housekeeping
+- Live GitHub inventory revealed 27 refs; 23 temporary PR heads (#22–#44), of which 21 merged, two documentation duplicates closed unmerged (#42, #43). Closed redundant open #43 after inspecting diff. Prepared exact safe remote-prune command in existing V3-GITHUB-CLEANUP document. Branch deletion not executed; connector has no delete-ref action and Desktop Commander quota blocks remote shell. Production untouched.

@@ -115,3 +115,6 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 ## 2026-10-12 — PR #50 acceptance checkpoint (supersedes its pending CI item)
 - [x] PR #50 merged as `9cbb69536cb599527652130a504a8c5ab6f33aa7`; GitHub `Offline Node checks` Node 20 isolated suite completed successfully on head `6989fe3`.
 - [ ] Confirm Pi DEV fast-forward to merged exact SHA, offline STAGE PASS and separate owner-approved immutable release gate before Telegram production receives this feature.
+
+## 2026-10-12 — PR #51 accepted
+- PR #51 merged as `d7aad8c` after GitHub Node 20 offline CI succeeded on exact head `668a357`. Four selected lights: all OFF vs any ON vs unknown is now explicit and read-only. Pi ARMv7 DEV/STAGE unverified; production not changed. Next: exact-SHA Pi candidate gate and owner-approved release.

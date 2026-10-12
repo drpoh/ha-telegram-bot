@@ -1,0 +1,20 @@
+[Unit]
+Description=RS Home AI V3 automated DEV validation and immutable candidate preparation
+ConditionPathExists=%h/projects/rs-home-ai-dev/.git
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/bash %h/projects/rs-home-ai-dev/scripts/automation/dev-validate.sh
+WorkingDirectory=%h/projects/rs-home-ai-dev
+TimeoutStartSec=22min
+UMask=0077
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/projects/rs-home-ai-dev %h/projects/rs-home-ai-v3-candidates %h/.local/state/rs-home-ai-dev-automation
+InaccessiblePaths=%h/.config/rs-home-ai-v3 %h/.local/state/rs-home-ai-v3 %h/ha-telegram-bot %h/rs-home-ai-v3
+PrivateTmp=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6

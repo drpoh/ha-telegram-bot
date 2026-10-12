@@ -2,7 +2,8 @@
 # PREPARE ONLY. Never changes systemd, current release, HA, or Telegram.
 set -euo pipefail
 repo="/home/drpoh/projects/rs-home-ai-dev"
-root="/home/drpoh/projects"
+root="${RS_V3_CANDIDATE_ROOT:-/home/drpoh/projects}"
+[[ -d "$root" && ! -L "$root" ]] || { echo "DENY: release root missing or symbolic link" >&2; exit 1; }
 cd "$repo"
 [[ "$(git branch --show-current)" == "feature/v3-home-agent" ]] || { echo "DENY: wrong branch" >&2; exit 1; }
 [[ -z "$(git status --porcelain=v1)" ]] || { echo "DENY: dirty DEV" >&2; exit 1; }

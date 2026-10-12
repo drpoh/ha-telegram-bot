@@ -1277,3 +1277,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — PR #51 accepted
 - PR #51 merged as `d7aad8c` after GitHub Node 20 offline CI succeeded on exact head `668a357`. Four selected lights: all OFF vs any ON vs unknown is now explicit and read-only. Pi ARMv7 DEV/STAGE unverified; production not changed. Next: exact-SHA Pi candidate gate and owner-approved release.
+
+## 2026-10-12 — Production switch startup evidence
+- Following owner's separate approval, owner ran reviewed systemd override promotion to immutable candidate `9dd5964`. Output confirmed `/usr/bin/node .../rs-home-ai-v3-release-9dd5964/src/pilot/telegram-readonly.mjs` with `ActiveState=active`, `SubState=running`, PID 3713, started 14:49 EEST. GitHub CI, Pi exact-SHA STAGE and scoped HA live read preflight passed earlier; owner confirmed Gate D success. Telegram end-to-end acceptance still pending. `journalctl --user` showed no journal files. No automatic production action by the assistant or confirmed HA write.

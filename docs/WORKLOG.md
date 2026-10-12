@@ -1283,3 +1283,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — Real Telegram V3 smoke accepted for read-only endpoints
 - Owner screenshot (16:39–16:40 EEST) verifies production 9dd5964 Telegram messages: status journal ready, empty confirm denied, sauna 28.4375 °C not ready, tamboor on, four-entity lighting overview on1/off3/unknown0, Russian two OFF-light questions both routed. Pending cancellation-with-request regression. No confirmed physical actuation. No code or runtime changes in this note.
+
+## 2026-10-12 — Production confirmed-action live acceptance (owner Telegram transcript)
+- Operator requested `Включи свет в тамбуре`, received pending exact `light.tambur_svet_l1` + explicit `/confirm` prompt; `/confirm` returned `Home Assistant подтвердил состояние светильника после команды.` Repeated for OFF, again verified by HA response. This proves confirmed on/off flow for existing authorized target, but independent physical observation and request→`/cancel`→`/confirm` regression are not yet supplied. No broader authority established. Active V3 release last observed `9dd5964`, rollback `c6a9812` preserved.

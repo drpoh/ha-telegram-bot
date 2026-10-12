@@ -13,15 +13,18 @@ if(process.argv.slice(2).join(' ')!=='--readonly --operator-approved'){
  process.exitCode=2;
 }else{
  let client;
+ let phase='configuration';
  try{
   const raw=readFileSync('/home/drpoh/.config/rs-home-ai-v3/mcp-url','utf8').trim();
   const endpoint=inspectKitchenLanEndpoint(raw,{ownerApprovedLanHttpPilot:true});
   if(!endpoint.allowed)throw Error('endpoint_denied');
+  phase='connection';
   client=new Client({name:'rs-home-ai-v3-manual-new-light-review',version:'0.1.0'});
   await client.connect(new StreamableHTTPClientTransport(endpoint.url,{
    fetch:(input,init)=>fetch(input,{...init,redirect:'error'}),
    requestInit:{redirect:'error'}
   }));
+  phase='inspection';
   const allowed=new Set(NEW_LIGHT_IDS);
   const result=await inspectNewLights({readState:async id=>{
    if(!allowed.has(id)||id.startsWith('light.browser_mod'))throw Error('scope_denied');
@@ -37,7 +40,9 @@ if(process.argv.slice(2).join(' ')!=='--readonly --operator-approved'){
   console.log('NEW_LIGHT_READ_SCOPE=19_CANDIDATES_ONLY');
   process.exitCode=result.status==='complete'?0:1;
  }catch{
+  // Stable phase code only: never print exception, endpoint, network URL or token.
   console.error('NEW_LIGHT_REVIEW=read_failed');
+  console.error('NEW_LIGHT_FAILURE_PHASE='+phase);
   process.exitCode=1;
  }finally{
   if(client)await client.close().catch(()=>{});

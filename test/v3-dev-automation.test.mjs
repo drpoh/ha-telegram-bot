@@ -47,3 +47,11 @@ test('DEV SSH bypasses faulty global proxy config but still verifies host keys',
  assert.match(script,/BatchMode=yes/);
  assert.doesNotMatch(script,/StrictHostKeyChecking=no|UserKnownHostsFile=\/dev\/null/);
 });
+
+test('systemd test errors are retained only in private state',()=>{
+ const script=load('scripts/automation/dev-validate.sh');
+ assert.match(script,/test_log="\$state\/last-test\.log"/);
+ assert.match(script,/npm test >"\$test_log" 2>&1/);
+ assert.match(script,/umask 077/);
+ assert.doesNotMatch(script,/tail .*last-test\.log|cat .*last-test\.log/);
+});

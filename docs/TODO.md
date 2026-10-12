@@ -36,3 +36,8 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - [x] Added narrow user-systemd pull-only DEV timer, guarded fast-forward, Pi test, separate immutable candidate directory, lock, protected status and explicit prod isolation; see `docs/V3-DEV-AUTOMATION-2026-10-12.md`.
 - [x] One-time DEV timer installation and first successful run confirmed by owner (07:10 UTC, SHA b1122bd). Continue verifying subsequent unattended timer executions and invariant protections.
 - [ ] Direct ChatGPT→Pi remains blocked by Desktop Commander remote-call quota (0% left when last checked). No public SSH/webhook or remote-shell bot fallback approved.
+
+## 2026-10-12 — Offline STAGE candidate smoke (source pending CI/Pi)
+- [x] Implement bounded on-demand offline candidate smoke using existing loopback mock; verify immutable SHA, GET /health, GET /registry with authorization:false, denial of writes. Integrated into candidate preparation after CI, no stage daemon or production deployment.
+- [ ] GitHub CI and Pi ARMv7 runtime acceptance of new STAGE smoke; full candidate pass not yet observed on Pi.
+- [ ] Independent runtime fault/rollback review before any production promotion. No automatic deployment.

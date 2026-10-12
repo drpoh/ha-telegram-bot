@@ -54,3 +54,8 @@ Status: **offline stage contract and runtime fault tests verified; no stage/prod
 - Active V3 production remains pinned to c6a9812 (older 97343fa references above are historical). STAGE is still mock-only; no independent installed stage environment and no production switch.
 - NEXT: reuse existing loopback mock and Node test facilities for disposable offline candidate smoke: verify SHA, safe start/stop and error cleanup, health/read-only behavior, forbidden writes, no real HA or prod credentials, deterministic bounded results. Verify on Pi ARMv7 before proposing promotion.
 - New stage service credentials or actual production promotion require distinct explicit owner approval, rollback preflight and preservation of HA independence, active V2 and V3 services. Candidate creation alone grants no authorization.
+
+## Automated candidate STAGE smoke (2026-10-12 source change)
+- Minimal reuse-first stage verification lives in scripts/automation/stage-smoke.mjs and executes AFTER immutable candidate packaging. The 30-second timeout runs only the candidate's existing stage-mock-ha module bound to 127.0.0.1 ephemeral port.
+- Checks exact candidate RELEASE_COMMIT SHA, mock health/registry with authorization:false, and HTTP 403 on write/state endpoints. Status remains stage_smoke on failure; last-stage.log stored privately in DEV automation state. No new systemd units, credentials, Telegram poller, HA-MCP or production promotion.
+- GitHub CI proof and Pi ARMv7 smoke must be independently observed before calling this stage accepted. This test is an offline mock contract, NOT verification of real HA behavior, physical entity policy or release approval.

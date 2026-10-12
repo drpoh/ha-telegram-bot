@@ -1,0 +1,74 @@
+# Gate B — per-home lighting review (NOT APPROVED)
+
+Source: locally saved `data/lighting-inventory-review-2026-10-08.json`, assembled using read-only HA-MCP `ha_list_floors_areas` and `ha_search`. This is a historical partial proposal, **not** a complete device registry, actual current device state or authorization.
+
+**No live grant may be generated from this document.** The operator must explicitly review classifications and later authorize an exact policy file and digest.
+
+## Ванная и сауна / sauna
+- Proposed controllable light: `light.wled_gledopto`.
+- Proposed light-like switch: `switch.vannaia_svet` (excluded from the current v3 light-only policy).
+- Proposed excluded device/status LEDs: `light.louder_esp32_s3_louder_esp32_s3_led`, `light.sauna_m5stack_echo_status_led`, `light.sauna_sauna_te_sauna_status_led`.
+- Unresolved: `switch.parilka_potolok` and whether sauna WLED belongs in bathroom-wide, sauna-specific or both commands.
+- **Decision: DENY whole-room control until resolved.**
+
+## Кухня / kukhnia
+- Proposed controllable: `light.kukhnia_svet_3`, `light.podsvetka_kukhnia`.
+- Unresolved: `light.dukhovka_light` (oven), `light.svet` (historically unavailable), `switch.kukhnia_kukhnia_svet` (possibly distinct circuit).
+- **Decision: DENY whole-room control until resolved.**
+
+## Коридор / koridor
+- Proposed controllable: `light.koridor`, `light.koridor_2`.
+- Unresolved: `light.sonoff_1000d78a79` (availability, function).
+- **Decision: DENY whole-room control until resolved.**
+
+## Approval checklist
+1. Obtain authoritative, current, authenticated, read-only *complete* HA device/entity/area registry (not merely search results); check pagination, device IDs, linked switches and disabled/unavailable entities.
+2. For each area, classify **every** relevant entity as controllable, excluded or unsafe/unknown; no unknown item may silently disappear from whole-room action scope.
+3. Explicitly resolve whether «ванная» and «сауна» share physical area but require different action scopes.
+4. Record owner review with the exact inventory snapshot identity and policy SHA-256; reject changed inventory, changed policy, missing audit or stale approval.
+5. Until then, policy remains deny-all for home entities and offline tests use only `light.fixture`.
+
+Status: PENDING OWNER REVIEW and authoritative registry evidence. No production changes performed.
+
+## Current registry cross-check — 2026-10-08 (read-only SSH)
+
+Access method: read-only copy of Home Assistant's `.storage/core.device_registry`, `core.entity_registry` and `core.area_registry` to a private directory on Raspberry Pi. Counted 293 device entries, 2,901 entity entries and 17 areas. Actual registry objects remain private and are not committed. This establishes an authoritative **registry snapshot**, not proof that every physical load/device in the home is functioning, nor live state or entity capability/availability at execution time. Device area is inherited when an entity has no explicit area.
+
+- **Sauna (area `sauna`):** light entries `light.wled_gledopto`, `light.louder_esp32_s3_louder_esp32_s3_led`, `light.sauna_m5stack_echo_status_led`, `light.sauna_sauna_te_sauna_status_led`. Lighting-like switches: `switch.vannaia_svet`, `switch.parilka_potolok`. The remaining WLED/utility switches are not automatically lighting; must be excluded or separately classified. **No grant.**
+- **Kitchen (`kukhnia`):** four light entries `light.dukhovka_light`, `light.kukhnia_svet_3`, `light.podsvetka_kukhnia`, `light.svet`; additional lighting-like switch `switch.kukhnia_kukhnia_svet`. Its availability and mapping remain unverified. **No grant.**
+- **Corridor (`koridor`):** three light entries `light.koridor`, `light.koridor_2`, `light.sonoff_1000d78a79`; `switch.sonoff_10005c210e` is hidden by integration while two associated utility switches are disabled. **No grant.**
+- **First-floor corridor (`koridor_1_etazh`) is a distinct HA area:** `light.koridor_1_etazh`, `light.koridor_1_etazh_2`, `switch.koridor_1_etazh`; there are hidden/disabled Sonoff utility switches. This area was omitted from the earlier 3-area review. Do not collapse it into `koridor` automatically. **No grant.**
+
+Required next: owner decision on lighting switches, status LEDs, oven light, `light.svet`, Sonoff entities, the split between two corridor areas, and bathroom-versus-sauna semantics. Capture fresh HA states as a separate read-only step before any actual rollout. **Gate B owner-home approval pending**.
+
+## Live read-only state cross-check — 2026-10-08 (HA-MCP)
+
+A separate read-only HA-MCP session queried 17 exact entity IDs with `ha_get_state`. These are instantaneous states, **not** evidence of physical function, room-scene membership or owner approval.
+
+- Sauna: `light.wled_gledopto=on`; `switch.parilka_potolok=off`, `switch.vannaia_svet=off`; `light.louder_esp32_s3_louder_esp32_s3_led=off`, `light.sauna_m5stack_echo_status_led=on`, `light.sauna_sauna_te_sauna_status_led=unavailable`.
+- Kitchen: `light.dukhovka_light=off`, `light.kukhnia_svet_3=off`, `light.podsvetka_kukhnia=off`, `switch.kukhnia_kukhnia_svet=off`; `light.svet=unavailable`.
+- Corridor: `light.koridor=off`, `light.koridor_2=off`; `light.sonoff_1000d78a79=unavailable`.
+- First-floor corridor: `light.koridor_1_etazh=off`, `light.koridor_1_etazh_2=off`, `switch.koridor_1_etazh=off`.
+
+Three unavailable entities require independent handling. No states were changed. The audit remains **PENDING OWNER REVIEW** and all whole-room grants remain denied.
+
+## 2026-10-08 — Identity of existing Whole House Light group
+Read-only HA registry identifies light.ves_svet as platform group, entry e0715de4e60cf2dee9336666fec1c17b, area dom. The similarly named light.ves_svet_2 belongs to platform yandex_station. Current HA state of light.ves_svet lists 14 members; preserve the group unchanged. Its membership is observational evidence and not a v3 write grant. Owner review of home-wide scope, unavailable members, and change detection is still required. No HA write executed.
+
+## 2026-10-08 — Owner-approved natural-language scope for whole-house OFF
+
+The owner explicitly defined: **«Выключи весь свет» without a room means the entire existing Home Assistant group `light.ves_svet`**, currently containing 14 light members. Do **not** substitute `light.ves_svet_2` (Yandex Station), a room-specific subset, or an inferred list. Group membership remains maintained by Home Assistant; any detected change must prompt revalidation. This authorizes the intended *scope* only, **not** an immediately executable v3 permission, nor turn-on, nor exemption from consent, policy or verification gates. No HA service was called.
+
+## Post-dashboard cleanup: refreshed authoritative map (2026-10-08)
+
+After the owner manually renamed/assigned devices and removed the temporary commissioning dashboard, read-only copies of HA entity, device and area registries were inspected again. Counts: 2,901 entities, 293 devices, 17 areas, 57 `light.*` entries. Effective area was determined using entity `area_id` first, then device `area_id`. Distribution across light entities: Kitchen 11; first-floor corridor 6; living room 6; corridor 5; bathroom/sauna 5; home 2; office 1; bedroom 1; no effective area 20. Full private registry payload is *not committed*.
+
+`light.koridor_2` inherits the `koridor` device area; the owner identified it physically as the corridor accent light. `light.ves_svet` remains the HA Group in area `dom`; do not substitute the Yandex `light.ves_svet_2` (also inherits `dom`). Its 14 member IDs were checked separately via read-only HA-MCP; do not infer live write authorization from membership. No real HA services were called, and no HA registry names/areas were modified. This new inventory invalidates assumptions based only on entity-level area IDs. Gate B production authorization remains DENY pending policy and transport verification.
+
+## Fresh post-cleanup registry checkpoint — 2026-10-08 evening
+
+Compared two authenticated read-only snapshots after the owner finished manual device/area editing. Latest snapshot: **2,889 entities / 293 devices / 17 areas / 45 `light.*` entities** (4 disabled). Previous: 2,901 / 293 / 17 / 57 `light.*` (2 disabled). The exact **12 removed entities are all Browser Mod `light.*_screen` display-illumination entities**, not identified household lighting circuits. No new entity IDs. Two remaining Browser Mod screen entities were disabled by device; other Browser Mod screens gained names `Роберт телефон` and `Домашняя панель`. Manual names changed: `light.kukhnia_led_niz_l1` → `Лед низ`; `light.kukhnia_led_niz_l2` → `Кухня не используется`.
+
+Effective area counts **after inheriting device area**: Kitchen 11; first-floor corridor 6; living room 6; corridor 5; bathroom/sauna 5; home 2; office 1; bedroom 1; no area 8. The 12 removed display-only light entities previously accounted for the no-area count difference. `light.koridor_2` remains the owner-confirmed corridor accent light; `light.ves_svet` remains the group and `light.ves_svet_2` is still the Yandex namesake. No entity IDs, names, areas, group membership or HA state were modified during this verification. Private raw registries are never committed.
+
+**Scope/invalidation:** refreshed names and membership evidence must be reviewed against any future operator-approved exact policy digest; do not derive authorization from display names or from the loss of Browser Mod pseudo-lights. Gate B remains deny-default, production action OFF.

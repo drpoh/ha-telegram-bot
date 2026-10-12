@@ -33,3 +33,8 @@
 ## Later Pi acceptance — manual room counts confirmed
 - Owner ran the 19-light manual HA-MCP read with PR #75 code: 1 on, 8 off, 10 exact HA `unavailable` states. Room counts: Kitchen 0/3/4; Living room 1/2/3; Bedroom 0/0/1; Corridor 0/0/1; Sauna 0/2/0; first-floor corridor 0/1/1 (on/off/unknown). This is a single observation, no runtime expansion.
 - Next read-only evidence: `docs/V3-UNAVAILABLE-LIGHT-HA-REGISTRY-CHECK-2026-10-12.md`, a built-in HA Template for only the 10 unavailable lights. No installation or registry mutation. Jules issue #72 still no confirmed ready PR at this check; no wrong-base merges.
+
+## Latest DEV progress — 2026-10-12
+- PR #76 (built-in HA Template for 10 persistent unavailable light IDs) passed exact-head CI and merged `c2e0e034860962000085170ba6a44ee1ffcc8e5e`.
+- PR #77 (bounded room-specific light question formatter with exact trusted aliases, offline tests) passed exact-head CI and merged DEV `8e380347cc727b5e1e97b7e0593f597c62bbed25`. The new formatter does **not** extend the live MCP allowlist, does not hook Telegram yet and never authorizes writes. Tests do not establish physical fixture identity.
+- Owner HA Template registry output for the 10 unavailable candidates is not yet received. This evidence is required before selecting reliable physical lighting targets. Jules issue #72 acknowledged without confirmed completion PR as of check. All `light.browser_mod*`, sensor and switch additions remain excluded; no production promotion.

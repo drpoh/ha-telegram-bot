@@ -30,7 +30,7 @@ for(const [name,summary] of jobs){
 }
 console.log('READONLY_PREFLIGHT='+ (failures?'PARTIAL_OR_FAILED':'PASS'));
 
-if(failures){
+{
  // Diagnoses only fixed previously approved entities; do not search for alternatives.
  // No raw MCP response or private endpoint is ever printed.
  for(const id of LIGHT_OVERVIEW_IDS){
@@ -41,7 +41,7 @@ if(failures){
    const state=raw?.isError===true?'mcp_error':data?.entity_id!==id?'identity_mismatch':
     data?.state==='unavailable'?'unavailable':data?.state==='unknown'?'unknown':
     ['on','off'].includes(data?.state)?'ok':'invalid_response';
-   if(state!=='ok')console.log('LIGHT_DIAGNOSTIC '+id+' '+state);
+   console.log('LIGHT_INVENTORY '+id+' '+state);
   }catch(e){console.log('LIGHT_DIAGNOSTIC '+id+' '+(e?.message==='timeout'?'timeout':'read_error'));}
  }
 }

@@ -54,6 +54,11 @@ git merge --ff-only "$remote"
 head="$(git rev-parse HEAD)"
 stage="tests"
 # Preserve diagnostic output privately; systemd may have no persistent journal.
+# Use private 0700 temp tree: security tests reject world-writable /tmp ancestors.
+test_tmp="$state/test-tmp"
+mkdir -p "$test_tmp"
+chmod 700 "$test_tmp"
+export TMPDIR="$test_tmp"
 test_log="$state/last-test.log"
 if timeout --signal=TERM --kill-after=10s 900s npm test >"$test_log" 2>&1; then
  echo "DEV tests passed"

@@ -52,22 +52,16 @@ stage="fast-forward"
 git merge-base --is-ancestor "$head" "$remote" || { echo "DENY: diverged DEV"; exit 1; }
 git merge --ff-only "$remote"
 head="$(git rev-parse HEAD)"
-stage="tests"
-# Preserve diagnostic output privately; systemd may have no persistent journal.
-# Use private 0700 temp tree: security tests reject world-writable /tmp ancestors.
-test_tmp="$HOME/.rs-home-ai-dev-test-tmp"
-mkdir -p "$test_tmp"
-chmod 700 "$test_tmp"
-export TMPDIR="$test_tmp"
-export RS_DEV_TEST_DIAGNOSTIC=1
-test_log="$state/last-test.log"
-if timeout --signal=TERM --kill-after=10s 900s npm test >"$test_log" 2>&1; then
- echo "DEV tests passed"
-else
- rc=$?
- echo "DENY: DEV tests failed (exit=$rc); private log: $test_log"
- exit "$rc"
-fi
+stage="ci_gate"
+# No privileged policy/security tests under user-systemd UID remapping.
+# Verify exact HEAD with GitHub's private Actions API using read-only token.
+ci_token="$HOME/.config/rs-home-ai-dev/ci-token"
+timeout --signal=TERM --kill-after=5s 45s node scripts/automation/verify-github-ci.mjs "$head" "$ci_token" || {
+ echo "DENY: exact commit GitHub CI gate not verified"
+ exit 1
+}
+stage="local_syntax"
+# Candidate script independently validates syntax and installs locked deps.
 stage="candidate"
 target="$HOME/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-${head:0:7}"
 if [[ -e "$target" ]]; then

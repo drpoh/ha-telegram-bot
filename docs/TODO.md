@@ -126,3 +126,6 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 ## 2026-10-12 — Real Telegram smoke evidence
 - [x] Owner screenshot confirms V3 9dd5964 `/status`, empty `/confirm`, `/sauna`, `/light`, `/lights` and two Russian lighting queries replied with consistent data.
 - [ ] Complete requested light intent → `/cancel` → `/confirm` missing, without physical write. Then close production functional acceptance and develop question-specific concise responses in DEV only.
+
+## 2026-10-12 — Production confirmed-action live acceptance (owner Telegram transcript)
+- Operator requested `Включи свет в тамбуре`, received pending exact `light.tambur_svet_l1` + explicit `/confirm` prompt; `/confirm` returned `Home Assistant подтвердил состояние светильника после команды.` Repeated for OFF, again verified by HA response. This proves confirmed on/off flow for existing authorized target, but independent physical observation and request→`/cancel`→`/confirm` regression are not yet supplied. No broader authority established. Active V3 release last observed `9dd5964`, rollback `c6a9812` preserved.

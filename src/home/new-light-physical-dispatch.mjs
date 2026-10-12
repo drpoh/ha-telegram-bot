@@ -16,10 +16,12 @@ export function createNewLightDispatch({callTool,verifyAdmission,approvedIds=[],
   try{admission=await verifyAdmission(structuredClone(action));}catch{return denied('approval_check_failed');}
   if(admission?.valid!==true)return denied('approval_not_verified');
   const id=action.args.entity_id;
+  let writeAttempted=false;
   try{
    const before=await callTool('ha_get_state',{entity_id:id});
    const body=before?.structuredContent??before;const state=body?.data??body;
    if(before?.isError||state?.entity_id!==id||!['on','off'].includes(state?.state))return denied('preflight_unverified');
+   writeAttempted=true;
    const serviceResult=await callTool('ha_call_service',structuredClone(action.args));
    if(serviceResult?.isError===true)return {status:'unverified',reason:'service_error',actualWrite:true};
    // One dispatch maximum. Subsequent attempts read status only.
@@ -31,6 +33,6 @@ export function createNewLightDispatch({callTool,verifyAdmission,approvedIds=[],
     if(value.state===expected)return {status:'verified',actualWrite:true};
    }
    return {status:'unverified',reason:'state_not_confirmed',actualWrite:true};
-  }catch{return {status:'failed',reason:'mcp_failure_or_unknown_outcome',actualWrite:true};}
+  }catch{return {status:'failed',reason:'mcp_failure_or_unknown_outcome',actualWrite:writeAttempted};}
  }});
 }

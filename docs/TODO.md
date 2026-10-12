@@ -77,3 +77,8 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - [x] Owner deleted 24 temporary GitHub remote refs; independently verified exactly 4 retained: main, refactor/v2, feature/v3-home-agent, Gate E review.
 - [ ] Gate E review branch retained pending separate assessment; do not delete just to reduce count.
 - [ ] Resume read-only HA metadata review for real light/switch/helper identity before improving /lights; no production change.
+
+## 2026-10-12 — Source integrity audit
+- [x] GitHub structural inventory: complete tree, 4 remote branches, 0 open PRs, no symlinks. Corrected contradictory V3 directory ownership and old production version guidance. Added short docs/CURRENT-STATE.md; history preserved.
+- [ ] Verify Pi canonical DEV checkout status/head against GitHub; effective V3 systemd ExecStart/rollback path; V2/Gate D last executions. GitHub connector cannot independently attest to those runtime facts.
+- [ ] Audit actual HA physical lighting vs switch/helper entities read-only before changing the /lights schema; retain fail-closed scopes.

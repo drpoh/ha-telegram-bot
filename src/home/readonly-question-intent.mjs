@@ -9,7 +9,7 @@ export function classifyReadonlyQuestion(input){
  const text=clean(input);
  for(const [category,values] of Object.entries(phrases))if(values.has(text))return category;
  // Never pass arbitrary questions about existing read-only subjects into a write dispatcher.
- if(text.includes('?') || /^(какой|какая|какие|сколько|где|готова ли|горит ли|что с|что со|покажи|состояние|температура)\b/u.test(text))
+ if((typeof input==='string'&&input.includes('?')) || ['какой ','какая ','какие ','сколько ','где ','готова ли ','горит ли ','что с ','что со ','покажи ','состояние ','температура '].some(prefix=>text.startsWith(prefix)))
   return 'unsupported_question';
  return null;
 }

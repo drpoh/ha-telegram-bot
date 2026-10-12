@@ -1,5 +1,7 @@
 # RS Home AI — authoritative project map
 
+**Start with [CURRENT-STATE](CURRENT-STATE.md) for the concise latest verified status.** Older dated checkpoints in this map remain historical, not permission to deploy.
+
 Updated 2026-10-12 (owner-confirmed first CI-gated immutable candidate after PR #33). See [latest cleanup audit](PROJECT-AUDIT-2026-10-11.md) before considering any file or branch removal. **Start here to avoid confusing source branches with running services.**
 
 ## Which directory is authoritative?

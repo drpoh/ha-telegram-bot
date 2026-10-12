@@ -111,3 +111,7 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 ## 2026-10-12 — Russian OFF-light read-only detail (PR #50)
 - [x] Source-only four-entity /lights now lists OFF labels as well as ON labels; unknown HA responses remain explicit and fail closed. Added explicit Russian OFF-light questions and isolated tests. No additional entity scope, commands, physical fixture assertion, polling process or runtime change.
 - [ ] Verify exact PR #50 CI and merge only on success; then Pi DEV exact-HEAD offline STAGE before separately authorized immutable production release.
+
+## 2026-10-12 — PR #50 acceptance checkpoint (supersedes its pending CI item)
+- [x] PR #50 merged as `9cbb69536cb599527652130a504a8c5ab6f33aa7`; GitHub `Offline Node checks` Node 20 isolated suite completed successfully on head `6989fe3`.
+- [ ] Confirm Pi DEV fast-forward to merged exact SHA, offline STAGE PASS and separate owner-approved immutable release gate before Telegram production receives this feature.

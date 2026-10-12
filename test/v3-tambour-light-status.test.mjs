@@ -22,3 +22,27 @@ test('denies errors, bad states, wrong scope, and failing reads',async()=>{
  for(const value of cases){const r=await summarizeTambourLight({readState:async()=>value});assert.equal(r.status,'unavailable');assert.equal(r.actualWrite,false);}
  const failure=await summarizeTambourLight({readState:async()=>{throw new Error('connection');}});assert.equal(failure.status,'unavailable');
 });
+
+test('direct tambour yes/no stays bounded to one HA read',async()=>{
+ const ids=[];
+ for(const state of ['on','off']){
+  const r=await summarizeTambourLight({mode:'yes_no',readState:async entity=>{
+   ids.push(entity);return {data:{entity_id:entity,state}};
+  }});
+  assert.equal(r.status,'complete');
+  assert.equal(r.text,state==='on'?'Да, свет в тамбуре включён.':'Нет, свет в тамбуре выключен.');
+  assert.equal(r.authorization,false);assert.equal(r.actualWrite,false);
+ }
+ assert.deepEqual(ids,[id,id]);
+});
+test('unknown tambo(u)r state never replies yes or no',async()=>{
+ const r=await summarizeTambourLight({mode:'yes_no',readState:async entity=>({data:{entity_id:entity,state:'unavailable'}})});
+ assert.equal(r.status,'unavailable');
+ assert.match(r.text,/Не удалось достоверно/);
+ assert.doesNotMatch(r.text,/^(Да|Нет),/);
+ assert.equal(r.authorization,false);assert.equal(r.actualWrite,false);
+});
+test('default /light detail remains unchanged',async()=>{
+ const readState=async entity=>({data:{entity_id:entity,state:'off'}});
+ assert.equal((await summarizeTambourLight({readState})).text,(await summarizeTambourLight({readState,mode:'status'})).text);
+});

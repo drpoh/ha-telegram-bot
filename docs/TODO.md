@@ -61,3 +61,7 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - [x] Actual Pi live HA-MCP: three fixed light IDs returned `unavailable`; sauna and tamboor complete. Owner clarified switches/auxiliary entities may be mixed with actual lamps.
 - [x] Reuse existing lighting-classification schema. Added bounded individual state inventory for seven scoped IDs, no registry discovery or actuation.
 - [ ] Obtain HA's actual area, physical-purpose and `switch.*` aliases via reviewed source; classification must not be guessed from a `light.*` ID.
+
+## 2026-10-12 — Lighting inventory review
+- [x] Owner confirmed some lighting entities are switches or auxiliary objects. Three selected light entities returned `unavailable`; do not auto-replace or infer device types.
+- [ ] Collect scoped HA entity registry metadata for corridor/tambour, review light/switch/excluded classification with existing classifier before revising /lights. See docs/V3-LIGHTING-INVENTORY-REVIEW-2026-10-12.md.

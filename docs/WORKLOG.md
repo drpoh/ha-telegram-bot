@@ -1186,3 +1186,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — DEV fetch root cause
 - Owner supplied sanitized error: `Bad owner or permissions on /etc/ssh/ssh_config.d/20-systemd-ssh-proxy.conf`. Script now uses `GIT_SSH_COMMAND` with `ssh -F none`, mandatory strict host-key checking, and batch mode only inside DEV script; no global SSH changes or production changes. Pi validation remains pending, as default SSH key/known_hosts access may still need checking.
+
+## 2026-10-12 — First systemd test-stage failure
+- Pi owner confirmed Git fetch works after SSH override: job reached `stage=tests`, SHA `2b61a72`, exit 1, no candidate; pinned V3 `c6a9812` active. Added private test-output capture for follow-up. Root cause of `npm test` under namespace still unknown; do not claim Pi tests passed or relax sandbox.

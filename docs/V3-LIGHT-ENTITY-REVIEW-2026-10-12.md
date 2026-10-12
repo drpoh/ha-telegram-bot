@@ -17,3 +17,6 @@ The existing `src/decision/lighting-classification.mjs` supports exactly `light_
 **Read-only inventory:** `scripts/manual/v3-live-readonly-preflight.mjs` prints `LIGHT_INVENTORY <id> <state>` for each of the **seven** scoped IDs (including successful reads). It does not perform `ha_search`, whole-house registry enumeration, or scan switch entities. Entity type, physical purpose, HA area and aliases cannot be inferred from these state reads alone.
 
 **Next review:** identify each real physical light and its corresponding HA entity/domain/area from Home Assistant's UI or a separately approved *read-only* registry query. Then prepare the local classification document and an owner-review diff; no HA renaming, deletion, or write-control changes. Leave unknown IDs unresolved.
+
+## Next scoped evidence collection
+- Manual live read-only preflight now prints `LIGHT_IDENTITY <entity_id> state=<state> friendly_name=<sanitized label>` for the **same fixed seven** IDs, using existing ha_get_state results; no registry scan, HA writes, or wider MCP permissions. Name is capped at 80 characters and cannot prove physical type/room. Ask the owner to corroborate switches, fixtures, helpers and actual HA area from HA UI or separately approved scoped registry evidence before adjusting /lights.

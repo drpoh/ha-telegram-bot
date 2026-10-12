@@ -42,3 +42,6 @@ GitHub API can check repository tree, ref counts, test workflow reports and file
 ## Latest lighting cleanup (2026-10-12)
 - Owner deleted three previously unavailable orphan entity records after review; the first was verified as obsolete yandex_station entity. The old three-ID unavailable report is historical, not a current active list.
 - Source V3 /lights now reads four retained HA light-domain IDs: light.tambur_svet_l1, light.koridor, light.koridor_1_etazh, light.koridor_spot. Physical fixture identity and wider area coverage still require review. Pinned production unchanged; run the Pi scoped read preflight before any deployment.
+
+## 2026-10-12 — Practical Russian light status merged
+- PR #50 merged as `9cbb695` after successful GitHub Node 20 isolated checks. `/lights` now lists both ON and OFF labels for the same four preselected entities and supports bounded Russian OFF-light questions; no extra read/write permission or physical fixture classification. Pi new-head offline STAGE and any immutable production release remain unverified/unapproved.

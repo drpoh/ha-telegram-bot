@@ -45,3 +45,8 @@
 
 ## Batch visible light request
 - Owner requested acceleration and batch adding every light visible in last Pi read. Exactly nine new IDs were ON/OFF and ten explicitly `unavailable`. The nine are collected in `src/home/responding-new-light-batch.mjs` for one-pass DEV identity review, without granting physical action authority or adding Telegram controls. Owner's general intention is switches via `/confirm`, but actual per-target physical mapping and separate live authorization are not yet established. Existing V3 prod write scope remains single tamboor L1. No `light.browser_mod*`, switches or sensors.
+
+## Telegram source routing added — PR #85
+- PR #82 gated HA-MCP physical light dispatcher CI-pass merged `f2c2d2c`, #83 consent adapter merged `e787a99`, #84 offline end-to-end composed tests merged `c7dc80f`, and #85 DEV Telegram `/newlight <light.entity_id> on|off` + shared `/confirm` and `/cancel` routing CI-pass merged `64e017b2bb9f1568a1461b8f447a4b116e70fee5`.
+- CRITICAL: #85 has `createNewLightDispatch({releaseEnabled:false,approvedIds:[]})` **hard disabled** and requires manually approved physical identity and trusted production release procedure before any new HA call. This is NOT a live activation or a real Pi test. The running V3 release is still immutable `9dd5964`. Legacy tamboor-only controls preserved. Never silently change that flag or extend the kitchen MCP client allowlist.
+- Next single bottleneck: verify physical mapping of responding light IDs, inspect trusted HA-MCP access boundary, and get explicit operator approval for production change; then carry out reviewed deployment and on-device one-target physical verification. All `light.browser_mod*`, sensor and switch additions remain excluded.

@@ -1,0 +1,20 @@
+name: V3 DEV Verified Gate
+on:
+  push:
+    branches:
+      - feature/v3-home-agent
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: sudo apt-get update && sudo apt-get install -y sqlite3
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm test

@@ -29,3 +29,7 @@
 
 ## Later checkpoint — room diagnostic
 - PR #75 passed exact-head GitHub Node offline CI for `0b97379dbfcd0af4c7a07e3391ca678b0e424a9d` and merged DEV `b56b8cdf5c81baf5ab6c2cabaffd22a07f77c626`. The operator-only `scripts/manual/v3-new-lights-readonly-preflight.mjs` now prints `NEW_LIGHT_AREA` per-area ON/OFF/unknown totals based solely on the just-completed 19-entity `ha_get_state` results. It does not activate a Telegram handler, change existing six read permissions or grant physical writes. Pi has not yet run this updated code. Jules issue #72 remains acknowledged but has no confirmed ready PR linked as of this checkpoint. No branch deletions.
+
+## Later Pi acceptance — manual room counts confirmed
+- Owner ran the 19-light manual HA-MCP read with PR #75 code: 1 on, 8 off, 10 exact HA `unavailable` states. Room counts: Kitchen 0/3/4; Living room 1/2/3; Bedroom 0/0/1; Corridor 0/0/1; Sauna 0/2/0; first-floor corridor 0/1/1 (on/off/unknown). This is a single observation, no runtime expansion.
+- Next read-only evidence: `docs/V3-UNAVAILABLE-LIGHT-HA-REGISTRY-CHECK-2026-10-12.md`, a built-in HA Template for only the 10 unavailable lights. No installation or registry mutation. Jules issue #72 still no confirmed ready PR at this check; no wrong-base merges.

@@ -129,3 +129,6 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 
 ## 2026-10-12 — Production confirmed-action live acceptance (owner Telegram transcript)
 - Operator requested `Включи свет в тамбуре`, received pending exact `light.tambur_svet_l1` + explicit `/confirm` prompt; `/confirm` returned `Home Assistant подтвердил состояние светильника после команды.` Repeated for OFF, again verified by HA response. This proves confirmed on/off flow for existing authorized target, but independent physical observation and request→`/cancel`→`/confirm` regression are not yet supplied. No broader authority established. Active V3 release last observed `9dd5964`, rollback `c6a9812` preserved.
+
+## 2026-10-12 — Live cancel response verified; replay check pending
+- Owner Telegram transcript: request `Включи свет в тамбуре` created exact-target pending confirmation; `/cancel` replied `Запрос отменён.` No subsequent `/confirm` output yet: cancellation response verified, invalidated-token replay rejection still pending. No new device write authorized.

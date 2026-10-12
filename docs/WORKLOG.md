@@ -1177,3 +1177,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — Lights candidate preflight
 - Prepared release gate `docs/V3-LIGHTS-RELEASE-GATE-2026-10-12.md`; immutable candidate packaging now syntax-checks both light modules. User Pi full test and actual HA-MCP seven-ID acceptance are **not yet provided**; production V3 `c6a9812` unchanged. V2/Gate D runtime result remains unconfirmed. Owner approval is required for any systemd switch.
+
+## 2026-10-12 — Safe combined automation milestone
+- Source-only DEV automation added: approved-branch clean fast-forward, locked/tested immutable candidate in `~/projects/rs-home-ai-v3-candidates/`, user systemd 6-hour timer, read-write scope limited to DEV/candidates/job state, inaccessible runtime credentials and V2/Gate D checkouts. A one-time owner installer is provided. No production switch, timer installation or Pi verification performed by this GitHub change. Direct remote Desktop Commander quota is 0%; do not claim live ChatGPT shell access. See `docs/V3-DEV-AUTOMATION-2026-10-12.md`.

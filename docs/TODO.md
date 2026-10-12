@@ -70,3 +70,8 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 ## 2026-10-12 — Remote Git branch housekeeping
 - [x] Audited 27 current GitHub branch refs and PR #22–#44: 23 disposable heads (21 merged, two closed duplicate doc PRs); closed duplicate PR #43. See docs/V3-GITHUB-CLEANUP-2026-10-12.md.
 - [ ] Owner-run exact-ref remote deletion and **post-delete GitHub verification remain pending** (no remote delete capability in this connector). Retain 4 named branches, including Gate E review; preserve local Pi runtime/release checkouts.
+
+## 2026-10-12 — Verified remote branch cleanup (supersedes earlier pending entries)
+- [x] Owner deleted 24 temporary GitHub remote refs; independently verified exactly 4 retained: main, refactor/v2, feature/v3-home-agent, Gate E review.
+- [ ] Gate E review branch retained pending separate assessment; do not delete just to reduce count.
+- [ ] Resume read-only HA metadata review for real light/switch/helper identity before improving /lights; no production change.

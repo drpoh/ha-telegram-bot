@@ -26,7 +26,10 @@ Run on canonical Pi DEV, not V2 or production checkout. The explicit list intent
 ```bash
 cd ~/projects/rs-home-ai-dev || exit 1
 test "$(git branch --show-current)" = feature/v3-home-agent || exit 1
-git remote -v
+case "$(git remote get-url origin)" in
+  git@github.com:drpoh/ha-telegram-bot.git|https://github.com/drpoh/ha-telegram-bot.git) ;;
+  *) echo 'Unexpected origin; STOP'; exit 1 ;;
+esac
 git fetch origin feature/v3-home-agent || exit 1
 git merge --ff-only origin/feature/v3-home-agent || exit 1
 git push origin --delete \

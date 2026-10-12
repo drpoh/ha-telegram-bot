@@ -638,3 +638,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-12 lighting physical-entity review
 - Owner notes apparent lamp entities can be switches or auxiliary. Real Pi HA-MCP reads confirmed exactly three `unavailable`: `light.koridor_2`, `light.koridor_1_etazh_2`, `light.koridor_spot_2`. Do not assume ID domain proves physical purpose. Scoped inventory now outputs every known light's state for manual review; existing classification schema supports `light_ids`/`switch_light_ids`/`excluded_light_ids`. No whole-home discovery or write expansion approved.
+
+## Lighting inventory checkpoint
+- Three fixed light IDs are `unavailable`; owner says some lighting entities are switches or helpers. Reuse existing `src/decision/lighting-classification.mjs`; avoid guessed aliases and changing authorization. Scoped registry review needed before /lights redesign. No production promotion.

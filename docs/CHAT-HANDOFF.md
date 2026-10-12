@@ -2,6 +2,17 @@
 
 # RS Home AI V3 — new-chat handoff
 
+## CURRENT checkpoint — owner-confirmed 2026-10-12 (supersedes older dated status below)
+- GitHub canonical branch `feature/v3-home-agent`, tested merged SHA `b1122bdb274931b5d89e745c9ce171ac4e3addbe` (PR #33). Owner fast-forwarded Pi DEV to `b1122bd`; later git status and unattended runs not independently observed.
+- User-systemd `rs-home-ai-dev-check.service` ran successfully: `time_utc=2026-10-12T07:10:00Z`, `status=passed`, `stage=complete`, `exit_code=0`, source SHA `b1122bd...`. The candidate `~/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-b1122bd/RELEASE_COMMIT` was observed with exact full SHA.
+- GitHub CI: 169 test files / 656 assertions / 0 failures for merged PR #33; exact-SHA push gate is checked by Pi using privately stored read-only PAT. Do not print, migrate or commit the credential.
+- Systemd user namespace maps host-root ancestors to 65534, so ownership-sensitive security tests intentionally reject sandbox fixtures. They were **not weakened**. CI runs full tests; Pi runs packaging/syntax. Real Pi ARMv7 isolated stage smoke still pending.
+- **No STAGE environment deployment and no production promotion.** User-reported V3 production user-service active at immutable `/home/drpoh/projects/rs-home-ai-v3-release-c6a9812`. Do not touch live V2, Gate D units, HA Green, Telegram poller, credentials, or real device control.
+- GitHub PRs #32 and #33 merged. Previous 2026-10-09 test totals and next-step sections below are historical and NOT the current checkpoint.
+- **Next:** build/reuse offline stage smoke validation of immutable candidate with tests of failure isolation, explicit status, and operator-only production gate. Review `docs/V3-NEXT-STAGE-DEV-STAGE-PROD.md`, `docs/PROJECT-MAP.md`, `docs/TODO.md` first. Preserve history instead of editing old evidence.
+
+
+
 This is the FIRST document to read when resuming this project in another chat.
 It is a compact navigation index, not a substitute for live repository checks.
 

@@ -56,3 +56,8 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 ## 2026-10-12 — Owner live HA-MCP read results
 - [x] Real sauna read complete: 27.125 °C, not ready (<85 °C); tamboor read complete: on.
 - [ ] Seven-light overview partial: 1 on, 3 off, 3 unknown (`light.koridor_2`, `light.koridor_1_etazh_2`, `light.koridor_spot_2`). No rename/removal or broader control approved; diagnose actual HA read errors before changing scope.
+
+## Lighting classification checkpoint 2026-10-12
+- [x] Actual Pi live HA-MCP: three fixed light IDs returned `unavailable`; sauna and tamboor complete. Owner clarified switches/auxiliary entities may be mixed with actual lamps.
+- [x] Reuse existing lighting-classification schema. Added bounded individual state inventory for seven scoped IDs, no registry discovery or actuation.
+- [ ] Obtain HA's actual area, physical-purpose and `switch.*` aliases via reviewed source; classification must not be guessed from a `light.*` ID.

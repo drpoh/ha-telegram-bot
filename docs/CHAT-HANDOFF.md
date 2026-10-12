@@ -674,3 +674,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-12 — PR #50 merge confirmed
 - PR #50 merged `9cbb695` with GitHub Node 20 isolated suite success. Source four-target /lights lists OFF and ON labels, added Russian off-light questions and tests. This is GitHub CI evidence only; Pi direct tool quota exhausted. No prod switch or scope change. Next Pi exact-SHA DEV/STAGE acceptance, then independent release review.
+
+## 2026-10-12 — PR #51 accepted
+- PR #51 merged as `d7aad8c` after GitHub Node 20 offline CI succeeded on exact head `668a357`. Four selected lights: all OFF vs any ON vs unknown is now explicit and read-only. Pi ARMv7 DEV/STAGE unverified; production not changed. Next: exact-SHA Pi candidate gate and owner-approved release.

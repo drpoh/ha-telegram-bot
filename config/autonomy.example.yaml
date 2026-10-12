@@ -1,0 +1,29 @@
+# Runtime policy is implemented in src/policy/config.mjs.
+# This file documents the intended human-readable shape.
+
+default: suggest
+
+entities:
+  light.kukhnia_svet:
+    level: auto_safe
+    services:
+      - turn_on
+      - turn_off
+
+  light.liustra:
+    level: auto_safe
+    services:
+      - turn_on
+      - turn_off
+
+  light.podsvetka:
+    level: auto_safe
+    services:
+      - turn_on
+      - turn_off
+
+  light.podsvetka_2:
+    level: auto_safe
+    services:
+      - turn_on
+      - turn_off

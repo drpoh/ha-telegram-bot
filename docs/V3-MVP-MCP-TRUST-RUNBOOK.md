@@ -1,0 +1,63 @@
+# V3 MVP MCP trusted-transport gate — 2026-10-10
+
+Status: **NO-GO.** This is an operator runbook, not authority to modify the active pilot.
+
+## Current observations (Pi, metadata-only)
+- V3 pilot URL is **non-loopback HTTP**. Existing dev policy explicitly rejects it; the active pilot still uses the old connection settings.
+- No local TCP listener on port **9584** during inspection; no dedicated MCP/SSH tunnel user unit found. An SSH agent is not a tunnel.
+- `ssh -G homeassistant.local` shows `StrictHostKeyChecking ask`; this alone does not prove a reviewed/pinned host key.
+- Live V3 user service remains active. No SSH connection, HA registry query, device command, or service restart performed.
+
+## Fastest safe route (operator review required)
+
+Use a separately configured, restricted **SSH local-forward** from the Pi to the existing HA-MCP listener, instead of introducing a new TLS reverse proxy. A loopback HTTP endpoint is safe **only while the local endpoint is demonstrably backed by an authenticated SSH tunnel to the approved HA host**. URL allowlisting alone is insufficient.
+
+1. Verify HA SSH server host key fingerprint out-of-band and pin it in an owner-managed known_hosts file. Reject unknown/changed keys (StrictHostKeyChecking=yes); never use accept-new/no for unattended release.
+2. Verify HA-MCP actual listening address, allowed read tools and credentials through the approved HA administration workflow. Ensure the forward destination on HA is localhost/restricted and that other hosts cannot access the Pi's forwarded port.
+3. In a separate, reviewed user-systemd tunnel service, use SSH with `-N -T -L 127.0.0.1:<dedicated_port>:127.0.0.1:<approved_HA_MCP_port>`, `ExitOnForwardFailure=yes`, a pinned known_hosts and least-privilege SSH identity. Do not run an exploratory tunnel against production automatically.
+4. Verify the loopback listener belongs to the approved tunnel process, distinguish endpoint health from HA authentication, and perform a single scoped read-only MCP state query under controlled supervision. No `ha_call_service` during Gate B.
+5. Update only the V3 pilot's secret-owned MCP URL to `http://127.0.0.1:<dedicated_port>/<reviewed_path>` after isolated acceptance. Review the complete endpoint URL including path and expected MCP server identity; never follow unreviewed redirects.
+6. Reconfirm the approved `light.led_kukhnia` entity registry + device registry + area, operator-reviewed policy and independent claim journal. Only then request authorization for bounded live on/off acceptance and separate release.
+7. Failure or loss of SSH tunnel must leave the V3 pilot unable to write; no retry of an uncertain action. V2 and Home Assistant Green remain independent.
+
+## What is still missing
+
+- Operator-attested HA host key and authorised SSH identity/source.
+- A configured, running, authenticated dedicated loopback forward and verified MCP server identity.
+- A real trusted HA registry read for the candidate exact light.
+- Independent protected `claims.db` provisioned with operator authorization.
+- Separately authorized one-light actuation acceptance and rollback sign-off.
+
+Do not upgrade `Gate B` or `Gate C` to PASS from an offline test or a local listener alone.
+
+## 2026-10-10 additional read-only acceptance evidence
+- SSH `BatchMode=yes`, `StrictHostKeyChecking=yes` succeeded with the Pi's pre-existing `known_hosts` record. Stored local fingerprints (still require out-of-band owner verification): ED25519 `SHA256:fkIMHj61cYOe+RSDSKWkR89kQM9MFoQZlSEnJdpZirw`, RSA `SHA256:IlVBP8CcNZdlJP7+G/r/F8YS0psZfvRZ+IwG+rPlrCI`.
+- HA host reports listener `0.0.0.0:9584` (this is potentially exposed to LAN; restrict network ingress as part of owner-managed hardening). It is not bound to HA loopback, though forwarding destination can be loopback.
+- Authenticated SSH read-only registry inspection found exactly one `light.led_kukhnia`, `mqtt` platform, enabled; expected device ID, unique ID, single device, and kitchen area all match developer admission expectations. This is point-in-time metadata, not live write approval.
+- An **ephemeral** strict-host-key SSH tunnel `127.0.0.1:19584` -> HA `127.0.0.1:9584` passed a TCP probe and was immediately stopped; subsequent `ss` showed no listener. This proves temporary forwarding, NOT authenticated MCP tool capabilities or production tunnel availability.
+- Still NO-GO: host key not independently attested by operator, HA-MCP tool identity/rights not accepted, standalone persistent tunnel not installed, claims journal missing, no approved real actuation.
+
+## 2026-10-10 — separate disabled user-unit candidate
+- Created `docs/rs-home-ai-v3-mcp-tunnel.service.example`, a **not installed, not enabled** user systemd unit to SSH-forward 127.0.0.1:19584 to the HA listener with strict host-key checks, BatchMode and ExitOnForwardFailure. No agent runtime dependency or live URL change is configured.
+- The file was copied to a temporary `.service` path for `systemd-analyze verify`: exit 0. This validates unit syntax only, not remote identity, SSH trust or MCP tool access.
+- Owner must independently verify/pin the actual SSH host key, review the HA-side listener exposure (currently `0.0.0.0:9584`), then explicitly authorize any installation/activation. Real one-light actuation and journal provisioning remain separate approvals.
+
+## 2026-10-10 — Critical SSH forwarding acceptance failure
+- A TCP listener at the Pi loopback port during a transient SSH session does NOT prove that the HA server will permit forwarding. Actual HTTP attempt through the forwarded channel failed: `channel open failed: administratively prohibited`.
+- HA `sshd -T` read-only inspection reports `allowtcpforwarding no`, `disableforwarding no`, `permitopen any`. **Consequently the disabled unit template is NOT operationally deployable as written.** Do not install/enable it yet. Server SSH policy must not be modified as part of generic project continuation.
+- Direct read-only request on HA loopback `http://127.0.0.1:9584/mcp` returned 404. The existing runtime MCP endpoint's path is neither `/mcp` nor `/`; it must be taken from an operator-approved, secret-safe source during configured acceptance (not guessed). No MCP tool invocation occurred.
+- Safe options after independent review: an SSH-specific restricted forwarding identity/policy change approved by HA owner; OR owner-managed TLS reverse proxy with checked certificate and bounded MCP auth. Neither option is currently approved. Before a tunnel rollout, validate forwarding end-to-end through the **actual** approved path and MCP protocol initialize/listTools, then separately attest HA credentials/permissions.
+- This supersedes any previous claim that a TCP-only forward probe proves HA-MCP endpoint usability. Gate B remains NO-GO. Current live V3 and v2 are untouched.
+
+## 2026-10-10 — Owner-approved limited SSH forwarding applied
+- Owner explicitly approved restricted SSH-forwarding changes. On HA SSH server, preserved `/etc/ssh/sshd_config.rs-v3-backup-20261010`, appended `Match User hassio` with `AllowTcpForwarding local`, `PermitOpen 127.0.0.1:9584`, `GatewayPorts no`; global `AllowTcpForwarding no` remains intact. `sshd -t` passed; listener reloaded with HUP, subsequent strict-key SSH reconnected. NOTE: this Match rule applies to ALL authenticated `hassio` connections, not a new dedicated V3-only SSH identity; a separate identity would be required for narrower user/key isolation.
+- Transient SSH local forwarding of Pi `127.0.0.1:19584` to HA `127.0.0.1:9584` now WORKS end-to-end. Upstream MCP SDK initialized using the existing configured URL path (not logged): `listTools` returned 53 tools including `ha_get_state` AND `ha_call_service`; scoped `ha_get_state(light.led_kukhnia)` returned structured content without error. No write tool invoked. Tunnel immediately stopped after each probe; no systemd tunnel installed/enabled.
+- MCP backend exposes write tools; this is NOT a read-only HA-MCP credential or least-privilege tool authorization. Maintain the independent V3 policy/confirmation/claim boundary. Host key was checked against pre-existing known_hosts, but no independent owner fingerprint attestation was performed. SSH server config persistence depends on HA add-on lifecycle; verify after reload/update.
+- Release still NO-GO until separately reviewed persistent tunnel, protected claims DB, owner trust/credential approval, and controlled one-light acceptance. Do not silently update live V3 endpoint or restart services.
+
+## 2026-10-10 — Repeat release precheck after redirect hardening
+- Effective authenticated HA SSH policy still permits only local forwarding to 127.0.0.1:9584 under `Match User hassio`; this is broader than a dedicated key grant and requires operator review.
+- Live pilot MCP URL remains non-loopback HTTP and fails the new dev origin validator; do NOT promote `e8665a6` without separately configuring the verified loopback tunnel and reviewing the real MCP path.
+- No listener on Pi TCP 19584; no external execution journal `~/.local/state/rs-home-ai-v3/claims.db`. Operator-policy file SHA256 still equals pinned expected hash `32843f881dbca7a24f205ac6a678b67463486033c581d859ac764b0c54c1091f`.
+- **NO-GO** for persistent tunnel activation and dev pilot promotion. Remaining independent approvals: confirm authentic HA SSH host-key fingerprint through HA console/owner-controlled channel; review exposed 0.0.0.0:9584 service and privileged MCP write-tool access; approve a dedicated tunnel user unit, provision durable journal, approve one-light control test.
+- Activation must be atomic from operator perspective: first verified persistent SSH unit and health check on the *correct* private MCP path, then isolated pilot endpoint switch; verify one read-only state before any separately approved actuation. Rollback: restore pilot endpoint/service checkout independently, stop the dedicated tunnel; NEVER reset claim DB, and HA Green continues standalone.

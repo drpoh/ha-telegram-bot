@@ -1210,3 +1210,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Owner confirmed `~/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-b1122bd/RELEASE_COMMIT` holds the matching SHA. Release was NOT activated; last production observation: user V3 service active at immutable `c6a9812`.
 - Root cause investigation: PI systemd user namespace maps root-owned ancestry to UID 65534; security fixture checks intentionally reject it. GitHub CI (PR #33) 169 files/656 assertions/0 failures. GitHub fine-grained PAT initially had no repository access, then owner corrected token/access; exact-SHA CI gate completed successfully. No secrets published.
 - New work: synchronize source of truth (AGENTS, TODO, HANDOFF, PROJECT-MAP, DEV-AUTOMATION docs) and prioritize offline isolated STAGE candidate smoke with explicit release/rollback gate. No new runtime execution or Pi stage test performed during this GitHub-only documentation change.
+
+## 2026-10-12 — Offline stage smoke source milestone
+- Added scripts/automation/stage-smoke.mjs to load immutable candidate's existing mock-only stage module, verify exact RELEASE_COMMIT and loopback-only health/registry and deny writes, with 30-second bounded user-systemd execution and private last-stage.log.
+- DEV validation invokes this after packaging; candidate is still NOT deployed. No HA Green, Telegram token/poller or production service accessed. GitHub CI and owner Pi result must be logged separately; not yet verified as of source change.

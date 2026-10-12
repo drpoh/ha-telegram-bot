@@ -39,5 +39,8 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 
 ## 2026-10-12 — Offline STAGE candidate smoke (source pending CI/Pi)
 - [x] Implement bounded on-demand offline candidate smoke using existing loopback mock; verify immutable SHA, GET /health, GET /registry with authorization:false, denial of writes. Integrated into candidate preparation after CI, no stage daemon or production deployment.
-- [ ] GitHub CI and Pi ARMv7 runtime acceptance of new STAGE smoke; full candidate pass not yet observed on Pi.
+- [x] Owner verified ARMv7 Pi offline STAGE smoke: 2026-10-12T07:56:27Z, SHA 46ce492033fb6c830a37ef95ba6efdb3ed632470, status=passed, stage=complete, exit_code=0; last-stage.log reports STAGE_PASS with identity/health/registry/deny. This accepts the OFFLINE MOCK contract only, not live HA integration or production deployment.
 - [ ] Independent runtime fault/rollback review before any production promotion. No automatic deployment.
+
+## Next immediate practical goal
+- [ ] Offline-tested Russian read-only questions for scoped lights and sauna; test safe handling of unknown/unavailable readings. Reuse existing `src/home/sauna-status.mjs`, `light-overview.mjs`, `src/pilot/telegram-readonly.mjs`. No new poller, secrets, broad actuation or prod restart without approval.

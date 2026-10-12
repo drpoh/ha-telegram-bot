@@ -4,6 +4,7 @@ import {createKitchenMcpClient} from '../../src/pilot/kitchen-mcp-client.mjs';
 import {summarizeSauna} from '../../src/home/sauna-status.mjs';
 import {summarizeLightOverview,LIGHT_OVERVIEW_IDS} from '../../src/home/light-overview.mjs';
 import {summarizeTambourLight} from '../../src/home/tambour-light-status.mjs';
+import {describeScopedLightIdentity} from '../../src/home/light-inventory-identity.mjs';
 
 const timeoutMs=45000;
 const read=createKitchenMcpClient({lanMvp:true,ownerApprovedLanHttpPilot:true});
@@ -42,6 +43,7 @@ console.log('READONLY_PREFLIGHT='+ (failures?'PARTIAL_OR_FAILED':'PASS'));
     data?.state==='unavailable'?'unavailable':data?.state==='unknown'?'unknown':
     ['on','off'].includes(data?.state)?'ok':'invalid_response';
    console.log('LIGHT_INVENTORY '+id+' '+state);
+   console.log(describeScopedLightIdentity(id,raw).text);
   }catch(e){console.log('LIGHT_DIAGNOSTIC '+id+' '+(e?.message==='timeout'?'timeout':'read_error'));}
  }
 }

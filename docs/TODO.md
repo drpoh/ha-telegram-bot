@@ -164,3 +164,8 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - [x] ChatGPT's disjoint sauna response feature PR #57 passed GitHub Node 20 offline CI and merged squash `1e89e16`; retains /sauna full answer, returns short temperature/readiness for recognized questions, no new HA writes.
 - [ ] Pi clean DEV ff-only, verified exact-SHA CI gate and offline ARMv7 STAGE for both previously merged light and new sauna source; keep production 9dd5964 pinned until separate owner release approval.
 - [ ] Review Jules PR #56 for additive tests/structured results only; never integrate broad diff from stale main. Confirm Jules future tasks use feature/v3-home-agent base before delegation.
+
+## 2026-10-12 — Free parallel Jules task #58 and scoped tambour PR #59
+- [x] Jules Free issue #58 assigned and acknowledged (`https://jules.google.com/task/17124109062565898142`): pure trusted-context read-only follow-ups; must base on feature/v3-home-agent and halt if it defaults to main. Await its small PR; never auto-merge or use paid services.
+- [x] In parallel ChatGPT implemented independent tambour yes/no read-only replies. PR #59 exact head d4d45ce passed GitHub Node 20 isolated CI; merged squash `acc5e0b`. No new HA scope, no production change.
+- [ ] Pi clean DEV fast-forward and CI-gated offline STAGE before any release candidate consideration. Production `9dd5964` remains immutable; owner approval required for switch.

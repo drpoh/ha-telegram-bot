@@ -58,7 +58,7 @@ test('Pi candidate requires exact verified GitHub push gate',()=>{
  assert.doesNotMatch(script,/npm test/);
  assert.match(gate,/head_sha===sha/);
  assert.match(gate,/r\.event==="push"/);
- assert.match(gate,/r\.conclusion!=="success"/);
+ assert.match(gate,/run\.conclusion!=="success"/);
  assert.match(gate,/unsafe_token_file/);
  assert.match(workflow,/feature\/v3-home-agent/);
  assert.match(workflow,/npm test/);

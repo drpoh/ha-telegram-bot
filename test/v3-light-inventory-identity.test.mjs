@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {describeScopedLightIdentity} from '../src/home/light-inventory-identity.mjs';
-const id='light.koridor_2';
+const id='light.koridor';
 test('identity evidence accepts exact scoped HA response but grants no authority',()=>{
  const r=describeScopedLightIdentity(id,{structuredContent:{data:{entity_id:id,state:'unavailable',attributes:{friendly_name:'Коридор основной'}}}});
  assert.equal(r.status,'unavailable');
@@ -11,6 +11,7 @@ test('identity evidence accepts exact scoped HA response but grants no authority
 test('identity evidence is fail-closed for mismatched entity, unsupported state or unknown id',()=>{
  assert.equal(describeScopedLightIdentity(id,{data:{entity_id:'light.other',state:'on'}}).status,'identity_mismatch');
  assert.equal(describeScopedLightIdentity(id,{data:{entity_id:id,state:'broken'}}).status,'invalid_state');
+ assert.equal(describeScopedLightIdentity('light.koridor_2',{data:{entity_id:'light.koridor_2',state:'on'}}).status,'scope_denied');
  assert.equal(describeScopedLightIdentity('switch.unknown',{data:{entity_id:'switch.unknown',state:'on'}}).status,'scope_denied');
  assert.equal(describeScopedLightIdentity(id,{isError:true}).status,'mcp_error');
 });

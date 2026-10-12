@@ -1225,3 +1225,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — bounded operator-only live HA-MCP read preflight
 - Reused existing narrow client and summarizers for direct read-only on-demand smoke. Script does not modify HA or run Telegram. No live test performed by GitHub connector; Pi/HA result remains open. See docs/V3-LIVE-READONLY-PREFLIGHT.md.
+
+## 2026-10-12 — Real read-only Pi acceptance (partial)
+- Owner ran `scripts/manual/v3-live-readonly-preflight.mjs`: SAUNA complete 27.125 °C/ready false, TAMBOUR complete/on, LIGHTS partial 1 on/3 off/3 unknown. Unknown IDs: `light.koridor_2`, `light.koridor_1_etazh_2`, `light.koridor_spot_2`.
+- Extended explicit read-only preflight to classify error reason for fixed seven IDs, without raw HA payloads, registry search or writes. New Pi run and validation pending. Production release unchanged.

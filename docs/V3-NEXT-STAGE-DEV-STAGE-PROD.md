@@ -1,6 +1,6 @@
 # RS Home AI V3 — Stage 2: environment isolation and expansion gates
 
-Status: **offline stage contract and runtime fault tests verified; no stage/prod deployment authorized** (2026-10-11).
+Status: **offline mock STAGE passed on owner Pi 2026-10-12, no physical stage/prod promotion authorized**. Current authoritative reconciliation: [V3 history/stage audit](V3-HISTORY-STAGE-AUDIT-2026-10-12.md).
 
 ## Verified baseline
 - First V3 live, owner-confirmed one-light MVP completed on `light.tambur_svet_l1`: both on and off independently verified through HA-MCP, release 97343fa. No broad HA authority was approved.

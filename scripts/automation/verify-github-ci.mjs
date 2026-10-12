@@ -13,11 +13,11 @@ try{
  token=readFileSync(tokenPath,"utf8").trim();
  if(!/^[A-Za-z0-9_]+$/.test(token)||token.length<20||token.length>300)deny("invalid_token");
 }catch{deny("token_unavailable");}
-const url=new URL("https://api.github.com/repos/drpoh/ha-telegram-bot/actions/workflows/v3-dev-verified-gate.yml/runs");
+const url=new URL("https://api.github.com/repos/drpoh/ha-telegram-bot/actions/runs");
 url.searchParams.set("branch","feature/v3-home-agent");
 url.searchParams.set("event","push");
 url.searchParams.set("head_sha",sha);
-url.searchParams.set("per_page","30");
+url.searchParams.set("per_page","100");
 let data;
 try{
  const response=await fetch(url,{headers:{
@@ -31,7 +31,7 @@ try{
 }catch{deny("github_api_unavailable");}
 const matches=(data.workflow_runs||[]).filter(r=>
  r.head_sha===sha && r.event==="push" && r.head_branch==="feature/v3-home-agent" &&
- r.path?.endsWith("v3-dev-verified-gate.yml") && r.repository?.full_name==="drpoh/ha-telegram-bot");
+ r.path?.split("@")[0].endsWith("/v3-dev-verified-gate.yml") && r.repository?.full_name==="drpoh/ha-telegram-bot");
 if(matches.length===0)deny("no_verified_push_run");
 const run=matches.sort((a,b)=>b.id-a.id)[0];
 if(run.status!=="completed" || run.conclusion!=="success")deny("run_not_successful");

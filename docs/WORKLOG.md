@@ -1232,3 +1232,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — classified review of lighting inventory
 - Owner observed `unavailable` on `light.koridor_2`, `light.koridor_1_etazh_2`, `light.koridor_spot_2` and clarified some items are switches/auxiliary. Limited Pi inventory enhanced to print all seven exact read-only IDs. Existing `lighting-classification.mjs` supports switches/exclusions. See `docs/V3-LIGHT-ENTITY-REVIEW-2026-10-12.md`; no live classification proof or prod promotion.
+
+## 2026-10-12 — Lighting classification checkpoint
+- Owner observed that some lamp-related entities are switches or auxiliary objects. All three previously unknown IDs returned `unavailable` on real HA-MCP. No scope or production changes. Plan is to reuse existing reviewed classification and collect targeted HA metadata.

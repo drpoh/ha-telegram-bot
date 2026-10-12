@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // Operator-invoked read-only HA-MCP acceptance; NO Telegram poller or write tool.
-import {createKitchenMcpClient} from '../src/pilot/kitchen-mcp-client.mjs';
-import {summarizeSauna} from '../src/home/sauna-status.mjs';
-import {summarizeLightOverview} from '../src/home/light-overview.mjs';
-import {summarizeTambourLight} from '../src/home/tambour-light-status.mjs';
+import {createKitchenMcpClient} from '../../src/pilot/kitchen-mcp-client.mjs';
+import {summarizeSauna} from '../../src/home/sauna-status.mjs';
+import {summarizeLightOverview} from '../../src/home/light-overview.mjs';
+import {summarizeTambourLight} from '../../src/home/tambour-light-status.mjs';
 
 const timeoutMs=45000;
 const read=createKitchenMcpClient({lanMvp:true,ownerApprovedLanHttpPilot:true});

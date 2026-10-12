@@ -48,3 +48,6 @@ GitHub API can check repository tree, ref counts, test workflow reports and file
 
 ## 2026-10-12 — Four-entity all-off answer (source candidate)
 - Existing `/lights` summary now explicitly distinguishes all four selected entities OFF, at least one ON, and one or more unknown. This does not claim whole-house physical light status; no extra HA reads or permissions. GitHub PR CI and later Pi STAGE remain separate acceptance gates.
+
+## 2026-10-12 — V3 production startup at 9dd5964 (Telegram smoke pending)
+- Owner explicitly approved switching to immutable candidate SHA `9dd5964a4956b88227ec4002ac80ef46a186d632`. Operator confirmed systemd `ExecStart` at `/home/drpoh/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-9dd5964/src/pilot/telegram-readonly.mjs`; service `active/running`, PID 3713, started 2026-10-12 14:49 EEST. Original release `c6a9812` retained for rollback. This is startup evidence, not Telegram functional acceptance; `journalctl --user` returned no journal files. Pending private Telegram read-only and cancel→confirm smoke before marking release accepted. No V2 or HA device write operation reported.

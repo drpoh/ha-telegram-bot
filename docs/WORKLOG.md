@@ -1252,3 +1252,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-12 — Operator-confirmed Gate D timer execution timestamps
 - Owner checked user-systemd: Gate D health and alerts timers both last triggered 13:17:17 EEST; health service ended 13:17:19 and alerts 13:17:18, both Result=success/ExecMainStatus=0 from prior check. Next scheduled both 13:32:17 EEST. DEV check timer last triggered 12:13:16 and next 18:13:07 EEST; timer firing alone does not attest job result. V2 and V3 previously observed active, V3 pinned c6a9812.
 - At latest source status provided, Pi DEV HEAD e231afb, remote after fetch 115c6b3; no subsequent fast-forward output received. DEV source sync and last automation latest.txt status remain unverified; no services changed.
+
+## 2026-10-12 — Owner confirms exact-SHA offline STAGE and practical lighting review
+- Owner reported Pi DEV automation at 10:33:23 UTC: status=passed, stage=complete, source_sha=f4acd114c10f2c8883e433cd71ca4c60f173d278, exit_code=0; this is offline mock STAGE plus candidate checks, not live registry acceptance or production promotion.
+- Reused existing read-only HA-MCP pilot and added bounded friendly_name review evidence for previously approved seven IDs. A name is only metadata and cannot authorize switches/rooms or prove physical circuit. Source CI and Pi run require separate observation.

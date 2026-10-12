@@ -158,3 +158,9 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - [x] Jules Free first pilot received issue #54 but reported unexpected task failure; no PR from Jules. Did not activate paid fallback. Reimplemented small scoped improvement independently through GitHub PR #55 with successful Node 20 offline CI, squash-merged `64ed9f1`; issue #54 closed, `jules` label removed.
 - [x] Exact bounded OFF and all-selected-OFF questions now get concise results from the original four scoped light IDs, `/lights` full overview unchanged, unknown states explicit; added isolated tests. No write permissions, credentials, network, prod, or hardware changes.
 - [ ] Pi clean fast-forward DEV and verify exact-head ARMv7 offline candidate/STAGE before considering the new read-only feature in production. Current production stays `9dd5964` until a separate owner-authorized release. No second agent required.
+
+## 2026-10-12 — Parallel Jules/ChatGPT source work: safe ownership
+- [x] Owner approved free-only parallel tasks, different modules per agent. Jules PR #56 for lights unexpectedly targets `main` and contains ~433 changed files; **do not merge as-is**. PR comment requests scoped comparison against feature/v3-home-agent; reuse better parts selectively.
+- [x] ChatGPT's disjoint sauna response feature PR #57 passed GitHub Node 20 offline CI and merged squash `1e89e16`; retains /sauna full answer, returns short temperature/readiness for recognized questions, no new HA writes.
+- [ ] Pi clean DEV ff-only, verified exact-SHA CI gate and offline ARMv7 STAGE for both previously merged light and new sauna source; keep production 9dd5964 pinned until separate owner release approval.
+- [ ] Review Jules PR #56 for additive tests/structured results only; never integrate broad diff from stale main. Confirm Jules future tasks use feature/v3-home-agent base before delegation.

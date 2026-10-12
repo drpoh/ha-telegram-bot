@@ -6,6 +6,8 @@ import {createKitchenLiveAdmission} from './kitchen-live-admission.mjs';
 import {createKitchenMcpClient} from './kitchen-mcp-client.mjs';
 import {prepareV3PilotExecutionJournal} from '../ops/v3-pilot-execution-journal.mjs';
 import {summarizeSauna} from '../home/sauna-status.mjs';
+import {createNineLightTelegramConsent} from '../home/nine-light-telegram-consent.mjs';
+import {createNewLightDispatch} from '../home/new-light-physical-dispatch.mjs';
 import {classifySaunaQuestionMode} from '../home/sauna-question-mode.mjs';
 import {summarizeTambourLight} from '../home/tambour-light-status.mjs';
 import {classifyTambourQuestionMode} from '../home/tambour-question-mode.mjs';
@@ -26,6 +28,11 @@ const claimsPath='/home/drpoh/.local/state/rs-home-ai-v3/claims.db';
 const storage=prepareV3PilotExecutionJournal({dbPath:claimsPath,rollbackRoot:'/home/drpoh/rs-home-ai-v3'});
 const executionJournal=storage.journal;
 const saunaRead=createKitchenMcpClient({lanMvp:true,ownerApprovedLanHttpPilot:true});
+// New-light commands are visible in the DEV source but physically disabled until
+// a separate trusted deployment review provisions exact physical target approvals.
+const newLightDispatch=createNewLightDispatch({releaseEnabled:false,approvedIds:[]});
+const newLightConsent=createNineLightTelegramConsent({executionJournal,dispatch:p=>newLightDispatch.dispatch(p)});
+const pendingNewLights=new Set();
 const pilot=createKitchenDryrunConsent({
  executionJournal,
  dispatch:({action})=>boundary.dispatch({action})
@@ -36,10 +43,34 @@ bot.start(ctx=>allow(ctx)?ctx.reply('RS Home AI v3: пилот тамбура. �
 bot.command('status',ctx=>allow(ctx)?ctx.reply(storage.ready?'RS Home AI v3: защищённый журнал доступен. Для реальной команды требуется /confirm и проверка разрешений.':'RS Home AI v3: исполнение заблокировано — защищённый журнал не готов. HA не затронут.'):undefined);
 bot.command('confirm',async ctx=>{
  if(!allow(ctx))return;
+ if(pendingNewLights.delete(ctx.from.id)){
+  const result=await newLightConsent.confirm(actor(ctx));
+  return ctx.reply(result.status==='verified'?'Home Assistant подтвердил состояние выбранного светильника.':
+   result.status==='unverified'?'Команда отправлена, состояние не подтверждено.':
+   result.status==='missing'?'Запрос истёк или уже обработан.':
+   'Новый свет: команда заблокирована или результат неизвестен ('+(result.reason||result.status)+').');
+ }
  const result=await pilot.confirm(actor(ctx));
  return ctx.reply(result.status==='missing'?'Нет действующего запроса для подтверждения.':result.status==='verified'?'Home Assistant подтвердил состояние светильника после команды.':result.status==='unverified'?'Команда отправлена, но итоговое состояние не подтверждено: '+result.reason:result.reason==='replay_claim_unavailable'?'Команда заблокирована: защищённый журнал подтверждений недоступен.':'Команда не выполнена или результат неизвестен: '+(result.reason||result.status));
 });
-bot.command('cancel',ctx=>allow(ctx)?ctx.reply(pilot.cancel(actor(ctx))?'Запрос отменён.':'Активного запроса нет.'):undefined);
+bot.command('cancel',ctx=>{
+ if(!allow(ctx))return;
+ if(pendingNewLights.delete(ctx.from.id))return ctx.reply(newLightConsent.cancel(actor(ctx)).status==='cancelled'?'Запрос отменён.':'Активного запроса нет.');
+ return ctx.reply(pilot.cancel(actor(ctx))?'Запрос отменён.':'Активного запроса нет.');
+});
+bot.command('newlight',ctx=>{
+ if(!allow(ctx))return;
+ const parts=(ctx.message?.text||'').trim().split(/\s+/);
+ if(parts.length!==3)return ctx.reply('Формат: /newlight light.kukhnia_svet on (или off). Затем /confirm.');
+ const service=parts[2]==='on'?'turn_on':parts[2]==='off'?'turn_off':null;
+ if(!service)return ctx.reply('Действие: только on или off.');
+ const result=newLightConsent.request(actor(ctx),{entityId:parts[1],service});
+ if(result.status!=='pending')return ctx.reply('Светильник не входит в проверенный список или команда отклонена.');
+ // Never keep an older tamboor request pending alongside a new-light request.
+ pilot.cancel(actor(ctx));
+ pendingNewLights.add(ctx.from.id);
+ return ctx.reply('Выбран '+result.entityId+'. Действие: '+parts[2]+'. Подтверди /confirm в течение 60 секунд или /cancel. Пока физическое управление новыми светильниками заблокировано до отдельного разрешения.');
+});
 bot.command('lights',async ctx=>{
  if(!allow(ctx))return;
  const result=await summarizeLightOverview({readState:id=>saunaRead('ha_get_state',{entity_id:id})});
@@ -62,6 +93,8 @@ bot.on('message',ctx=>{
  if(intent==='lights')return summarizeLightOverview({readState:id=>saunaRead('ha_get_state',{entity_id:id}),mode:classifyLightQuestionMode(ctx.message?.text)}).then(result=>ctx.reply(result.text));
  if(intent==='tambour')return summarizeTambourLight({readState:id=>saunaRead('ha_get_state',{entity_id:id}),mode:classifyTambourQuestionMode(ctx.message?.text)}).then(result=>ctx.reply(result.text));
  if(intent==='unsupported_question')return ctx.reply('Этот вопрос пока не поддерживается. Доступны температура сауны, свет в тамбуре и обзор выбранных светильников.');
+ pendingNewLights.delete(ctx.from.id);
+ newLightConsent.cancel(actor(ctx));
  const r=pilot.request(actor(ctx),ctx.message?.text);
  return ctx.reply(r.status==='pending'?'Цель: light.tambur_svet_l1. Действие: '+(ctx.message.text.toLowerCase().startsWith('включи')?'ВКЛЮЧИТЬ':'ВЫКЛЮЧИТЬ')+'. Для РЕАЛЬНОГО переключения отправь /confirm в течение 60 секунд либо /cancel.':'Режим тестирования. Попробуй: «Включи свет в тамбуре» или «Выключи свет в тамбуре».');
 });

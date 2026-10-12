@@ -39,3 +39,11 @@ test('SSH failures are classified without showing raw remote errors',()=>{
  assert.match(script,/2>"\$fetch_errors"/);
  assert.doesNotMatch(script,/cat "\$fetch_errors"|tee "\$fetch_errors"/);
 });
+
+test('DEV SSH bypasses faulty global proxy config but still verifies host keys',()=>{
+ const script=load('scripts/automation/dev-validate.sh');
+ assert.match(script,/GIT_SSH_COMMAND="\/usr\/bin\/ssh -F none/);
+ assert.match(script,/StrictHostKeyChecking=yes/);
+ assert.match(script,/BatchMode=yes/);
+ assert.doesNotMatch(script,/StrictHostKeyChecking=no|UserKnownHostsFile=\/dev\/null/);
+});

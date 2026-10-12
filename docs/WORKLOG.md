@@ -1195,3 +1195,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — Real Pi fixture ancestor identified
 - Owner `namei -l` proved `~/.local` is group-writable 0775. Four secret/policy test files reject it as an unsafe ancestor. Moved automated test scratch to `~/.rs-home-ai-dev-test-tmp` directly beneath private 0700 user home; updated systemd ReadWritePaths and installer to accept an exact known prior unit for controlled upgrade. No global chmod or production change; Pi verification still pending.
+
+## 2026-10-12 — Pi test temp ancestry diagnostics
+- Pi user verified `~/.rs-home-ai-dev-test-tmp` and all ancestors are safe, and systemd has the correct `ReadWritePaths`, yet 4 policy/security test files still fail. Added opt-in diagnostic output in the isolated test runner to record only each temporary root ancestor's depth, ownership relation, mode, and policy compatibility, never raw paths or tokens. DEV runner enables it and preserves output in private last-test.log. Root cause remains unverified pending Pi run; no sandbox weakening or prod change.

@@ -700,3 +700,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-12 cleanup checkpoint
 - User confirmed CLEANUP=PASS after removing eight obsolete Raspberry Pi build folders; both V2 and V3 services remain active. Current immutable V3 release 9dd5964 and retained rollback directories were not deleted. Source synchronization remains separate from production deployment.
+
+## 2026-10-12 — Optional free cloud coding agent proposal
+- Owner requires **no new paid subscriptions, billing, or pay-as-you-go APIs**. Prepared Jules Free agent policy in AGENTS.md and setup docs/FREE-AI-DEVELOPER.md on short-lived GitHub PR branch. This does not install/authorize Jules: owner must connect GitHub app for this repo only and explicitly select feature/v3-home-agent; agent submits reviewed offline PR only. Existing GitHub CI/automatic Pi offline candidate gate stay in charge, no production changes; stop at free usage caps.

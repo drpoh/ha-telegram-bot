@@ -1264,3 +1264,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-12 — Owner HA cleanup / narrowed four-entity light view
 - Owner reports three old unavailable HA entities removed (light.koridor_2, light.koridor_1_etazh_2, light.koridor_spot_2). Screenshot proved first was orphaned from yandex_station; other deletions owner-confirmed, no independent device metadata.
 - Source-only V3 light status now targets exactly four retained IDs; original tamboor write permission unchanged. Revised tests assert read set excludes the three deleted IDs. GitHub CI and real Pi updated preflight required separately; production pinned c6a9812.
+
+## 2026-10-12 — Pi live four-entity HA-MCP preflight PASS
+- Owner verified revised manual preflight: sauna complete 27.9375°C, ready false; lights complete (on 1, off 3, unknown 0), tamboor complete/on; `READONLY_PREFLIGHT=PASS`. Individual IDs: `light.tambur_svet_l1` on, `light.koridor` off, `light.koridor_1_etazh` off, `light.koridor_spot` off. No HA actions executed.
+- PR #49, exact four-ID source and tests, had successful GitHub CI (run #55 at source commit 40d9764) and merged `0a0d024`. Pi live preflight confirms read-only behavior; no new Pi STAGE candidate or production deployment acceptance implied.

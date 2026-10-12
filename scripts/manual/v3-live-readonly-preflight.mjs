@@ -9,13 +9,15 @@ const timeoutMs=45000;
 const read=createKitchenMcpClient({lanMvp:true,ownerApprovedLanHttpPilot:true});
 const onlyRead=id=>read('ha_get_state',{entity_id:id});
 const jobs=[['SAUNA',summarizeSauna],['LIGHTS',summarizeLightOverview],['TAMBOUR',summarizeTambourLight]];
+const bounded=async task=>{
+ let handle;
+ try{return await Promise.race([task,new Promise((_,reject)=>{handle=setTimeout(()=>reject(Error('timeout')),timeoutMs);})]);}
+ finally{clearTimeout(handle);}
+};
 let failures=0;
 for(const [name,summary] of jobs){
  try{
-  const result=await Promise.race([
-   summary({readState:onlyRead}),
-   new Promise((_,reject)=>setTimeout(()=>reject(Error('timeout')),timeoutMs))
-  ]);
+  const result=await bounded(summary({readState:onlyRead}));
   if(result.authorization!==false||result.actualWrite!==false)throw Error('authorization_invariant');
   console.log(name+'_STATUS='+result.status);
   console.log(name+'_TEXT='+result.text);

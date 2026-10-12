@@ -1,0 +1,25 @@
+# INERT TEMPLATE — rendered and installed only after separately approved stage deployment.
+[Unit]
+Description=RS Home AI Stage mock (fixture only)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=__STAGE_RELEASE_DIR__
+ExecStart=/usr/bin/node __STAGE_RELEASE_DIR__/scripts/stage/mock-server.mjs
+Environment=RS_STAGE_PORT=0
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+IPAddressDeny=any
+IPAddressAllow=localhost
+RestrictAddressFamilies=AF_INET AF_UNIX
+CapabilityBoundingSet=
+LockPersonality=true
+
+[Install]
+WantedBy=default.target

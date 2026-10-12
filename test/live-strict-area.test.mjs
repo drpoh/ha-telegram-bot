@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { resolveLiveStrictArea as resolve } from '../src/home/live-strict-area.mjs';
+const response={success:true,floors:[{areas:[{area_id:'sauna',name:'Ванная и Сауна'},{area_id:'koridor',name:'Коридор'}]}],unassigned_areas:[]};
+const tool=async(name,args)=>{assert.equal(name,'ha_list_floors_areas');assert.deepEqual(args.area_fields,['area_id','name']);return {structuredContent:response};};
+test('live exact area resolves by trusted HA list',async()=>assert.equal((await resolve({query:'Ванная и Сауна',callTool:tool})).area.area_id,'sauna'));
+test('subroom cannot silently widen to sauna area',async()=>assert.equal((await resolve({query:'Ванная',callTool:tool})).status,'area_not_found'));
+test('reviewed alias only',async()=>assert.equal((await resolve({query:'баня',callTool:tool,aliases:{'баня':'sauna'}})).status,'reviewed_alias'));
+test('not applicable multi room phrase fails closed',async()=>assert.equal((await resolve({query:'свет в сауне и коридоре',callTool:tool})).ok,false));
+test('missing registry fails',async()=>assert.equal((await resolve({query:'Коридор',callTool:async()=>({structuredContent:{success:true,floors:[]}})})).ok,false));
+test('partial registry fails',async()=>assert.equal((await resolve({query:'Коридор',callTool:async()=>({structuredContent:{...response,partial:true}})})).ok,false));
+test('tool failure fails',async()=>assert.equal((await resolve({query:'Коридор',callTool:async()=>{throw Error('offline')}})).status,'area_lookup_failed'));

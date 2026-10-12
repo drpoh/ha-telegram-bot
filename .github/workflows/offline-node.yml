@@ -1,0 +1,38 @@
+name: Offline Node checks
+
+on:
+  pull_request:
+    branches:
+      - feature/v3-home-agent
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: offline-node-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  isolated-tests:
+    name: Node 20 isolated suite
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      CI: "true"
+    steps:
+      - name: Checkout untrusted source without persisted credentials
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install SQLite CLI
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends sqlite3
+      - name: Install locked dependencies without install scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Run isolated checks with fake credentials and loopback MCP
+        run: npm test

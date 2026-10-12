@@ -1,0 +1,16 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { validateAreaLightScope as check } from '../src/decision/area-scope.mjs';
+const areaId = 'living_room';
+const entities = [{entity_id:'light.a',domain:'light',area:areaId},{entity_id:'light.b',domain:'light',area:areaId}];
+const searchResult = {success:true,partial:false,entity_has_more:false,entity_total_matches:2,entities};
+const states = [{entity_id:'light.a',state:'on'},{entity_id:'light.b',state:'off'}];
+const input = {areaId,searchResult,states,requestedIds:['light.a','light.b']};
+test('complete area inventory and states validates',()=>assert.equal(check(input).allowed,true));
+test('truncated search fails closed',()=>assert.equal(check({...input,searchResult:{...searchResult,entity_has_more:true}}).allowed,false));
+test('missing count fails closed',()=>assert.equal(check({...input,searchResult:{...searchResult,entity_total_matches:undefined}}).allowed,false));
+test('wrong area fails closed',()=>assert.equal(check({...input,searchResult:{...searchResult,entities:[entities[0],{...entities[1],area:'kitchen'}]}}).allowed,false));
+test('wrong domain fails closed',()=>assert.equal(check({...input,searchResult:{...searchResult,entities:[entities[0],{...entities[1],domain:'switch'}]}}).allowed,false));
+test('unknown state fails closed',()=>assert.equal(check({...input,states:[states[0],{...states[1],state:'unknown'}]}).allowed,false));
+test('unlisted target fails closed',()=>assert.equal(check({...input,requestedIds:['light.a','light.other']}).allowed,false));
+test('duplicate entities fail closed',()=>assert.equal(check({...input,searchResult:{...searchResult,entities:[entities[0],entities[0]]}}).allowed,false));

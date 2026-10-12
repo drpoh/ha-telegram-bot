@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {acquireAssistTargetRegistry} from '../src/decision/v3-assist-target-reader.mjs';
+const member={entityId:'light.fixture',areaId:'sauna',deviceId:'device1',available:true,disabled:false};
+const source={success:true,complete:true,partial:false,capturedAt:1000,entityCount:1,entities:[member]};
+const get=(overrides={})=>acquireAssistTargetRegistry({now:1010,readRegistry:async()=>({...source,...overrides})});
+test('complete trusted snapshot is normalized, never authorized',async()=>{const r=await get();assert.equal(r.success,true);assert.equal(r.entities[0].areaId,'sauna');assert.equal('authorization' in r,false);});
+test('partial, paginated, mismatched count, stale fail closed',async()=>{for(const change of [{complete:false},{partial:true},{has_more:true},{next_offset:2},{entityCount:2},{capturedAt:0}]){const r=await acquireAssistTargetRegistry({now:change.capturedAt===0?50000:1010,readRegistry:async()=>({...source,...change})});assert.equal(r.success,false);}});
+test('duplicate and malformed entities fail closed',async()=>{for(const entities of [[member,member],[{...member,deviceId:''}],[{...member,entityId:'switch.door'}]]){assert.equal((await get({entities,entityCount:entities.length})).success,false);}});
+test('reader errors and absent adapter fail closed',async()=>{assert.equal((await acquireAssistTargetRegistry()).success,false);assert.equal((await acquireAssistTargetRegistry({readRegistry:async()=>{throw Error('offline')},now:1010})).success,false);});

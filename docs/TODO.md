@@ -153,3 +153,8 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - [ ] Owner: authorize Google Labs Jules app for **only** drpoh/ha-telegram-bot; select base feature/v3-home-agent; verify Free plan, never add billing.
 - [ ] Run one small offline Russian-light-answer coding task → new PR → independent review/CI. No auto-merge, production, HA network, secrets or paid API.
 - [ ] Only after first clean PR, consider weekly maintenance via built-in free Jules Scheduled Tasks or issue label jules; stop at quota.
+
+## 2026-10-12 — Focused Russian lighting answers source merged, Pi release pending
+- [x] Jules Free first pilot received issue #54 but reported unexpected task failure; no PR from Jules. Did not activate paid fallback. Reimplemented small scoped improvement independently through GitHub PR #55 with successful Node 20 offline CI, squash-merged `64ed9f1`; issue #54 closed, `jules` label removed.
+- [x] Exact bounded OFF and all-selected-OFF questions now get concise results from the original four scoped light IDs, `/lights` full overview unchanged, unknown states explicit; added isolated tests. No write permissions, credentials, network, prod, or hardware changes.
+- [ ] Pi clean fast-forward DEV and verify exact-head ARMv7 offline candidate/STAGE before considering the new read-only feature in production. Current production stays `9dd5964` until a separate owner-authorized release. No second agent required.

@@ -4,6 +4,7 @@ import {LIGHT_OVERVIEW_IDS,summarizeLightOverview} from '../src/home/light-overv
 test('bounded complete light overview reads only four reviewed remaining entities',async()=>{
  const seen=[];
  const r=await summarizeLightOverview({readState:async id=>{seen.push(id);return {structuredContent:{data:{entity_id:id,state:id===LIGHT_OVERVIEW_IDS[0]||id===LIGHT_OVERVIEW_IDS[2]?'on':'off'}}};}});
+ assert.deepEqual(LIGHT_OVERVIEW_IDS,['light.tambur_svet_l1','light.koridor','light.koridor_1_etazh','light.koridor_spot']);
  assert.deepEqual(seen,LIGHT_OVERVIEW_IDS);assert.equal(r.status,'complete');assert.equal(r.onCount,2);assert.equal(r.offCount,2);assert.equal(r.unknownCount,0);assert.equal(r.actualWrite,false);assert.equal(r.authorization,false);assert.match(r.text,/4 выбранных сущностей HA, не число физических ламп/);
 });
 test('bad or missing HA data is unknown rather than silently off',async()=>{

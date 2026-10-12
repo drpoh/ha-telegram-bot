@@ -1180,3 +1180,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — Safe combined automation milestone
 - Source-only DEV automation added: approved-branch clean fast-forward, locked/tested immutable candidate in `~/projects/rs-home-ai-v3-candidates/`, user systemd 6-hour timer, read-write scope limited to DEV/candidates/job state, inaccessible runtime credentials and V2/Gate D checkouts. A one-time owner installer is provided. No production switch, timer installation or Pi verification performed by this GitHub change. Direct remote Desktop Commander quota is 0%; do not claim live ChatGPT shell access. See `docs/V3-DEV-AUTOMATION-2026-10-12.md`.
+
+## 2026-10-12 — First Pi DEV automation run
+- Owner installed the user timer and ran DEV check. It exited 128 at fetch; no npm test or candidate built. V2 active; pinned V3 c6a9812 active; Gate D health and alerts unit Results=success and ExecMainStatus=0, but timestamps/incident recovery not confirmed. Sandbox shows ProtectHome=read-only, ProtectSystem=strict, expected scoped ReadWritePaths and private InaccessiblePaths. No unit journal entries available. Added private fetch-error classification to aid actual SSH diagnosis without secrets. Do not claim runner passing until Pi recheck.

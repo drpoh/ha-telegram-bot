@@ -147,3 +147,9 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - Owner ran the reviewed guarded deletion and reported `CLEANUP=PASS`. Eight directories removed: five old candidate siblings `b1122bd`, `e231afb`, `46ce492`, `ed27051`, `f4acd11`, plus standalone `rs-home-ai-v3-candidate`, `rs-home-ai-v3-candidate-v2`, `rs-home-ai-v3-release-968748d`. Each previously measured ~64M, estimated ~512 MiB freed (df rounded: avail 43G→44G, used 22%→21%).
 - Before deletion, exact-target directory and production ExecStart validation succeeded. After deletion both `rs-home-ai-v3.service` user and `ha-telegram-bot.service` system remained `active`, all eight target paths absent. Retained active `9dd5964` child inside shared candidate parent, `c6a9812`, `97343fa`, Gate D historical checkout, V2 checkout, archives, and private state. Disk figures approximate; no byte-accurate measurement provided.
 - Documentation-only GitHub update creates a new DEV commit beyond owner's last shown `75e23bd`; next safe Pi sync is clean-worktree fetch + ff-only; do NOT redeploy immutable production for documentation.
+
+## 2026-10-12 — Zero-cost coding agent onboarding (proposal)
+- [x] Prepared repository AGENTS.md no-paid-services/no-billing rule and docs/FREE-AI-DEVELOPER.md Google Jules Free onboarding in a separate PR branch. No Jules authorization, task or subscription activated.
+- [ ] Owner: authorize Google Labs Jules app for **only** drpoh/ha-telegram-bot; select base feature/v3-home-agent; verify Free plan, never add billing.
+- [ ] Run one small offline Russian-light-answer coding task → new PR → independent review/CI. No auto-merge, production, HA network, secrets or paid API.
+- [ ] Only after first clean PR, consider weekly maintenance via built-in free Jules Scheduled Tasks or issue label jules; stop at quota.

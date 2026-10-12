@@ -28,7 +28,21 @@ cd "$repo"
 [[ "$(git branch --show-current)" == "feature/v3-home-agent" ]] || { echo "DENY: unexpected branch"; exit 1; }
 [[ -z "$(git status --porcelain=v1)" ]] || { echo "DENY: dirty DEV (preserved)"; exit 1; }
 stage="fetch"
-git fetch --no-tags origin feature/v3-home-agent
+# Keep Git/SSH diagnostics private; do not echo potentially sensitive remote output.
+fetch_errors="$state/fetch-stderr.log"
+if ! git -c core.askPass= -c credential.interactive=never fetch --no-tags origin feature/v3-home-agent 2>"$fetch_errors"; then
+ reason="git_fetch_failed"
+ if grep -qi 'Permission denied (publickey)' "$fetch_errors"; then reason="ssh_publickey_denied"
+ elif grep -qi 'Host key verification failed' "$fetch_errors"; then reason="ssh_host_key_untrusted"
+ elif grep -Eqi 'Could not resolve hostname|Temporary failure in name resolution' "$fetch_errors"; then reason="dns_unavailable"
+ elif grep -Eqi 'Could not open a connection to your authentication agent|sign_and_send_pubkey.*agent refused operation' "$fetch_errors"; then reason="ssh_agent_unavailable"
+ elif grep -qi 'Network is unreachable' "$fetch_errors"; then reason="network_unreachable"
+ fi
+ printf 'fetch_reason=%s\n' "$reason" > "$state/fetch-reason.txt"
+ echo "DENY: fetch failed: $reason; private details kept on Pi in automation state"
+ exit 128
+fi
+rm -f "$fetch_errors" "$state/fetch-reason.txt"
 remote="$(git rev-parse --verify refs/remotes/origin/feature/v3-home-agent)"
 head="$(git rev-parse --verify HEAD)"
 stage="fast-forward"

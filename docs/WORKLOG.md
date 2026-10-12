@@ -1292,3 +1292,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — V3 9dd5964 Telegram MVP functional acceptance complete
 - Owner-provided live Telegram transcript confirms pending `light.tambur_svet_l1` request → `/cancel` = `Запрос отменён.` → `/confirm` = `Нет действующего запроса для подтверждения.` Previous private-chat smoke passed `/status`, `/sauna`, `/light`, `/lights`, Russian lighting questions, and separately user-confirmed ON/OFF with `/confirm` and HA verified-state replies. This closes **scoped Telegram functional acceptance** only; broader policy/security gates, physical-light classification, fault/recovery tests and voice remain open. Existing production SHA `9dd5964`, no new deployment or permissions. Next: concise question-specific Russian answers and scoped context in DEV via CI without production changes.
+
+## 2026-10-12 — Accepted V3 MVP checkpoint and safe cleanup assessment
+- Recorded user-confirmed release `9dd5964`, exact immutable systemd executable and successful private Telegram tests: `/status`, `/sauna`, `/light`, `/lights`, Russian questions, confirmed tamboor ON/OFF, pending `/cancel` then `/confirm` missing. This is narrow functional acceptance, not global policy/voice fault-gate completion.
+- GitHub live branch audit found 11 refs, 7 merged PR #46–52 heads and 4 retained branches. Reviewed cleanup candidates without deleting history/refs/runtime. Current Pi DEV revision after documentation commits not independently read because Desktop Commander quota blocked remote shell.

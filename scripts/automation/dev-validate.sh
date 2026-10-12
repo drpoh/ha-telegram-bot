@@ -4,6 +4,9 @@ set -euo pipefail
 export PATH=/usr/local/bin:/usr/bin:/bin
 export GIT_TERMINAL_PROMPT=0
 export GIT_CONFIG_NOSYSTEM=0
+# Ignore unrelated system-wide OpenSSH proxy include with invalid ownership.
+# Keep SSH host verification enforced; no agent or global config changes.
+export GIT_SSH_COMMAND="/usr/bin/ssh -F none -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=20"
 umask 077
 repo="$HOME/projects/rs-home-ai-dev"
 state="$HOME/.local/state/rs-home-ai-dev-automation"

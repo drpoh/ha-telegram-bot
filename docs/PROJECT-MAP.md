@@ -60,3 +60,8 @@ Engineering direction: [reuse-first ADR](ADR-REUSE-FIRST-2026-10-11.md). For cod
 - Legacy names `kitchen-*` remain in V3 pilot modules even though the authorized light is in the tambur. Do not mass-rename those modules before a separate dependency and safety audit.
 - Historical TODO unchecked items may already be superseded. Preserve past evidence; use newest dated section as active backlog.
 - Stage mock and source-only selector return non-authorizing candidates, never live write grants.
+
+## 2026-10-12 verified release checkpoint
+- Active owner-accepted V3 executable is now `/home/drpoh/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-9dd5964/src/pilot/telegram-readonly.mjs` via user-systemd override. This candidate **is production**, not an offline-only candidate anymore. Preserve previous `c6a9812` rollback and `97343fa` reserve. The earlier table row describing `c6a9812` as active is historical and superseded by this paragraph.
+- Source branch can advance with documentation while immutable prod remains at `9dd5964`; no need or authorization to update prod because of documentation commits. Owner verified scoped Telegram read, confirm, cancel/replay denial. V2/Gate D remain independent.
+- New GitHub audit: 11 remote branches, including seven merged PR #46–52 heads awaiting safe remote-ref cleanup. Avoid claiming old four-branch inventory as current.

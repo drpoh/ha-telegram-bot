@@ -662,3 +662,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-12 — Live lighting names accepted; next action
 - Last owner read: sauna 28°C, ready false; tamboor on; light.koridor off/Коридор, light.koridor_2 unavailable/Коридор; light.koridor_1_etazh off/Коридор 1 этаж, light.koridor_1_etazh_2 unavailable/same label; light.koridor_spot off/Спот, light.koridor_spot_2 unavailable/Свет. Do NOT conclude physical duplication without HA device/platform/area metadata. Current source-only /lights wording counts entities rather than physical fixtures, no permission change; runtime V3 release remains c6a9812.
+
+## 2026-10-12 — HA lighting orphan cleanup confirmed by owner
+- Owner deleted all three unavailable entities (light.koridor_2, light.koridor_1_etazh_2, light.koridor_spot_2); first confirmed orphan warning for yandex_station. Updated *source only* V3 /lights and scoped ha_get_state list to four IDs: light.tambur_svet_l1, light.koridor, light.koridor_1_etazh, light.koridor_spot. Four entities != verified distinct physical lights. Run Pi read-only preflight next; do not touch pinned prod c6a9812 or tamboor-only write scope.

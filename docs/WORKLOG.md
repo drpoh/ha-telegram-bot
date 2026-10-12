@@ -1260,3 +1260,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-12 — Exact seven HA names verified read-only
 - Owner Pi HA-MCP read at sauna 28°C (not ready), tamboor on, corridor three available off and three unavailable. Friendly names: light.koridor and light.koridor_2 both Коридор; light.koridor_1_etazh and light.koridor_1_etazh_2 both Коридор 1 этаж; light.koridor_spot Спот; light.koridor_spot_2 Свет. No inferred duplicate/circuit relationship or physical type.
 - Source-only /lights overview now explicitly distinguishes seven HA entities from physical lamps and lists unresolved exact IDs. Production c6a9812 unchanged.
+
+## 2026-10-12 — Owner HA cleanup / narrowed four-entity light view
+- Owner reports three old unavailable HA entities removed (light.koridor_2, light.koridor_1_etazh_2, light.koridor_spot_2). Screenshot proved first was orphaned from yandex_station; other deletions owner-confirmed, no independent device metadata.
+- Source-only V3 light status now targets exactly four retained IDs; original tamboor write permission unchanged. Revised tests assert read set excludes the three deleted IDs. GitHub CI and real Pi updated preflight required separately; production pinned c6a9812.

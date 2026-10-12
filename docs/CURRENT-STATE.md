@@ -38,3 +38,7 @@
 ## Audit boundaries
 
 GitHub API can check repository tree, ref counts, test workflow reports and files; it **cannot verify** Pi working tree, running systemd ExecStart, secret scope, live V2/Gate D health or real HA availability without authorized Pi output. Do not mark these verified based on source-only audit.
+
+## Latest lighting cleanup (2026-10-12)
+- Owner deleted three previously unavailable orphan entity records after review; the first was verified as obsolete yandex_station entity. The old three-ID unavailable report is historical, not a current active list.
+- Source V3 /lights now reads four retained HA light-domain IDs: light.tambur_svet_l1, light.koridor, light.koridor_1_etazh, light.koridor_spot. Physical fixture identity and wider area coverage still require review. Pinned production unchanged; run the Pi scoped read preflight before any deployment.

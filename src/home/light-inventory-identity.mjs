@@ -1,5 +1,5 @@
 // Human-review evidence only. Never resolves authorization or guesses physical devices.
-// Accepts only the seven fixed entity_ids from the already-reviewed read-only pilot.
+// Accepts only the fixed entity_ids from the already-reviewed read-only pilot.
 import {LIGHT_OVERVIEW_IDS} from './light-overview.mjs';
 const allowed=new Set(LIGHT_OVERVIEW_IDS);
 const safeName=value=>{

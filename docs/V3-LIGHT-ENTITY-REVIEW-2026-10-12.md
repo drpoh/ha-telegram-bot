@@ -36,3 +36,8 @@ The existing `src/decision/lighting-classification.mjs` supports exactly `light_
 Sauna was 28 °C and not ready; all reads were `ha_get_state`. The `/lights` source-only response now explicitly says it counts **seven selected HA entities, not physical lamps**, and lists unavailable **entity IDs** so duplicates are not guessed from labels. The existing read whitelist remains unchanged.
 
 **Still needed to conclude hardware identity:** use HA Settings → Devices & services → Entities to inspect integration/platform, actual device, assigned area and whether it is a helper, then record the switch that physically controls each lighting circuit. This is a read-only manual review, not approval to modify HA or expand dispatch. Keep any mapping tentative until verified by the owner.
+
+## Owner cleanup completed (2026-10-12)
+The owner deleted **three** unavailable HA entity-registry records after reviewing their status in HA: `light.koridor_2`, `light.koridor_1_etazh_2`, and `light.koridor_spot_2`. The first showed a clear orphan warning from the `yandex_station` integration; the other two were owner-reported deleted, but their integration/platform was not independently recorded. These records must no longer be queried by the V3 read-only light overview. They are preserved in this audit **only as historical deleted IDs**, not candidates for re-creation or current HA entities.
+
+The narrow pilot now reads **four** retained HA light-domain entities: `light.tambur_svet_l1`, `light.koridor`, `light.koridor_1_etazh`, `light.koridor_spot`. This still does **not** prove four distinct physical luminaires or whole-house coverage. The existing tamboor-only physical write policy is unchanged. Run the updated preflight on Pi before claiming complete real-HA acceptance.

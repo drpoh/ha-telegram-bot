@@ -53,3 +53,8 @@ Prioritize a shared command envelope and deterministic decision/policy/confirmat
 - Gate C isolated fault and concurrency tests have advanced through GitHub PR #3–#4 (GitHub CI 161 files / 628 assertions, zero failures). Cooperative AbortSignal and per-process in-flight guards are **not** verified network cancellation, durable replay protection, or release approval.
 - Stage is a source-only loopback mock, not a deployed isolated environment. Gate E Assist/Atom Echo must reuse shared policy and trusted identity; no independent voice authority.
 - GitHub CI is development evidence, not ARMv7 Pi validation or authorization for real HA actions. Maintain Home Assistant Green autonomy and immutable active pilot scope.
+
+## 2026-10-12 — Current delivery strategy
+- Prioritize a useful limited home assistant, not custom infrastructure. Reuse HA Assist, ESPHome, HA-MCP, Node/systemd and existing libraries; retain Home Assistant Green independence.
+- Owner confirmed successful CI-gated candidate preparation for b1122bd, not production promotion or stage execution.
+- NEXT: offline isolated STAGE smoke for the immutable candidate; no live HA, Telegram poller or production secrets. Then independently validate Pi ARMv7, narrowed read-only real-world functionality and explicit approval/rollback before release. General Gate B, live Gate C, recovery Gate D and voice Gate E remain open.

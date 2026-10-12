@@ -1,0 +1,15 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { checkVerifiedAreaDecision as check } from '../src/decision/verified-area-decision.mjs';
+const discovery={allowed:true,status:'verified_read_only',entityIds:['light.a','light.b']};
+const base={discovery,areaResolved:true,userRequestedArea:true,toolName:'ha_call_service',args:{domain:'light',service:'turn_off',entity_id:['light.a','light.b']}};
+test('exact whole area passes scope only',()=>assert.equal(check(base).status,'verified_area_scope'));
+test('read-only tools not affected',()=>assert.equal(check({...base,toolName:'ha_get_state'}).allowed,true));
+test('no trusted resolution fails closed',()=>assert.equal(check({...base,areaResolved:false}).allowed,false));
+test('incomplete or unavailable discovery blocked',()=>assert.equal(check({...base,discovery:{allowed:false,status:'unavailable_targets'}}).allowed,false));
+test('extra device is blocked',()=>assert.equal(check({...base,args:{...base.args,entity_id:['light.a','light.b','light.other']}}).allowed,false));
+test('subset silently omitted is blocked',()=>assert.equal(check({...base,args:{...base.args,entity_id:'light.a'}}).status,'partial_area_action'));
+test('duplicates blocked',()=>assert.equal(check({...base,args:{...base.args,entity_id:['light.a','light.a']}}).allowed,false));
+test('wrong domain blocked',()=>assert.equal(check({...base,args:{...base.args,domain:'switch'}}).allowed,false));
+test('unrelated request does not acquire area permission',()=>assert.equal(check({...base,userRequestedArea:false}).status,'not_applicable'));
+test('mixed light and switch are not one service call',()=>assert.equal(check({...base,discovery:{...discovery,entityIds:['light.a','switch.a']}}).allowed,false));

@@ -1,0 +1,5 @@
+[
+  {"environment":"dev","service":"rs-ai-dev-offline","storage":"/tmp/rs-ai-dev-fixture","port":33101,"telegramCredentialRef":"fake-dev-only","haEndpointRef":"fixture-dev","haAccess":"fixture","writeEnabled":false},
+  {"environment":"stage","service":"rs-ai-stage-mock","storage":"/tmp/rs-ai-stage-fixture","port":33102,"telegramCredentialRef":"fake-stage-only","haEndpointRef":"loopback-stage-mock","haAccess":"mock","writeEnabled":false},
+  {"environment":"prod","service":"rs-ai-prod-future","storage":"/tmp/rs-ai-prod-example","port":33103,"telegramCredentialRef":"placeholder-not-a-token","haEndpointRef":"future-owner-reviewed-endpoint","haAccess":"approved_live","writeEnabled":false}
+]

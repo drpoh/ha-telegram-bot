@@ -1,0 +1,11 @@
+# Review-only design; NOT an installed unit.
+# Standard systemd user service, use only after approved immutable stage artifact provisioning.
+# WorkingDirectory: separately pinned stage release (never the production v2/v3 checkout)
+# ExecStart: /usr/bin/node <stage-release>/scripts/stage/mock-server.mjs
+# Environment: RS_STAGE_PORT=0 (ephemeral; no reserved stable endpoint)
+# No production EnvironmentFile, Telegram bot, real HA URL or network credential.
+# Recommended review: NoNewPrivileges, UMask=0077, PrivateTmp, ProtectSystem=strict,
+# ProtectHome=read-only (only after path compatibility review), IPAddressDeny=any,
+# IPAddressAllow=localhost (requires systemd enforcement verification).
+# Restart=on-failure after manual readiness/rollback validation.
+# Do not install/enable any unit based only on this text.

@@ -5,10 +5,10 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "node bot.mjs",
-    "dev": "node --watch bot.mjs",
-    "check": "node --check bot.mjs",
-    "test": "npm run check"
+    "start": "node src/index.mjs",
+    "dev": "node --watch src/index.mjs",
+    "check": "find src test -name \"*.mjs\" -type f -print0 | xargs -0 -P 3 -n 1 node --check",
+    "test": "npm run check && node scripts/run-isolated-tests.mjs"
   },
   "keywords": [
     "home-assistant",

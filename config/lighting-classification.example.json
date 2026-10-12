@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "areas": [
+    {
+      "area_id": "replace_with_real_ha_area_id",
+      "area_name": "Replace with exact Home Assistant area name",
+      "light_ids": ["light.main_room_light"],
+      "excluded_light_ids": ["light.device_status_led"],
+      "switch_light_ids": ["switch.physical_room_light"]
+    }
+  ]
+}

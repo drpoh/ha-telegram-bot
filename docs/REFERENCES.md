@@ -1,0 +1,38 @@
+# Architecture References
+
+These projects are design references, not automatic dependencies. Re-check current upstream license before copying any implementation.
+
+## hass-agent-llm
+Reference concepts: memory extraction, context providers, retrieval of relevant memory, testing patterns.
+
+## Extended OpenAI Conversation
+Reference concepts: exposing Home Assistant Recorder/history to an LLM and bounded time-range queries.
+
+## Letta
+Reference concepts: working vs persistent/archival memory and agent-managed context.
+
+## Mem0
+Reference concepts: memory lifecycle, fact extraction, relevance retrieval.
+
+## HA-MCP
+Reference concepts: MCP interface to Home Assistant and least-privilege/policy boundaries.
+
+## home-assistant-mcp-agent
+Reference concepts: modular MCP integrations, environment-based secrets and user memory patterns.
+
+## Rule
+Prefer independently implementing the needed concept in this repository. If code is copied or adapted, document source, version/commit, license and required attribution.
+
+
+## Engineering decision process (2026-10-08)
+
+Every external pattern requires a short ADR or design note recording **problem, alternatives, decision, risks, test evidence and rollback**. Benchmark external implementations instead of importing whole agents, especially on Raspberry Pi 3 (ARMv7, ~1 GiB RAM).
+
+| Reference / standard | Pattern to evaluate | Local decision |
+|---|---|---|
+| [Home Assistant backups](https://www.home-assistant.io/common-tasks/general/) | Archive lifecycle, scheduled backups and test restores | Treat HA Green backup as a **separate** system from the Raspberry Pi bot. Do not copy or restore HA data through this bot. |
+| [MCP authorization security](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/specification/2026-07-28/basic/authorization/security-considerations.mdx) | Credential audience, no token forwarding, bounded permissions | Keep credentials out of Git and logs; do not confuse a tool schema or user confirmation with actual action authorization. |
+| [OWASP AI Agent Security](https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html) | Least privilege, human oversight, tool-input validation, prompt injection testing | Treat LLM-provided entity IDs and policy choices as untrusted; test fail-closed behavior and malicious tool proposals. |
+| Existing project references above | Memory retrieval, small modular components, read-only state collection | Adopt ideas selectively and document their failure cases; no dependency or copied code without license and compatibility review. |
+
+For each meaningful new feature: ADR -> explicit threat model -> offline regression tests -> read-only acceptance -> code review -> production change only after owner approval. Prefer reliable, deterministic code over expanding prompts. Record external source URL, checked date, applicable license, and whether code was copied (normally: no). Re-check upstream material and licenses when implementation begins.

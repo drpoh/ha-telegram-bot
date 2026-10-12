@@ -1,0 +1,11 @@
+[Unit]
+Description=Periodic safe RS Home AI V3 DEV checks
+
+[Timer]
+OnCalendar=*-*-* 00,06,12,18:10:00
+RandomizedDelaySec=5min
+Persistent=true
+Unit=rs-home-ai-dev-check.service
+
+[Install]
+WantedBy=timers.target

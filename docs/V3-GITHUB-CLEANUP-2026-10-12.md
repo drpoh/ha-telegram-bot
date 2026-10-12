@@ -63,3 +63,8 @@ git ls-remote --heads origin
 Stop if origin URL is unexpected, branch is not `feature/v3-home-agent`, or fast-forward fails. The deletion command is destructive to *remote refs*, not history; always verify the exact list before executing. If any branch changed after this audit, inspect it before deletion, rather than assuming contents remain merged. Do not run `git branch -D`, force-push, prune Pi checkouts, or clean runtime directories as part of this step.
 
 After operator confirmation, re-query GitHub and record the real remaining branch count. No new redundant cleanup document should be created.
+
+## 2026-10-12 — Cleanup completed and independently verified
+- Owner reported execution of reviewed remote deletion. GitHub connector immediately re-listed **exactly four** refs: `main`, `refactor/v2`, `feature/v3-home-agent`, `review/gate-e-target-snapshot-hardening-20261009`. 24 temporary refs gone, including the cleanup PR #45 head; no unmerged active work deleted.
+- PR #42 and #43 were closed as duplicate inventory documentation; authoritative inventory remains `docs/V3-LIGHT-ENTITY-REVIEW-2026-10-12.md`. Merged PR history remains accessible.
+- No production release, HA, runtime checkout or service changes were made by this GitHub remote-ref cleanup. Gate E branch retained pending review.

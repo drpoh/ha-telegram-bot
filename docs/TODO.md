@@ -101,3 +101,9 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - [x] Owner deleted unavailable HA entity records light.koridor_2, light.koridor_1_etazh_2 and light.koridor_spot_2 (first identified as orphan of yandex_station). No automatic HA deletion by this project.
 - [x] V3 read-only allowlist and /lights source narrowed from 7 to 4 existing light-domain IDs; negative test ensures deleted IDs never queried.
 - [ ] Verify all four live HA-MCP reads via revised preflight and actual role/area before claiming physical-light inventory; no prod promotion without owner release gate.
+
+## 2026-10-12 — Scoped four-light live read acceptance achieved
+- [x] Owner real Pi HA-MCP preflight: sauna complete, tamboor complete, four retained light IDs all available; `READONLY_PREFLIGHT=PASS` (on 1/off 3/unknown 0).
+- [x] PR #49 four-target source and regression tests passed GitHub CI and merged `0a0d024`.
+- [ ] Check exact new HEAD Pi CI-gated offline STAGE, then owner-review immutable candidate and rollback before deploying /lights and Russian read-only routing to V3 production. Existing prod c6a9812 unchanged.
+- [ ] Later verify physical room/fixture classification to broaden coverage; four-domain-entity status is not whole-house inventory.

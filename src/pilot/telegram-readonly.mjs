@@ -6,6 +6,7 @@ import {createKitchenLiveAdmission} from './kitchen-live-admission.mjs';
 import {createKitchenMcpClient} from './kitchen-mcp-client.mjs';
 import {prepareV3PilotExecutionJournal} from '../ops/v3-pilot-execution-journal.mjs';
 import {summarizeSauna} from '../home/sauna-status.mjs';
+import {classifySaunaQuestionMode} from '../home/sauna-question-mode.mjs';
 import {summarizeTambourLight} from '../home/tambour-light-status.mjs';
 import {summarizeLightOverview} from '../home/light-overview.mjs';
 import {classifyReadonlyQuestion,classifyLightQuestionMode} from '../home/readonly-question-intent.mjs';
@@ -56,7 +57,7 @@ bot.command('sauna',async ctx=>{
 bot.on('message',ctx=>{
  if(!allow(ctx))return;
  const intent=classifyReadonlyQuestion(ctx.message?.text);
- if(intent==='sauna')return summarizeSauna({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
+ if(intent==='sauna')return summarizeSauna({readState:id=>saunaRead('ha_get_state',{entity_id:id}),mode:classifySaunaQuestionMode(ctx.message?.text)}).then(result=>ctx.reply(result.text));
  if(intent==='lights')return summarizeLightOverview({readState:id=>saunaRead('ha_get_state',{entity_id:id}),mode:classifyLightQuestionMode(ctx.message?.text)}).then(result=>ctx.reply(result.text));
  if(intent==='tambour')return summarizeTambourLight({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
  if(intent==='unsupported_question')return ctx.reply('Этот вопрос пока не поддерживается. Доступны температура сауны, свет в тамбуре и обзор выбранных светильников.');

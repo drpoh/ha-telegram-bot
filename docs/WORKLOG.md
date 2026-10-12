@@ -1256,3 +1256,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-12 — Owner confirms exact-SHA offline STAGE and practical lighting review
 - Owner reported Pi DEV automation at 10:33:23 UTC: status=passed, stage=complete, source_sha=f4acd114c10f2c8883e433cd71ca4c60f173d278, exit_code=0; this is offline mock STAGE plus candidate checks, not live registry acceptance or production promotion.
 - Reused existing read-only HA-MCP pilot and added bounded friendly_name review evidence for previously approved seven IDs. A name is only metadata and cannot authorize switches/rooms or prove physical circuit. Source CI and Pi run require separate observation.
+
+## 2026-10-12 — Exact seven HA names verified read-only
+- Owner Pi HA-MCP read at sauna 28°C (not ready), tamboor on, corridor three available off and three unavailable. Friendly names: light.koridor and light.koridor_2 both Коридор; light.koridor_1_etazh and light.koridor_1_etazh_2 both Коридор 1 этаж; light.koridor_spot Спот; light.koridor_spot_2 Свет. No inferred duplicate/circuit relationship or physical type.
+- Source-only /lights overview now explicitly distinguishes seven HA entities from physical lamps and lists unresolved exact IDs. Production c6a9812 unchanged.

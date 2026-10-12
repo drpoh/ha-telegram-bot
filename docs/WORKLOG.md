@@ -1192,3 +1192,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — Pi sandbox security-test fixture remediation
 - Owner-provided test failures were `policy_unsafe_ancestor` and `untrusted_secret_parent`, consistent with test fixtures beneath world-writable `/tmp`. DEV automation now exports private `TMPDIR` under its 0700 automation state before `npm test`; no security policy checks or production isolation weakened. Await real Pi validation; CI alone cannot prove Pi systemd compatibility.
+
+## 2026-10-12 — Real Pi fixture ancestor identified
+- Owner `namei -l` proved `~/.local` is group-writable 0775. Four secret/policy test files reject it as an unsafe ancestor. Moved automated test scratch to `~/.rs-home-ai-dev-test-tmp` directly beneath private 0700 user home; updated systemd ReadWritePaths and installer to accept an exact known prior unit for controlled upgrade. No global chmod or production change; Pi verification still pending.

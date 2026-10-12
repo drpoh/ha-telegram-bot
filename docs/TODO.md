@@ -185,3 +185,8 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - [x] Exact-head Node 20 GitHub CI succeeded for PR #66 `dc2193784`, then squash merged DEV commit `535d20ae5f11fe46945899dca03963625dcfe2ce`. Script `scripts/manual/v3-new-lights-readonly-preflight.mjs` is opt-in only, uses existing reviewed LAN endpoint with only `ha_get_state` for 19 reviewed candidate IDs. Does not touch Telegram pilot, runtime production, write policy or sensor scope.
 - [ ] Owner/operator runs script on clean synced Pi DEV after gated candidate checks, with explicit `--readonly --operator-approved`, then shares limited `NEW_LIGHT` lines. No evidence of real 19-light HA state yet; no expanded reads in actual bot until exact identity and useful physical grouping review.
 - [ ] Jules PR #65 targets `main` with hundreds of unrelated changes; warned, do not merge as-is. Must target V3 `feature/v3-home-agent` with small diff.
+
+## 2026-10-12 — Actual Pi light read evidence
+- [x] Owner Pi DEV fast-forwarded to `dd901a8`; operator manually ran readonly 19-light preflight. Result 1 ON (`light.vykliuchatel_z_gostinaia_l3`), 8 OFF, 10 unknown; 0 write calls. Unknown does not imply OFF or absent.
+- [x] PR #67 evidence-only snapshot + offline regression, exact-head Node 20 CI succeeded, merged `491f6be1d236ea55b0ba7748aded5a07580473f7`. Source snapshot is NOT live truth nor authorization.
+- [ ] Diagnose 10 unknown new light IDs and verify physical identity/duplicate devices for the nine readable candidates before reviewing any additional live read allowlist. Keep all `light.browser_mod*` excluded; defer sensors/switches, physical writes forbidden without separate approval. Existing prod `9dd5964` remains unchanged.

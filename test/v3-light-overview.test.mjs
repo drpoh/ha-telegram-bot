@@ -36,3 +36,11 @@ test('Russian light status includes reviewed off labels without inventing physic
  assert.match(r.text,/не число физических ламп/);
  assert.equal(r.authorization,false);assert.equal(r.actualWrite,false);
 });
+
+test('All-off conclusion stays bounded and unknown never implies all off',async()=>{
+ const fixture=async state=>summarizeLightOverview({readState:async id=>({data:{entity_id:id,state:typeof state==='function'?state(id):state}})});
+ const off=await fixture('off');assert.match(off.text,/Весь выбранный свет выключен/);assert.equal(off.onCount,0);
+ const on=await fixture(id=>id===LIGHT_OVERVIEW_IDS[0]?'on':'off');assert.match(on.text,/Не весь выбранный свет выключен/);
+ const partial=await fixture(id=>id===LIGHT_OVERVIEW_IDS[0]?'unavailable':'off');assert.match(partial.text,/нельзя достоверно сказать/);assert.doesNotMatch(partial.text,/\. Весь выбранный свет выключен\./);
+ assert.equal(partial.actualWrite,false);assert.equal(partial.authorization,false);
+});

@@ -45,3 +45,6 @@ GitHub API can check repository tree, ref counts, test workflow reports and file
 
 ## 2026-10-12 — Practical Russian light status merged
 - PR #50 merged as `9cbb695` after successful GitHub Node 20 isolated checks. `/lights` now lists both ON and OFF labels for the same four preselected entities and supports bounded Russian OFF-light questions; no extra read/write permission or physical fixture classification. Pi new-head offline STAGE and any immutable production release remain unverified/unapproved.
+
+## 2026-10-12 — Four-entity all-off answer (source candidate)
+- Existing `/lights` summary now explicitly distinguishes all four selected entities OFF, at least one ON, and one or more unknown. This does not claim whole-house physical light status; no extra HA reads or permissions. GitHub PR CI and later Pi STAGE remain separate acceptance gates.

@@ -180,3 +180,8 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - [ ] PR #64 offline-only checked state review (19 IDs, ON/OFF/unknown, exact entity identity), awaiting exact-head CI and merge; it does not contact HA or modify scope.
 - [ ] Later, verify new lighting HA entity/area/source and availability with bounded read-only operator diagnostics; only then propose extending the read allowlist and `/lights` in DEV. Do not widen physical write permissions without separate owner approval.
 - [ ] Suspend sensors, switches, and `light.browser_mod*` until owner changes priorities. Production stays pinned `9dd5964`.
+
+## 2026-10-12 — PR #66 new-light manual readonly preflight
+- [x] Exact-head Node 20 GitHub CI succeeded for PR #66 `dc2193784`, then squash merged DEV commit `535d20ae5f11fe46945899dca03963625dcfe2ce`. Script `scripts/manual/v3-new-lights-readonly-preflight.mjs` is opt-in only, uses existing reviewed LAN endpoint with only `ha_get_state` for 19 reviewed candidate IDs. Does not touch Telegram pilot, runtime production, write policy or sensor scope.
+- [ ] Owner/operator runs script on clean synced Pi DEV after gated candidate checks, with explicit `--readonly --operator-approved`, then shares limited `NEW_LIGHT` lines. No evidence of real 19-light HA state yet; no expanded reads in actual bot until exact identity and useful physical grouping review.
+- [ ] Jules PR #65 targets `main` with hundreds of unrelated changes; warned, do not merge as-is. Must target V3 `feature/v3-home-agent` with small diff.

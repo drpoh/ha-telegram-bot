@@ -1,5 +1,13 @@
 # RS Home AI V3 — active tasks (2026-10-12)
 
+## Latest owner-verified checkpoint — 2026-10-12
+- [x] Installed user-systemd DEV timer successfully completed `stage=complete`, `status=passed`, `exit_code=0`, SHA `b1122bdb274931b5d89e745c9ce171ac4e3addbe` at 07:10:00 UTC. Exact-SHA private GitHub Actions gate succeeded after correcting fine-grained PAT repository access. 
+- [x] Owner confirmed candidate `/home/drpoh/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-b1122bd/RELEASE_COMMIT` contains that exact SHA. This is packaging proof, NOT stage execution or production acceptance.
+- [x] Pi user-systemd UID mapping investigation: sandbox root ancestors `/` and `/home` map to UID 65534. Security tests remain strict; full suite runs in GitHub CI instead of inside that namespace. GitHub PR #33 suite: 169 test files / 656 assertions / 0 failed; separate Pi ARMv7 runtime smoke remains pending.
+- [x] Last owner-reported active V3 production is pinned to `c6a9812`; no release promotion performed.
+- [ ] Next: create offline isolated STAGE candidate smoke-validation (no Telegram poller, HA actuation, live secrets or prod state), bounded pass/fail evidence and rollback-ready operator review; never auto-promote.
+- [ ] Verify DEV timer's subsequent unattended run, V2/Gate D health, and candidate Pi ARMv7 functionality independently.
+
 ## Operational baseline
 - Owner-confirmed V3 production: immutable `/home/drpoh/projects/rs-home-ai-v3-release-c6a9812`, private Telegram sauna and tamboor consent/cancel validated; no new deployment approved.
 - V2 system service uses `/home/drpoh/ha-telegram-bot`; Gate D enabled health/alerts timers run scripts from historical `/home/drpoh/rs-home-ai-v3`. Never move these checkout directories without migration.
@@ -24,7 +32,7 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 ## 2026-10-12 — Lights candidate preflight
 - Prepared release gate `docs/V3-LIGHTS-RELEASE-GATE-2026-10-12.md`; immutable candidate packaging now syntax-checks both light modules. User Pi full test and actual HA-MCP seven-ID acceptance are **not yet provided**; production V3 `c6a9812` unchanged. V2/Gate D runtime result remains unconfirmed. Owner approval is required for any systemd switch.
 
-## 2026-10-12 — DEV automation (source prepared)
+## 2026-10-12 — DEV automation (installed and first successful run confirmed)
 - [x] Added narrow user-systemd pull-only DEV timer, guarded fast-forward, Pi test, separate immutable candidate directory, lock, protected status and explicit prod isolation; see `docs/V3-DEV-AUTOMATION-2026-10-12.md`.
-- [ ] Run owner one-time installer, verify Pi user systemd namespace protections and first job's actual output; do not claim installed before evidence.
+- [x] One-time DEV timer installation and first successful run confirmed by owner (07:10 UTC, SHA b1122bd). Continue verifying subsequent unattended timer executions and invariant protections.
 - [ ] Direct ChatGPT→Pi remains blocked by Desktop Commander remote-call quota (0% left when last checked). No public SSH/webhook or remote-shell bot fallback approved.

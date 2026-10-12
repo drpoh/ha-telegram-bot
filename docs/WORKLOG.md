@@ -1268,3 +1268,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-12 — Pi live four-entity HA-MCP preflight PASS
 - Owner verified revised manual preflight: sauna complete 27.9375°C, ready false; lights complete (on 1, off 3, unknown 0), tamboor complete/on; `READONLY_PREFLIGHT=PASS`. Individual IDs: `light.tambur_svet_l1` on, `light.koridor` off, `light.koridor_1_etazh` off, `light.koridor_spot` off. No HA actions executed.
 - PR #49, exact four-ID source and tests, had successful GitHub CI (run #55 at source commit 40d9764) and merged `0a0d024`. Pi live preflight confirms read-only behavior; no new Pi STAGE candidate or production deployment acceptance implied.
+
+## 2026-10-12 — Bounded Russian light detail PR #50
+- GitHub source-only PR adds OFF labels to existing /lights summary and extra exact Russian OFF questions with regression tests. All reads remain four reviewed HA entity IDs; no physical classification or permission increase. PR CI to be checked; no Pi execution or production deployment claimed.

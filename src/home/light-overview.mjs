@@ -18,16 +18,17 @@ export async function summarizeLightOverview({readState}={}){
  const error={status:'unavailable',authorization:false,actualWrite:false,text:'Не удалось проверить освещение. Состояние неизвестно.'};
  if(typeof readState!=='function')return error;
  // Bounded serial reads; one scoped entity per MCP request; partial failures stay visible.
- const on=[],unknown=[];let off=0;
+ const on=[],off=[],unknown=[];
  for(const target of LIGHT_OVERVIEW_TARGETS){
   let state=null;
   try{state=readValue(await readState(target.id),target.id);}catch{}
   if(state==='on')on.push(target.label);
-  else if(state==='off')off++;
+  else if(state==='off')off.push(target.label);
   else unknown.push(target.id);
  }
- const summary=`Освещение (состояния ${LIGHT_OVERVIEW_TARGETS.length} выбранных сущностей HA, не число физических ламп): on ${on.length}, off ${off}, недоступны или неизвестны ${unknown.length}.`;
+ const summary=`Освещение (состояния ${LIGHT_OVERVIEW_TARGETS.length} выбранных сущностей HA, не число физических ламп): on ${on.length}, off ${off.length}, недоступны или неизвестны ${unknown.length}.`;
  const detail=on.length?` В состоянии on: ${on.join(', ')}.`:'';
+ const offDetail=off.length?` В состоянии off: ${off.join(', ')}.`:'';
  const caveat=unknown.length?` Требуют проверки: ${unknown.join(', ')}.`:'';
- return {status:unknown.length?'partial':'complete',authorization:false,actualWrite:false,onCount:on.length,offCount:off,unknownCount:unknown.length,text:summary+detail+caveat};
+ return {status:unknown.length?'partial':'complete',authorization:false,actualWrite:false,onCount:on.length,offCount:off.length,unknownCount:unknown.length,text:summary+detail+offDetail+caveat};
 }

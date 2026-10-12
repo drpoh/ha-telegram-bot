@@ -68,3 +68,8 @@ After operator confirmation, re-query GitHub and record the real remaining branc
 - Owner reported execution of reviewed remote deletion. GitHub connector immediately re-listed **exactly four** refs: `main`, `refactor/v2`, `feature/v3-home-agent`, `review/gate-e-target-snapshot-hardening-20261009`. 24 temporary refs gone, including the cleanup PR #45 head; no unmerged active work deleted.
 - PR #42 and #43 were closed as duplicate inventory documentation; authoritative inventory remains `docs/V3-LIGHT-ENTITY-REVIEW-2026-10-12.md`. Merged PR history remains accessible.
 - No production release, HA, runtime checkout or service changes were made by this GitHub remote-ref cleanup. Gate E branch retained pending review.
+
+## 2026-10-12 — Post-release temporary branch audit (not yet deleted)
+- GitHub branch query: **11 refs**. Keep `main`, `refactor/v2`, `feature/v3-home-agent`, `review/gate-e-target-snapshot-hardening-20261009`.
+- Seven temporary remote branches from PR #46–52 verified *merged=true, closed*: `docs/v3-integrity-truth-20261012`, `feat/v3-light-readonly-identity-20261012`, `fix/v3-lights-entity-truth-20261012`, `fix/v3-remove-deleted-ha-light-entities-20261012`, `feature/v3-russian-light-status-detail-20261012`, `feature/v3-bounded-all-lights-off-answer-20261012`, `docs/v3-four-light-release-gate-20261012`.
+- Their GitHub PR histories and merged content remain preserved; **remote refs not deleted by this checkpoint**. Before remote deletion inspect exact ref SHA and open PR state again, then delete only these seven using a reviewed command. No local `git clean`, branch force-delete, Pi release folder removal or historical documentation removal.

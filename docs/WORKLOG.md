@@ -1271,3 +1271,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — Bounded Russian light detail PR #50
 - GitHub source-only PR adds OFF labels to existing /lights summary and extra exact Russian OFF questions with regression tests. All reads remain four reviewed HA entity IDs; no physical classification or permission increase. PR CI to be checked; no Pi execution or production deployment claimed.
+
+## 2026-10-12 — PR #50 GitHub acceptance
+- Node 20 isolated suite GitHub job succeeded on head `6989fe3`; PR #50 squash merged `9cbb695`. Four fixed HA light IDs only; OFF names and Russian queries now source-available. No ARMv7/Pi run or production release performed in this chat.

@@ -1222,3 +1222,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — read-only Russian question classifier
 - Reused summarizeSauna, summarizeLightOverview and summarizeTambourLight. Classified additional natural Russian phrases through a pure allowlisted router; unsupported questions stay read-only with an explanatory reply rather than falling into consent/physical control. No new entities, tokens, services or HA writes. Pi acceptance and release still pending.
+
+## 2026-10-12 — bounded operator-only live HA-MCP read preflight
+- Reused existing narrow client and summarizers for direct read-only on-demand smoke. Script does not modify HA or run Telegram. No live test performed by GitHub connector; Pi/HA result remains open. See docs/V3-LIVE-READONLY-PREFLIGHT.md.

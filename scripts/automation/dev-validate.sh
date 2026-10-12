@@ -70,5 +70,15 @@ if [[ -e "$target" ]]; then
 else
  timeout --signal=TERM --kill-after=10s 240s env RS_V3_CANDIDATE_ROOT="$HOME/projects/rs-home-ai-v3-candidates" bash scripts/prepare-v3-release-candidate.sh
 fi
+stage="stage_smoke"
+# Offline loopback mock only; no actual HA or Telegram connections.
+stage_log="$state/last-stage.log"
+if timeout --signal=TERM --kill-after=5s 30s node scripts/automation/stage-smoke.mjs "$target" "$head" >"$stage_log" 2>&1; then
+ echo "STAGE offline smoke passed"
+else
+ rc=$?
+ echo "DENY: offline STAGE smoke failed (exit=$rc); private log: $stage_log"
+ exit "$rc"
+fi
 stage="complete"
-echo "Candidate ready for MANUAL REVIEW ONLY; production not modified."
+echo "Candidate offline STAGE checked for MANUAL REVIEW ONLY; production not modified."

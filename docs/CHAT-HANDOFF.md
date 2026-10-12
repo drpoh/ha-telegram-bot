@@ -656,3 +656,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-12 — Gate D operational evidence (newer than earlier pending checks)
 - Pi owner output: Gate D health and alerts user timers ran 13:17:17 EEST, end timestamps 13:17:19 and 13:17:18; previous reported Result=success and ExecMainStatus=0 for each. Both next due 13:32:17 EEST. DEV timer last 12:13:16, next 18:13:07; **do not infer DEV job success** from timer. Pi DEV was e231afb vs fetched origin 115c6b3 before a user-confirmed fast-forward; await current HEAD and latest.txt. Actual V3 systemd ExecStart points to immutable c6a9812, V2 and V3 active.
+
+## 2026-10-12 — Next value-first phase, exact-SHA Pi STAGE confirmed
+- Pi owner output confirms f4acd114... 10:33:23 UTC STAGE_PASS/complete (exit 0). DEV clean and synced to f4acd11 at last user check; production remains c6a9812. Resume physical light/switch/helper classification with existing HA-MCP and existing lighting-classification loader. Added read-only fixed-ID friendly_name evidence to manual preflight; review on Pi before any /lights semantics or permission change. No new LLM provider/infrastructure or Telegram poller.

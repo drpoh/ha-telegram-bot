@@ -59,6 +59,7 @@ test_tmp="$HOME/.rs-home-ai-dev-test-tmp"
 mkdir -p "$test_tmp"
 chmod 700 "$test_tmp"
 export TMPDIR="$test_tmp"
+export RS_DEV_TEST_DIAGNOSTIC=1
 test_log="$state/last-test.log"
 if timeout --signal=TERM --kill-after=10s 900s npm test >"$test_log" 2>&1; then
  echo "DEV tests passed"

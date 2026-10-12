@@ -69,3 +69,12 @@ test('sandbox gives writable access only to private home-root test scratch',()=>
  const installer=load('scripts/automation/install-dev-check.sh');
  assert.match(installer,/install -d -m 700 "\$HOME\/\.rs-home-ai-dev-test-tmp"/);
 });
+
+test('DEV test scratch diagnostic records ancestor modes without revealing filesystem paths',()=>{
+ const script=load('scripts/automation/dev-validate.sh');
+ const runner=load('scripts/run-isolated-tests.mjs');
+ assert.match(script,/export RS_DEV_TEST_DIAGNOSTIC=1/);
+ assert.match(runner,/FIXTURE_ANCESTOR/);
+ assert.match(runner,/uidMatch/);
+ assert.doesNotMatch(runner,/console\.log\("FIXTURE_ANCESTOR",\s*cursor/);
+});

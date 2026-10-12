@@ -96,3 +96,8 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - [x] Owner confirmed seven HA states/names from live HA-MCP; 3 returned unavailable and two share names with off counterparts. Same friendly_name is not proof of duplicate physical circuits.
 - [x] Source /lights text adjusted to count selected HA entities, not seven lamps; unknown entities named by exact IDs. CI and Pi release acceptance separate.
 - [ ] Verify entity integration/device/area and switch/helper identity in HA UI or reviewed registry; then map to existing lighting-classification module. No broader writes.
+
+## 2026-10-12 — Deleted Yandex-derived lighting records
+- [x] Owner deleted unavailable HA entity records light.koridor_2, light.koridor_1_etazh_2 and light.koridor_spot_2 (first identified as orphan of yandex_station). No automatic HA deletion by this project.
+- [x] V3 read-only allowlist and /lights source narrowed from 7 to 4 existing light-domain IDs; negative test ensures deleted IDs never queried.
+- [ ] Verify all four live HA-MCP reads via revised preflight and actual role/area before claiming physical-light inventory; no prod promotion without owner release gate.

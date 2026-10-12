@@ -55,7 +55,7 @@ head="$(git rev-parse HEAD)"
 stage="tests"
 # Preserve diagnostic output privately; systemd may have no persistent journal.
 # Use private 0700 temp tree: security tests reject world-writable /tmp ancestors.
-test_tmp="$state/test-tmp"
+test_tmp="$HOME/.rs-home-ai-dev-test-tmp"
 mkdir -p "$test_tmp"
 chmod 700 "$test_tmp"
 export TMPDIR="$test_tmp"

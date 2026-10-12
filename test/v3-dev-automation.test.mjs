@@ -60,5 +60,12 @@ test('Pi sandbox security tests use private TMPDIR',()=>{
  const script=load('scripts/automation/dev-validate.sh');
  assert.match(script,/export TMPDIR="\$test_tmp"/);
  assert.match(script,/chmod 700 "\$test_tmp"/);
- assert.match(script,/test_tmp="\$state\/test-tmp"/);
+ assert.match(script,/test_tmp="\$HOME\/\.rs-home-ai-dev-test-tmp"/);
+});
+
+test('sandbox gives writable access only to private home-root test scratch',()=>{
+ const unit=load('deploy/rs-home-ai-dev-check.service');
+ assert.match(unit,/ReadWritePaths=.*%h\/\.rs-home-ai-dev-test-tmp/);
+ const installer=load('scripts/automation/install-dev-check.sh');
+ assert.match(installer,/install -d -m 700 "\$HOME\/\.rs-home-ai-dev-test-tmp"/);
 });

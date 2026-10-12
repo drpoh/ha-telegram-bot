@@ -1,5 +1,7 @@
 # RS Home AI V3 — active tasks (2026-10-12)
 
+**For the one-page current plan see [CURRENT-STATE](CURRENT-STATE.md).** Earlier unchecked TODO entries are historical, not necessarily still pending; use the newest verified checkpoint below.
+
 ## Latest owner-verified checkpoint — 2026-10-12
 - [x] Installed user-systemd DEV timer successfully completed `stage=complete`, `status=passed`, `exit_code=0`, SHA `b1122bdb274931b5d89e745c9ce171ac4e3addbe` at 07:10:00 UTC. Exact-SHA private GitHub Actions gate succeeded after correcting fine-grained PAT repository access. 
 - [x] Owner confirmed candidate `/home/drpoh/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-b1122bd/RELEASE_COMMIT` contains that exact SHA. This is packaging proof, NOT stage execution or production acceptance.

@@ -1201,3 +1201,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — split exact-SHA GitHub CI / Pi immutable candidate
 - Owner confirmed systemd user namespaces show root / and /home with UID 65534, while user home is UID 1000; security suite intentionally rejects unmapped root owners. Switched DEV runner to verify a completed successful private-repo GitHub Actions push workflow for exact HEAD SHA, correct repo/branch/workflow, using local read-only PAT in a 0600 file; no local security tests under remapped Pi. New workflow runs full npm test on feature branch push. Pi candidate remains blocked if gate unavailable. One-time read-only token configuration required. Production untouched.
+
+## 2026-10-12 — CI API path compatibility
+- After token was accepted on Pi, GitHub API returned HTTP 404 on workflow-file-scoped Actions runs endpoint because new workflow is not on default branch. Switched verifier to repository-scoped Actions runs API with unchanged exact SHA/branch/event/workflow/repository filters. Still fail-closed on all errors. Production untouched.

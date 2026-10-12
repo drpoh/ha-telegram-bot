@@ -683,3 +683,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-12 — Telegram screenshot of 9dd5964
 - Read-only Telegram acceptance demonstrated for status/sauna/light/lights and two Russian lighting questions; empty confirm denied. Need separate pending tamboor request → cancel → confirm proof before declaring full production functional acceptance. Next DEV milestone: focused natural-language answers rather than repeating full lighting overview; do not alter current production or writes.
+
+## 2026-10-12 — Production confirmed-action live acceptance (owner Telegram transcript)
+- Operator requested `Включи свет в тамбуре`, received pending exact `light.tambur_svet_l1` + explicit `/confirm` prompt; `/confirm` returned `Home Assistant подтвердил состояние светильника после команды.` Repeated for OFF, again verified by HA response. This proves confirmed on/off flow for existing authorized target, but independent physical observation and request→`/cancel`→`/confirm` regression are not yet supplied. No broader authority established. Active V3 release last observed `9dd5964`, rollback `c6a9812` preserved.

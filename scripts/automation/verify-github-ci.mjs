@@ -31,7 +31,7 @@ try{
 }catch{deny("github_api_unavailable");}
 const matches=(data.workflow_runs||[]).filter(r=>
  r.head_sha===sha && r.event==="push" && r.head_branch==="feature/v3-home-agent" &&
- r.path?.endsWith("v3-dev-verified-gate.yml") && r.repository?.full_name==="drpoh/ha-telegram-bot");
+ r.path?.split("@")[0].endsWith("/v3-dev-verified-gate.yml") && r.repository?.full_name==="drpoh/ha-telegram-bot");
 if(matches.length===0)deny("no_verified_push_run");
 const run=matches.sort((a,b)=>b.id-a.id)[0];
 if(run.status!=="completed" || run.conclusion!=="success")deny("run_not_successful");

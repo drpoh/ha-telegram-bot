@@ -626,3 +626,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Pending STAGE source work — 2026-10-12
 - New source-only offline candidate STAGE smoke is developed via GitHub PR after b1122bd candidate; exact merged SHA and CI status must be checked. The owner has NOT yet supplied Pi stage pass evidence. Full identity, read-only loopback mock and write denial, no real home actuation. Production remains c6a9812 unless separately observed/approved.
+
+## Pending practical MVP — 2026-10-12
+- Source-only PR adds safe Russian question normalization and allowlisted routing to existing sauna/tambour/seven-light read-only summaries. Unknown questions cannot fall through to write dispatcher. Confirm CI and Pi STAGE independently. Do not auto-deploy pinned V3 production.

@@ -44,3 +44,7 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 
 ## Next immediate practical goal
 - [ ] Offline-tested Russian read-only questions for scoped lights and sauna; test safe handling of unknown/unavailable readings. Reuse existing `src/home/sauna-status.mjs`, `light-overview.mjs`, `src/pilot/telegram-readonly.mjs`. No new poller, secrets, broad actuation or prod restart without approval.
+
+## 2026-10-12 — Russian read-only question routing (source only)
+- Added pure bounded Russian question classifier for existing sauna temperature/ready, seven selected lights and tamboor light; unsupported questions never fall into write intent. No new authority or live deployment.
+- [ ] GitHub CI, Pi candidate STAGE, and owner-approved real read-only HA acceptance before prod promotion.

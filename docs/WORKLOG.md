@@ -1248,3 +1248,7 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Verified GitHub V3 tree fully enumerable (471 entries, no truncation): 155 src file blobs, 174 test blobs, 61 docs blobs; no symlinks. Exactly 4 remote branches, no open PRs at audit. GitHub source and offline CI are not Pi runtime integrity proof.
 - Detected and corrected conflicting legacy V3 checkout designation in AGENTS and outdated 97343fa active-release reference in STRUCTURE-INDEX. Added docs/CURRENT-STATE.md as short current entry; historical WORKLOG/HANDOFF preserved rather than rewritten or deleted.
 - Incomplete checks: current Pi DEV SHA/cleanliness, effective V3 systemd ExecStart, V2/Gate D health, latest Pi production-candidate ARMv7 validation and HA physical light classification. No deployment, runtime files or Home Assistant devices modified.
+
+## 2026-10-12 — Operator-confirmed Gate D timer execution timestamps
+- Owner checked user-systemd: Gate D health and alerts timers both last triggered 13:17:17 EEST; health service ended 13:17:19 and alerts 13:17:18, both Result=success/ExecMainStatus=0 from prior check. Next scheduled both 13:32:17 EEST. DEV check timer last triggered 12:13:16 and next 18:13:07 EEST; timer firing alone does not attest job result. V2 and V3 previously observed active, V3 pinned c6a9812.
+- At latest source status provided, Pi DEV HEAD e231afb, remote after fetch 115c6b3; no subsequent fast-forward output received. DEV source sync and last automation latest.txt status remain unverified; no services changed.

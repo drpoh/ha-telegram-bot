@@ -629,3 +629,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Pending practical MVP — 2026-10-12
 - Source-only PR adds safe Russian question normalization and allowlisted routing to existing sauna/tambour/seven-light read-only summaries. Unknown questions cannot fall through to write dispatcher. Confirm CI and Pi STAGE independently. Do not auto-deploy pinned V3 production.
+
+## Latest follow-up — live read-only preflight source
+- On-demand scripts/manual/v3-live-readonly-preflight.mjs added for the existing fixed HA-MCP entity IDs, not automatically run by DEV timer. Do not claim Pi live read acceptance until operator provides output. No changes to production.

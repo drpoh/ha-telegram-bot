@@ -190,3 +190,10 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - [x] Owner Pi DEV fast-forwarded to `dd901a8`; operator manually ran readonly 19-light preflight. Result 1 ON (`light.vykliuchatel_z_gostinaia_l3`), 8 OFF, 10 unknown; 0 write calls. Unknown does not imply OFF or absent.
 - [x] PR #67 evidence-only snapshot + offline regression, exact-head Node 20 CI succeeded, merged `491f6be1d236ea55b0ba7748aded5a07580473f7`. Source snapshot is NOT live truth nor authorization.
 - [ ] Diagnose 10 unknown new light IDs and verify physical identity/duplicate devices for the nine readable candidates before reviewing any additional live read allowlist. Keep all `light.browser_mod*` excluded; defer sensors/switches, physical writes forbidden without separate approval. Existing prod `9dd5964` remains unchanged.
+
+## Agent collaboration and repo hygiene, 2026-10-12
+- [x] PR #73 verified exact-head CI success and merged DEV `e11b0bef9ef50b1bc25b2c08ec28dd1cefd20e5d`; offline area breakdown of 19 light candidates only, no live runtime authorization.
+- [x] Create concise `docs/V3-AGENT-CHECKPOINT-2026-10-12.md` and cross-link AGENTS/handoff/WORKLOG. Full history preserved.
+- [ ] Jules issue #72 completion PR not yet verified; no assumption based on verbal finish. Require minimal DEV-targeted tests-only PR, unlike wrong-target #56/#65/#69.
+- [ ] Investigate 10 `unavailable` via HA native registry; confirm physical/duplicate identity of 9 responding candidates, then propose explicit bounded read-only DEV view. Keep all `light.browser_mod*` out.
+- [ ] Branch cleanup only after reachability and owner/history check; do not delete old branches blindly.

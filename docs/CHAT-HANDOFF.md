@@ -659,3 +659,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-12 — Next value-first phase, exact-SHA Pi STAGE confirmed
 - Pi owner output confirms f4acd114... 10:33:23 UTC STAGE_PASS/complete (exit 0). DEV clean and synced to f4acd11 at last user check; production remains c6a9812. Resume physical light/switch/helper classification with existing HA-MCP and existing lighting-classification loader. Added read-only fixed-ID friendly_name evidence to manual preflight; review on Pi before any /lights semantics or permission change. No new LLM provider/infrastructure or Telegram poller.
+
+## 2026-10-12 — Live lighting names accepted; next action
+- Last owner read: sauna 28°C, ready false; tamboor on; light.koridor off/Коридор, light.koridor_2 unavailable/Коридор; light.koridor_1_etazh off/Коридор 1 этаж, light.koridor_1_etazh_2 unavailable/same label; light.koridor_spot off/Спот, light.koridor_spot_2 unavailable/Свет. Do NOT conclude physical duplication without HA device/platform/area metadata. Current source-only /lights wording counts entities rather than physical fixtures, no permission change; runtime V3 release remains c6a9812.

@@ -703,3 +703,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-12 — Optional free cloud coding agent proposal
 - Owner requires **no new paid subscriptions, billing, or pay-as-you-go APIs**. Prepared Jules Free agent policy in AGENTS.md and setup docs/FREE-AI-DEVELOPER.md on short-lived GitHub PR branch. This does not install/authorize Jules: owner must connect GitHub app for this repo only and explicitly select feature/v3-home-agent; agent submits reviewed offline PR only. Existing GitHub CI/automatic Pi offline candidate gate stay in charge, no production changes; stop at free usage caps.
+
+## 2026-10-12 — Jules pilot failed; focused read-only source PR #55 merged
+- Google Jules Free task from Issue #54 acknowledged and then failed unexpectedly; check its private task activity log if investigating. No PR from Jules. Instead, GitHub source-only PR #55 (short Russian OFF/all-OFF light replies, existing four IDs, no write scope changes) passed Node 20 CI for head `f85864c` and merged squash `64ed9f15691bdc11dacbf8ed98c4b8413c1fbc21`. Issue #54 closed and label removed. **Not deployed**: production remains immutable V3 `9dd5964`, rollback `c6a9812`. Next: Pi DEV clean fast-forward and exact SHA CI-gated offline STAGE. No paid services or subscription; investigate Jules failure before re-enabling automated tasks.

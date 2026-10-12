@@ -665,3 +665,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-12 — HA lighting orphan cleanup confirmed by owner
 - Owner deleted all three unavailable entities (light.koridor_2, light.koridor_1_etazh_2, light.koridor_spot_2); first confirmed orphan warning for yandex_station. Updated *source only* V3 /lights and scoped ha_get_state list to four IDs: light.tambur_svet_l1, light.koridor, light.koridor_1_etazh, light.koridor_spot. Four entities != verified distinct physical lights. Run Pi read-only preflight next; do not touch pinned prod c6a9812 or tamboor-only write scope.
+
+## 2026-10-12 — Latest four-light Pi acceptance confirmed
+- Owner ran updated `scripts/manual/v3-live-readonly-preflight.mjs`; SAUNA complete 27.9375 °C not ready, LIGHTS complete (on 1/off 3/unknown 0), TAMBOUR complete/on, `READONLY_PREFLIGHT=PASS`. All four exact light IDs returned real states, three stale IDs already deleted from HA. Source PR #49 merged as `0a0d024` after successful CI. No write scope expansion, V3 production remains last confirmed immutable c6a9812. Next: prioritize useful Telegram read-only queries and separate owner-reviewed release gate.

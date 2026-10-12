@@ -118,3 +118,7 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 
 ## 2026-10-12 — PR #51 accepted
 - PR #51 merged as `d7aad8c` after GitHub Node 20 offline CI succeeded on exact head `668a357`. Four selected lights: all OFF vs any ON vs unknown is now explicit and read-only. Pi ARMv7 DEV/STAGE unverified; production not changed. Next: exact-SHA Pi candidate gate and owner-approved release.
+
+## 2026-10-12 — Owner-approved V3 startup, final acceptance pending
+- [x] Owner approved and executed V3 switch to immutable `9dd5964` candidate. systemd confirmed exact ExecStart, `active/running`, PID 3713 at 14:49 EEST; previous `c6a9812` rollback kept.
+- [ ] Telegram smoke `/status`, `/sauna`, `/light`, `/lights`, Russian questions; cancel→confirm must return missing with no physical action. Roll back to `c6a9812` if regression. User journal reports `No journal files were found`; do not infer bot protocol success from active state alone.

@@ -66,3 +66,7 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - [x] Historical audit reconciled production c6a9812, verified mock STAGE, live Pi HA-MCP and the three unavailable entities; see docs/V3-HISTORY-STAGE-AUDIT-2026-10-12.md.
 - [ ] NEXT: scoped authoritative HA entity metadata for physical light/switch/helper classification in corridor/tambour; no guessed aliases or authorization changes.
 - [ ] Then tested bounded /lights summaries, fresh exact-SHA candidate, ARMv7/CI and separate owner-approved promotion. Gate B/C/D/E wider acceptance OPEN.
+
+## 2026-10-12 — Remote Git branch housekeeping
+- [x] Audited 27 current GitHub branch refs and PR #22–#44: 23 disposable heads (21 merged, two closed duplicate doc PRs); closed duplicate PR #43. See docs/V3-GITHUB-CLEANUP-2026-10-12.md.
+- [ ] Owner-run exact-ref remote deletion and **post-delete GitHub verification remain pending** (no remote delete capability in this connector). Retain 4 named branches, including Gate E review; preserve local Pi runtime/release checkouts.

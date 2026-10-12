@@ -1280,3 +1280,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — Production switch startup evidence
 - Following owner's separate approval, owner ran reviewed systemd override promotion to immutable candidate `9dd5964`. Output confirmed `/usr/bin/node .../rs-home-ai-v3-release-9dd5964/src/pilot/telegram-readonly.mjs` with `ActiveState=active`, `SubState=running`, PID 3713, started 14:49 EEST. GitHub CI, Pi exact-SHA STAGE and scoped HA live read preflight passed earlier; owner confirmed Gate D success. Telegram end-to-end acceptance still pending. `journalctl --user` showed no journal files. No automatic production action by the assistant or confirmed HA write.
+
+## 2026-10-12 — Real Telegram V3 smoke accepted for read-only endpoints
+- Owner screenshot (16:39–16:40 EEST) verifies production 9dd5964 Telegram messages: status journal ready, empty confirm denied, sauna 28.4375 °C not ready, tamboor on, four-entity lighting overview on1/off3/unknown0, Russian two OFF-light questions both routed. Pending cancellation-with-request regression. No confirmed physical actuation. No code or runtime changes in this note.

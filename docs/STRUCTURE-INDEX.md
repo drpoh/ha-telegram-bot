@@ -7,7 +7,7 @@ Reviewed 2026-10-11. This is a navigation aid, **not** permission to rename, del
 | Responsibility | Existing paths | Ownership / caution |
 |---|---|---|
 | Running legacy V2 | `src/index.mjs`, `src/ai/`, `src/telegram/`, `src/mcp/`, `src/home/`, `src/memory/` | `npm start` enters V2; do not assume root `bot.mjs` is in service use |
-| Pinned one-light V3 pilot | `src/pilot/` | Actual live release is separate, pinned at `97343fa`; source changes here are NOT automatically live |
+| Pinned one-light V3 pilot | `src/pilot/` | Last owner-verified live release is separate, pinned at `c6a9812`; `97343fa` is retained for rollback; source changes here are NOT automatically live |
 | Deterministic policy and evidence | `src/decision/` | 77 small modules covering registry, confirmation, approval, Assist and experiments; **do not mass-move**, imports and regression references span modules |
 | Mocked stage exercises | `src/ops/`, `scripts/stage/`, `test/stage-*` | Fixture-only; cannot authorize real HA writes |
 | Offline contract checks | `test/` and `scripts/run-isolated-tests.mjs` | Full `npm test` includes syntax checking; no live-device smoke |

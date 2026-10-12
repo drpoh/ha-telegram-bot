@@ -69,3 +69,10 @@ Target Node.js 20+ and keep Raspberry Pi-class hardware viable where practical. 
 
 ## Reference designs
 See docs/REFERENCES.md. Borrow architecture intentionally; do not copy code without checking its current license and attribution requirements.
+
+## Zero-additional-cost AI development — owner requirement 2026-10-12
+- Do not require or enable any new paid subscription, pay-as-you-go API, cloud VM, paid GitHub runner, purchased credits, or billing method. Prefer available free tiers. When a free allowance is exhausted, stop and wait for reset; never auto-upgrade, silently use a billable fallback or bypass account limits.
+- Preferred optional cloud coding agent: Google Jules **free tier** via narrowly authorized GitHub access only. Its cloud sandbox is for *offline source changes and tests*, not HA, Pi SSH, Telegram tokens or owner private runtime state. Existing GitHub Actions and Pi DEV validation remain distinct trusted gates.
+- Agent must read this AGENTS.md and current docs, use `feature/v3-home-agent` as **base**, publish a new review PR, and never push directly to active production, edit live services, enable broad HA device writes or merge its own security/release changes automatically.
+- Jules integration is **not installed or authorized** simply because this policy exists. Owner must explicitly authorize the GitHub app for this one repository via Jules UI; no secrets copied to it. Do not schedule repetitive PRs until a first manual task has passed review and free plan constraints are verified.
+- Approved production V3 is immutable SHA `9dd5964a4956b88227ec4002ac80ef46a186d632` via a reviewed systemd drop-in. Preserve `c6a9812` rollback, older `97343fa`, V2, Gate D. Documentation-only changes are not production upgrades. See `docs/FREE-AI-DEVELOPER.md`.

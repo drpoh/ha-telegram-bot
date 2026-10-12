@@ -8,7 +8,7 @@ import {prepareV3PilotExecutionJournal} from '../ops/v3-pilot-execution-journal.
 import {summarizeSauna} from '../home/sauna-status.mjs';
 import {summarizeTambourLight} from '../home/tambour-light-status.mjs';
 import {summarizeLightOverview} from '../home/light-overview.mjs';
-import {classifyReadonlyQuestion} from '../home/readonly-question-intent.mjs';
+import {classifyReadonlyQuestion,classifyLightQuestionMode} from '../home/readonly-question-intent.mjs';
 const base='/home/drpoh/.config/rs-home-ai-v3/';
 const token=readFileSync(base+'telegram-token','utf8').trim();
 const userId=Number(readFileSync(base+'allowed-user-id','utf8').trim());
@@ -57,7 +57,7 @@ bot.on('message',ctx=>{
  if(!allow(ctx))return;
  const intent=classifyReadonlyQuestion(ctx.message?.text);
  if(intent==='sauna')return summarizeSauna({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
- if(intent==='lights')return summarizeLightOverview({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
+ if(intent==='lights')return summarizeLightOverview({readState:id=>saunaRead('ha_get_state',{entity_id:id}),mode:classifyLightQuestionMode(ctx.message?.text)}).then(result=>ctx.reply(result.text));
  if(intent==='tambour')return summarizeTambourLight({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
  if(intent==='unsupported_question')return ctx.reply('Этот вопрос пока не поддерживается. Доступны температура сауны, свет в тамбуре и обзор выбранных светильников.');
  const r=pilot.request(actor(ctx),ctx.message?.text);

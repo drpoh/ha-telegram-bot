@@ -3,11 +3,8 @@
 export const LIGHT_OVERVIEW_TARGETS=Object.freeze([
  Object.freeze({id:'light.tambur_svet_l1',label:'Тамбур'}),
  Object.freeze({id:'light.koridor',label:'Коридор'}),
- Object.freeze({id:'light.koridor_2',label:'Коридор 2'}),
  Object.freeze({id:'light.koridor_1_etazh',label:'Коридор, первый этаж'}),
- Object.freeze({id:'light.koridor_1_etazh_2',label:'Коридор, первый этаж 2'}),
- Object.freeze({id:'light.koridor_spot',label:'Коридор, споты'}),
- Object.freeze({id:'light.koridor_spot_2',label:'Коридор, споты 2'})
+ Object.freeze({id:'light.koridor_spot',label:'Коридор, споты'})
 ]);
 export const LIGHT_OVERVIEW_IDS=Object.freeze(LIGHT_OVERVIEW_TARGETS.map(x=>x.id));
 const readValue=(result,id)=>{
@@ -29,7 +26,7 @@ export async function summarizeLightOverview({readState}={}){
   else if(state==='off')off++;
   else unknown.push(target.id);
  }
- const summary=`Освещение (состояния 7 выбранных сущностей HA, не число физических ламп): on ${on.length}, off ${off}, недоступны или неизвестны ${unknown.length}.`;
+ const summary=`Освещение (состояния ${LIGHT_OVERVIEW_TARGETS.length} выбранных сущностей HA, не число физических ламп): on ${on.length}, off ${off}, недоступны или неизвестны ${unknown.length}.`;
  const detail=on.length?` В состоянии on: ${on.join(', ')}.`:'';
  const caveat=unknown.length?` Требуют проверки: ${unknown.join(', ')}.`:'';
  return {status:unknown.length?'partial':'complete',authorization:false,actualWrite:false,onCount:on.length,offCount:off,unknownCount:unknown.length,text:summary+detail+caveat};

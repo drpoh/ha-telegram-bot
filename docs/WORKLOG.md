@@ -1219,3 +1219,6 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 - Owner ran installed DEV automation at 07:56:27 UTC for exact SHA `46ce492033fb6c830a37ef95ba6efdb3ed632470`: `status=passed`, `stage=complete`, `exit_code=0`. Private stage log: `STAGE_PASS ... mode=offline_mock tests=identity,health,registry,deny`.
 - Production user service remained active at immutable `c6a9812` (read-only systemctl observation). Candidate never promoted. This is **offline mock stage validation**, not live HA read/write scope acceptance.
 - Next: value-first reuse of existing Russian read-only sauna and bounded lighting summaries, test with fixtures first; separate owner approval for deployment.
+
+## 2026-10-12 — read-only Russian question classifier
+- Reused summarizeSauna, summarizeLightOverview and summarizeTambourLight. Classified additional natural Russian phrases through a pure allowlisted router; unsupported questions stay read-only with an explanatory reply rather than falling into consent/physical control. No new entities, tokens, services or HA writes. Pi acceptance and release still pending.

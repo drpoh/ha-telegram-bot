@@ -52,3 +52,7 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 ## 2026-10-12 — Live read-only preflight tool
 - [x] Added operator-only explicit HA-MCP read smoke script (sauna/7 scoped lights/tambour), no service calls or bot. CI proof pending; Pi real response not yet verified.
 - [ ] Run once with operator consent on Pi, capture bounded statuses (not credentials); unresolved/unknown identities fail acceptance without allowing new action scopes.
+
+## 2026-10-12 — Owner live HA-MCP read results
+- [x] Real sauna read complete: 27.125 °C, not ready (<85 °C); tamboor read complete: on.
+- [ ] Seven-light overview partial: 1 on, 3 off, 3 unknown (`light.koridor_2`, `light.koridor_1_etazh_2`, `light.koridor_spot_2`). No rename/removal or broader control approved; diagnose actual HA read errors before changing scope.

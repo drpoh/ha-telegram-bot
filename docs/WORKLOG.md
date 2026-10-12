@@ -1214,3 +1214,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 ## 2026-10-12 — Offline stage smoke source milestone
 - Added scripts/automation/stage-smoke.mjs to load immutable candidate's existing mock-only stage module, verify exact RELEASE_COMMIT and loopback-only health/registry and deny writes, with 30-second bounded user-systemd execution and private last-stage.log.
 - DEV validation invokes this after packaging; candidate is still NOT deployed. No HA Green, Telegram token/poller or production service accessed. GitHub CI and owner Pi result must be logged separately; not yet verified as of source change.
+
+## 2026-10-12 — owner-confirmed offline STAGE smoke on Pi
+- Owner ran installed DEV automation at 07:56:27 UTC for exact SHA `46ce492033fb6c830a37ef95ba6efdb3ed632470`: `status=passed`, `stage=complete`, `exit_code=0`. Private stage log: `STAGE_PASS ... mode=offline_mock tests=identity,health,registry,deny`.
+- Production user service remained active at immutable `c6a9812` (read-only systemctl observation). Candidate never promoted. This is **offline mock stage validation**, not live HA read/write scope acceptance.
+- Next: value-first reuse of existing Russian read-only sauna and bounded lighting summaries, test with fixtures first; separate owner approval for deployment.

@@ -8,6 +8,7 @@ import {prepareV3PilotExecutionJournal} from '../ops/v3-pilot-execution-journal.
 import {summarizeSauna} from '../home/sauna-status.mjs';
 import {summarizeTambourLight} from '../home/tambour-light-status.mjs';
 import {summarizeLightOverview} from '../home/light-overview.mjs';
+import {classifyReadonlyQuestion} from '../home/readonly-question-intent.mjs';
 const base='/home/drpoh/.config/rs-home-ai-v3/';
 const token=readFileSync(base+'telegram-token','utf8').trim();
 const userId=Number(readFileSync(base+'allowed-user-id','utf8').trim());
@@ -54,16 +55,11 @@ bot.command('sauna',async ctx=>{
 });
 bot.on('message',ctx=>{
  if(!allow(ctx))return;
- const text=typeof ctx.message?.text==='string'?ctx.message.text.trim().toLowerCase().replace(/ё/g,'е'):'';
- if(['какая температура в сауне?','какая температура в сауне','сауна готова?','готова ли сауна?'].includes(text)){
-  return summarizeSauna({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
- }
- if(['какой свет включен?','какой свет включен','какие лампы включены?','какие лампы включены','состояние освещения'].includes(text)){
-  return summarizeLightOverview({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
- }
- if(['свет в тамбуре включен?','свет в тамбуре включен','состояние света в тамбуре','какое состояние света в тамбуре?'].includes(text)){
-  return summarizeTambourLight({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
- }
+ const intent=classifyReadonlyQuestion(ctx.message?.text);
+ if(intent==='sauna')return summarizeSauna({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
+ if(intent==='lights')return summarizeLightOverview({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
+ if(intent==='tambour')return summarizeTambourLight({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
+ if(intent==='unsupported_question')return ctx.reply('Этот вопрос пока не поддерживается. Доступны температура сауны, свет в тамбуре и обзор выбранных светильников.');
  const r=pilot.request(actor(ctx),ctx.message?.text);
  return ctx.reply(r.status==='pending'?'Цель: light.tambur_svet_l1. Действие: '+(ctx.message.text.toLowerCase().startsWith('включи')?'ВКЛЮЧИТЬ':'ВЫКЛЮЧИТЬ')+'. Для РЕАЛЬНОГО переключения отправь /confirm в течение 60 секунд либо /cancel.':'Режим тестирования. Попробуй: «Включи свет в тамбуре» или «Выключи свет в тамбуре».');
 });

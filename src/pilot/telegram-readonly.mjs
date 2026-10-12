@@ -8,6 +8,7 @@ import {prepareV3PilotExecutionJournal} from '../ops/v3-pilot-execution-journal.
 import {summarizeSauna} from '../home/sauna-status.mjs';
 import {classifySaunaQuestionMode} from '../home/sauna-question-mode.mjs';
 import {summarizeTambourLight} from '../home/tambour-light-status.mjs';
+import {classifyTambourQuestionMode} from '../home/tambour-question-mode.mjs';
 import {summarizeLightOverview} from '../home/light-overview.mjs';
 import {classifyReadonlyQuestion,classifyLightQuestionMode} from '../home/readonly-question-intent.mjs';
 const base='/home/drpoh/.config/rs-home-ai-v3/';
@@ -59,7 +60,7 @@ bot.on('message',ctx=>{
  const intent=classifyReadonlyQuestion(ctx.message?.text);
  if(intent==='sauna')return summarizeSauna({readState:id=>saunaRead('ha_get_state',{entity_id:id}),mode:classifySaunaQuestionMode(ctx.message?.text)}).then(result=>ctx.reply(result.text));
  if(intent==='lights')return summarizeLightOverview({readState:id=>saunaRead('ha_get_state',{entity_id:id}),mode:classifyLightQuestionMode(ctx.message?.text)}).then(result=>ctx.reply(result.text));
- if(intent==='tambour')return summarizeTambourLight({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
+ if(intent==='tambour')return summarizeTambourLight({readState:id=>saunaRead('ha_get_state',{entity_id:id}),mode:classifyTambourQuestionMode(ctx.message?.text)}).then(result=>ctx.reply(result.text));
  if(intent==='unsupported_question')return ctx.reply('Этот вопрос пока не поддерживается. Доступны температура сауны, свет в тамбуре и обзор выбранных светильников.');
  const r=pilot.request(actor(ctx),ctx.message?.text);
  return ctx.reply(r.status==='pending'?'Цель: light.tambur_svet_l1. Действие: '+(ctx.message.text.toLowerCase().startsWith('включи')?'ВКЛЮЧИТЬ':'ВЫКЛЮЧИТЬ')+'. Для РЕАЛЬНОГО переключения отправь /confirm в течение 60 секунд либо /cancel.':'Режим тестирования. Попробуй: «Включи свет в тамбуре» или «Выключи свет в тамбуре».');

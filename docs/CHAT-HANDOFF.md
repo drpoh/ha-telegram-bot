@@ -671,3 +671,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-12 — Current work: PR #50
 - PR #49 merged 0a0d024. New PR #50 improves bounded four-entity Russian read-only /lights (OFF labels + exact questions) with offline tests. Confirm its CI/merge, then Pi DEV STAGE; production still last owner-confirmed immutable c6a9812. Remote Desktop Commander quota exhausted, so no new Pi runtime checks in this chat. No change to HA permissions, entity inventory or active services.
+
+## 2026-10-12 — PR #50 merge confirmed
+- PR #50 merged `9cbb695` with GitHub Node 20 isolated suite success. Source four-target /lights lists OFF and ON labels, added Russian off-light questions and tests. This is GitHub CI evidence only; Pi direct tool quota exhausted. No prod switch or scope change. Next Pi exact-SHA DEV/STAGE acceptance, then independent release review.

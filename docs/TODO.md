@@ -86,3 +86,8 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 ## 2026-10-12 — Latest Pi operational confirmation
 - [x] Owner verified V2 active; V3 active from immutable c6a9812; Gate D health/alerts last exit success (0), last ran 13:17:17 EEST, next 13:32:17. No prod mutation.
 - [ ] Verify Pi DEV fast-forward completed (last owner observed e231afb vs fetched origin 115c6b3); inspect automation latest.txt outcome separately from timer triggers (last DEV timer 12:13:16 EEST).
+
+## 2026-10-12 — Practical light identity evidence
+- [x] Owner confirmed exact-SHA Pi DEV STAGE PASS `f4acd114c10f2c8883e433cd71ca4c60f173d278` at 10:33:23 UTC (status passed, stage complete, exit 0). Pi DEV also clean and synced at f4acd11 on last report. No prod deployment.
+- [x] Added review-only fixed-scope HA friendly-name display for existing seven `ha_get_state` targets. No new MCP permissions or physical type inference.
+- [ ] Owner-run revised preflight to collect friendly names/state; then cross-check actual switch/helper and area metadata in HA before changing /lights semantics. Do not treat friendly_name as physical proof.

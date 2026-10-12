@@ -680,3 +680,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-12 — V3 9dd5964 startup confirmed; Telegram checks next
 - Owner approved production switch and ran operator-side systemd override. Actual V3 ExecStart now immutable `9dd5964`, `active/running`, PID 3713, timestamp 14:49 EEST. `c6a9812` rollback available. Pi DEV exact-SHA candidate/STAGE and HA read-only acceptance previously passed. Do not call production release fully accepted before owner tests Telegram `/status`, `/sauna`, `/light`, `/lights`, Russian read-only questions and cancelled tamboor confirmation. Journal read unavailable; service startup alone isn't Telegram functionality proof.
+
+## 2026-10-12 — Telegram screenshot of 9dd5964
+- Read-only Telegram acceptance demonstrated for status/sauna/light/lights and two Russian lighting questions; empty confirm denied. Need separate pending tamboor request → cancel → confirm proof before declaring full production functional acceptance. Next DEV milestone: focused natural-language answers rather than repeating full lighting overview; do not alter current production or writes.

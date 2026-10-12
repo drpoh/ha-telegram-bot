@@ -5,7 +5,7 @@ const load=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 test('DEV automation has no production service calls or HA tool invocations',()=>{
  const script=load('scripts/automation/dev-validate.sh');
  assert.match(script,/git merge --ff-only/);
- assert.match(script,/npm test/);
+ assert.match(script,/verify-github-ci\.mjs "\$head"/);
  assert.match(script,/prepare-v3-release-candidate\.sh/);
  assert.match(script,/flock -n/);
  assert.match(script,/RS_V3_CANDIDATE_ROOT/);
@@ -48,33 +48,18 @@ test('DEV SSH bypasses faulty global proxy config but still verifies host keys',
  assert.doesNotMatch(script,/StrictHostKeyChecking=no|UserKnownHostsFile=\/dev\/null/);
 });
 
-test('systemd test errors are retained only in private state',()=>{
+test('Pi candidate requires exact verified GitHub push gate',()=>{
  const script=load('scripts/automation/dev-validate.sh');
- assert.match(script,/test_log="\$state\/last-test\.log"/);
- assert.match(script,/npm test >"\$test_log" 2>&1/);
- assert.match(script,/umask 077/);
- assert.doesNotMatch(script,/tail .*last-test\.log|cat .*last-test\.log/);
-});
-
-test('Pi sandbox security tests use private TMPDIR',()=>{
- const script=load('scripts/automation/dev-validate.sh');
- assert.match(script,/export TMPDIR="\$test_tmp"/);
- assert.match(script,/chmod 700 "\$test_tmp"/);
- assert.match(script,/test_tmp="\$HOME\/\.rs-home-ai-dev-test-tmp"/);
-});
-
-test('sandbox gives writable access only to private home-root test scratch',()=>{
- const unit=load('deploy/rs-home-ai-dev-check.service');
- assert.match(unit,/ReadWritePaths=.*%h\/\.rs-home-ai-dev-test-tmp/);
- const installer=load('scripts/automation/install-dev-check.sh');
- assert.match(installer,/install -d -m 700 "\$HOME\/\.rs-home-ai-dev-test-tmp"/);
-});
-
-test('DEV test scratch diagnostic records ancestor modes without revealing filesystem paths',()=>{
- const script=load('scripts/automation/dev-validate.sh');
- const runner=load('scripts/run-isolated-tests.mjs');
- assert.match(script,/export RS_DEV_TEST_DIAGNOSTIC=1/);
- assert.match(runner,/FIXTURE_ANCESTOR/);
- assert.match(runner,/uidMatch/);
- assert.doesNotMatch(runner,/console\.log\("FIXTURE_ANCESTOR",\s*cursor/);
+ const gate=load('scripts/automation/verify-github-ci.mjs');
+ const workflow=load('.github/workflows/v3-dev-verified-gate.yml');
+ assert.match(script,/stage="ci_gate"/);
+ assert.match(script,/verify-github-ci\.mjs "\$head" "\$ci_token"/);
+ assert.ok(script.indexOf('verify-github-ci.mjs') < script.indexOf('stage="candidate"'));
+ assert.doesNotMatch(script,/npm test/);
+ assert.match(gate,/head_sha===sha/);
+ assert.match(gate,/r\.event==="push"/);
+ assert.match(gate,/r\.conclusion!=="success"/);
+ assert.match(gate,/unsafe_token_file/);
+ assert.match(workflow,/feature\/v3-home-agent/);
+ assert.match(workflow,/npm test/);
 });

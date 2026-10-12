@@ -25,3 +25,6 @@ data/
 .DS_Store
 .vscode/
 .idea/
+
+# Private reviewed Home Assistant room classification
+config/lighting-classification.local.json

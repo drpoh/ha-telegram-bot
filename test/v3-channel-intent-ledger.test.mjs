@@ -1,0 +1,31 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {normalizeV3Command} from "../src/decision/v3-command-envelope.mjs";
+import {createV3ChannelIntentLedger} from "../src/decision/v3-channel-intent-ledger.mjs";
+const command=normalizeV3Command({source:"assist",sourceId:"atom-echo.sauna",text:"Включи свет",issuedAt:100}).command;
+const action={name:"ha_call_service",args:{domain:"light",service:"turn_on",entity_id:"light.fixture"}};
+test("device-only Assist intent binds channel and exact original command without user identity",()=>{
+ const ledger=createV3ChannelIntentLedger({clock:()=>1000});
+ const input=structuredClone(action);
+ const {token}=ledger.propose({command,action:input});
+ input.args.entity_id="light.attacker";
+ assert.equal(ledger.consume({command:{...command,sourceId:"atom-echo.kitchen"},token}),null);
+ assert.equal(ledger.consume({command:{...command,originalText:"Выключи свет"},token}),null);
+ const consumed=ledger.consume({command,token});
+ assert.equal(consumed.action.args.entity_id,"light.fixture");
+ assert.equal(consumed.command.actorId,null);
+ assert.equal(ledger.consume({command,token}),null);
+});
+test("expired, replaced, cancelled voice intents fail closed",()=>{
+ let now=1000;
+ const ledger=createV3ChannelIntentLedger({clock:()=>now});
+ const first=ledger.propose({command,action,ttlMs:10});
+ const second=ledger.propose({command,action,ttlMs:10});
+ assert.equal(ledger.consume({command,token:first.token}),null);
+ now=1010;
+ assert.equal(ledger.consume({command,token:second.token}),null);
+ const third=ledger.propose({command,action});
+ assert.equal(ledger.cancel({command}),true);
+ assert.equal(ledger.consume({command,token:third.token}),null);
+ assert.throws(()=>ledger.propose({command:{...command,actorId:77},action}),/invalid_channel_intent/);
+});

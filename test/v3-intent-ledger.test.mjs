@@ -1,0 +1,34 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {createV3IntentLedger} from "../src/decision/v3-intent-ledger.mjs";
+const action={name:"ha_call_service",args:{domain:"light",service:"turn_on",entity_id:"light.fixture"}};
+test("ledger preserves original action despite caller mutation and requires exact token and actor",()=>{
+ let time=1000;
+ const ledger=createV3IntentLedger({clock:()=>time});
+ const actor={userId:10,chatId:20};
+ const supplied=structuredClone(action);
+ const issued=ledger.issue({...actor,userText:"Включи весь свет в Комната",action:supplied});
+ supplied.args.entity_id="light.attacker";
+ assert.equal(ledger.inspect({...actor,token:issued.token}).action.args.entity_id,"light.fixture");
+ assert.equal(ledger.inspect({...actor,userId:11,token:issued.token}),null);
+ assert.equal(ledger.inspect({...actor,chatId:21,token:issued.token}),null);
+ assert.equal(ledger.inspect({...actor,token:"invalid"}),null);
+ const obtained=ledger.inspect({...actor,token:issued.token});
+ obtained.action.args.entity_id="light.changed";
+ assert.equal(ledger.consume({...actor,token:issued.token}).action.args.entity_id,"light.fixture");
+ assert.equal(ledger.consume({...actor,token:issued.token}),null);
+});
+test("replaced, cancelled and expired consent cannot be replayed",()=>{
+ let time=100;
+ const ledger=createV3IntentLedger({clock:()=>time});
+ const actor={userId:100,chatId:200};
+ const a=ledger.issue({...actor,action,userText:"Свет",ttlMs:10});
+ const b=ledger.issue({...actor,action,userText:"Другой запрос",ttlMs:10});
+ assert.equal(ledger.inspect({...actor,token:a.token}),null);
+ assert.equal(ledger.inspect({...actor,token:b.token}).originalUserText,"Другой запрос");
+ time=110;
+ assert.equal(ledger.consume({...actor,token:b.token}),null);
+ const c=ledger.issue({...actor,action,userText:"Свет"});
+ assert.equal(ledger.cancel(actor),true);
+ assert.equal(ledger.inspect({...actor,token:c.token}),null);
+});

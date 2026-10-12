@@ -1,0 +1,15 @@
+# Disabled example ONLY; require owner host-key review before installation.
+[Unit]
+Description=RS Home AI V3 loopback-only authenticated SSH tunnel
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/ssh -N -T -o BatchMode=yes -o StrictHostKeyChecking=yes -o ExitOnForwardFailure=yes -o ServerAliveInterval=20 -o ServerAliveCountMax=2 -o ClearAllForwardings=yes -L 127.0.0.1:19584:127.0.0.1:9584 hassio@homeassistant.local
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=default.target

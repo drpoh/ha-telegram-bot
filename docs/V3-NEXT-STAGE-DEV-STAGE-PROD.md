@@ -48,3 +48,9 @@ Status: **offline stage contract and runtime fault tests verified; no stage/prod
 ## Stage 2 closeout gate (2026-10-11)
 - `stage-batch-http-simulation` tests added for expired intent, forged/nonmatching actor and stale clock/failure conditions; combined HTTP test 6/6 PASS. Earlier linked mock batch tests and pure identity/replay gates remain in repository.
 - Next phase uses existing Node.js HTTP server and systemd user service, without new orchestrator. Deployment design `deploy/stage/README.md` is documentation only; stage process, credentials and systemd unit not installed. Owner authorization is required before installing any persistent stage service.
+
+## 2026-10-12 — Current stage acceptance priorities
+- Owner-confirmed DEV -> exact-SHA GitHub CI -> immutable candidate b1122bd at 07:10 UTC, status=passed, stage=complete, candidate RELEASE_COMMIT matched full SHA.
+- Active V3 production remains pinned to c6a9812 (older 97343fa references above are historical). STAGE is still mock-only; no independent installed stage environment and no production switch.
+- NEXT: reuse existing loopback mock and Node test facilities for disposable offline candidate smoke: verify SHA, safe start/stop and error cleanup, health/read-only behavior, forbidden writes, no real HA or prod credentials, deterministic bounded results. Verify on Pi ARMv7 before proposing promotion.
+- New stage service credentials or actual production promotion require distinct explicit owner approval, rollback preflight and preservation of HA independence, active V2 and V3 services. Candidate creation alone grants no authorization.

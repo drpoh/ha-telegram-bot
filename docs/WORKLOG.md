@@ -1204,3 +1204,9 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — CI API path compatibility
 - After token was accepted on Pi, GitHub API returned HTTP 404 on workflow-file-scoped Actions runs endpoint because new workflow is not on default branch. Switched verifier to repository-scoped Actions runs API with unchanged exact SHA/branch/event/workflow/repository filters. Still fail-closed on all errors. Production untouched.
+
+## 2026-10-12 — first CI-gated Pi candidate confirmed, docs/strategy reconciled
+- Owner output: `rs-home-ai-dev-check.service` returned success and `latest.txt` recorded `time_utc=2026-10-12T07:10:00Z`, `status=passed`, `stage=complete`, `source_sha=b1122bdb274931b5d89e745c9ce171ac4e3addbe`, `exit_code=0`.
+- Owner confirmed `~/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-b1122bd/RELEASE_COMMIT` holds the matching SHA. Release was NOT activated; last production observation: user V3 service active at immutable `c6a9812`.
+- Root cause investigation: PI systemd user namespace maps root-owned ancestry to UID 65534; security fixture checks intentionally reject it. GitHub CI (PR #33) 169 files/656 assertions/0 failures. GitHub fine-grained PAT initially had no repository access, then owner corrected token/access; exact-SHA CI gate completed successfully. No secrets published.
+- New work: synchronize source of truth (AGENTS, TODO, HANDOFF, PROJECT-MAP, DEV-AUTOMATION docs) and prioritize offline isolated STAGE candidate smoke with explicit release/rollback gate. No new runtime execution or Pi stage test performed during this GitHub-only documentation change.

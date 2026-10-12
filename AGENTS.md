@@ -10,7 +10,7 @@ At the beginning of every new chat, first read `docs/CHAT-HANDOFF.md`, then veri
 - **ONLY canonical development checkout:** `/home/drpoh/projects/rs-home-ai-dev`, branch `feature/v3-home-agent`. Perform source edits, tests, documentation, commits and GitHub pushes here.
 - `/home/drpoh/ha-telegram-bot` is the **live v2 system-service directory**; `/home/drpoh/rs-home-ai-v3` is the **live V3 pilot user-service directory**. They are separately versioned checkouts of the same GitHub remote. Inspect them read-only, NEVER auto-pull/rebase/reset, overwrite, delete, move, symlink, or `npm install` in them.
 - Treat `vinted-sales-agent`, `ha-backups`, app state, tokens, live unit files and Home Assistant Green as independently managed; never reorganize or inspect secrets merely to tidy folders.
-- `dev` currently means offline source/test checkout; `stage` and promoted `prod` are NOT yet deployed isolated environments. Distinct environment manifests are planning evidence only, not credentials or authority.
+- `dev` is the canonical source checkout with an installed pull-only 6-hour CI-gated candidate timer (owner-confirmed on 2026-10-12); `stage` remains offline/mock only, and production is a separately pinned release. Automatic candidate packaging NEVER authorizes activation. Distinct environment manifests are planning evidence only, not credentials or authority.
 - When a new chat begins, inspect Git state in dev first and compare runtime Git state read-only. Read `docs/PI-REPOSITORY-LAYOUT-PLAN.md`. Changes to running services, live HA connections or writes, owner-controlled credentials, stage deployment and production release require the existing explicit gate/authorization workflow.
 
 ## Project navigation

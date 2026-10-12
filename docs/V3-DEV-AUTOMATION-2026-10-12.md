@@ -34,7 +34,7 @@ journalctl --user -u rs-home-ai-dev-check.service -n 40 --no-pager
 systemctl --user disable --now rs-home-ai-dev-check.timer
 ```
 
-The timer is initially a **candidate** until the owner runs the one-time install; no claim of installed Pi state is made here.
+**Owner verified 2026-10-12:** timer installed and service manually triggered successfully; `stage=complete`, `status=passed`, `exit_code=0` at 07:10 UTC for `b1122bd`, candidate `rs-home-ai-v3-release-b1122bd` with exact `RELEASE_COMMIT` observed. This is NOT proof of an unattended later run, STAGE acceptance, or production deployment.
 
 ## Verified GitHub CI split (2026-10-12 update)
 The private repo needs authenticated read-only GitHub Actions metadata. The new `.github/workflows/v3-dev-verified-gate.yml` runs all offline tests on every push to `feature/v3-home-agent`. The Pi runner verifies the **same SHA**, branch, `push` event, workflow path, repository, completed status and success conclusion via official GitHub API. If there is no matching run or the API is inaccessible, candidate generation is denied. `workflow_dispatch` runs never satisfy this gate.

@@ -1,11 +1,12 @@
 # RS Home AI — authoritative project map
 
-Updated 2026-10-11 (GitHub-first CI workflow after PR #2). See [latest cleanup audit](PROJECT-AUDIT-2026-10-11.md) before considering any file or branch removal. **Start here to avoid confusing source branches with running services.**
+Updated 2026-10-12 (owner-confirmed first CI-gated immutable candidate after PR #33). See [latest cleanup audit](PROJECT-AUDIT-2026-10-11.md) before considering any file or branch removal. **Start here to avoid confusing source branches with running services.**
 
 ## Which directory is authoritative?
 | Location | Purpose | Edit policy |
 |---|---|---|
 | `/home/drpoh/projects/rs-home-ai-dev` | **Only canonical source checkout**; V3 `feature/v3-home-agent`; tests, docs, GitHub push | Edit here |
+| `/home/drpoh/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-b1122bd` | **Prepared only** candidate, exact SHA verified 2026-10-12, NOT running production | Offline STAGE validation only; never auto-promote |
 | `/home/drpoh/projects/rs-home-ai-v3-release-c6a9812` | Active **V3 production pilot** immutable release artifact; only `light.tambur_svet_l1` on/off with private Telegram `/confirm` | Read only; deploy new separately reviewed artifact, never `git pull` |
 | `/home/drpoh/projects/rs-home-ai-v3-release-97343fa` | Previous V3 release retained for rollback | Read only |
 | `/home/drpoh/projects/archive/rs-home-ai-v3/` | Historical releases `7d9bab5` and `920585d` (archived, not deleted) | Preserve until retention audit |
@@ -40,7 +41,7 @@ Engineering direction: [reuse-first ADR](ADR-REUSE-FIRST-2026-10-11.md). For cod
 
 ## Branches vs environments
 - `main`: baseline; `refactor/v2`: V2 lineage; `feature/v3-home-agent`: active source development; `review/gate-e-target-snapshot-hardening-20261009`: unmerged review work at last audit.
-- `dev` is a source checkout. `stage` currently is a disposable local mock used by tests, not an installed service. `prod` is the separately pinned V3 release and legacy V2 service, not a Git branch.
+- `dev` is a canonical source checkout with an installed user-systemd pull-only candidate timer, whose first successful run was confirmed 2026-10-12. `stage` currently is a disposable local mock used by tests, not an installed service. `prod` is the separately pinned V3 release and legacy V2 service, not a Git branch.
 - Promotion requires explicit review, isolated candidate, tests, identity/policy check, rollback, and owner authorization. Git push alone is not deployment.
 
 ## GitHub-first development when Pi remote tools are unavailable

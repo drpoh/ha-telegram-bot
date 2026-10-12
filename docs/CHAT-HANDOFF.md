@@ -668,3 +668,6 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## 2026-10-12 — Latest four-light Pi acceptance confirmed
 - Owner ran updated `scripts/manual/v3-live-readonly-preflight.mjs`; SAUNA complete 27.9375 °C not ready, LIGHTS complete (on 1/off 3/unknown 0), TAMBOUR complete/on, `READONLY_PREFLIGHT=PASS`. All four exact light IDs returned real states, three stale IDs already deleted from HA. Source PR #49 merged as `0a0d024` after successful CI. No write scope expansion, V3 production remains last confirmed immutable c6a9812. Next: prioritize useful Telegram read-only queries and separate owner-reviewed release gate.
+
+## 2026-10-12 — Current work: PR #50
+- PR #49 merged 0a0d024. New PR #50 improves bounded four-entity Russian read-only /lights (OFF labels + exact questions) with offline tests. Confirm its CI/merge, then Pi DEV STAGE; production still last owner-confirmed immutable c6a9812. Remote Desktop Commander quota exhausted, so no new Pi runtime checks in this chat. No change to HA permissions, entity inventory or active services.

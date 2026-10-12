@@ -82,3 +82,7 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - [x] GitHub structural inventory: complete tree, 4 remote branches, 0 open PRs, no symlinks. Corrected contradictory V3 directory ownership and old production version guidance. Added short docs/CURRENT-STATE.md; history preserved.
 - [ ] Verify Pi canonical DEV checkout status/head against GitHub; effective V3 systemd ExecStart/rollback path; V2/Gate D last executions. GitHub connector cannot independently attest to those runtime facts.
 - [ ] Audit actual HA physical lighting vs switch/helper entities read-only before changing the /lights schema; retain fail-closed scopes.
+
+## 2026-10-12 — Latest Pi operational confirmation
+- [x] Owner verified V2 active; V3 active from immutable c6a9812; Gate D health/alerts last exit success (0), last ran 13:17:17 EEST, next 13:32:17. No prod mutation.
+- [ ] Verify Pi DEV fast-forward completed (last owner observed e231afb vs fetched origin 115c6b3); inspect automation latest.txt outcome separately from timer triggers (last DEV timer 12:13:16 EEST).

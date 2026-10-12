@@ -1243,3 +1243,8 @@ Late upstream responses previously resumed registry reads after timeout. Added e
 
 ## 2026-10-12 — Remote branch deletion independently verified
 - Owner executed approved GitHub temporary branch deletion. Connector returned exactly 4 remote branch refs: main, refactor/v2, feature/v3-home-agent, review/gate-e-target-snapshot-hardening-20261009. Cleanup complete. No production changes. See docs/V3-GITHUB-CLEANUP-2026-10-12.md.
+
+## 2026-10-12 — Repository integrity and navigation audit
+- Verified GitHub V3 tree fully enumerable (471 entries, no truncation): 155 src file blobs, 174 test blobs, 61 docs blobs; no symlinks. Exactly 4 remote branches, no open PRs at audit. GitHub source and offline CI are not Pi runtime integrity proof.
+- Detected and corrected conflicting legacy V3 checkout designation in AGENTS and outdated 97343fa active-release reference in STRUCTURE-INDEX. Added docs/CURRENT-STATE.md as short current entry; historical WORKLOG/HANDOFF preserved rather than rewritten or deleted.
+- Incomplete checks: current Pi DEV SHA/cleanliness, effective V3 systemd ExecStart, V2/Gate D health, latest Pi production-candidate ARMv7 validation and HA physical light classification. No deployment, runtime files or Home Assistant devices modified.

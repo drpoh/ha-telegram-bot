@@ -1,5 +1,5 @@
-import {readdirSync,mkdtempSync,rmSync,readFileSync} from "node:fs";
-import {join} from "node:path";
+import {readdirSync,mkdtempSync,rmSync,readFileSync,lstatSync} from "node:fs";
+import {join,dirname} from "node:path";
 import {tmpdir} from "node:os";
 import {execFileSync,spawn} from "node:child_process";
 
@@ -7,6 +7,18 @@ const files=readdirSync("test").filter(f=>f.endsWith(".test.mjs")).sort();
 const schema=readFileSync("test/fixtures/bot-schema.sql","utf8");
 if(!schema.includes("CREATE TABLE")) throw Error("SQLite schema unavailable");
 const root=mkdtempSync(join(tmpdir(),"ha-bot-test-"));
+if(process.env.RS_DEV_TEST_DIAGNOSTIC==="1"){
+ let cursor=root;
+ while(true){
+  const st=lstatSync(cursor);
+  const safe=st.isDirectory()&&!st.isSymbolicLink()&&
+    ((st.mode&0o022)===0 || (st.uid===0&&(st.mode&0o1000)!==0))&&
+    (st.uid===0 || st.uid===process.getuid());
+  console.log("FIXTURE_ANCESTOR",JSON.stringify({depth:cursor.split("/").filter(Boolean).length,mode:(st.mode&0o7777).toString(8),uidMatch:st.uid===process.getuid(),rootOwned:st.uid===0,safe}));
+  const next=dirname(cursor);if(next===cursor)break;cursor=next;
+ }
+ console.log("FIXTURE_ENV",JSON.stringify({tmpMatches:tmpdir()===process.env.TMPDIR,runnerHomeMatches:root===process.env.HOME}));
+}
 // No production keys or inherited MCP endpoints enter isolated test processes.
 const testEnv={
  PATH:process.env.PATH || "/usr/bin:/bin",

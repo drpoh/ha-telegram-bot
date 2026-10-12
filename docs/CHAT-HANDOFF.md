@@ -649,3 +649,7 @@ Never print `.env`, access tokens, private HA URLs, DB contents or raw personal 
 
 ## Latest branch cleanup verified — 2026-10-12
 - Owner completed remote temporary-ref removal; GitHub connector verified **four** remote branches remain (main, refactor/v2, feature/v3-home-agent, Gate E review). Branch cleanup closed; do not request repeat deletion. Resume practical V3 light/switch/helper identity classification. Runtime V3 remains last owner-confirmed c6a9812.
+
+## 2026-10-12 — Integrity audit handoff
+- Start with docs/CURRENT-STATE.md (new concise truth/navigation point). Last owner-verified live V3 release is immutable c6a9812, rollback 97343fa. Historical /home/drpoh/rs-home-ai-v3 serves Gate D timers; it is NOT active V3 executable. Canonical Pi DEV /home/drpoh/projects/rs-home-ai-dev.
+- GitHub tree and branches checked; Pi runtime and current SHA still unverified in this audit. Existing priority remains read-only lighting fixture/switch/helper area review before /lights redesign. No service or write-policy changes.

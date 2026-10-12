@@ -1,5 +1,7 @@
 # RS Home AI V3 — active tasks (2026-10-12)
 
+**For the one-page current plan see [CURRENT-STATE](CURRENT-STATE.md).** Earlier unchecked TODO entries are historical, not necessarily still pending; use the newest verified checkpoint below.
+
 ## Latest owner-verified checkpoint — 2026-10-12
 - [x] Installed user-systemd DEV timer successfully completed `stage=complete`, `status=passed`, `exit_code=0`, SHA `b1122bdb274931b5d89e745c9ce171ac4e3addbe` at 07:10:00 UTC. Exact-SHA private GitHub Actions gate succeeded after correcting fine-grained PAT repository access. 
 - [x] Owner confirmed candidate `/home/drpoh/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-b1122bd/RELEASE_COMMIT` contains that exact SHA. This is packaging proof, NOT stage execution or production acceptance.
@@ -75,3 +77,8 @@ Read `AGENTS.md`, `docs/PROJECT-MAP.md`, `docs/CHAT-HANDOFF.md`, `docs/WORKLOG.m
 - [x] Owner deleted 24 temporary GitHub remote refs; independently verified exactly 4 retained: main, refactor/v2, feature/v3-home-agent, Gate E review.
 - [ ] Gate E review branch retained pending separate assessment; do not delete just to reduce count.
 - [ ] Resume read-only HA metadata review for real light/switch/helper identity before improving /lights; no production change.
+
+## 2026-10-12 — Source integrity audit
+- [x] GitHub structural inventory: complete tree, 4 remote branches, 0 open PRs, no symlinks. Corrected contradictory V3 directory ownership and old production version guidance. Added short docs/CURRENT-STATE.md; history preserved.
+- [ ] Verify Pi canonical DEV checkout status/head against GitHub; effective V3 systemd ExecStart/rollback path; V2/Gate D last executions. GitHub connector cannot independently attest to those runtime facts.
+- [ ] Audit actual HA physical lighting vs switch/helper entities read-only before changing the /lights schema; retain fail-closed scopes.

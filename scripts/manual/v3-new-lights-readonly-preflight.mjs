@@ -30,7 +30,7 @@ if(process.argv.slice(2).join(' ')!=='--readonly --operator-approved'){
   if(result.authorization!==false||result.actualWrite!==false)throw Error('authorization_invariant');
   for(const entry of result.entries){
    // Only IDs and states. Do not print raw MCP response, URLs, attributes or credentials.
-   console.log('NEW_LIGHT '+entry.id+' '+entry.state);
+   console.log('NEW_LIGHT '+entry.id+' '+entry.state+' '+entry.reason);
   }
   console.log('NEW_LIGHT_REVIEW='+result.status);
   console.log('NEW_LIGHT_COUNTS='+JSON.stringify(result.counts));

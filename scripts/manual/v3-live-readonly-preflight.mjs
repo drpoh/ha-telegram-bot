@@ -2,7 +2,7 @@
 // Operator-invoked read-only HA-MCP acceptance; NO Telegram poller or write tool.
 import {createKitchenMcpClient} from '../../src/pilot/kitchen-mcp-client.mjs';
 import {summarizeSauna} from '../../src/home/sauna-status.mjs';
-import {summarizeLightOverview} from '../../src/home/light-overview.mjs';
+import {summarizeLightOverview,LIGHT_OVERVIEW_IDS} from '../../src/home/light-overview.mjs';
 import {summarizeTambourLight} from '../../src/home/tambour-light-status.mjs';
 
 const timeoutMs=45000;
@@ -29,4 +29,20 @@ for(const [name,summary] of jobs){
  }
 }
 console.log('READONLY_PREFLIGHT='+ (failures?'PARTIAL_OR_FAILED':'PASS'));
+
+if(failures){
+ // Diagnoses only fixed previously approved entities; do not search for alternatives.
+ // No raw MCP response or private endpoint is ever printed.
+ for(const id of LIGHT_OVERVIEW_IDS){
+  try{
+   const raw=await bounded(onlyRead(id));
+   const envelope=raw?.structuredContent??raw;
+   const data=envelope?.data??envelope;
+   const state=raw?.isError===true?'mcp_error':data?.entity_id!==id?'identity_mismatch':
+    data?.state==='unavailable'?'unavailable':data?.state==='unknown'?'unknown':
+    ['on','off'].includes(data?.state)?'ok':'invalid_response';
+   if(state!=='ok')console.log('LIGHT_DIAGNOSTIC '+id+' '+state);
+  }catch(e){console.log('LIGHT_DIAGNOSTIC '+id+' '+(e?.message==='timeout'?'timeout':'read_error'));}
+ }
+}
 process.exitCode=failures?1:0;

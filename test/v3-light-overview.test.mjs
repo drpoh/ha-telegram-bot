@@ -27,3 +27,12 @@ test('unavailable entity IDs stay explicitly visible, not counted as physical li
  assert.equal(r.authorization,false);
  assert.equal(r.actualWrite,false);
 });
+
+test('Russian light status includes reviewed off labels without inventing physical fixtures',async()=>{
+ const r=await summarizeLightOverview({readState:async id=>({data:{entity_id:id,state:id===LIGHT_OVERVIEW_IDS[0]?'on':'off'}})});
+ assert.equal(r.status,'complete');assert.equal(r.onCount,1);assert.equal(r.offCount,3);
+ assert.match(r.text,/В состоянии on: Тамбур/);
+ assert.match(r.text,/В состоянии off: Коридор, Коридор, первый этаж, Коридор, споты/);
+ assert.match(r.text,/не число физических ламп/);
+ assert.equal(r.authorization,false);assert.equal(r.actualWrite,false);
+});

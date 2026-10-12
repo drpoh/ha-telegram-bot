@@ -21,6 +21,8 @@ printf '%s\n' "$sha" > "$temp/RELEASE_COMMIT"
  npm ci --omit=dev --ignore-scripts --no-audit --no-fund
  node --check src/pilot/telegram-readonly.mjs
  node --check src/home/sauna-status.mjs
+ node --check src/home/tambour-light-status.mjs
+ node --check src/home/light-overview.mjs
  node --check src/pilot/kitchen-mcp-client.mjs
 )
 mv -- "$temp" "$target"

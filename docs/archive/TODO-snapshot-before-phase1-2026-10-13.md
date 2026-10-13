@@ -15,7 +15,7 @@
 - [ ] Optional, separately approved: connect ChatGPT GitHub app to private reports repo; afterward retire failed Tor diagnostic workflow/keys/secrets only after explicit cleanup review.
 - [ ] Keep DEV/stage/prod isolated; no second Telegram poller or HA write scope expansion on a docs-only update.
 
-See [2026-10-13 documentation audit](DOCUMENTATION-AUDIT-2026-10-13.md). Dated sections below are historical and may contain superseded `[ ]` entries.
+See [2026-10-13 documentation audit](../DOCUMENTATION-AUDIT-2026-10-13.md). Dated sections below are historical and may contain superseded `[ ]` entries.
 
 
 ## Action plan — 2026-10-13 (owner priority; current live verification still required)
@@ -44,7 +44,7 @@ See [2026-10-13 documentation audit](DOCUMENTATION-AUDIT-2026-10-13.md). Dated s
 
 # RS Home AI V3 — active tasks (2026-10-12)
 
-**For the one-page current plan see [CURRENT-STATE](CURRENT-STATE.md).** Earlier unchecked TODO entries are historical, not necessarily still pending; use the newest verified checkpoint below.
+**For the one-page current plan see [CURRENT-STATE](../CURRENT-STATE.md).** Earlier unchecked TODO entries are historical, not necessarily still pending; use the newest verified checkpoint below.
 
 ## Latest owner-verified checkpoint — 2026-10-12
 - [x] Installed user-systemd DEV timer successfully completed `stage=complete`, `status=passed`, `exit_code=0`, SHA `b1122bdb274931b5d89e745c9ce171ac4e3addbe` at 07:10:00 UTC. Exact-SHA private GitHub Actions gate succeeded after correcting fine-grained PAT repository access. 

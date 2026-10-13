@@ -1,5 +1,11 @@
 # WORKLOG — Development checkpoint journal
 
+## 2026-10-13 — selective reuse of Matt Pocock / ECC engineering practices
+
+Owner agreed to **adopt ideas, not install frameworks**. Reviewed upstream public repositories Matt Pocock / skills (MIT, main `49dd158d1076134a641b33efb035946536778336`) and affaan-m / ECC (MIT, main `b92f181b3b748d1abbc2afd94af6aa7d8c8fca29`). Wrote [ENGINEERING-PRACTICES](development/ENGINEERING-PRACTICES.md) adapting fast reproducible failure tests, red-green-refactor, two-axis PR review and local-evidence MCP/security/release auditing. Kept AGENTS and existing Gate B–E authoritative, reused Node 20 `node:test`, existing npm test/CI and systemd/HA-MCP. No external source code was copied; no CLI, plugin, hooks, services, npm modules, secrets, new tokens or runtime paths were changed.
+
+**First application:** scoped DEV-to-V3 Telegram kitchen read-only review (see [GATE-D](gates/GATE-D.md)). Source `v3-readonly-question-router.mjs` plus kitchen status is read-only and describes exactly four selected HA entities with unknowns treated separately. But the larger DEV `telegram-readonly.mjs` also adds `/newlight`, `/lightcheck` and changes `/confirm`/`/cancel` and in-memory pending consent; `createNewLightDispatch` is currently disabled for new writes, which does not prove complete old-policy compatibility. **NO-GO** to promote the entire DEV SHA as a kitchen feature. Prepare minimal read-only-only patch and negative tests, with separate owner approval for production switching. Documentation-only work; pinned V3 `9dd5964`, V2 and HA Green left untouched.
+
 ## 2026-10-13 — real pinned V3 Telegram natural-language acceptance (owner evidence)
 
 Operator used **already running** private `RSHomeAI_v3_bot` on pinned `9dd5964`, without starting another Telegram process or triggering physical HA writes. Live Telegram replies: `/status` reported protected journal available; `/confirm` **without pending request** returned «Нет действующего запроса для подтверждения»; `/sauna` returned 88.625 °C, ready, 85 °C threshold. Three separately sent natural questions all responded: «Сколько градусов в сауне?» → 89 °C / ready; «Где горит свет?» → **0 ON / 4 OFF / 0 UNKNOWN among exactly 4 selected HA entities**, not whole home; «Горит ли свет в тамбуре?» → off.

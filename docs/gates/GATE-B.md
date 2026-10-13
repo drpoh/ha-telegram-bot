@@ -15,6 +15,7 @@
 
 - DEV offline тесты и опциональный `/newlight` код проверяют правила, **не** работающий production.
 - Ручной Pi `v3-new-lights-readonly-preflight.mjs` прочитал 19 кандидатов; доступность девяти `light.*` не устанавливает их физическую идентичность.
+- Ручное чтение всех доступных для HA-MCP поиска `light.*` (включая скрытые) вернуло 38 ID: **5 ON / 16 OFF / 17 UNKNOWN**. Три UNKNOWN имеют `light.browser_mod_`-префикс (потенциальные UI-сущности), 14 других UNKNOWN остаются неразобранными. Это проверенная полнота одного ответа `ha_search`, **не** доказательство, что все 38 — физические светильники или что disabled entities входят в state inventory. Для физических разрешений ничего не изменилось.
 - Существовавший узкий пилот `light.tambur_svet_l1` **не** разрешает остальные контуры.
 - Начальная проверка: ручной Pi HA-MCP read-only для `light.kukhnia_svet` завершился `complete`, `state=off`, `physical_identity=unverified` (владелец, 2026-10-13). Это не выполнение Gate B и не допуск к записи.
 - Для следующего шага используйте **HA Settings → Devices & services → Entities**: найдите exact `light.kukhnia_svet`, проверьте **integration/platform**, **связанное Device**, **Area** (отдельно для entity и device), а также нет ли группы, виртуального alias или дублирующей сущности. Наличие только friendly name недостаточно. Если linked device отсутствует, не придумывать device_id.

@@ -1,5 +1,8 @@
 # Home Assistant Telegram AI Bot
 
+> **V3 DEV checkpoint, 2026-10-13:** `feature/v3-home-agent` at `6f6e694` was tested on Raspberry Pi (198 isolated test files, 726 assertions, zero failures). Real read-only HA-MCP checks passed, including a separate 19-light inspection (9 readable / 10 unavailable). **No additional physical light control is enabled by these tests.** See [CURRENT-STATE](docs/CURRENT-STATE.md) and [documentation audit](docs/DOCUMENTATION-AUDIT-2026-10-13.md). Production is pinned independently; do not run a second Telegram poller.
+
+
 AI-powered Telegram assistant for Home Assistant using MCP.
 
 ## Features

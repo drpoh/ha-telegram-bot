@@ -34,3 +34,11 @@
 - Выделить проверенный факт, источник, дату и пределы доказательства.
 - Держать актуальную сводку **только в CURRENT-STATE**; обновить TODO (открытые дела), здесь изменить лишь next step, подробный лог — в WORKLOG.
 - Не переносить/удалять исторические файлы, пока статический поиск ссылок и CI не подтвердят безопасность.
+
+## Дополнение 2026-10-13 — независимый source-only review PR #134
+
+GitHub DEV HEAD подтверждён `c0dd10048d3d64ad7ef1b7b0d5c16406c9c351a1`. PR #134 по-прежнему открыт, `head=cdcfdcdaeeec408fa89001e578639b9144b1a7e1`, `base=9dd5964a4956b88227ec4002ac80ef46a186d632`, GitHub compare ровно 6 файлов / 186 добавлений / 0 удалений, существующий consent/actor/launch unchanged in source diff. Workflow runs/statuses для candidate HEAD **0/0**, CI не запускался. Pi online, но Desktop Commander monthly quota не позволяет выполнить команды; Pi tests не проводились. Подробная независимая рецензия — комментарий к [PR #134](https://github.com/drpoh/ha-telegram-bot/pull/134). Следующий шаг: offline Pi isolated worktree на точном candidate SHA, Node 20 checks, consent regression, затем exact-SHA CI и Gate D release planning. Не merge и не deploy без подтверждений.
+
+## Handoff дополнение — внешний Deep Research, проверен 2026-10-13
+
+Отчёт Perplexity `export_7780787100989724748.md` принят как **список гипотез**, а не подтверждение текущей реализации: сам Perplexity репозиторий не прочитал. GitHub DEV `c0dd10048d3d64ad7ef1b7b0d5c16406c9c351a1` уже содержит SQLite conversation, context builder, entity/area resolver, strict-area resolver, policy, durable confirmations/journal, read-only router. Приоритет **не меняется**: сначала exact-SHA PR #134 offline CI/Pi + Gate D, затем безопасный read-only контекст «А в коридоре?» через existing code; не создавать новый framework или DB. `conversation.process` способен выполнять физические действия; strict policy обязателен. Для details см. новые записи CURRENT-STATE/TODO/WORKLOG. Production и HA не менялись.

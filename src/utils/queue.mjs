@@ -1,3 +1,4 @@
+import PQueue from "p-queue";
 import { askHomeAssistant } from "../ai/agent.mjs";
 import { callHA } from "../mcp/executor.mjs";
 import {
@@ -6,33 +7,22 @@ import {
   peekPendingConfirmation,
 } from "../decision/pending-confirmation.mjs";
 
-let requestQueue = Promise.resolve();
+// A single queue serializes AI queries and physical-confirmation requests.
+// Never let a queued command bypass the independent policy/consent checks below.
+const requestQueue = new PQueue({concurrency: 1});
 let requestNumber = 0;
-let pendingRequests = 0;
-let activeRequests = 0;
 
 function enqueue(label, handler) {
   const id = ++requestNumber;
-  pendingRequests++;
   console.log(`Queue #${id} → ${label}`);
-
-  const request = requestQueue.then(async () => {
+  return requestQueue.add(async () => {
     console.log(`Queue #${id} START`);
-    pendingRequests--;
-    activeRequests++;
     try {
       return await handler();
     } finally {
-      activeRequests--;
       console.log(`Queue #${id} DONE`);
     }
   });
-
-  requestQueue = request.catch((error) => {
-    console.error(`Queue #${id} ERROR:`, error);
-  });
-
-  return request;
 }
 
 export function queueHomeAssistantRequest(userText, options = {}) {
@@ -94,8 +84,8 @@ export function cancelQueuedConfirmation({ userId, chatId }) {
 
 export function getQueueStatus() {
   return {
-    active: activeRequests,
-    pending: pendingRequests,
+    active: requestQueue.pending,
+    pending: requestQueue.size,
     total: requestNumber,
   };
 }

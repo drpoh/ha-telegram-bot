@@ -44,6 +44,16 @@ node scripts/manual/v3-all-lights-readonly-inventory.mjs --readonly --operator-a
 
 Если HA возвращает неполную выдачу, пагинацию, неверный формат, превышение 500 или ошибку — `ALL_LIGHTS_INVENTORY=unverified_or_incomplete` / `read_failed` и код 1. Такой результат **не** разрешает считать список полным. Повторное или bulk-чтение живого HA — только с согласия оператора; никогда не запускать это автоматически.
 
+## Gate D — побайтовая сверка исходников pinned release (только чтение)
+
+После CI и безопасной `ff-only` синхронизации DEV:
+
+```sh
+node scripts/manual/v3-release-content-readonly.mjs --readonly --operator-approved
+```
+
+Команда использует `RELEASE_COMMIT` существующего релиза, сравнивает Git blob SHA-1 каждого tracked-файла с его байтами на диске и отдельно проверяет исполняемые биты Git. Не использует `tar --compare`, который может вернуть ложное расхождение по uid/gid/mtime/non-exec permissions. Не читает `node_modules` или частные untracked конфигурации, не запускает Telegram/HA и не изменяет файлы/systemd. `PASS` относится **только** к tracked source + exec mode, не к runtime процессу, зависимостям, возможности rollback или single poller. `UNVERIFIED` требует ручного review, ничего не исправлять автоматически.
+
 ## Естественные Telegram-вопросы — реальный HA-MCP, без запуска Telegram и AI
 
 **После проверки GitHub CI и безопасного `ff-only` обновления DEV** вручную запустить на Pi из `/home/drpoh/projects/rs-home-ai-dev`:

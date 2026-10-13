@@ -27,11 +27,10 @@
 
 ```jinja
 {% set ids = [
+  'light.kukhnia_led_niz_l1',
+  'light.kukhnia_led_niz_l2',
   'light.kukhnia_svet',
-  'light.kukhnia_led_niz_l1_2',
-  'light.kukhnia_led_niz_l2_2',
-  'light.kukhnia_svet_3',
-  'light.podsvetka_kukhnia'
+  'light.led_kukhnia'
 ] %}
 {% for id in ids %}
 {{ id }} | state={{ states(id) }} | area={{ area_name(id) or 'none' }} | device={{ device_name(id) or 'none' }} | model={{ device_attr(id, 'model') or 'none' }}
@@ -80,6 +79,22 @@ Switch-as-X total entries: {{ ids | count }}
 ```
 
 `integration_entities('switch_as_x')` читает список сущностей зарегистрированной интеграции и **не** является прямым доказательством физического устройства. Если список пустой либо не включает подозрительные `light.*`, проверить их **Settings → Devices & services → Entities** (Integration, Device, Area) и **Helpers**, не переименовывать и не удалять. Последующий список распознанных физических устройств должен быть отдельным человеческим review-документом, не permission allowlist. Не публиковать содержимое приватных registry identifiers/serials в GitHub.
+
+### Последний HA Template после обновления — 27 сущностей (2026-10-13)
+
+Владелец получил в более позднем снимке **27** `states.light`: **9 ON / 13 OFF / 5 UNKNOWN**. По сравнению с предыдущими 38 ID **исчезли 10 недоступных дополнительных связанных представлений** и один прежний Browser Mod screen. Это изменение относится к инвентарю `states.light`; оно **не доказывает**, что все зависимости уже исправлены, что интеграции здоровы или что отсутствующие ID удалены из entity registry.
+
+`integration_entities('switch_as_x')` независимо показало ровно **7** текущих световых ID:
+
+- `light.koridor`, `light.koridor_1_etazh`, `light.koridor_spot`
+- `light.kukhnia_svet`
+- `light.vykliuchatel_z_gostinaia_l1`, `light.vykliuchatel_z_gostinaia_l2`, `light.vykliuchatel_z_gostinaia_l3`
+
+Это проверенное происхождение из **Switch as X**, а не доказательство семи ламп или соответствия конкретной нагрузке. Основные каналы могут представлять выключатели; физическая привязка сохраняет статус **unverified**. Не переносить перечисленные ID в write allowlist автоматически.
+
+**Пять UNKNOWN:** `light.browser_mod_635bb8a2_ae2afdad_screen` (UI), `light.ves_svet_2` (связанный с whole-house group), `light.sonoff_1000d78a79` (device D1R1), `light.spalnia` и `light.svet_kukhni` (device не показан в Template). Последние три требуют отдельной проверки наличия интеграции/registry и физических контуров. `unavailable` не доказывает отсутствие питания.
+
+Для **read-only ответов по кухне** текущий операторский инвентарь из четырех присутствующих ID: `light.kukhnia_led_niz_l1`, `light.kukhnia_led_niz_l2`, `light.kukhnia_svet`, `light.led_kukhnia`. Оба LED channel находятся под одним устройством `2 channel dimmer` — не считать их двумя разными физическими модулями, не утверждать, что это полный свет комнаты, и не давать автоматически права. Исторический список 19 кандидатов оставлен как документ предыдущего наблюдения.
 
 ## Продолжение
 

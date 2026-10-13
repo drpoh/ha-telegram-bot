@@ -24,11 +24,11 @@
 
 ## Непосредственный следующий шаг
 
-1. GitHub DEV PR #104–#108 объединены. Владелец подтвердил на Pi `5380a75`, **202/737/0** в `npm test`, `DOCS_CHECK=PASS files=15 links=131`. Новый `/lightcheck` и CLI source/offline проверены, в production не развёрнуты; live HA-MCP read ещё не показан. Исторические документы не переносить без необходимости.
-2. Из оставшегося Gate D: проверить фактический Git SHA содержимого активного pinned V3 каталога, V2 ExecStart и recovery/rollback, без перезапуска сервисов.
-3. Pi DEV `5380a75`: владелец подтвердил **live read-only** `light.kukhnia_svet=off`, `SINGLE_LIGHT_STATUS=complete`, `PHYSICAL_IDENTITY=unverified`. Следующий шаг — вручную прочитать в HA UI entity / device / area / integration и сверить с физическим контуром; не переключать и не запускать второй Telegram poller. `/lightcheck` остаётся source-only до отдельного release.
-4. Более поздний нативный HA Template (владелец 2026-10-13) дал **38 `light.*`: 9 ON/13 OFF/16 UNKNOWN**; 11 из UNKNOWN имеют в `device_attr(model)` `| light.*` (подозрение на дополнительные обёртки), 2 — Browser Mod, 3 другие требуют исследования. Детали и следующий Template `integration_entities('switch_as_x')` — в `docs/gates/GATE-B.md`. **Не считать** `unavailable` доказательством выключенного питания/неисправности. `light.kukhnia_svet` физически ещё не идентифицирован. Все новые действия остаются DENY, production и Telegram без изменений.
-5. Сверяться с [активным TODO](../TODO.md) и [правилами агента](../../AGENTS.md). Вести малые PR с CI; обновлять текущий статус только после проверенного milestone.
+1. По последнему HA Template владельца (2026-10-13) **27 `light.*`, 9 ON / 13 OFF / 5 UNKNOWN** после обновления; `integration_entities('switch_as_x')` подтвердило **7 конкретных световых ID**, включая `light.kukhnia_svet`. Данные снимка и остаток Gate B — в [CURRENT-STATE](../CURRENT-STATE.md) и [Gate B](../gates/GATE-B.md).
+2. В DEV источник естественных вопросов о кухне обновлён с устаревших 7 до **4 присутствующих HA ID** (`light.kukhnia_led_niz_l1/l2`, `light.kukhnia_svet`, `light.led_kukhnia`). В отдельно выделенный `ha_get_state` reader добавлен только exact ID `light.kukhnia_led_niz_l2`. Исторические 19 review candidates и action policy не изменять.
+3. После PR CI и безопасной DEV `ff-only` синхронизации на Pi вручную выполнить `npm test` и `node scripts/manual/v3-kitchen-lights-readonly-preflight.mjs --readonly --operator-approved`; не запускать второй Telegram poller или DEV как production.
+4. Реальное физическое соответствие Switch as X `light.kukhnia_svet` **не подтверждено**. Три UNKNOWN `light.sonoff_1000d78a79`, `light.spalnia`, `light.svet_kukhni` требуют отдельного HA registry review. Новые физические действия — DENY до явного согласования.
+5. Из Gate D остаётся read-only проверка SHA активного `...release-9dd5964` и V2 ExecStart; нельзя автоматически переключать pinned production. После milestone — обновить только CURRENT-STATE/TODO/HANDOFF; подробности — в WORKLOG.
 
 ## Правила завершения итерации
 

@@ -19,6 +19,28 @@ test('new light read only uses one exact ha_get_state call and closes client',as
  assert.deepEqual(calls[1][1],{name:'ha_get_state',arguments:{entity_id:'light.kukhnia_svet'}});
  assert.equal(calls[0][1].url,url);
 });
+test('recently observed kitchen LED L2 has exact read-only HA-MCP scope',async()=>{
+ const calls=[];
+ const read=createReviewedLightReadonlyReader({
+  readConfig:()=>url,
+  makeClient:()=>({
+   connect:async()=>calls.push('connected'),
+   callTool:async request=>{
+    calls.push(request);
+    return {data:{entity_id:request.arguments.entity_id,state:'off'}};
+   },
+   close:async()=>calls.push('closed')
+  }),
+  makeTransport:()=>({})
+ });
+ const result=await read('light.kukhnia_led_niz_l2');
+ assert.equal(result.data.entity_id,'light.kukhnia_led_niz_l2');
+ assert.deepEqual(calls,[
+  'connected',
+  {name:'ha_get_state',arguments:{entity_id:'light.kukhnia_led_niz_l2'}},
+  'closed'
+ ]);
+});
 test('unlisted, malicious and old pilot IDs fail before config access',async()=>{
  let access=0;
  const read=createReviewedLightReadonlyReader({readConfig:()=>{access++;return url;}});

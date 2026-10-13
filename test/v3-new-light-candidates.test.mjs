@@ -21,3 +21,29 @@ test('fail-closed candidate validation rejects duplicates and forbidden prefixes
  assert.equal(validateNewLightCandidates([{...first,review:'approved'}]),false);
  assert.equal(validateNewLightCandidates([]),false);
 });
+
+test('fail-closed candidate validation explicitly excludes Browser Mod and non-light domains',()=>{
+ const first = NEW_LIGHT_CANDIDATES[0];
+
+ const forbiddenBrowserModIds = [
+  'light.browser_mod_1234',
+  'light.browser_mod_tablet',
+  'light.browser_mod_wallpanel'
+ ];
+ for (const id of forbiddenBrowserModIds) {
+  assert.equal(validateNewLightCandidates([{...first, id}]), false, `Should reject ${id}`);
+ }
+
+ const forbiddenNonLightDomainIds = [
+  'switch.kukhnia_led',
+  'sensor.kukhnia_light_sensor',
+  'binary_sensor.kukhnia_light_motion',
+  'media_player.living_room_tv_light',
+  'climate.sauna'
+ ];
+ for (const id of forbiddenNonLightDomainIds) {
+  assert.equal(validateNewLightCandidates([{...first, id}]), false, `Should reject ${id}`);
+ }
+
+ assert.ok(NEW_LIGHT_IDS.every(id => id.startsWith('light.') && !id.includes('browser_mod')));
+});

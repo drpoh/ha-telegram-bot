@@ -6,8 +6,8 @@
 ## Mission
 Build a reliable conversational Home Assistant agent that can remember useful context, analyze Home Assistant history, and autonomously perform explicitly permitted non-critical actions.
 
-## Cross-chat continuation
-At the beginning of every new chat, first read `docs/CHAT-HANDOFF.md`, then verify the live Pi Git status, current TODO/WORKLOG and GitHub PRs. Do not treat old chat memories or historical counters as current evidence. Update the handoff after stable milestones.
+## Cross-chat continuation and single current-status source
+Before any work, **first read `docs/CURRENT-STATE.md`**, then `docs/development/HANDOFF.md` (≤150 lines), `docs/TODO.md` (open tasks) and this AGENTS file. Verify live Pi Git status, current service ExecStart and GitHub PRs when relevant and access permits; never treat a historical checkpoint as current evidence. The current status is maintained **only** in CURRENT-STATE. After stable milestones update current status with verification date/source, open TODO tasks, and short next-step HANDOFF; put detailed history in WORKLOG or archive. Old `docs/CHAT-HANDOFF.md` remains preserved history, **not** the first-read entrypoint. Keep source and production observations separate.
 
 ## Raspberry Pi workspace ownership — effective 2026-10-10
 - **ONLY canonical development checkout:** `/home/drpoh/projects/rs-home-ai-dev`, branch `feature/v3-home-agent`. Perform source edits, tests, documentation, commits and GitHub pushes here.

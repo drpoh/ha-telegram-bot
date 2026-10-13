@@ -28,7 +28,7 @@ test('manual preflight explicitly fixes four Russian natural queries and read-on
  assert.match(src,/!generalIds\.has\(id\)/);
  assert.match(src,/!kitchenIds\.has\(id\)/);
  assert.match(src,/generalClient\('ha_get_state',\{entity_id:id\}\)/);
- assert.match(src,/readKitchenState:id/); // no arbitrary names or implicit write path
+ assert.match(src,/const readKitchenState=id=>/); // no arbitrary names or implicit write path
  assert.match(src,/TELEGRAM_QUESTIONS_HA_WRITE_ATTEMPTED=false/);
  assert.match(src,/TELEGRAM_QUESTIONS_TELEGRAM_POLLER_STARTED=false/);
  assert.match(src,/complete===probes\.length\?0:1/);

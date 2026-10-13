@@ -10,7 +10,10 @@ const active=[
  'AGENTS.md','README.md','docs/README.md','docs/CURRENT-STATE.md',
  'docs/TODO.md','docs/development/HANDOFF.md',
  'docs/development/README.md','docs/architecture/README.md',
- 'docs/operator/README.md','docs/gates/README.md'
+ 'docs/operator/README.md','docs/gates/README.md',
+ 'docs/gates/GATE-B.md','docs/gates/GATE-C.md',
+ 'docs/gates/GATE-D.md','docs/gates/GATE-E.md',
+ 'docs/archive/README.md'
 ];
 const failures=[];
 let checked=0;

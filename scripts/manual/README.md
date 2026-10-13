@@ -43,3 +43,15 @@ node scripts/manual/v3-all-lights-readonly-inventory.mjs --readonly --operator-a
 Скрипт делает **один** read-only вызов `ha_search`, домен строго `light`, лимит 500, без Telegram и без записи в HA/Git. В новых DEV-сборках также печатается `ALL_LIGHTS_REVIEW_BUCKETS` — простая группировка по **имени** `light.browser_mod_` и прочим ID с разбивкой UNKNOWN; это не достоверный тип устройства, не HA-registry и не разрешение на переключение. Печатает только entity ID, ON/OFF/UNKNOWN и ограниченный тип причины для неизвестных (`unavailable`, `unknown`, `other_state`), не выводит токены, имена людей, URLs или подробные MCP ошибки. `LIGHT_ENTITY light.foo unknown unavailable` может быть следствием физического отключения, но само по себе не доказывает причину. Виртуальные, дублированные и `browser_mod` сущности **не получают разрешений на управление**.
 
 Если HA возвращает неполную выдачу, пагинацию, неверный формат, превышение 500 или ошибку — `ALL_LIGHTS_INVENTORY=unverified_or_incomplete` / `read_failed` и код 1. Такой результат **не** разрешает считать список полным. Повторное или bulk-чтение живого HA — только с согласия оператора; никогда не запускать это автоматически.
+
+## Естественные Telegram-вопросы — реальный HA-MCP, без запуска Telegram и AI
+
+**После проверки GitHub CI и безопасного `ff-only` обновления DEV** вручную запустить на Pi из `/home/drpoh/projects/rs-home-ai-dev`:
+
+```sh
+timeout 150s node scripts/manual/v3-telegram-questions-readonly-preflight.mjs --readonly --operator-approved
+```
+
+Скрипт проверит четыре **фиксированных** русских вопроса: «Сколько градусов в сауне?», «Горит ли свет в тамбуре?», «Где горит свет?», «Что со светом на кухне?». Он вызывает ту же детерминированную функцию `routeV3ReadonlyQuestion`, которую использует V3 Telegram, но **не запускает Telegraf, вторую подписку/poller, Gemini или другие LLM**. Использует только ограниченные `ha_get_state` readers и напечатает четыре `TELEGRAM_QUESTION_*_STATUS` / `REPLY`.
+
+Ожидаемое `TELEGRAM_QUESTIONS_READONLY=PASS` возможно только если все четыре ответа `complete`; при `partial` или `unavailable` вернёт код 1, не подменяя неизвестные состояния выключенными. Внешний `timeout` возвращает 124 при зависании. В обоих случаях **HA не переключается**. Это live HA-MCP **приёмка текста**, а не Telegram API/end-to-end и не разрешение release/новых физических действий. Не запускать в CI, по расписанию или из production checkout.

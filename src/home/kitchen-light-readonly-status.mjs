@@ -1,17 +1,20 @@
-// DEV-only answer for a small, fixed operator-reviewed HA entity sample in the kitchen.
-// This is NOT an HA area registry, count of physical lights, or permission to actuate.
-import {NEW_LIGHT_CANDIDATES} from './new-light-candidates.mjs';
+// DEV-only fixed read scope updated from owner HA Template, 2026-10-13.
+// Four currently present kitchen control entities, NOT a complete physical room inventory.
+// The historical 19-candidate source is unchanged: it is evidence, not a live allowlist.
 import {inspectNewLights} from './new-light-review.mjs';
 
-export const REVIEWED_KITCHEN_LIGHTS=Object.freeze(
- NEW_LIGHT_CANDIDATES.filter(candidate=>candidate.area==='Кухня')
-);
+export const REVIEWED_KITCHEN_LIGHTS=Object.freeze([
+ ['light.kukhnia_led_niz_l1','Кухня LED низ L1'],
+ ['light.kukhnia_led_niz_l2','Кухня LED низ L2'],
+ ['light.kukhnia_svet','Кухня свет (Switch as X)'],
+ ['light.led_kukhnia','Кухня LED IKEA драйвер']
+].map(([id,label])=>Object.freeze({id,area:'Кухня',label,review:'unverified',readOnly:true})));
 const denied=Object.freeze({
  status:'unavailable',authorization:false,actualWrite:false,
  text:'Не удалось проверить выбранные сущности света на кухне. Состояние неизвестно. Никаких переключений не выполнялось.'
 });
 export async function summarizeReviewedKitchenLights({readState}={}){
- if(typeof readState!=='function'||REVIEWED_KITCHEN_LIGHTS.length!==7)return {...denied};
+ if(typeof readState!=='function'||REVIEWED_KITCHEN_LIGHTS.length!==4)return {...denied};
  const report=await inspectNewLights({readState,candidates:REVIEWED_KITCHEN_LIGHTS});
  if(report.authorization!==false||report.actualWrite!==false||
     report.entries?.length!==REVIEWED_KITCHEN_LIGHTS.length||
@@ -33,7 +36,7 @@ export async function summarizeReviewedKitchenLights({readState}={}){
   id:e.id,reason:e.reason
  }));
  if(missing.some(e=>!Object.hasOwn(reasons,e.reason)))return {...denied};
- let text='Кухня — из 7 выбранных сущностей Home Assistant: включено '+on+
+ let text='Кухня — из 4 выбранных сущностей Home Assistant: включено '+on+
   ', выключено '+off+', неизвестно или недоступно '+unknown+'.';
  if(selected.length)text+=' В состоянии ON: '+selected.join(', ')+'.';
  if(missing.length)text+=' Не удалось проверить: '+missing.map(e=>e.id+' ('+reasons[e.reason]+')').join(', ')+'.';

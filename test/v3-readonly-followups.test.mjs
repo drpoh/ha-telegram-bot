@@ -87,3 +87,36 @@ test('Existing Telegram consent handlers/poller remain unchanged; new wrapper ha
  assert.match(source,/readonlyFollowups\.route\(/);
  assert.doesNotMatch(context,/ha_call_service|\.dispatch\(|pilot\.confirm\(|pilot\.request\(/);
 });
+
+test('Kitchen and tambour follow-ups reuse only the corresponding fixed-ID readers',async()=>{
+ const calls=[],kitchenCalls=[];
+ const general=fixture(calls),kitchenRead=fixture(kitchenCalls,{'light.kukhnia_svet':'on'});
+ const router=createV3ReadonlyFollowupRouter({clock:()=>5000});
+ const first=await request(router.route,'Где горит свет?',general,kitchenRead);
+ assert.equal(first.handled,true);
+ calls.length=0;
+ const a=await request(router.route,'А на кухне?',general,kitchenRead);
+ assert.equal(a.status,'complete');
+ assert.deepEqual(kitchenCalls,kitchen);
+ assert.deepEqual(calls,[]);
+ kitchenCalls.length=0;
+ const b=await request(router.route,'А в тамбуре?',general,kitchenRead);
+ assert.equal(b.status,'complete');
+ assert.deepEqual(calls,['light.tambur_svet_l1']);
+ assert.deepEqual(kitchenCalls,[]);
+});
+
+test('Unrecognized follow-up cannot reuse a previously valid light context',async()=>{
+ const calls=[],reader=fixture(calls);
+ const router=createV3ReadonlyFollowupRouter({clock:()=>10000});
+ await request(router.route,'Что со светом в тамбуре?',reader,reader);
+ calls.length=0;
+ const invalid=await request(router.route,'А в спальне? Выключи свет',reader,reader);
+ assert.equal(invalid.handled,true);
+ assert.equal(invalid.status,'unsupported');
+ assert.equal(invalid.actualWrite,false);
+ assert.deepEqual(calls,[]);
+ const after=await request(router.route,'А в коридоре?',reader,reader);
+ assert.equal(after.status,'unsupported');
+ assert.deepEqual(calls,[]);
+});

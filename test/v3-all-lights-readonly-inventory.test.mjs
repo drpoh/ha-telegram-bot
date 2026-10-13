@@ -32,6 +32,23 @@ test('all-light diagnostic requests hidden plus visible entities in one scoped H
  ]);
  assert.equal(r.authorization,false);assert.equal(r.actualWrite,false);
 });
+test('prefix-based Browser Mod buckets are only diagnostic and do not authorize any device',async()=>{
+ const r=await summarizeDiscoveredLights({includeHidden:true,maxEntities:500,readTool:async()=>response([
+  e('browser_mod_a_screen','unavailable'),
+  e('browser_mod_b_screen','unknown'),
+  e('kitchen','on'),
+  e('other','off'),
+  e('broken','unavailable')
+ ])});
+ assert.equal(r.checked,5);assert.equal(r.status,'partial');
+ assert.deepEqual(r.reviewBuckets,{
+  browserModPrefix:2,otherEntityIds:3,
+  unknownBrowserModPrefix:2,unknownOtherEntityIds:1
+ });
+ assert.equal(r.authorization,false);assert.equal(r.actualWrite,false);
+ // A non-browser_mod ID is NOT automatically a verified physical fixture.
+ assert.ok(r.reviewBuckets.otherEntityIds>=1);
+});
 test('an incomplete full-domain inventory is denied, never treated as all lights',async()=>{
  const all=[e('one','off'),e('two','on')];
  for(const patch of [
@@ -60,6 +77,7 @@ test('all-light manual script has explicit operator guard, fixed HA search and n
  assert.match(src,/maxEntities:500/);
  assert.match(src,/name!=='ha_search'/);
  assert.match(src,/ALL_LIGHTS_WRITE_AUTHORIZATION=false/);
+ assert.match(src,/ALL_LIGHTS_REVIEW_BUCKETS=/);
  assert.match(src,/ALL_LIGHTS_INVENTORY=unverified_or_incomplete/);
  assert.doesNotMatch(src,/ha_call_service|turn_on|turn_off|new Telegraf|bot\.launch|setInterval|createWriteStream/);
 });

@@ -41,6 +41,8 @@ if(process.argv.slice(2).join(' ')!=='--readonly --operator-approved'){
    console.log('ALL_LIGHTS_COUNTS='+JSON.stringify({
     on:report.on.length,off:report.off.length,unknown:report.unknown.length
    }));
+   // Naming-pattern buckets for review; never a proof of physical identity.
+   console.log('ALL_LIGHTS_REVIEW_BUCKETS='+JSON.stringify(report.reviewBuckets));
    for(const id of report.on)console.log('LIGHT_ENTITY '+id+' on');
    for(const id of report.off)console.log('LIGHT_ENTITY '+id+' off');
    for(const item of report.unknownDetails){

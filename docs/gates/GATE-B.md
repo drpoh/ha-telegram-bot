@@ -15,10 +15,30 @@
 
 - DEV offline тесты и опциональный `/newlight` код проверяют правила, **не** работающий production.
 - Ручной Pi `v3-new-lights-readonly-preflight.mjs` прочитал 19 кандидатов; доступность девяти `light.*` не устанавливает их физическую идентичность.
+- Ручное чтение всех доступных для HA-MCP поиска `light.*` (включая скрытые) вернуло 38 ID: **5 ON / 16 OFF / 17 UNKNOWN**. Три UNKNOWN имеют `light.browser_mod_`-префикс (потенциальные UI-сущности), 14 других UNKNOWN остаются неразобранными. Это проверенная полнота одного ответа `ha_search`, **не** доказательство, что все 38 — физические светильники или что disabled entities входят в state inventory. Для физических разрешений ничего не изменилось.
 - Существовавший узкий пилот `light.tambur_svet_l1` **не** разрешает остальные контуры.
 - Начальная проверка: ручной Pi HA-MCP read-only для `light.kukhnia_svet` завершился `complete`, `state=off`, `physical_identity=unverified` (владелец, 2026-10-13). Это не выполнение Gate B и не допуск к записи.
 - Для следующего шага используйте **HA Settings → Devices & services → Entities**: найдите exact `light.kukhnia_svet`, проверьте **integration/platform**, **связанное Device**, **Area** (отдельно для entity и device), а также нет ли группы, виртуального alias или дублирующей сущности. Наличие только friendly name недостаточно. Если linked device отсутствует, не придумывать device_id.
 - Физическую идентичность подтверждать отдельно по известной схеме/маркировке/наблюдению владельца; **без ручного ON/OFF в рамках этой проверки**. Не переносить данные registry напрямую в исполняемый allowlist.
+
+### Быстрая проверка связи Entity → Device → Area без новых API-ключей
+
+Через **Home Assistant → Инструменты разработчика → Шаблон (Template)**, вручную, только чтение; использовать стандартные функции HA, не создавать интеграции и не менять сущности:
+
+```jinja
+{% set ids = [
+  'light.kukhnia_svet',
+  'light.kukhnia_led_niz_l1_2',
+  'light.kukhnia_led_niz_l2_2',
+  'light.kukhnia_svet_3',
+  'light.podsvetka_kukhnia'
+] %}
+{% for id in ids %}
+{{ id }} | state={{ states(id) }} | area={{ area_name(id) or 'none' }} | device={{ device_name(id) or 'none' }} | model={{ device_attr(id, 'model') or 'none' }}
+{% endfor %}
+```
+
+Это **только сведения HA** о присутствующих состояниях, area и связанном device. Отсутствие device/area и совпадающие friendly names требуют ручного анализа в **Settings → Devices & services → Entities/Devices**, включая название интеграции. Disabled entries могут не попасть в state inventory, а group/template entity может не иметь физического device. Уровень Gate B не повышать только по выводу шаблона; не раскрывать serial/identifiers и не отправлять полный registry в публичный GitHub.
 
 ## Продолжение
 

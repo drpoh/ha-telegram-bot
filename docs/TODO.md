@@ -2,11 +2,11 @@
 
 > **Актуальное состояние и проверенные версии:** [CURRENT-STATE.md](CURRENT-STATE.md). Этот файл содержит только **ещё не завершённые** работы. Результаты пройденных тестов и закрытые пункты — [WORKLOG.md](WORKLOG.md) и [архив TODO до этапа 1](archive/TODO-snapshot-before-phase1-2026-10-13.md).
 >
-> Приоритеты обновлены 2026-10-13. Состояние production не подтверждено новым live systemd чтением.
+> Приоритеты обновлены 2026-10-13. Systemd read-only: V3 `active`, ExecStart в `rs-home-ai-v3-release-9dd5964`; V2 `active`. Это не доказательство SHA содержимого, Telegram API или recovery.
 
 ## P0 — полезное безопасное управление светом
 
-- [ ] **Runtime provenance:** проверить read-only фактический `systemctl --user show rs-home-ai-v3.service -p ExecStart`; отдельно `systemctl is-active ha-telegram-bot.service`, `systemctl --user is-active rs-home-ai-v3.service`. Сохранить результат без токенов; не менять работающие unit.
+- [ ] **Runtime provenance — остаток:** V3 `ActiveState=active`, `ExecStart=.../rs-home-ai-v3-release-9dd5964/src/pilot/telegram-readonly.mjs`, V2 `active` подтверждены. Проверить **фактический SHA содержимого** pinned V3 release и V2 ExecStart, read-only rollback/recovery evidence и отсутствие второго poller; не менять unit.
 - [ ] **Identity:** привязать `light.kukhnia_svet` к exact HA entity, устройству, области и физическому контуру; проверить риск дублей/виртуальных ламп.
 - [ ] После успешного read-only `light.kukhnia_svet=off` (снимок 2026-10-13) проверить через **HA UI entity registry** точные `entity_id`, integration/platform, связанное device и area; затем сопоставить с независимым подтверждением физического контура без переключения. При отсутствующей device/area ссылке оставить блокировку. Telegram `/lightcheck` остаётся source-only до отдельного release.
 - [ ] После подтверждения первой физической идентичности — аналогично остальные **восемь** ранее отвечавших сущностей; каждую проверять независимо. **Десять unavailable** оставить вне физического управления до read-only анализа registry/integration.

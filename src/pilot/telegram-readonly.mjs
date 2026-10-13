@@ -13,7 +13,7 @@ import {summarizeSauna} from '../home/sauna-status.mjs';
 import {summarizeTambourLight} from '../home/tambour-light-status.mjs';
 import {summarizeLightOverview} from '../home/light-overview.mjs';
 import {createReviewedLightReadonlyReader} from '../home/reviewed-light-readonly-client.mjs';
-import {routeV3ReadonlyQuestion} from './v3-readonly-question-router.mjs';
+import {createV3ReadonlyFollowupRouter} from './v3-readonly-followup-router.mjs';
 const base='/home/drpoh/.config/rs-home-ai-v3/';
 const token=readFileSync(base+'telegram-token','utf8').trim();
 const userId=Number(readFileSync(base+'allowed-user-id','utf8').trim());
@@ -40,6 +40,7 @@ const pilot=createKitchenDryrunConsent({
  dispatch:({action})=>boundary.dispatch({action})
 });
 const actor=ctx=>({userId:ctx.from.id,chatId:ctx.chat.id});
+const readonlyFollowups=createV3ReadonlyFollowupRouter();
 const allow=ctx=>ctx.chat?.type==='private'&&ctx.chat?.id===userId&&ctx.from?.id===userId;
 bot.start(ctx=>allow(ctx)?ctx.reply('RS Home AI v3: пилот тамбура. Команды только для light.tambur_svet_l1 и только после /confirm.'):undefined);
 bot.command('status',ctx=>allow(ctx)?ctx.reply(storage.ready?'RS Home AI v3: защищённый журнал доступен. Для реальной команды требуется /confirm и проверка разрешений.':'RS Home AI v3: исполнение заблокировано — защищённый журнал не готов. HA не затронут.'):undefined);
@@ -110,7 +111,8 @@ bot.on('message',async ctx=>{
  if(!allow(ctx))return;
  // Telegram stickers/photos/non-text payloads must never reach a physical request path.
  if(typeof ctx.message?.text!=='string'||!ctx.message.text.trim())return;
- const routed=await routeV3ReadonlyQuestion({
+ const routed=await readonlyFollowups.route({
+  actor:actor(ctx),
   text:ctx.message?.text,
   readState:id=>saunaRead('ha_get_state',{entity_id:id}),
   readKitchenState:id=>newLightRead(id)

@@ -1,4 +1,14 @@
-# RS Home AI V3 — current state (2026-10-12)
+# RS Home AI V3 — current state (2026-10-13)
+
+## Verified owner checkpoint — 2026-10-13 (supersedes older operational summaries)
+
+- **Canonical Pi DEV:** clean fast-forward `163fc89` → `6f6e694` (`feature/v3-home-agent`); Node.js `v22.23.3`; `npm ci --ignore-scripts` in DEV; `npm test`: **198 isolated test files, 726 passed assertions, 0 failed files**; `git status --short` empty.
+- **Live HA-MCP read-only:** `SAUNA_STATUS=complete`, temperature **28 °C**, ready threshold **85 °C**; `LIGHTS_STATUS=complete` (four selected entities: **1 ON, 3 OFF**); `TAMBOUR_STATUS=complete`, `light.tambur_svet_l1=on`; `READONLY_PREFLIGHT=PASS`. Corridor `light.koridor`, `light.koridor_1_etazh`, `light.koridor_spot` were OFF. These are dated readings, not live state cache.
+- **Manual new-light read:** `NEW_LIGHT_REVIEW=partial`, `NEW_LIGHT_COUNTS={"on":2,"off":7,"unknown":10}`; exact ten returned `unavailable`. ON: `light.kukhnia_led_niz_l1`, `light.kukhnia_svet`; seven other responsive targets were OFF. Nine readable **entity IDs**, not nine physically identified/approved circuits. No `ha_call_service`, no widened authority, no `light.browser_mod*`.
+- **Private diagnostics:** one manual outbound HTTPS report reached private GitHub Issue `drpoh/rs-home-ai-private-reports#1` comment `6141220575`. No recurring sender; ChatGPT GitHub connector returns 404 for this private repository and cannot verify its content. The public `main` reporter bug was fixed in PR #102. Do not copy private diagnostics into public GitHub Issues.
+- **Runtime caution:** Production V3, V2, Gate D and Home Assistant were not deployed or restarted in this phase. Historical documentation conflicts over the precise active V3 immutable release (`c6a9812` vs `9dd5964`); verify systemd `ExecStart` read-only before any release statement or deployment. Tests and operator output are not evidence of production promotion.
+- **Next blocker:** exact HA device/area and physical fixture identity for `light.kukhnia_svet`, then separately authorized real actuation gate. Do not request a physical switch test before the operator explicitly approves.
+- **Audit:** [Documentation inventory and consistency review](DOCUMENTATION-AUDIT-2026-10-13.md).
 
 **This is the short operational entry point.** Read this first, then [AGENTS](../AGENTS.md), [PROJECT-MAP](PROJECT-MAP.md), [TODO](TODO.md) and [HISTORY-STAGE-AUDIT](V3-HISTORY-STAGE-AUDIT-2026-10-12.md). `CHAT-HANDOFF.md` and `WORKLOG.md` are chronological evidence, not a substitute for current status. Earlier paragraphs can be superseded; prefer the newest verified checkpoint. Do not delete history to shorten navigation.
 

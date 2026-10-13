@@ -1,5 +1,8 @@
 # Operator Pi observation — 2026-10-12, 19 new lights
 
+> **Newer owner observation (2026-10-13):** Pi DEV `6f6e694` manual read-only HA-MCP survey reported `NEW_LIGHT_REVIEW=partial`, ON=2 (`light.kukhnia_led_niz_l1`, `light.kukhnia_svet`), OFF=7, UNKNOWN=10, each unavailable. This supersedes the **states**, not the historical date or engineering decisions below. No physical fixture mapping or authorization was established. See [current state](CURRENT-STATE.md).
+
+
 Owner ran DEV fast-forward to `dd901a8` and explicit manual `v3-new-lights-readonly-preflight.mjs --readonly --operator-approved`. Script output: `NEW_LIGHT_REVIEW=partial`, `on=1`, `off=8`, `unknown=10`. These are point-in-time HA-MCP reads; no evidence of authorized physical writes, live bot expansion or physical circuit identity.
 
 Observed **ON**: `light.vykliuchatel_z_gostinaia_l3`.

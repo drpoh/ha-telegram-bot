@@ -1,5 +1,8 @@
 # AGENTS.md — Home Assistant AI Agent
 
+> **2026-10-13 operations checkpoint:** For current observed state read [docs/CURRENT-STATE.md](docs/CURRENT-STATE.md) and [docs/DOCUMENTATION-AUDIT-2026-10-13.md](docs/DOCUMENTATION-AUDIT-2026-10-13.md). DEV `6f6e694` passed 198 test files / 726 assertions on Pi; HA-MCP read-only passed; 19 new light candidates produced 9 responsive / 10 unavailable. **Physical device identities and active production release must be independently verified**; these observations confer no write or deployment authorization.
+
+
 ## Mission
 Build a reliable conversational Home Assistant agent that can remember useful context, analyze Home Assistant history, and autonomously perform explicitly permitted non-critical actions.
 

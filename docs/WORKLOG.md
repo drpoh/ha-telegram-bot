@@ -1,5 +1,13 @@
 # WORKLOG — Development checkpoint journal
 
+## 2026-10-13 — owner-verified Pi source, HA reads and documentation review
+
+Owner reports clean DEV ff-only from `163fc89` to `6f6e694` on `feature/v3-home-agent`, Node `22.23.3`, isolated suite **198 files, 726 assertions, zero failed**, no Git changes. Live manual read-only sauna 28 °C and four scoped lights (one ON, three OFF) passed. Subsequent operator-only 19 light candidate inspection: 2 ON, 7 OFF, 10 unavailable (`partial` expected), no HA writes and no new physical fixture identity approval. Outbound HTTPS reporter in private GitHub Issue #1 returned `REPORT=sent`; public `main` PR #102 fixed a strict parser that rejected V2/V3 numbered diagnostic keys. The connector to private reports still returns 404; do not claim the assistant independently read the posted payload.
+
+Reviewed inventory of **71 Markdown files**; updated operative entrypoints rather than rewriting dated historical evidence. Full disposition and unresolved runtime release SHA contradiction: [documentation audit](DOCUMENTATION-AUDIT-2026-10-13.md). Documentation-only commit; **no Pi DEV sync yet for this documentation change**, no deployment, no production/HA alterations.
+
+
+
 ## 2026-10-09 — project and file review
 
 See `docs/REVIEW-2026-10-09.md` for the reviewed file inventory, operational evidence, current gate boundaries and next priority tasks. Earlier counters/checkpoints below are historical, not present-day production acceptance. General Gate B and voice Gate E remain open; Gate D reboot and Telegram receipt passed but real-alert and disaster-recovery acceptance remains incomplete.

@@ -1,5 +1,8 @@
 # RS Home AI — structure and ownership index
 
+> **2026-10-13 note:** 71 Markdown files were inventoried. This is a logical code/document grouping, not the current rollout status; consult [CURRENT-STATE](CURRENT-STATE.md) and [audit](DOCUMENTATION-AUDIT-2026-10-13.md). Dated module counts below remain historical.
+
+
 Reviewed 2026-10-11. This is a navigation aid, **not** permission to rename, delete or deploy. Start with [PROJECT-MAP](PROJECT-MAP.md), [TODO](TODO.md), [CHAT-HANDOFF](CHAT-HANDOFF.md) and [AGENTS](../AGENTS.md). For the evidence behind safe cleanup, see [PROJECT-AUDIT](PROJECT-AUDIT-2026-10-11.md).
 
 ## Code grouped by responsibility (logical grouping; paths remain unchanged)

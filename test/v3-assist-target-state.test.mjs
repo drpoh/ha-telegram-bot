@@ -1,0 +1,11 @@
+import test from 'node:test';import assert from 'node:assert/strict';import{inspectAssistTargetState}from '../src/decision/v3-assist-target-state.mjs';
+const entityId='light.fixture';
+const entity={success:true,entity_id:entityId,entity_entry:{entity_id:entityId,device_id:'dev1',unique_id:'u1',enabled:true,disabled_by:null,hidden:false,hidden_by:null,area_id:null}};
+const device={success:true,device:{device_id:'dev1',area_id:'sauna',disabled_by:null}};
+const state={structuredContent:{success:true,data:{entity_id:entityId,state:'off'}}};
+const create=(patch={})=>{let calls=[];return {calls,run:()=>inspectAssistTargetState({entityId,expectedAreaId:'sauna',readEntity:async()=>{calls.push('entity');return entity;},readDevice:async()=>{calls.push('device');return device;},readState:async()=>{calls.push('state');return state;},...patch})}};
+test('target status uses entity->device->state and never grants authority',async()=>{const c=create();const r=await c.run();assert.equal(r.status,'observed');assert.equal(r.state,'off');assert.equal(r.authorization,false);assert.deepEqual(c.calls,['entity','device','state']);});
+test('wrong room blocks state request',async()=>{const c=create({expectedAreaId:'kitchen'});assert.equal((await c.run()).status,'denied');assert.deepEqual(c.calls,['entity','device']);});
+test('mismatched state is denied',async()=>assert.equal((await create({readState:async()=>({structuredContent:{data:{entity_id:'light.other',state:'on'}}})}).run()).status,'denied'));
+test('unknown state and read failures deny',async()=>{assert.equal((await create({readState:async()=>({structuredContent:{data:{entity_id:entityId,state:'unavailable'}}})}).run()).status,'denied');assert.equal((await create({readDevice:async()=>{throw Error('offline')}}).run()).status,'denied');});
+test('read contract rejects write-capable target names',async()=>assert.equal((await create({entityId:'switch.lock'}).run()).status,'denied'));

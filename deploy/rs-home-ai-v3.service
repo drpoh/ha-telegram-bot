@@ -1,0 +1,22 @@
+# HISTORICAL EXAMPLE — DO NOT INSTALL AS-IS.
+# Paths and kitchen label are outdated. Current deployment uses an immutable release artifact.
+# See docs/PROJECT-AUDIT-2026-10-11.md and docs/PROJECT-MAP.md.
+[Unit]
+Description=RS Home AI v3 isolated kitchen Telegram pilot
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+[Service]
+Type=simple
+WorkingDirectory=/home/drpoh/rs-home-ai-v3
+ExecStart=/usr/bin/node /home/drpoh/rs-home-ai-v3/src/pilot/telegram-readonly.mjs
+Restart=on-failure
+RestartSec=8
+TimeoutStopSec=20
+UMask=0077
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target

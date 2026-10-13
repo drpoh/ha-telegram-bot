@@ -108,6 +108,8 @@ bot.command('sauna',async ctx=>{
 });
 bot.on('message',async ctx=>{
  if(!allow(ctx))return;
+ // Telegram stickers/photos/non-text payloads must never reach a physical request path.
+ if(typeof ctx.message?.text!=='string'||!ctx.message.text.trim())return;
  const routed=await routeV3ReadonlyQuestion({
   text:ctx.message?.text,
   readState:id=>saunaRead('ha_get_state',{entity_id:id}),

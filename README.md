@@ -80,6 +80,8 @@ Tests:
 
     npm test
 
+In an interactive terminal, `npm test` now shows two live progress bars: `syntax` and `isolated`, with completed/total files, percent, failures and elapsed time. In CI or piped logs it prints sparse `TEST_PROGRESS` checkpoints without terminal control codes, preserving the final `Isolated test files: ...` line. To disable intermediate progress use `RS_TEST_PROGRESS=off npm test`; to force plain checkpoints locally use `RS_TEST_PROGRESS=plain npm test`. There are no new npm dependencies, and neither command needs live HA credentials.
+
 ## Security
 
 Store all credentials in `.env`.

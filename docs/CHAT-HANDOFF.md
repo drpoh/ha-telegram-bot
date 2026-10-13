@@ -2,6 +2,18 @@
 
 # RS Home AI V3 — new-chat handoff
 
+## Verified owner checkpoint — 2026-10-13 (supersedes older operational summaries)
+
+- **Canonical Pi DEV:** clean fast-forward `163fc89` → `6f6e694` (`feature/v3-home-agent`); Node.js `v22.23.3`; `npm ci --ignore-scripts` in DEV; `npm test`: **198 isolated test files, 726 passed assertions, 0 failed files**; `git status --short` empty.
+- **Live HA-MCP read-only:** `SAUNA_STATUS=complete`, temperature **28 °C**, ready threshold **85 °C**; `LIGHTS_STATUS=complete` (four selected entities: **1 ON, 3 OFF**); `TAMBOUR_STATUS=complete`, `light.tambur_svet_l1=on`; `READONLY_PREFLIGHT=PASS`. Corridor `light.koridor`, `light.koridor_1_etazh`, `light.koridor_spot` were OFF. These are dated readings, not live state cache.
+- **Manual new-light read:** `NEW_LIGHT_REVIEW=partial`, `NEW_LIGHT_COUNTS={"on":2,"off":7,"unknown":10}`; exact ten returned `unavailable`. ON: `light.kukhnia_led_niz_l1`, `light.kukhnia_svet`; seven other responsive targets were OFF. Nine readable **entity IDs**, not nine physically identified/approved circuits. No `ha_call_service`, no widened authority, no `light.browser_mod*`.
+- **Private diagnostics:** one manual outbound HTTPS report reached private GitHub Issue `drpoh/rs-home-ai-private-reports#1` comment `6141220575`. No recurring sender; ChatGPT GitHub connector returns 404 for this private repository and cannot verify its content. The public `main` reporter bug was fixed in PR #102. Do not copy private diagnostics into public GitHub Issues.
+- **Runtime caution:** Production V3, V2, Gate D and Home Assistant were not deployed or restarted in this phase. Historical documentation conflicts over the precise active V3 immutable release (`c6a9812` vs `9dd5964`); verify systemd `ExecStart` read-only before any release statement or deployment. Tests and operator output are not evidence of production promotion.
+- **Next blocker:** exact HA device/area and physical fixture identity for `light.kukhnia_svet`, then separately authorized real actuation gate. Do not request a physical switch test before the operator explicitly approves.
+- **Audit:** [Documentation inventory and consistency review](DOCUMENTATION-AUDIT-2026-10-13.md).
+
+
+
 **Latest owner-confirmed offline stage acceptance (2026-10-12):** `rs-home-ai-dev-check.service` status `passed`, `stage=complete`, `source_sha=46ce492033fb6c830a37ef95ba6efdb3ed632470`, `exit_code=0`, recorded UTC 07:56:27; `last-stage.log`: `STAGE_PASS sha=46ce492033fb6c830a37ef95ba6efdb3ed632470 mode=offline_mock tests=identity,health,registry,deny`. Last V3 prod active at immutable `c6a9812`, not promoted. Next practical slice: read-only Russian light/sauna questions. Do not conflate offline stage mock with real HA acceptance.
 
 

@@ -24,11 +24,10 @@
 
 ## Непосредственный следующий шаг
 
-1. **Владелец подтвердил Pi 2026-10-13:** `npm test` **391 файлов синтаксиса / 212 тестовых файлов / 785 проверок / 0 ошибок**. Короткие индикаторы `S [########]` и `T [########]` работают в Termux в одной строке на каждый этап.
-2. **Gate D local runtime read-only PASS:** V2 PID `927`, V3 PID `3713`, оба действующих Node entrypoint совпадают, PID различаются; known entrypoint counts `V2=1, V3=1, unreadable=0`, duplicates=false. Token-level Telegram polling uniqueness **не доказана**.
-3. Ранее на Pi **Gate D source PASS** — 437/437 Git blobs + executable bits совпали с закреплённым V3 `9dd5964`. Оба rollback каталога присутствуют, но восстановление не выполнялось. Реальные natural-language HA-MCP чтения 4/4 complete; это не Telegram end-to-end.
-4. **Следующий один безопасный шаг:** использовать встроенный `npm ls --offline --omit=dev --all` и структурный file check по [Gate D](../gates/GATE-D.md) для активного V3 и старых rollback каталогов. Проверять только наличие/согласованность установленных пакетов, не запускать Telegram/HA и не копировать секреты. Затем сформировать отдельно согласуемый план Telegram end-to-end с сохранением текущих V2 и V3.
-5. **Gate B всё ещё OPEN:** `light.kukhnia_svet` Switch as X, физический контур не подтверждён; `light.svet_kukhni` и `light.sonoff_1000d78a79` удалены владельцем. Права на новые физические переключения не расширять.
+1. **Владелец подтвердил на Pi 2026-10-13:** `npm test` 391 syntax files / 212 test files / 785 assertions / 0 errors; однострочный Termux прогресс работает. Live HA-MCP natural Russian questions 4/4 complete. **Gate D source** — 437/437 Git blobs/exec bits pinned `9dd5964` PASS. **Gate D local runtime** — V2 MainPID 927, V3 3713, оба точные entrypoints, без известных локальных дубликатов.
+2. **Gate D dependency inventory (новый операторский вывод):** active `9dd5964` и основной резерв `c6a9812`: `RELEASE_STRUCTURE=PRESENT`, `DEPENDENCIES=PASS_STATIC` через `npm ls --offline`; исторический второй резерв `97343fa`: `RELEASE_STRUCTURE=UNVERIFIED`. Это НЕ повреждение исходного коммита: GitHub tree `97343fa81b1af0c73ee2f061ed65fe1939ea488a` содержит оба package-файла и V3 `src/pilot/telegram-readonly.mjs`. Локальный состав каталога пока не известен; ничего не удалять и не устанавливать.
+3. **Следующий минимальный диагностический шаг:** выполнить из [Gate D](../gates/GATE-D.md) один shell read-only осмотр `97343fa`, печатающий только тип/наличие известных файлов и факт соответствия префикса `RELEASE_COMMIT`, без содержимого/токенов. Установить точную причину `UNVERIFIED`. Затем owner может проверить **уже запущенный V3 Telegram** существующими read-only `/status` и `/sauna` в чате; новый poller не запускать, V2/V3 не перезапускать.
+4. **Release Gate D остаётся открыт:** статический `npm ls` не проверяет содержимое SDK, восстановление и Telegram polling по токену. Новый DEV Telegram не развернут. Любые новые физические write-capabilities, отдельный restore/release требуют explicit owner approval. Gate B `light.kukhnia_svet` физически не подтверждён.
 
 ## Правила завершения итерации
 

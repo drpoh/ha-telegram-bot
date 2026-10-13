@@ -146,6 +146,44 @@ done
 
 Только после этого можно подготовить отдельную операторскую процедуру Telegram end-to-end / однополлерного release с сохранением старых V2/V3 services. **Не запускать новый polling-клиент для проверки уникальности токена.** Gate D до такой процедуры остаётся OPEN.
 
+## Проверка статических зависимостей и старого backup (2026-10-13)
+
+Владелец выполнил штатную **read-only** проверку структуры и `npm ls --omit=dev --all --offline`:
+
+- **Активный** `9dd5964`: `RELEASE_STRUCTURE=PRESENT`, `DEPENDENCIES=PASS_STATIC`.
+- **Основной rollback** `c6a9812`: `RELEASE_STRUCTURE=PRESENT`, `DEPENDENCIES=PASS_STATIC`.
+- **Вторичный исторический rollback** `97343fa`: `RELEASE_STRUCTURE=UNVERIFIED`. Это агрегированный ответ составного `if`; точное условие ещё неизвестно и `npm ls` для него не запускался.
+
+Исторический GitHub commit `97343fa81b1af0c73ee2f061ed65fe1939ea488a` **содержит** `package.json`, `package-lock.json` и `src/pilot/telegram-readonly.mjs`. Наличие их в Git не доказывает наличие на Pi; прежняя папка `97343fa` ранее существовала. Не считать этот резерв пригодным к оперативному restore, пока не выявлен конкретный blocker. Основной `c6a9812` статически комплектен, но ещё не испытан как восстановление.
+
+**Следующий короткий read-only осмотр на Pi** (выводит только тип объекта и совпадение префикса SHA, без содержимого или токенов):
+
+```bash
+d=/home/drpoh/projects/rs-home-ai-v3-release-97343fa
+for x in . RELEASE_COMMIT package.json package-lock.json src/pilot/telegram-readonly.mjs node_modules; do
+  if [ "$x" = . ]; then p="$d"; else p="$d/$x"; fi
+  if [ -L "$p" ]; then state=SYMLINK
+  elif [ -d "$p" ]; then state=DIRECTORY
+  elif [ -f "$p" ]; then state=FILE
+  else state=MISSING; fi
+  printf '%s=%s\n' "$x" "$state"
+done
+if [ -f "$d/RELEASE_COMMIT" ] && [ ! -L "$d/RELEASE_COMMIT" ]; then
+  read -r sha < "$d/RELEASE_COMMIT"
+  if [[ "$sha" =~ ^97343fa[0-9a-f]{33}$ ]]; then
+    echo RELEASE_COMMIT_PREFIX=PASS
+  else
+    echo RELEASE_COMMIT_PREFIX=UNVERIFIED
+  fi
+else
+  echo RELEASE_COMMIT_PREFIX=UNVERIFIED
+fi
+```
+
+Не выполнять `npm ci`, `npm install`, `chmod`, перемещение или удаление старого каталога для «исправления» диагностики. `RELEASE_STRUCTURE=UNVERIFIED` может быть следствием отсутствующего marker/installed deps или symlink, а не порчи tracked source. Команды не выключают процесс, не запускают Telegram и не посылают HA-MCP запросов.
+
+**Следующий пользовательский Telegram acceptance без deployment:** в **уже работающем V3 боте**, с которым пользователь общался прежде, команды `/status` и `/sauna` есть в проверенном pinned исходнике `9dd5964`. Можно отдельно запросить эти два **read-only** ответа владельца. Не запускать второй экземпляр бота, не использовать `/confirm` или новые физические команды. Такой опыт подтверждает только текущий pinned V3 Telegram path, **не** будущие DEV natural-language kitchen возможности и **не** token-level uniqueness. Gate D остаётся OPEN до отдельно согласованного полного release/rollback review.
+
 ## Исторические источники
 
 [Операции](../V3-OPERATIONS.md) · [review 2026-10-09](../REVIEW-2026-10-09.md) · [план окружений](../ADR-DEV-STAGE-PROD.md) · [карта каталогов](../PROJECT-MAP.md).

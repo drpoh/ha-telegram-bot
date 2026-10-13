@@ -39,3 +39,6 @@
 - [ ] Развивать публичный QUICKSTART/CONFIGURATION/EXAMPLES только после стабилизации реального MVP; Docker оставить опциональным.
 
 **Исторические TODO не являются автоматически открытыми задачами.** Приоритет этой версии — работающий, безопасный помощник, а не бесконечная перестройка архитектуры.
+
+- [ ] PR #134: выполнить изолированные offline `node --check` / `node --test` на точном SHA `cdcfdcdaeeec408fa89001e578639b9144b1a7e1` в Node 20 на Pi ARMv7; отдельная regression-проверка существующего `/confirm`/authorization без Telegram poller и HA writes. Предыдущий GitHub source-only audit от 2026-10-13 подтвердил 6 файлов / 186 additions / 0 deletions, но **0 workflow runs и 0 statuses**. Desktop Commander сейчас блокирует выполнение из-за лимита; не считать проверку состоявшейся.
+- [ ] Запустить/получить CI именно кандидата PR #134 и проверить SHA, затем подготовить immutable candidate, контроль целостности, однополлерный cutover и rollback drill; никаких deployment/systemd изменений без отдельного approval владельца.

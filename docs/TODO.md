@@ -8,7 +8,7 @@
 
 - [ ] **Runtime provenance:** проверить read-only фактический `systemctl --user show rs-home-ai-v3.service -p ExecStart`; отдельно `systemctl is-active ha-telegram-bot.service`, `systemctl --user is-active rs-home-ai-v3.service`. Сохранить результат без токенов; не менять работающие unit.
 - [ ] **Identity:** привязать `light.kukhnia_svet` к exact HA entity, устройству, области и физическому контуру; проверить риск дублей/виртуальных ламп.
-- [ ] После синхронизации DEV проверить `/lightcheck light.kukhnia_svet` исключительно как read-only диагностику состояния HA; не считать её физической идентификацией.
+- [ ] После синхронизации DEV проверить через **ручной Pi CLI** `node scripts/manual/v3-single-light-readonly-preflight.mjs --readonly --operator-approved light.kukhnia_svet` только состояние сущности HA. Telegram `/lightcheck` остаётся source-only до отдельного release; второй poller не запускать. Это не физическая идентификация.
 - [ ] После подтверждения первой физической идентичности — аналогично остальные **восемь** ранее отвечавших сущностей; каждую проверять независимо. **Десять unavailable** оставить вне физического управления до read-only анализа registry/integration.
 - [ ] Подготовить отдельно утверждаемую минимальную физическую capability/долговременную запись подтверждения для одного exact ID с rollback; сохранить старое поведение `light.tambur_svet_l1`. Source-only `/newlight` **не даёт разрешения** на реальный сервисный вызов.
 - [ ] Только после explicit owner approval и release gate: один контролируемый реальный тест ON/verification/OFF/verification через Telegram `/confirm`, отказные сценарии и возможность отката. Никаких массовых комнатных переключений или автоматического разрешения из LLM.

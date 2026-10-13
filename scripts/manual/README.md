@@ -11,3 +11,13 @@ These scripts invoke the live Home Assistant agent and may issue `ha_call_servic
 **Do not run as part of `npm test`, CI, or unattended background jobs.** Run only after explicitly confirming the affected devices, a backup/restore plan, safe conditions, and an authorized operator's approval.
 
 Both scripts now enforce two independent opt-in conditions: an explicit `HA_ALLOW_LIVE_SMOKE` environment value and `--live-ha-approved` CLI flag. These checks are necessary but not sufficient to guarantee safe actuation. These files were preserved from previously unfinished work, not validated for safe actuation in this cleanup.
+
+## Точечная проверка нового света — только чтение
+
+После отдельной безопасной синхронизации DEV на Pi оператор может вручную вызвать:
+
+```sh
+node scripts/manual/v3-single-light-readonly-preflight.mjs --readonly --operator-approved light.kukhnia_svet
+```
+
+Команда делает **один** запрос HA-MCP `ha_get_state` только для ID из заранее зафиксированного списка 19 кандидатов. Не запускает Telegram poller, не меняет свет и не доказывает физическую идентичность, device/area. `unknown`/`unavailable` дают неполный результат и не равны OFF. Не запускать из CI или по расписанию.

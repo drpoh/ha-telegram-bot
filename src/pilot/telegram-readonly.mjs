@@ -9,6 +9,7 @@ import {summarizeSauna} from '../home/sauna-status.mjs';
 import {createNineLightTelegramConsent} from '../home/nine-light-telegram-consent.mjs';
 import {createNewLightDispatch} from '../home/new-light-physical-dispatch.mjs';
 import {RESPONDING_NEW_LIGHT_IDS} from '../home/responding-new-light-batch.mjs';
+import {inspectSingleNewLight} from '../home/single-new-light-status.mjs';
 import {classifySaunaQuestionMode} from '../home/sauna-question-mode.mjs';
 import {summarizeTambourLight} from '../home/tambour-light-status.mjs';
 import {classifyTambourQuestionMode} from '../home/tambour-question-mode.mjs';
@@ -65,6 +66,17 @@ bot.command('newlights',ctx=>{
  return ctx.reply('💡 Девять отзывавшихся светильников для проверки:\n'+
   RESPONDING_NEW_LIGHT_IDS.map(id=>'• '+id).join('\n')+
   '\n\nСписок основан на предыдущем чтении HA; текущее состояние не проверено. Новые физические команды в этой версии НЕ включены.');
+});
+// Exact-ID, read-only diagnostic: no admission, no /confirm, no service calls.
+bot.command('lightcheck',async ctx=>{
+ if(!allow(ctx))return;
+ const parts=(ctx.message?.text||'').trim().split(/\s+/);
+ if(parts.length!==2)return ctx.reply('Формат: /lightcheck light.kukhnia_svet');
+ const result=await inspectSingleNewLight({
+  entityId:parts[1],
+  readState:id=>saunaRead('ha_get_state',{entity_id:id})
+ });
+ return ctx.reply(result.text);
 });
 bot.command('newlight',ctx=>{
  if(!allow(ctx))return;

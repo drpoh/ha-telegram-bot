@@ -84,3 +84,59 @@ Never commit API keys, Telegram tokens or private MCP URLs.
 MIT
 
 Reference-only Raspberry Pi resource and repository snapshot: [docs/raspberry-pi-reference-2026-10-08.md](docs/raspberry-pi-reference-2026-10-08.md). This is informational and does not authorize deployment.
+
+
+## Optional Docker deployment (not enabled on the Pi)
+
+The Raspberry Pi currently uses systemd and its own persistent data. Docker is an
+**alternative**, not a second bot to start alongside the running Telegram poller.
+
+```sh
+cp .env.example .env
+# Add Telegram, Gemini and HA-MCP credentials locally. Never commit .env.
+docker compose config
+docker compose build
+# Stop the old Telegram poller using a separately reviewed migration plan BEFORE:
+# docker compose up -d
+```
+
+Compose binds HTTP to **127.0.0.1:3000**, not to all network interfaces.
+HA-MCP must be reachable from the container: `localhost` in an MCP URL
+refers to the container, not to the Raspberry Pi host. Explicitly configure a
+reachable, authorized MCP URL and protect it from untrusted networks. State in
+`data/` and local files is not automatically persistent across container
+recreation; add explicitly approved volumes before a live migration. No
+Docker rollout is approved by committing these files.
+
+## Minimal configuration
+
+See [`.env.example`](.env.example), with `TELEGRAM_BOT_TOKEN`,
+`TELEGRAM_ALLOWED_USER_ID`, `GEMINI_API_KEY`, `MCP_URL`, and
+`HTTP_PORT=3000`. Use the already-authorized Home Assistant MCP
+server/endpoint; do not expose HA-MCP publicly.
+
+## Example interaction (illustrative, not a live screenshot)
+
+```text
+You: Какая температура в сауне?
+Bot: Температура сауны: … °C.
+
+You: Включи свет в тамбуре
+Bot: Цель: light.tambur_svet_l1. Для выполнения отправьте /confirm.
+You: /confirm
+Bot: Home Assistant подтвердил новое состояние. (only if verified)
+```
+
+Screenshot illustrations should only be added once privately captured,
+reviewed and scrubbed of Telegram IDs, tokens, home addresses, and HA URLs.
+
+## Architecture
+
+The current entrypoint is `src/index.mjs`, not one 640-line
+`bot.mjs`. Telegram lives in `src/telegram/`, AI in `src/ai/`, MCP
+in `src/mcp/`, memory in `src/memory/`, queueing in
+`src/utils/queue.mjs`, and HTTP in `src/api/`. Prefer incremental
+refactoring to duplicating these modules. The v3 pilot uses a separately
+pinned release with strictly bounded device permissions.
+
+See [live-light acceptance and modernization tasks](docs/TODO.md).

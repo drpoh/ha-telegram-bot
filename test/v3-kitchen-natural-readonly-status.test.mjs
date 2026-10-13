@@ -35,7 +35,7 @@ test('missing, mismatched, unavailable, and MCP failure remain unknown rather th
  assert.deepEqual(r.unknownReasons.map(item=>item.reason),[
   'unavailable','identity_mismatch','read_error','mcp_error'
  ]);
- assert.match(r.text,/light\.kukhnia_led_niz_l1_2 \(недоступна в HA\)/);
+ assert.match(r.text,/light\.kukhnia_led_niz_l1 \(недоступна в HA\)/);
  assert.match(r.text,/ID ответа не совпал/);
  assert.match(r.text,/ошибка MCP/);
  assert.doesNotMatch(r.text,/secret_token/);

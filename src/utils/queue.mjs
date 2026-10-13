@@ -1,6 +1,7 @@
 import PQueue from "p-queue";
 import { askHomeAssistant } from "../ai/agent.mjs";
 import { callHA } from "../mcp/executor.mjs";
+import { answerV2ReadonlyFastPath } from "../telegram/readonly-fast-path.mjs";
 import {
   cancelPendingConfirmation,
   consumePendingConfirmation,
@@ -29,7 +30,16 @@ function enqueue(label, handler) {
 }
 
 export function queueHomeAssistantRequest(userText, options = {}) {
-  return enqueue(userText, () => askHomeAssistant(userText, options));
+  // Keep fast reads on the SAME single-worker queue as existing AI requests
+  // and confirmation handling; they must never race with action execution.
+  const {readonlyFastPath=false,...agentOptions}=options;
+  return enqueue(userText, async () => {
+    if(readonlyFastPath===true){
+      const fast=await answerV2ReadonlyFastPath({text:userText});
+      if(fast.handled===true)return fast.text;
+    }
+    return askHomeAssistant(userText, agentOptions);
+  });
 }
 
 export function queueConfirmedAction(

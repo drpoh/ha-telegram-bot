@@ -9,14 +9,17 @@ import {
 import { getAIStatus } from "../ai/router.mjs";
 import {
   clearConversationHistory,
+  getConversationHistory,
 } from "../memory/conversation.mjs";
 
 import {
   clearDeviceMemory,
+  getDeviceMemory,
 } from "../memory/devices.mjs";
 
 import {
   clearControlledMemory,
+  getLastControlled,
 } from "../memory/controlled.mjs";
 import { clearPendingConfirmations } from "../decision/pending-confirmation.mjs";
 import { getDecisionAudit, getDecisionAuditSummary } from "../decision/audit.mjs";
@@ -46,6 +49,7 @@ export function startTelegram() {
       "/status — состояние бота\n" +
       "/lights_on — обзор освещения Home Assistant\n" +
       "/model — AI-конфигурация\n" +
+      "/memory — краткая сводка памяти\n" +
       "/clear — очистить память"
     );
   });
@@ -163,6 +167,23 @@ bot.command("status", async (ctx) => {
       `Last provider: ${ai.provider || "none"}\n` +
       `Last model: ${ai.model || "none"}\n` +
       `Last used: ${lastUsed}`
+    );
+  });
+
+  bot.command("memory", async (ctx) => {
+    if (!isAllowed(ctx) || ctx.chat?.type !== "private" ||
+        ctx.chat?.id !== ctx.from?.id) return;
+
+    const messages = getConversationHistory();
+    const found = getDeviceMemory();
+    const controlled = getLastControlled();
+    await ctx.reply(
+      "🧠 Память ассистента\\n\\n" +
+      `💬 Сообщений в истории: ${messages.length}\\n` +
+      `🔎 Устройств в последнем поиске: ${found.entities.length}\\n` +
+      `💡 Недавно управляемых устройств: ${controlled.entities.length}\\n\\n` +
+      "Полные сообщения и секреты не выводятся.\\n" +
+      "/clear — очистить память."
     );
   });
 

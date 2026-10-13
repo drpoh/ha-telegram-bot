@@ -10,6 +10,7 @@ import {createNineLightTelegramConsent} from '../home/nine-light-telegram-consen
 import {createNewLightDispatch} from '../home/new-light-physical-dispatch.mjs';
 import {RESPONDING_NEW_LIGHT_IDS} from '../home/responding-new-light-batch.mjs';
 import {inspectSingleNewLight} from '../home/single-new-light-status.mjs';
+import {summarizeReviewedKitchenLights} from '../home/kitchen-light-readonly-status.mjs';
 import {createReviewedLightReadonlyReader} from '../home/reviewed-light-readonly-client.mjs';
 import {classifySaunaQuestionMode} from '../home/sauna-question-mode.mjs';
 import {summarizeTambourLight} from '../home/tambour-light-status.mjs';
@@ -114,7 +115,8 @@ bot.on('message',ctx=>{
  if(intent==='sauna')return summarizeSauna({readState:id=>saunaRead('ha_get_state',{entity_id:id}),mode:classifySaunaQuestionMode(ctx.message?.text)}).then(result=>ctx.reply(result.text));
  if(intent==='lights')return summarizeLightOverview({readState:id=>saunaRead('ha_get_state',{entity_id:id}),mode:classifyLightQuestionMode(ctx.message?.text)}).then(result=>ctx.reply(result.text));
  if(intent==='tambour')return summarizeTambourLight({readState:id=>saunaRead('ha_get_state',{entity_id:id}),mode:classifyTambourQuestionMode(ctx.message?.text)}).then(result=>ctx.reply(result.text));
- if(intent==='unsupported_question')return ctx.reply('Этот вопрос пока не поддерживается. Доступны температура сауны, свет в тамбуре и обзор выбранных светильников.');
+ if(intent==='kitchen_review')return summarizeReviewedKitchenLights({readState:id=>newLightRead(id)}).then(result=>ctx.reply(result.text));
+ if(intent==='unsupported_question')return ctx.reply('Этот вопрос пока не поддерживается. Доступны температура сауны, свет в тамбуре, обзор выбранных светильников и чтение выбранных сущностей кухни.');
  pendingNewLights.delete(ctx.from.id);
  newLightConsent.cancel(actor(ctx));
  const r=pilot.request(actor(ctx),ctx.message?.text);

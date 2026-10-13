@@ -294,6 +294,9 @@ bot.command("status", async (ctx) => {
       const startedAt = Date.now();
       const answer = await queueHomeAssistantRequest(text, {
         actor,
+        // Local deterministic answers only in the owner's private chat.
+        // The pre-existing V2 agent/policy handles every other message.
+        readonlyFastPath: ctx.chat?.type === "private" && ctx.chat?.id === ctx.from?.id,
       });
 
       if (debugModelChats.has(ctx.from.id)) {

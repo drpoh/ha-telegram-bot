@@ -18,14 +18,14 @@
 
 - Последние **подтверждённые пользователем** результаты Pi и реального HA-MCP см. в [CURRENT-STATE](../CURRENT-STATE.md), не переписывать здесь числа и состояния.
 - Новые `light.*` только read-only до точной физической идентификации, отдельного допуска и release gate. `light.browser_mod*` исключены. `unavailable` ≠ `off`.
-- Точный активный production release должен быть прочитан через `systemctl --user show rs-home-ai-v3.service -p ExecStart`; исторические SHA противоречат.
+- Read-only `ExecStart` V3 проверен: **active** `/home/drpoh/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-9dd5964/src/pilot/telegram-readonly.mjs`; V2 system service **active**. Папка с `9dd5964` в имени не подтверждает Git SHA её содержимого; recovery/rollback и Telegram live-поведение не проверялись.
 - Ручная отправка диагностики из Pi в private `drpoh/rs-home-ai-private-reports#1` уже сработала. GitHub connector ChatGPT не имеет чтения private repo; токены не выводить/не копировать.
 - Никогда не смешивать source tests, Pi offline mock, live HA read, Telegram live write и физическую проверку: разные уровни доказательства.
 
 ## Непосредственный следующий шаг
 
 1. GitHub DEV PR #104–#108 объединены. Владелец подтвердил на Pi `5380a75`, **202/737/0** в `npm test`, `DOCS_CHECK=PASS files=15 links=131`. Новый `/lightcheck` и CLI source/offline проверены, в production не развёрнуты; live HA-MCP read ещё не показан. Исторические документы не переносить без необходимости.
-2. Подтвердить read-only активный `ExecStart` V3 и статус V2.
+2. Из оставшегося Gate D: проверить фактический Git SHA содержимого активного pinned V3 каталога, V2 ExecStart и recovery/rollback, без перезапуска сервисов.
 3. Pi DEV `5380a75`: владелец подтвердил **live read-only** `light.kukhnia_svet=off`, `SINGLE_LIGHT_STATUS=complete`, `PHYSICAL_IDENTITY=unverified`. Следующий шаг — вручную прочитать в HA UI entity / device / area / integration и сверить с физическим контуром; не переключать и не запускать второй Telegram poller. `/lightcheck` остаётся source-only до отдельного release.
 4. После identity review подготовить узкий опциональный confirmed action path; никаких самостоятельных включений.
 5. Сверяться с [активным TODO](../TODO.md) и [правилами агента](../../AGENTS.md). Вести малые PR с CI; обновлять текущий статус только после проверенного milestone.

@@ -122,7 +122,9 @@ test('Telegram handler uses reviewed router without altering actor/confirmation 
  assert.match(source,/bot\.on\('message',async ctx=>\{/);
  assert.match(source,/if\(!allow\(ctx\)\)return;/);
  assert.match(source,/if\(typeof ctx\.message\?\.text!=='string'\|\|!ctx\.message\.text\.trim\(\)\)return;/);
- assert.match(source,/const routed=await routeV3ReadonlyQuestion\(/);
+ assert.match(source,/const routed=await readonlyFollowups\.route\(/);
+ assert.match(source,/actor:actor\(ctx\)/);
+ assert.match(source,/const readonlyFollowups=createV3ReadonlyFollowupRouter\(\)/);
  assert.match(source,/readKitchenState:id=>newLightRead\(id\)/);
  assert.match(source,/if\(routed\.handled\)return ctx\.reply\(routed\.text\);/);
  assert.match(source,/const r=pilot\.request\(actor\(ctx\),ctx\.message\?\.text\);/);

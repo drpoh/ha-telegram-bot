@@ -263,6 +263,16 @@ src/pilot/telegram-readonly.mjs=PASS
 
 Пока это **план**, а не автоматическое развертывание. Допускаются offline source review/фикстуры, но production V2/V3 и Home Assistant Green не изменяются.
 
+### Первое применение selective spec/security review (только исходники, 2026-10-13)
+
+**Spec-проверка (read-only kitchen question):** DEV `routeV3ReadonlyQuestion` распознаёт выбранные кухонные формулировки, вызывает `summarizeReviewedKitchenLights` через отдельный `createReviewedLightReadonlyReader` и возвращает `authorization:false`, `actualWrite:false`; список содержит **ровно четыре выбранных** `light.*`, а не полную физическую инвентаризацию кухни. Для `unknown/unavailable` сохраняется отдельный счётчик; пользовательский текст должен прямо сообщать, что физическая идентичность не подтверждена. Считать это пока **DEV source evidence**, не реальным Telegram acceptance.
+
+**Standards/security-проверка (избирательная, не полный аудит):** DEV `src/pilot/telegram-readonly.mjs` по сравнению с pinned `9dd5964` содержит не только изменения read-only router, но также `/newlights`, `/newlight`, `/lightcheck`, новые ветки `/confirm`, `/cancel` и `pendingNewLights`. `createNewLightDispatch({releaseEnabled:false,approvedIds:[]})` блокирует новые физические write-действия **в текущем DEV source**, но не заменяет дифф-аудит consent/journal. Потребуется отдельно доказать, что никакое сообщение или гонка с `/confirm` не создаёт новых разрешений и не изменяет старое допущенное поведение тамбура.
+
+**Решение:** **NO-GO для прямого переноса всей DEV в V3 prod**; сохранённый `9dd5964` работает и подтверждён реальными read-only ответами. Следующая работа — небольшой read-only-only release patch/review c отрицательными тестами сообщений, actor/chat, ambiguous/unknown entities, никакого `ha_call_service` и прежних `/confirm` semantics. Повторный CI и Pi DEV evidence после изменения; переключение `systemd` — отдельный owner-approved шаг с single-poller/recovery проверкой.
+
+Дисциплина и критерии обоих review-осей: [выборочный engineering playbook](../development/ENGINEERING-PRACTICES.md).
+
 ## Исторические источники
 
 [Операции](../V3-OPERATIONS.md) · [review 2026-10-09](../REVIEW-2026-10-09.md) · [план окружений](../ADR-DEV-STAGE-PROD.md) · [карта каталогов](../PROJECT-MAP.md).

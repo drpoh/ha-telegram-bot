@@ -152,7 +152,7 @@ done
 
 - **Активный** `9dd5964`: `RELEASE_STRUCTURE=PRESENT`, `DEPENDENCIES=PASS_STATIC`.
 - **Основной rollback** `c6a9812`: `RELEASE_STRUCTURE=PRESENT`, `DEPENDENCIES=PASS_STATIC`.
-- **Вторичный исторический rollback** `97343fa`: `RELEASE_STRUCTURE=UNVERIFIED`. Это агрегированный ответ составного `if`; точное условие ещё неизвестно и `npm ls` для него не запускался.
+- **Вторичный исторический rollback** `97343fa`: первоначально `RELEASE_STRUCTURE=UNVERIFIED` от составного `if`. Операторский покомпонентный осмотр затем установил **единственное отсутствующее условие: `RELEASE_COMMIT=MISSING`**; `directory`, `package.json`, `package-lock.json`, `src/pilot/telegram-readonly.mjs` и `node_modules` присутствуют. Дерево установленных зависимостей legacy архива по-прежнему **не проверено**. Новый release-marker не следует задним числом требовать от старой сборки или создавать ради PASS.
 
 Исторический GitHub commit `97343fa81b1af0c73ee2f061ed65fe1939ea488a` **содержит** `package.json`, `package-lock.json` и `src/pilot/telegram-readonly.mjs`. Наличие их в Git не доказывает наличие на Pi; прежняя папка `97343fa` ранее существовала. Не считать этот резерв пригодным к оперативному restore, пока не выявлен конкретный blocker. Основной `c6a9812` статически комплектен, но ещё не испытан как восстановление.
 
@@ -183,6 +183,43 @@ fi
 Не выполнять `npm ci`, `npm install`, `chmod`, перемещение или удаление старого каталога для «исправления» диагностики. `RELEASE_STRUCTURE=UNVERIFIED` может быть следствием отсутствующего marker/installed deps или symlink, а не порчи tracked source. Команды не выключают процесс, не запускают Telegram и не посылают HA-MCP запросов.
 
 **Следующий пользовательский Telegram acceptance без deployment:** в **уже работающем V3 боте**, с которым пользователь общался прежде, команды `/status` и `/sauna` есть в проверенном pinned исходнике `9dd5964`. Можно отдельно запросить эти два **read-only** ответа владельца. Не запускать второй экземпляр бота, не использовать `/confirm` или новые физические команды. Такой опыт подтверждает только текущий pinned V3 Telegram path, **не** будущие DEV natural-language kitchen возможности и **не** token-level uniqueness. Gate D остаётся OPEN до отдельно согласованного полного release/rollback review.
+
+## Legacy rollback `97343fa`: корректная проверка без RELEASE_COMMIT
+
+В исходном Git commit `97343fa81b1af0c73ee2f061ed65fe1939ea488a` `RELEASE_COMMIT` **не отслеживается** (новый build marker создаётся отдельно при упаковке). Его отсутствие в старом каталоге не означает, что три исходных файла повреждены. Для этого **исторического, неработающего** backup выполняются независимые неразрушающие проверки:
+
+```bash
+d=/home/drpoh/projects/rs-home-ai-v3-release-97343fa
+dev=/home/drpoh/projects/rs-home-ai-dev
+sha=97343fa81b1af0c73ee2f061ed65fe1939ea488a
+
+if [ ! -L "$d" ] && [ -d "$d" ] && [ -d "$d/node_modules" ] &&
+   [ ! -L "$d/node_modules" ]; then
+  if npm --prefix "$d" ls --omit=dev --all --offline --loglevel=silent >/dev/null 2>&1; then
+    echo LEGACY_DEPENDENCIES=PASS_STATIC
+  else
+    echo LEGACY_DEPENDENCIES=UNVERIFIED
+  fi
+else
+  echo LEGACY_DEPENDENCIES=UNVERIFIED
+fi
+
+if git -C "$dev" cat-file -e "$sha^{commit}" 2>/dev/null; then
+  for file in package.json package-lock.json src/pilot/telegram-readonly.mjs; do
+    expected=$(git -C "$dev" rev-parse "$sha:$file" 2>/dev/null)
+    if [ -f "$d/$file" ] && [ ! -L "$d/$file" ] &&
+       [ "$(git hash-object "$d/$file" 2>/dev/null)" = "$expected" ]; then
+      echo "LEGACY_GIT_FILE_MATCH=$file PASS"
+    else
+      echo "LEGACY_GIT_FILE_MATCH=$file UNVERIFIED"
+    fi
+  done
+else
+  echo LEGACY_GIT_COMMIT=UNAVAILABLE
+fi
+```
+
+Эта команда не создаёт marker, не записывает Git objects (`git hash-object` без `-w`), не переустанавливает пакеты и не запускает Telegram или HA. Три совпавших файла и `npm ls` могут подтвердить лишь **ограниченную статическую проверку**; полный `git tree` старой сборки, token-level poller и работоспособность восстановления всё равно остаются непроверенными. При `UNVERIFIED` ничего автоматически не исправлять.
 
 ## Исторические источники
 

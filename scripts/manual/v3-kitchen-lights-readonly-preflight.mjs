@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Manual, explicitly operator-invoked read-only HA-MCP summary for seven kitchen candidates.
+// Manual, explicitly operator-invoked read-only HA-MCP summary for four owner-observed kitchen entities.
 // Do not schedule; no Telegram poller, HA service calls, or physical identity assertion.
 import {summarizeReviewedKitchenLights} from '../../src/home/kitchen-light-readonly-status.mjs';
 import {createReviewedLightReadonlyReader} from '../../src/home/reviewed-light-readonly-client.mjs';

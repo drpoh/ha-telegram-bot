@@ -24,7 +24,7 @@
 
 ## Непосредственный следующий шаг
 
-1. Документационные этапы 1–3 выполнены на GitHub DEV PR #104–#106; GitHub CI на `e72bd93` завершился успешно. На Pi **не подтверждён** переход от `eb22ac5` к этому SHA. Исторические файлы остаются по старым путям из-за зависимостей. На следующем DEV PR добавлен read-only `/lightcheck` для одного точного ID; до CI и Pi sync не считать его работающим на Pi.
+1. GitHub DEV PR #104–#108 объединены. Владелец подтвердил на Pi `5380a75`, **202/737/0** в `npm test`, `DOCS_CHECK=PASS files=15 links=131`. Новый `/lightcheck` и CLI source/offline проверены, в production не развёрнуты; live HA-MCP read ещё не показан. Исторические документы не переносить без необходимости.
 2. Подтвердить read-only активный `ExecStart` V3 и статус V2.
 3. После безопасного Pi DEV fast-forward проверить один exact ID через `scripts/manual/v3-single-light-readonly-preflight.mjs --readonly --operator-approved light.kukhnia_svet`, не запуская второй Telegram poller. `/lightcheck` — source-only до отдельного release. Для физической привязки отдельно нужны HA device+area и независимое подтверждение контура; пока не переключать.
 4. После identity review подготовить узкий опциональный confirmed action path; никаких самостоятельных включений.

@@ -21,6 +21,25 @@
 - Для следующего шага используйте **HA Settings → Devices & services → Entities**: найдите exact `light.kukhnia_svet`, проверьте **integration/platform**, **связанное Device**, **Area** (отдельно для entity и device), а также нет ли группы, виртуального alias или дублирующей сущности. Наличие только friendly name недостаточно. Если linked device отсутствует, не придумывать device_id.
 - Физическую идентичность подтверждать отдельно по известной схеме/маркировке/наблюдению владельца; **без ручного ON/OFF в рамках этой проверки**. Не переносить данные registry напрямую в исполняемый allowlist.
 
+### Быстрая проверка связи Entity → Device → Area без новых API-ключей
+
+Через **Home Assistant → Инструменты разработчика → Шаблон (Template)**, вручную, только чтение; использовать стандартные функции HA, не создавать интеграции и не менять сущности:
+
+```jinja
+{% set ids = [
+  'light.kukhnia_svet',
+  'light.kukhnia_led_niz_l1_2',
+  'light.kukhnia_led_niz_l2_2',
+  'light.kukhnia_svet_3',
+  'light.podsvetka_kukhnia'
+] %}
+{% for id in ids %}
+{{ id }} | state={{ states(id) }} | area={{ area_name(id) or 'none' }} | device={{ device_name(id) or 'none' }} | model={{ device_attr(id, 'model') or 'none' }}
+{% endfor %}
+```
+
+Это **только сведения HA** о присутствующих состояниях, area и связанном device. Отсутствие device/area и совпадающие friendly names требуют ручного анализа в **Settings → Devices & services → Entities/Devices**, включая название интеграции. Disabled entries могут не попасть в state inventory, а group/template entity может не иметь физического device. Уровень Gate B не повышать только по выводу шаблона; не раскрывать serial/identifiers и не отправлять полный registry в публичный GitHub.
+
 ## Продолжение
 
 [Первичные критерии Gate B](../GATE-B-ACCEPTANCE.md) · [Решения](../GATE-B-PILOT-DECISIONS.md) · [История физического допуска](../V3-LIGHTS-RELEASE-GATE-2026-10-12.md) · [19 read-only кандидатов](../V3-NEW-LIGHTS-REAL-READ-2026-10-12.md).

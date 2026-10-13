@@ -273,6 +273,16 @@ src/pilot/telegram-readonly.mjs=PASS
 
 Дисциплина и критерии обоих review-осей: [выборочный engineering playbook](../development/ENGINEERING-PRACTICES.md).
 
+## DEV kitchen read-only release boundary (offline review, 2026-10-13)
+
+The first real use of the adopted [engineering practices](../development/ENGINEERING-PRACTICES.md) is a **minimal kitchen question slice**, not a new application. The current DEV source handles `Что со светом на кухне?` by reading **four selected IDs** (`light.kukhnia_led_niz_l1`, `light.kukhnia_led_niz_l2`, `light.kukhnia_svet`, `light.led_kukhnia`) and must report `unavailable` separately from `off`. The identity of `light.kukhnia_svet` remains Gate B **UNVERIFIED**; no physical action authority derives from a read.
+
+**Two-axis review:** spec scope = one private Telegram read-only question; standards/safety = exact four-entity allowlist, owner authorization, no `ha_call_service`, no altered consent, no additional poller, no credential or URL exposure, unknown != off. Added offline regression test `test/v3-kitchen-release-readonly-boundary.test.mjs` for exact state reads, unavailable counts, mixed action/question denial, dispatcher disabled even with supplied approval, and Telegram owner/router/physical-fallback ordering.
+
+**Change size:** GitHub comparison from pinned `9dd5964` to DEV `39b4fce` has **118 commits and 123 changed files**. The source `telegram-readonly.mjs` also contains unrelated `/newlight`, `/confirm`, `/cancel` and claim-related changes. A full DEV candidate **remains NO-GO**; this test is evidence for **future** scoped packaging, not permission to deploy or an assertion that a minimal release exists. A later candidate must prove how it isolates the read-only delta from consent and action changes.
+
+**Next action after offline tests:** prepare a **separately reviewed** minimal immutable candidate or integration approach that cannot touch existing V3 physical/Telegram authorization boundaries; verify source hashes and rollback with the old `9dd5964`, then seek explicit owner approval before any production `systemd` change. Do **not** run a second Telegram poller even for staging.
+
 ## Исторические источники
 
 [Операции](../V3-OPERATIONS.md) · [review 2026-10-09](../REVIEW-2026-10-09.md) · [план окружений](../ADR-DEV-STAGE-PROD.md) · [карта каталогов](../PROJECT-MAP.md).

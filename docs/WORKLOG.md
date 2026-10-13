@@ -1,5 +1,9 @@
 # WORKLOG — Development checkpoint journal
 
+## 2026-10-13 — focused kitchen read-only release security boundary
+
+Read current source against pinned V3 `9dd5964`; GitHub compare at DEV `39b4fce` shows 118 commits, 123 changed files, and pilot entrypoint differences including `/newlight` and `/confirm`. Blanket promotion is **NO-GO**. Added one focused **offline** regression test to prove the four-entity kitchen Telegram route reports unavailable separately, stays authorization/actualWrite=false, avoids reads for mixed question/action phrases, does not reach disabled new-light physical dispatch even with fabricated approval, and routes owner-only messages before the physical consent fallback. Gate D document records the scoped review; actual Pi and Telegram production were **not** exercised, no second poller started. Existing Matt Pocock/ECC engineering playbook reused rather than adding a new test system.
+
 ## 2026-10-13 — selective reuse of Matt Pocock / ECC engineering practices
 
 Owner agreed to **adopt ideas, not install frameworks**. Reviewed upstream public repositories Matt Pocock / skills (MIT, main `49dd158d1076134a641b33efb035946536778336`) and affaan-m / ECC (MIT, main `b92f181b3b748d1abbc2afd94af6aa7d8c8fca29`). Wrote [ENGINEERING-PRACTICES](development/ENGINEERING-PRACTICES.md) adapting fast reproducible failure tests, red-green-refactor, two-axis PR review and local-evidence MCP/security/release auditing. Kept AGENTS and existing Gate B–E authoritative, reused Node 20 `node:test`, existing npm test/CI and systemd/HA-MCP. No external source code was copied; no CLI, plugin, hooks, services, npm modules, secrets, new tokens or runtime paths were changed.

@@ -221,6 +221,22 @@ fi
 
 Эта команда не создаёт marker, не записывает Git objects (`git hash-object` без `-w`), не переустанавливает пакеты и не запускает Telegram или HA. Три совпавших файла и `npm ls` могут подтвердить лишь **ограниченную статическую проверку**; полный `git tree` старой сборки, token-level poller и работоспособность восстановления всё равно остаются непроверенными. При `UNVERIFIED` ничего автоматически не исправлять.
 
+## Legacy rollback: 3/3 Git blob PASS и npm static PASS
+
+**Фактический ответ оператора Pi, 2026-10-13:** `LEGACY_DEPENDENCIES=PASS_STATIC`, затем:
+
+```text
+package.json=PASS
+package-lock.json=PASS
+src/pilot/telegram-readonly.mjs=PASS
+```
+
+Это означает, что все **три выбранных файла** сохранённого старого каталога `rs-home-ai-v3-release-97343fa` побайтово совпали с Git commit `97343fa81b1af0c73ee2f061ed65fe1939ea488a`; локальное `npm ls --offline` прошло. Ошибка `RELEASE_STRUCTURE=UNVERIFIED` прежнего составного preflight вызвана требованием отсутствующего legacy `RELEASE_COMMIT`. Отсутствие marker **не** означает битые исходники; добавлять его, править или пересобирать old rollback не нужно.
+
+Теперь статический `npm ls --offline` прошёл в **active `9dd5964`, primary fallback `c6a9812` и legacy `97343fa`**. Однако полная целостность отслеживаемых файлов в legacy и primary rollback ещё не аттестована, а работа recovery не испытана. Не писать `Gate D complete` только на основании npm и трёх хешей.
+
+**Следующий независимый приемочный шаг:** через **уже запущенный приватный V3 Telegram чат** проверить входящие команды `/status` и `/sauna` закреплённого `9dd5964`; не создавать новый poller и не посылать `/confirm` или команды физического управления. Сообщения от бота являются свидетельством Telegram ingress, авторизации owner и HA-MCP read-only только в рамках этих двух команд, но не подтверждают единственность poller по токену/на других хостах или будущую DEV-версию.
+
 ## Исторические источники
 
 [Операции](../V3-OPERATIONS.md) · [review 2026-10-09](../REVIEW-2026-10-09.md) · [план окружений](../ADR-DEV-STAGE-PROD.md) · [карта каталогов](../PROJECT-MAP.md).

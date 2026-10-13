@@ -18,6 +18,8 @@ systemctl is-active ha-telegram-bot.service
 systemctl --user is-active rs-home-ai-v3.service
 ```
 
+**Свидетельство 2026-10-13:** оператор подтвердил `ActiveState=active`; `ExecStart` V3 указывает на `/home/drpoh/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-9dd5964/src/pilot/telegram-readonly.mjs`; `ha-telegram-bot.service` → `active`. Это доказывает исполняемый путь/состояние systemd при проверке, **не** проверяет Git SHA файлов, единичность poller, API и восстановление. Итоговый Gate D остаётся частичным.
+
 Никаких `restart`, `enable`, изменения unit или `git pull` в runtime по результатам этого документа.
 
 ## Исторические источники

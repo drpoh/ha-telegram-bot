@@ -1,3 +1,16 @@
+## Active priorities — 2026-10-13 (latest owner-observed state)
+
+- [x] Pi canonical DEV fast-forward to `6f6e694`, clean Git; offline tests 198 files / 726 assertions / zero failed files.
+- [x] Pi live HA-MCP fixed read-only preflight: `READONLY_PREFLIGHT=PASS`, sauna 28 °C, four selected lights 1 ON / 3 OFF.
+- [x] Pi operator-only 19 candidate light read: 2 ON / 7 OFF / 10 unavailable; `NEW_LIGHT_REVIEW=partial` (not a transport failure).
+- [x] Manual private outbound GitHub diagnostic report published to private Issue #1 (not readable via current ChatGPT GitHub connector).
+- [ ] Review exact HA device/area and physical fixture corresponding to `light.kukhnia_svet`; continue remaining eight responsive IDs only after identity proof. **No additional live switching permission yet.**
+- [ ] Verify actual running V3 `ExecStart` independently; historical release SHA descriptions conflict. Never update pinned production from DEV.
+- [ ] Optional, separately approved: connect ChatGPT GitHub app to private reports repo; afterward retire failed Tor diagnostic workflow/keys/secrets only after explicit cleanup review.
+- [ ] Keep DEV/stage/prod isolated; no second Telegram poller or HA write scope expansion on a docs-only update.
+
+See [2026-10-13 documentation audit](DOCUMENTATION-AUDIT-2026-10-13.md). Dated sections below are historical and may contain superseded `[ ]` entries.
+
 
 ## Action plan — 2026-10-13 (owner priority; current live verification still required)
 

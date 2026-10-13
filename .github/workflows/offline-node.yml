@@ -34,5 +34,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends sqlite3
       - name: Install locked dependencies without install scripts
         run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Check active documentation and local Markdown links (offline)
+        run: node scripts/docs/check-active-markdown-links.mjs
       - name: Run isolated checks with fake credentials and loopback MCP
         run: npm test

@@ -32,7 +32,7 @@ Read [index](README.md) → [only current status](CURRENT-STATE.md) → [short h
 | Path | Role |
 |---|---|
 | `AGENTS.md` | Must-follow operating rules |
-| `docs/CHAT-HANDOFF.md` | Latest verified runtime and continuation point |
+| `docs/CHAT-HANDOFF.md` | Preserved historical handoff; **not** current status or first-read entrypoint |
 | `docs/TODO.md` | Short authoritative current backlog; previous append-only register archived at `docs/archive/TODO-history-through-2026-10-11.md` |
 | `docs/WORKLOG.md` | Append-only evidence and commits |
 | `docs/V3-NEXT-STAGE-DEV-STAGE-PROD.md` | Current Stage 2 plan and acceptance gates |

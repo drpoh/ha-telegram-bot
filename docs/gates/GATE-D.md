@@ -42,14 +42,9 @@ if [ -d "$release" ] && [ ! -L "$release" ] &&
   if [[ "$declared" =~ ^[0-9a-f]{40}$ ]] &&
      git -C "$dev" cat-file -e "$declared^{commit}" 2>/dev/null; then
     echo "RELEASE_DECLARED_COMMIT=$declared"
-    # tar -d compares the tracked source archive with the on-disk release,
-    # without writing files. Extra node_modules/RELEASE_COMMIT are not checked.
-    if (set -o pipefail; git -C "$dev" archive --format=tar "$declared" |
-        tar --compare -f - -C "$release" >/dev/null 2>&1); then
-      echo "RELEASE_TRACKED_SOURCE_MATCH=PASS"
-    else
-      echo "RELEASE_TRACKED_SOURCE_MATCH=FAIL_OR_UNVERIFIED"
-    fi
+    # Do not use tar --compare as an integrity gate here: it also tests
+    # uid/gid/mode/mtime and can reject unchanged Git source bytes.
+    # The separate reviewed Node verifier below hashes exact Git blobs.
   else
     echo "RELEASE_DECLARED_COMMIT=UNVERIFIED"
   fi
@@ -68,9 +63,20 @@ for old in \
 done
 ```
 
-Запуск блока только читает Git objects, release-файлы и метаданные systemd; **не запускает Telegram, `npm install`, restart, HA-MCP, `ha_call_service` и не создаёт или переключает release**. Команды исполняются вручную без `exit 1`, чтобы ошибка не разрывала SSH. `RELEASE_TRACKED_SOURCE_MATCH=PASS` относится лишь к отслеживаемым Git source-файлам, а **не** к `node_modules`, приватным config/credentials, фактически загруженным в память процессам и отсутствию второго poller. Совпадение одного `RELEASE_COMMIT` без tar-compare не является доказательством целостности. Вывод `ExecStart` перед пересылкой следует проверить на наличие неожиданных секретных аргументов.
+Для точной побайтовой проверки, **после CI и безопасной ff-only синхронизации DEV**, оператор вручную запускает:
 
-Если `ExecStart` указывает на другой путь, отсутствует `RELEASE_COMMIT`, `git archive`/compare выдаёт FAIL либо нет rollback — **Gate D остаётся открытым**, никаких автоматических изменений сервисов. После read-only evidence отдельно проверить реальные poller/rollback/Telegram API через operator-approved release plan, а не выдавать systemd `active` за end-to-end PASS.
+```sh
+cd /home/drpoh/projects/rs-home-ai-dev
+node scripts/manual/v3-release-content-readonly.mjs --readonly --operator-approved
+```
+
+Верификатор сверяет Git `blob` SHA-1 каждого **отслеживаемого** файла с фактическими байтами закреплённого V3 релиза и отдельно проверяет только исполняемые биты файлов из Git. Он не сравнивает tar UID/GID/mtime или неисполняемые `chmod 600/644`: эти метаданные могут различаться после сборки, не меняя Git source. Результат `RELEASE_SOURCE_STATUS=PASS` требует `RELEASE_TRACKED_BYTES_MATCH=PASS` и `RELEASE_EXECUTABLE_BITS_MATCH=PASS`. При отсутствующих/изменённых файлах, неверном `RELEASE_COMMIT`, недоступном Git object, symlink вместо обычного файла, несовпадающих executable bits или ошибке чтения — `UNVERIFIED` и ненулевой код выхода. Вывод не содержит содержимого файлов или секретов.
+
+**Фактическое наблюдение 2026-10-13:** прежний `git archive | tar --compare` вернул `RELEASE_SOURCE_MATCH=UNVERIFIED`. Оператор показал строки `Mode differs`, `Uid differs`, `Gid differs` у `.env.example`, `AGENTS.md` и других tracked files. Это объясняет **потенциальную ложную тревогу по метаданным**, но **ещё не доказывает**, что содержимое файлов совпадает; требуется новый read-only verifier.
+
+Обе команды только читают Git objects, release и systemd; **не запускают Telegram, `npm install`, restart, HA-MCP, `ha_call_service` и не создают или переключают release**. Запуск вручную, без `exit 1`, чтобы ошибка не разрывала SSH. `RELEASE_SOURCE_STATUS=PASS` относится лишь к tracked source, **не** к `node_modules`, дополнительным файлам, приватным конфигурациям, уже загруженным в память процессам или единственности Telegram poller. Совпадение одного `RELEASE_COMMIT` без сверки Git blobs не является доказательством целостности. `ExecStart` перед пересылкой нужно проверить на отсутствие неожиданных секретных аргументов.
+
+Если `ExecStart` указывает на другой путь, отсутствует `RELEASE_COMMIT`, новый verifier возвращает `UNVERIFIED` либо нет rollback — **Gate D остаётся открытым**, никаких автоматических изменений сервисов. После read-only evidence отдельно проверить реальные poller/rollback/Telegram API через operator-approved release plan, а не выдавать systemd `active` за end-to-end PASS.
 
 ## Исторические источники
 

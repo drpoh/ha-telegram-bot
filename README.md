@@ -80,7 +80,7 @@ Tests:
 
     npm test
 
-In an interactive terminal, `npm test` now shows two live progress bars: `syntax` and `isolated`, with completed/total files, percent, failures and elapsed time. In CI or piped logs it prints sparse `TEST_PROGRESS` checkpoints without terminal control codes, preserving the final `Isolated test files: ...` line. To disable intermediate progress use `RS_TEST_PROGRESS=off npm test`; to force plain checkpoints locally use `RS_TEST_PROGRESS=plain npm test`. There are no new npm dependencies, and neither command needs live HA credentials.
+In a Termux/SSH terminal, each stage of `npm test` (`syntax`, then `isolated`) now occupies **one compact row**: `T [####....] 52/211 25% 8s`. It overwrites the same row using only carriage return, limits text to the available terminal width and finishes with one newline. Locally redirected output prints start/end (plus long-stall warnings), **not dozens of lines**; GitHub CI still receives sparse plain-text checkpoints. The final `Isolated test files: ...` summary is unchanged. Disable intermediate updates with `RS_TEST_PROGRESS=off npm test`, or force CI-style plain updates with `RS_TEST_PROGRESS=plain npm test`. No extra npm package or HA credentials.
 
 ## Security
 

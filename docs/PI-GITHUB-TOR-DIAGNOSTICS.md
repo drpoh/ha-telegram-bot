@@ -29,7 +29,7 @@ fi
 # Download only the reviewed source from the remote GitHub branch, without
 # resetting/updating the DEV working tree.
 git -C ~/projects/rs-home-ai-dev fetch origin main
-git -C ~/projects/rs-home-ai-dev show origin/main:scripts/ops/rs-home-ai-gh-readonly-diagnostic.sh \
+git -C ~/projects/rs-home-ai-dev show FETCH_HEAD:scripts/ops/rs-home-ai-gh-readonly-diagnostic.sh \
   > ~/.local/bin/rs-home-ai-gh-readonly-diagnostic.sh
 chmod 700 ~/.local/bin/rs-home-ai-gh-readonly-diagnostic.sh
 # The dedicated key is appended: it does not revoke existing Termux access.
@@ -51,7 +51,7 @@ It must print a small `KEY=value` report with `HA_WRITES=none`. No sensitive pat
 In repository **Settings → Secrets and variables → Actions → New repository secret**:
 
 1. `PI_DIAG_ONION`: the existing **56-character Tor v3 hostname**, ending in `.onion`. Never paste this into an issue or public repo.
-2. `PI_DIAG_SSH_KEY`: entire content of **`~/.ssh/rs-home-ai-gh-diag` (private key)**. Copy locally into GitHub Secret; never paste in chat, commit it or use the existing Termux private key.
+2. `PI_DIAG_SSH_KEY`: **one-line Base64 encoding** of the dedicated private key `~/.ssh/rs-home-ai-gh-diag`, produced on the Pi by `base64 -w 0 ~/.ssh/rs-home-ai-gh-diag; echo`. Copy that entire line into the GitHub Secret; the workflow decodes it before SSH validation. Treat Base64 as sensitive private key material: never paste in chat, commit it or use the existing Termux private key.
 3. `PI_DIAG_KNOWN_HOSTS`: a line `<the-same-onion-host> ssh-ed25519 <Pi-SSH-host-public-key-base64>`, where the key comes from the Pi's `/etc/ssh/ssh_host_ed25519_key.pub` (this is a public host key, **not** the user's diagnostic key). This pins the server identity.
 
 To prepare the third value on the Pi, run this without saving the host in shell history:

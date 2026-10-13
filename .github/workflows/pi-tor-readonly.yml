@@ -39,7 +39,10 @@ jobs:
             { echo 'Required Secrets are not configured'; exit 1; }
           key="$RUNNER_TEMP/pi-diag-key"
           hosts="$RUNNER_TEMP/pi-diag-known-hosts"
-          printf '%s\n' "$PI_DIAG_SSH_KEY" > "$key"
+          # GitHub Secret contains one-line base64 of the dedicated OpenSSH private key.
+          # Reject malformed content without echoing secret material.
+          printf '%s' "$PI_DIAG_SSH_KEY" | base64 --decode > "$key" ||
+            { echo 'Diagnostic key base64 is invalid'; exit 1; }
           printf '%s\n' "$PI_DIAG_KNOWN_HOSTS" > "$hosts"
           ssh-keygen -y -f "$key" > /dev/null
           ssh-keygen -F "$PI_DIAG_ONION" -f "$hosts" > /dev/null ||

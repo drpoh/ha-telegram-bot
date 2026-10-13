@@ -16,6 +16,9 @@ function enqueue(label, handler) {
   const id = ++requestNumber;
   console.log(`Queue #${id} → ${label}`);
   return requestQueue.add(async () => {
+    // Match the former Promise-chain async boundary: cancellation immediately
+    // after queueing must be observed before authorization begins.
+    await Promise.resolve();
     console.log(`Queue #${id} START`);
     try {
       return await handler();

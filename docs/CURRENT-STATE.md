@@ -63,6 +63,8 @@
 
 ## 4. Постоянные правила безопасности
 
+- В DEV принят [короткий playbook инженерных практик](development/ENGINEERING-PRACTICES.md), адаптация Matt Pocock/ECC только на уровне процесса (repro → TDD → dual-axis review → Gate D evidence); **никаких skills/harness/hooks/packages на Pi не ставили**. Первичный source-only review кухни: весь DEV build **NO-GO** к прямому production-promotion из-за изменения consent entrypoint; отдельный read-only patch/review необходим.
+
 - HA Green сохраняет самостоятельную работу независимо от Raspberry Pi.
 - LLM предлагает, но **не авторизует** действия. `Observe → Reason → Policy → Act → Verify → Learn`.
 - State-changing действия требуют детерминированной политики, exact entity identity, нужного режима допуска, подтверждения и проверки результата.

@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 // Manual-only: send a strictly allowlisted Pi diagnostic via outbound HTTPS.
-// WARNING: GitHub issue comments in a public repository are public.
+// Fail closed: only post to a verified private repository and issue.
 import { readFileSync, statSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 
-const EXPECTED_REPO = 'drpoh/ha-telegram-bot';
+// Deliberately pin one private destination, not an arbitrary user-supplied repo.
+const EXPECTED_REPO = 'drpoh/rs-home-ai-private-reports';
 const tokenPath = process.env.RS_PI_GITHUB_TOKEN_FILE ||
   '/home/drpoh/.config/rs-home-ai-gh-report/token';
 const issueText = process.env.RS_PI_GITHUB_REPORT_ISSUE;
@@ -12,7 +13,7 @@ if (!/^[1-9][0-9]{0,7}$/.test(issueText ?? '')) {
   console.error('REPORT=missing_issue_number');
   process.exit(2);
 }
-if (process.env.RS_PI_GITHUB_REPORT_CONFIRM !== 'PUBLIC_READONLY_REPORT') {
+if (process.env.RS_PI_GITHUB_REPORT_CONFIRM !== 'PRIVATE_READONLY_REPORT') {
   console.error('REPORT=requires_public_report_confirmation');
   process.exit(2);
 }
@@ -24,6 +25,42 @@ if ((tokenMode & 0o077) !== 0) {
 const token = readFileSync(tokenPath, 'utf8').trim();
 if (!/^[A-Za-z0-9_]{20,}$/.test(token)) {
   console.error('REPORT=invalid_token_format');
+  process.exit(2);
+}
+const apiHeaders = {
+  'Accept': 'application/vnd.github+json',
+  'Authorization': `Bearer ${token}`,
+  'X-GitHub-Api-Version': '2022-11-28',
+  'User-Agent': 'rs-home-ai-pi-readonly-diagnostics',
+};
+const repoCheck = await fetch(`https://api.github.com/repos/${EXPECTED_REPO}`, {
+  method: 'GET', headers: apiHeaders, redirect: 'error',
+  signal: AbortSignal.timeout(12000),
+});
+if (!repoCheck.ok) {
+  console.error(`REPORT=private_repo_check_http_${repoCheck.status}`);
+  process.exit(1);
+}
+const repoInfo = await repoCheck.json();
+if (repoInfo?.full_name !== EXPECTED_REPO || repoInfo?.private !== true ||
+    repoInfo?.visibility !== 'private' || repoInfo?.has_issues !== true) {
+  console.error('REPORT=destination_not_verified_private');
+  process.exit(2);
+}
+const issueCheck = await fetch(
+  `https://api.github.com/repos/${EXPECTED_REPO}/issues/${issueText}`, {
+    method: 'GET', headers: apiHeaders, redirect: 'error',
+    signal: AbortSignal.timeout(12000),
+  },
+);
+if (!issueCheck.ok) {
+  console.error(`REPORT=private_issue_check_http_${issueCheck.status}`);
+  process.exit(1);
+}
+const targetIssue = await issueCheck.json();
+if (targetIssue?.number !== Number(issueText) ||
+    targetIssue?.pull_request || targetIssue?.state !== 'open') {
+  console.error('REPORT=target_not_open_issue');
   process.exit(2);
 }
 const diagnostic = execFileSync('/home/drpoh/.local/bin/rs-home-ai-gh-readonly-diagnostic.sh', [], {
@@ -66,13 +103,8 @@ const body = [
 const response = await fetch(
   `https://api.github.com/repos/${EXPECTED_REPO}/issues/${issueText}/comments`, {
     method: 'POST',
-    headers: {
-      'Accept': 'application/vnd.github+json',
-      'Authorization': `Bearer ${token}`,
-      'X-GitHub-Api-Version': '2022-11-28',
-      'User-Agent': 'rs-home-ai-pi-readonly-diagnostics',
-      'Content-Type': 'application/json',
-    },
+    headers: { ...apiHeaders, 'Content-Type': 'application/json' },
+    redirect: 'error',
     body: JSON.stringify({body}),
     signal: AbortSignal.timeout(20000),
   },

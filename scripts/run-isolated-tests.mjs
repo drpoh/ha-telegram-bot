@@ -2,6 +2,7 @@ import {readdirSync,mkdtempSync,rmSync,readFileSync,lstatSync} from "node:fs";
 import {join,dirname} from "node:path";
 import {tmpdir} from "node:os";
 import {execFileSync,spawn} from "node:child_process";
+import {createTestProgress} from "./testing/test-progress.mjs";
 
 const files=readdirSync("test").filter(f=>f.endsWith(".test.mjs")).sort();
 const schema=readFileSync("test/fixtures/bot-schema.sql","utf8");
@@ -31,7 +32,8 @@ const testEnv={
  MCP_URL:"http://127.0.0.1:1/mcp",
  HTTP_PORT:"0",
 };
-let next=0,failed=0,passed=0;
+let next=0,failed=0,passed=0,completed=0;
+const progress=createTestProgress({label:'isolated',total:files.length});
 try{
  const jobs=Array.from({length:3},async()=>{
   while(next<files.length){
@@ -51,15 +53,19 @@ try{
    });
    const pass=Number(output.text.match(/# pass (\d+)/)?.[1]||0);
    passed+=pass;
+   completed++;
    if(output.exit!==0){
     failed++;
+    progress.clearLine();
     console.error("FAIL",file,"\n",output.text.slice(-3000));
    }
+   progress.update({done:completed,errors:failed});
   }
  });
  await Promise.all(jobs);
- console.log("Isolated test files:",files.length,"passed assertions:",passed,"failed files:",failed);
  if(failed)process.exitCode=1;
 }finally{
+ progress.finish({done:completed,errors:failed});
+ console.log("Isolated test files:",files.length,"passed assertions:",passed,"failed files:",failed);
  rmSync(root,{recursive:true,force:true});
 }

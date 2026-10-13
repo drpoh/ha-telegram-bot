@@ -13,6 +13,8 @@
 - [ ] Подготовить отдельно утверждаемую минимальную физическую capability/долговременную запись подтверждения для одного exact ID с rollback; сохранить старое поведение `light.tambur_svet_l1`. Source-only `/newlight` **не даёт разрешения** на реальный сервисный вызов.
 - [ ] Только после explicit owner approval и release gate: один контролируемый реальный тест ON/verification/OFF/verification через Telegram `/confirm`, отказные сценарии и возможность отката. Никаких массовых комнатных переключений или автоматического разрешения из LLM.
 
+- [ ] После GitHub CI и безопасной синхронизации DEV проверить offline на Pi естественные вопросы об освещении кухни, затем отдельным согласованным read-only live-сеансом проверить ответы для 7 выбранных HA-сущностей; `unknown` не считать `off`. Не запускать второй Telegram poller и не устанавливать DEV в production ради теста.
+
 ## P1 — надёжность и приемка
 
 - [ ] Проверить существенные пробелы Gates B/C/D/E: HA registry/device-source trust, fault isolation, recovery/reboot, голос/Assist; отделять offline mock от реального HA теста.

@@ -2,7 +2,7 @@
 
 > **Единственная актуальная сводка проекта.** Данные об устройствах — снимок на момент проверки, не текущие состояния. Исторические записи в других документах не обновляют эту сводку автоматически.
 >
-> Проверено владельцем: **2026-10-13** · Raspberry Pi DEV `feature/v3-home-agent` на `5380a75`, `npm test`: **202 тестовых файла, 737 проверок, 0 ошибок**, `DOCS_CHECK=PASS files=15 links=131` (вывод пользователя). Это подтверждает Pi DEV source/tests, **не production deployment**. GitHub PR #106–#108 включены в эту версию. Runtime V3 показал `ActiveState=active`, но `ExecStart` был обрезан пейджером `less` и активный release SHA **остаётся непроверенным**.
+> Проверено владельцем: **2026-10-13** · Raspberry Pi DEV `feature/v3-home-agent` на `5380a75`, `npm test`: **202 тестовых файла, 737 проверок, 0 ошибок**, `DOCS_CHECK=PASS files=15 links=131` (вывод пользователя). Это подтверждает Pi DEV source/tests, **не production deployment**. GitHub PR #106–#108 включены в эту версию. Новый read-only вывод владельца `systemctl --user show` подтверждает `ActiveState=active` и точный исполняемый путь `/home/drpoh/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-9dd5964/src/pilot/telegram-readonly.mjs`; `systemctl is-active ha-telegram-bot.service` → `active`. Имя папки **не** доказывает SHA содержимого релиза; рестарт/recovery и фактическое поведение runtime не тестировались.
 
 ## 1. Что подтверждено
 
@@ -13,8 +13,8 @@
 | Новые светильники: чтение | ⚠️ Частично | 19 проверены; **2 ON, 7 OFF, 10 unavailable**; `NEW_LIGHT_REVIEW=partial`; прочитанные сущности ≠ подтверждённые физические светильники |
 | Новые светильники: включение/выключение | 🔒 Не разрешено | Код DEV не выдаёт нового физического допуска; требуются проверка идентичности, отдельное разрешение и release gate |
 | Точечное чтение `light.kukhnia_svet` | ✅ Live HA-MCP read-only на Pi | Владелец запустил `v3-single-light-readonly-preflight.mjs` на DEV `5380a75`: **SINGLE_LIGHT_STATUS=complete**, **SINGLE_LIGHT_STATE=off**, **PHYSICAL_IDENTITY=unverified** (2026-10-13). Это снимок состояния HA, не проверка device/area/физического контура, не Telegram production и не разрешение управления |
-| Telegram V3 / подтверждение | ⚠️ Только узкий исторический пилот | Ранее подтверждённое ограничение: `light.tambur_svet_l1`; **текущий systemd ExecStart ещё не перепроверен** |
-| Telegram V2 / HTTP API | ⚠️ Историческое подтверждение | Отдельный V2 сервис; текущее состояние API/бота в этом этапе не проверялось |
+| Telegram V3 / подтверждение | ⚠️ Runtime путь подтверждён; поведение не тестировалось | `systemctl --user show`: **active**, ExecStart указывает на `.../rs-home-ai-v3-release-9dd5964/src/pilot/telegram-readonly.mjs`. Предыдущее ограничение пилота `light.tambur_svet_l1` историческое; новый Telegram live-тест не проводился |
+| Telegram V2 / HTTP API | ⚠️ Service active; API не проверен | `systemctl is-active ha-telegram-bot.service` → `active` (2026-10-13). Отдельный runtime; API и ответы Telegram не тестировались |
 | Policy Engine / подтверждения | ✅ Offline DEV тесты | Нет доказательства, что новые сценарии развернуты в активном production |
 | Память / очередь / `/debug` / `/newlights` | ✅ DEV исходники и тесты | Изменения PR #90–#94 на `6f6e694`; не означает включение в production |
 | Автономные действия (AUTO_SAFE) | 🔒 Новых прав нет | Нельзя расширять allowlist по данным LLM или только из исходного кода |
@@ -29,13 +29,13 @@
 | --- | --- | --- |
 | DEV | `/home/drpoh/projects/rs-home-ai-dev`, ветка `feature/v3-home-agent` | Единственный изменяемый рабочий каталог |
 | STAGE | Offline mock / CI-gated immutable candidate | Не является работающей HA-инсталляцией |
-| V3 production | Отдельный закреплённый release, user-systemd | **ActiveState=active**, точный ExecStart/SHA НЕ ПОДТВЕРЖДЁН |
+| V3 production | Отдельный закреплённый release, user-systemd | **active**; ExecStart `/home/drpoh/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-9dd5964/src/pilot/telegram-readonly.mjs`; SHA содержимого не перепроверен |
 | Rollback | Исторически `97343fa` | Проверить путь/наличие перед любым использованием |
-| V2 production | `/home/drpoh/ha-telegram-bot` | Не изменять, отдельный сервис |
+| V2 production | `/home/drpoh/ha-telegram-bot` | `ha-telegram-bot.service` **active** (read-only systemd); путь ExecStart, API и runtime SHA не перепроверены |
 | Historical V3 | `/home/drpoh/rs-home-ai-v3` | Не изменять; связан с Gate D |
 | Home Assistant Green | Независимый контроллер устройств | Продолжает работать при остановке RS Home AI |
 
-**Противоречие в истории:** отдельные документы называют production `c6a9812` и `9dd5964`. Ни один SHA нельзя считать актуальным до read-only проверки `systemctl --user show rs-home-ai-v3.service -p ExecStart`. Никакого автоповышения DEV → production.
+**Разрешение исторического противоречия:** системный `ExecStart` теперь достоверно указывает на каталог релиза **`9dd5964`**, а не `c6a9812`. Фактический Git SHA содержимого каталога и механизм восстановления ещё не перепроверены. Никакого автоповышения DEV → production.
 
 ## 3. Gates
 
@@ -44,7 +44,7 @@
 | A | ⚠️ Историческая база | Не приравнивать старое принятие к новой версии |
 | B | **OPEN** | Физическая идентичность, доверенная HA-registry привязка и отдельно разрешённое управление новыми светильниками |
 | C | ⚠️ Частичный offline | Реальная fault/recovery проверка независимо от mock |
-| D | ⚠️ Частично проверен ранее | Повторная проверка runtime/recovery без вмешательства в сервисы |
+| D | ⚠️ Read-only runtime path + active подтверждены | V3 `ExecStart` → `9dd5964`-named release, V2 active. Проверка SHA содержимого, single-poller invariant, recovery и rollback остаётся |
 | E | **OPEN** | Реальный голосовой цикл и безопасные подтверждения |
 
 Подробности критериев: [Gate B](gates/GATE-B.md) · [Gate C](gates/GATE-C.md) · [Gate D](gates/GATE-D.md) · [Gate E](gates/GATE-E.md). Это не отдельный источник актуального статуса.
@@ -61,7 +61,7 @@
 
 ## 5. Следующие приоритеты
 
-1. Подтвердить read-only `ExecStart` действующего V3 production и стабильность V2.
+1. Сохранить подтверждённую systemd-привязку V3 `9dd5964`-named release и V2 `active`; отдельно проверить Git SHA содержимого и recovery/rollback read-only, не трогая runtime.
 2. После успешного live `ha_get_state` сопоставить `light.kukhnia_svet` с HA entity registry, device, area, integration и конкретным физическим светильником. Проверить совпадения/виртуальные группы без переключения, затем остальные восемь отвечающих кандидатов.
 3. Подготовить строго ограниченный, отдельно согласованный первый реальный тест нового света; никаких разрешений из одного только Telegram текста.
 4. Завершить Gate B/C/D acceptance без новых инфраструктурных велосипедов (systemd, HA-MCP, Assist, ESPHome).

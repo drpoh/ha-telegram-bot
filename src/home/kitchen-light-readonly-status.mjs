@@ -20,12 +20,24 @@ export async function summarizeReviewedKitchenLights({readState}={}){
    return {...denied};
  const {on,off,unknown}=report.counts;
  const selected=report.entries.filter(e=>e.state==='on').map(e=>e.id);
- const missing=report.entries.filter(e=>e.state==='unknown').map(e=>e.id);
+ // Never expose raw MCP responses/errors. The inspector supplies only fixed reason codes.
+ const reasons=Object.freeze({
+  unavailable:'недоступна в HA',
+  unknown:'состояние HA неизвестно',
+  identity_mismatch:'ID ответа не совпал',
+  mcp_error:'ошибка MCP',
+  read_error:'ошибка чтения',
+  invalid_state:'неверное состояние в ответе'
+ });
+ const missing=report.entries.filter(e=>e.state==='unknown').map(e=>({
+  id:e.id,reason:e.reason
+ }));
+ if(missing.some(e=>!Object.hasOwn(reasons,e.reason)))return {...denied};
  let text='Кухня — из 7 выбранных сущностей Home Assistant: включено '+on+
   ', выключено '+off+', неизвестно или недоступно '+unknown+'.';
  if(selected.length)text+=' В состоянии ON: '+selected.join(', ')+'.';
- if(missing.length)text+=' Не удалось проверить: '+missing.join(', ')+'.';
+ if(missing.length)text+=' Не удалось проверить: '+missing.map(e=>e.id+' ('+reasons[e.reason]+')').join(', ')+'.';
  text+=' Это НЕ весь свет кухни и НЕ число физических ламп. Идентичность устройств пока не подтверждена; управление новыми светильниками заблокировано.';
  return {status:unknown?'partial':'complete',authorization:false,actualWrite:false,
-  counts:{on,off,unknown},text};
+  counts:{on,off,unknown},unknownReasons:missing,text};
 }

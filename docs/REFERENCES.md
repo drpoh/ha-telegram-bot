@@ -21,8 +21,17 @@ Reference concepts: MCP interface to Home Assistant and least-privilege/policy b
 Reference concepts: modular MCP integrations, environment-based secrets and user memory patterns.
 
 ## Rule
-Prefer independently implementing the needed concept in this repository. If code is copied or adapted, document source, version/commit, license and required attribution.
+Prefer maintained upstream libraries for commodity transport and tooling, but adapt development **practices** without importing whole agent frameworks. Implement only project-specific decision/policy logic. For copied or adapted source code, document source, pinned version/commit, license and attribution. No external workflow installation without deliberate dependency and security review.
 
+
+## Reuse of engineering practices — 2026-10-13
+
+Selected **ideas only**, with no installed agents/harness/hooks and no copied files:
+
+- [Matt Pocock / skills](https://github.com/mattpocock/skills) (MIT; reviewed main `49dd158d1076134a641b33efb035946536778336`): reproduce bugs before changing code, TDD at public interfaces, PR review of spec and standards, short retrospectives.
+- [affaan-m / ECC](https://github.com/affaan-m/ECC) (MIT; reviewed main `b92f181b3b748d1abbc2afd94af6aa7d8c8fca29`): MCP package reference pinning/static review, security trust boundaries, local evidence-based release audit.
+
+How our existing Node/test/CI/Gate B–E workflow uses those ideas is documented in [ENGINEERING-PRACTICES](development/ENGINEERING-PRACTICES.md). Their examples are **not production policy or permission to execute code**. If upstream content is copied in the future, verify the exact upstream license/commit and attribution at that time.
 
 ## Engineering decision process (2026-10-08)
 

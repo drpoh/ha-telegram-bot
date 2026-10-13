@@ -9,7 +9,8 @@ const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
 const active=[
  'AGENTS.md','README.md','docs/README.md','docs/CURRENT-STATE.md',
  'docs/TODO.md','docs/development/HANDOFF.md',
- 'docs/development/README.md','docs/architecture/README.md',
+ 'docs/development/README.md','docs/development/ENGINEERING-PRACTICES.md',
+ 'docs/architecture/README.md',
  'docs/operator/README.md','docs/gates/README.md',
  'docs/gates/GATE-B.md','docs/gates/GATE-C.md',
  'docs/gates/GATE-D.md','docs/gates/GATE-E.md',

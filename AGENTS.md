@@ -1,6 +1,6 @@
 # AGENTS.md — Home Assistant AI Agent
 
-> **2026-10-13 operations checkpoint:** For current observed state read [docs/CURRENT-STATE.md](docs/CURRENT-STATE.md) and [docs/DOCUMENTATION-AUDIT-2026-10-13.md](docs/DOCUMENTATION-AUDIT-2026-10-13.md). DEV `6f6e694` passed 198 test files / 726 assertions on Pi; HA-MCP read-only passed; 19 new light candidates produced 9 responsive / 10 unavailable. **Physical device identities and active production release must be independently verified**; these observations confer no write or deployment authorization.
+> **Current runtime and acceptance are recorded only in [docs/CURRENT-STATE.md](docs/CURRENT-STATE.md).** Dated prior checkpoints here are historical, not a replacement for live evidence or permission to modify HA. Selective external engineering practices: [docs/development/ENGINEERING-PRACTICES.md](docs/development/ENGINEERING-PRACTICES.md).
 
 
 ## Mission
@@ -11,7 +11,7 @@ Before any work, **first read `docs/CURRENT-STATE.md`**, then `docs/development/
 
 ## Raspberry Pi workspace ownership — effective 2026-10-10
 - **ONLY canonical development checkout:** `/home/drpoh/projects/rs-home-ai-dev`, branch `feature/v3-home-agent`. Perform source edits, tests, documentation, commits and GitHub pushes here.
-- `/home/drpoh/ha-telegram-bot` is the **live v2 system-service directory**; `/home/drpoh/rs-home-ai-v3` is the **preserved historical V3 checkout used by Gate D timers, NOT the active pilot executable**. The last owner-confirmed active V3 pilot is the immutable `/home/drpoh/projects/rs-home-ai-v3-release-c6a9812` release (verify current systemd ExecStart read-only before any operational decision). They are separately versioned checkouts of the same GitHub remote. Inspect them read-only, NEVER auto-pull/rebase/reset, overwrite, delete, move, symlink, or `npm install` in them.
+- `/home/drpoh/ha-telegram-bot` is the **live v2 system-service directory**; `/home/drpoh/rs-home-ai-v3` is the **preserved historical V3 checkout used by Gate D timers, NOT the active pilot executable**. The most recent owner-confirmed active V3 pilot is pinned at `/home/drpoh/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-9dd5964` (Git source verified), with `c6a9812` retained for rollback; re-check actual `ExecStart` read-only before any operational decision. They are separately versioned checkouts of the same GitHub remote. Inspect them read-only, NEVER auto-pull/rebase/reset, overwrite, delete, move, symlink, or `npm install` in them.
 - Treat `vinted-sales-agent`, `ha-backups`, app state, tokens, live unit files and Home Assistant Green as independently managed; never reorganize or inspect secrets merely to tidy folders.
 - `dev` is the canonical source checkout with an installed pull-only 6-hour CI-gated candidate timer (owner-confirmed on 2026-10-12); `stage` remains offline/mock only, and production is a separately pinned release. Automatic candidate packaging NEVER authorizes activation. Distinct environment manifests are planning evidence only, not credentials or authority.
 - When a new chat begins, inspect Git state in dev first and compare runtime Git state read-only. Read `docs/PI-REPOSITORY-LAYOUT-PLAN.md`. Changes to running services, live HA connections or writes, owner-controlled credentials, stage deployment and production release require the existing explicit gate/authorization workflow.
@@ -56,6 +56,14 @@ Locks, alarm/security, destructive configuration changes and other critical oper
 4. Do not weaken existing safety/tests to make a change pass.
 5. Update documentation when behavior or architecture changes.
 6. After a stable tested milestone, commit/push it to GitHub.
+
+## Selective engineering practices — 2026-10-13
+
+- **Reuse methods, not frameworks.** Apply the concise local [engineering playbook](docs/development/ENGINEERING-PRACTICES.md), informed by selected Matt Pocock and ECC documentation. Do **not** install their agents, hooks, CLI, memory or MCP configurations; no extra paid services or process managers.
+- Bug fixes: reproduce a precise failure using existing `node:test`/offline fixture before fixing; run focused test then full existing `npm test` at the stable milestone. Preserve real red/green evidence; do not invent production results.
+- Meaningful code/PR reviews must independently inspect **spec behavior** and **standards/security**. When touching MCP, Telegram, policy, confirmation, secrets or HA writes, check exact scope, authorization, unavailable/failure handling, secrets, single-poller and rollback paths.
+- For prospective releases, record exact diff against immutable pinned production. **Broad DEV diff is not automatically deployable**; prefer a small reviewed read-only slice, GitHub CI, separate Pi evidence and explicit owner approval for any runtime change. Existing Gate B/C/D/E controls override external examples.
+- Keep one current status in `docs/CURRENT-STATE.md`; put open actions in TODO and evidence in WORKLOG/HANDOFF. Minimize extra process documents and repeated owner questions.
 
 ## Accelerated vertical-slice workflow (approved 2026-10-09)
 - Prioritize complete, independently tested Gate B command-provenance -> immutable action -> reviewed policy -> confirmation -> authoritative scope -> deny/audit chain over isolated protocol micro-modules.

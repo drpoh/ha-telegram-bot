@@ -39,6 +39,9 @@ Start:
 
 ## Where to start
 
+**New documentation entrypoint:** [docs/README.md](docs/README.md) → [single CURRENT-STATE](docs/CURRENT-STATE.md) → [short HANDOFF](docs/development/HANDOFF.md) → [open TODO](docs/TODO.md). Historical `docs/CHAT-HANDOFF.md` is preserved but no longer the recommended entrypoint.
+
+
 See the [structure index](docs/STRUCTURE-INDEX.md) for file ownership, logical module groups and safe cleanup candidates.
 
 **Current directory, source, active runtime and Git branches are different things.** Read [Project map](docs/PROJECT-MAP.md) before editing files or comparing service versions. The running V3 pilot is a pinned release artifact, not the historical `~/rs-home-ai-v3` checkout.

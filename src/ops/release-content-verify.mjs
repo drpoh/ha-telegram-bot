@@ -2,7 +2,7 @@
 // Executable Git mode is checked separately. Never reads untracked secrets/node_modules.
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
-import {constants,closeSync,existsSync,fstatSync,lstatSync,openSync,readFileSync,readSync,readlinkSync,realpathSync} from 'node:fs';
+import {constants,closeSync,fstatSync,lstatSync,openSync,readFileSync,readSync,readlinkSync,realpathSync} from 'node:fs';
 import {basename,dirname,isAbsolute,join,relative,resolve,sep} from 'node:path';
 
 const shaPattern=/^[0-9a-f]{40}$/;
@@ -46,7 +46,7 @@ export function verifyTrackedReleaseContent({repoDir,releaseDir,expectedPrefix='
   if(!shaPattern.test(commit)||!commit.startsWith(expectedPrefix))return cleanResult('release_marker_mismatch');
   result.commit=commit;
   const manifest=execFileSync('git',['-C',repoRoot,'ls-tree','-r','-z','--full-tree',commit],{
-   encoding:'buffer',timeout:12000,maxBuffer:25*1024*1024,stdio:['ignore','pipe','pipe']
+   encoding:null,timeout:12000,maxBuffer:25*1024*1024,stdio:['ignore','pipe','pipe']
   });
   const entries=manifest.subarray(0).toString('utf8').split('\0').filter(Boolean);
   if(entries.length===0)return {...result,reason:'empty_git_tree'};

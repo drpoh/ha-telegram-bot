@@ -9,6 +9,9 @@ import {createNineLightTelegramConsent} from '../home/nine-light-telegram-consen
 import {createNewLightDispatch} from '../home/new-light-physical-dispatch.mjs';
 import {RESPONDING_NEW_LIGHT_IDS} from '../home/responding-new-light-batch.mjs';
 import {inspectSingleNewLight} from '../home/single-new-light-status.mjs';
+import {summarizeSauna} from '../home/sauna-status.mjs';
+import {summarizeTambourLight} from '../home/tambour-light-status.mjs';
+import {summarizeLightOverview} from '../home/light-overview.mjs';
 import {createReviewedLightReadonlyReader} from '../home/reviewed-light-readonly-client.mjs';
 import {routeV3ReadonlyQuestion} from './v3-readonly-question-router.mjs';
 const base='/home/drpoh/.config/rs-home-ai-v3/';

@@ -1,5 +1,11 @@
 # WORKLOG — Development checkpoint journal
 
+## 2026-10-13 — documentation phase 1 (DEV source only)
+
+Created `docs/README.md` index and compact `docs/development/HANDOFF.md`; rewrote `docs/CURRENT-STATE.md` as the only operational status; reduced `docs/TODO.md` to open tasks. The old full TODO is preserved in `docs/archive/TODO-snapshot-before-phase1-2026-10-13.md` and historical `docs/CHAT-HANDOFF.md` remains in place until phase 2. Updated AGENTS and navigation. This is GitHub-only: no Pi runtime, HA or production changes.
+
+
+
 ## 2026-10-13 — owner-verified Pi source, HA reads and documentation review
 
 Owner reports clean DEV ff-only from `163fc89` to `6f6e694` on `feature/v3-home-agent`, Node `22.23.3`, isolated suite **198 files, 726 assertions, zero failed**, no Git changes. Live manual read-only sauna 28 °C and four scoped lights (one ON, three OFF) passed. Subsequent operator-only 19 light candidate inspection: 2 ON, 7 OFF, 10 unavailable (`partial` expected), no HA writes and no new physical fixture identity approval. Outbound HTTPS reporter in private GitHub Issue #1 returned `REPORT=sent`; public `main` PR #102 fixed a strict parser that rejected V2/V3 numbered diagnostic keys. The connector to private reports still returns 404; do not claim the assistant independently read the posted payload.

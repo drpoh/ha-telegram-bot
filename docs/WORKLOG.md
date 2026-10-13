@@ -1,5 +1,9 @@
 # WORKLOG — Development checkpoint journal
 
+## 2026-10-13 — pinned-base, additive kitchen read-only release proposal (not deployed)
+
+Opened [PR #134](https://github.com/drpoh/ha-telegram-bot/pull/134) against **separate pinned Git baseline 9dd5964**, not current DEV, so existing owner authorization/confirmation/journal/poller implementation remains unchanged. Adds existing DEV kitchen bounded summarizer and two helper modules, one kitchen classifier set line, 2 extra lines in pinned Telegram pilot to route only `ha_get_state`, and one focused offline regression test. **6 files changed, no old lines deleted, no install, no running service touched.** GitHub Actions pull-request job is configured only for DEV base, therefore **proposal CI has not run**. Next owner Pi stage via isolated offline checkout and `node --test`, then separate release/rollback review. Gate D OPEN. No prod promotion implied.
+
 ## 2026-10-13 — focused kitchen read-only release security boundary
 
 Read current source against pinned V3 `9dd5964`; GitHub compare at DEV `39b4fce` shows 118 commits, 123 changed files, and pilot entrypoint differences including `/newlight` and `/confirm`. Blanket promotion is **NO-GO**. Added one focused **offline** regression test to prove the four-entity kitchen Telegram route reports unavailable separately, stays authorization/actualWrite=false, avoids reads for mixed question/action phrases, does not reach disabled new-light physical dispatch even with fabricated approval, and routes owner-only messages before the physical consent fallback. Gate D document records the scoped review; actual Pi and Telegram production were **not** exercised, no second poller started. Existing Matt Pocock/ECC engineering playbook reused rather than adding a new test system.

@@ -2,13 +2,14 @@
 
 > **Единственная актуальная сводка проекта.** Данные об устройствах — снимок на момент проверки, не текущие состояния. Исторические записи в других документах не обновляют эту сводку автоматически.
 >
-> **Последняя проверка владельца, 2026-10-13:** Raspberry Pi DEV `npm test` — **209 тестовых файлов, 766 проверок, 0 ошибок**. Ручной live **HA-MCP read-only** preflight четырёх естественных вопросов — **4/4 complete, `TELEGRAM_QUESTIONS_READONLY=PASS`**, без Telegraf poller, LLM и HA writes. Это НЕ Telegram API/end-to-end и НЕ развертывание V2/V3 production. Последний полный HA Template (27 `light.*`) исторический, до удаления двух несуществующих сущностей. Активный V3 `ExecStart` ранее указывал на release с именем `9dd5964`, но фактическая целостность релиза ещё не проверена.
+> **Последняя проверка владельца, 2026-10-13:** Raspberry Pi DEV `npm test` — **210 тестовых файлов / 771 проверка / 0 ошибок**. Нативный read-only Gate D verifier подтвердил **437/437 отслеживаемых Git-файлов** закреплённого V3 `RELEASE_COMMIT=9dd5964a4956b88227ec4002ac80ef46a186d632`: `RELEASE_SOURCE_STATUS=PASS`, Git blob bytes PASS, executable bits PASS, missing/modified/type errors 0. Четыре естественных русских вопроса ранее прошли live HA-MCP preflight (**4/4 complete**) без Telegram poller или HA writes. Путь V3 `ExecStart` ранее указывал на `9dd5964` release. **Не проверены:** зависимости/untracked файлы, фактическая память процесса, единственность poller, Telegram end-to-end и реальный rollback. Production не обновлялся.
 
 ## 1. Что подтверждено
 
 | Возможность | Статус | Основание и границы |
 | --- | --- | --- |
-| Pi DEV исходники / тесты | ✅ Выполнено владельцем, версия Pi не выведена отдельно | Более поздний запуск `npm test`: **206 файлов, 747 проверок, 0 ошибок** после синхронизации ветки с PR #113; отдельного `git rev-parse` в том выводе нет. Ранее на `5380a75` пройдено 202/737/0. GitHub CI новой кухонной версии необходимо проверять отдельно |
+| Прогресс `npm test` в DEV | ⚠️ В новой ветке PR, Pi ещё не проверял | Отдельные индикаторы для Node syntax-check и isolated suite: интерактивная строка с прогресс-баром, **прошедшим временем (не прогноз ETA)**, счётчик файлов/ошибок; CI/pipe получают редкие текстовые checkpoint (без ANSI). Финальная строка `Isolated test files:` сохраняется для прежнего GitHub summary. Никаких дополнительных зависимостей |
+| Pi DEV исходники / тесты | ✅ Выполнено владельцем после PR #124 | **210 test files / 771 assertions / 0 failed** (2026-10-13), затем отдельный read-only `v3-release-content-readonly.mjs` PASS. Последний точный DEV `git rev-parse` отдельно не опубликован; не считать имя ветки подтверждением SHA |
 | HA-MCP чтение | ✅ Проверено на Pi | `READONLY_PREFLIGHT=PASS`, 2026-10-13: сауна 28 °C, порог 85 °C; 4 световые сущности — 1 ON / 3 OFF |
 | Новые светильники: чтение | ⚠️ Частично | 19 проверены; **2 ON, 7 OFF, 10 unavailable**; `NEW_LIGHT_REVIEW=partial`; прочитанные сущности ≠ подтверждённые физические светильники |
 | Новые светильники: включение/выключение | 🔒 Не разрешено | Код DEV не выдаёт нового физического допуска; требуются проверка идентичности, отдельное разрешение и release gate |
@@ -37,7 +38,7 @@
 | --- | --- | --- |
 | DEV | `/home/drpoh/projects/rs-home-ai-dev`, ветка `feature/v3-home-agent` | Единственный изменяемый рабочий каталог |
 | STAGE | Offline mock / CI-gated immutable candidate | Не является работающей HA-инсталляцией |
-| V3 production | Отдельный закреплённый release, user-systemd | **active**; ExecStart `/home/drpoh/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-9dd5964/src/pilot/telegram-readonly.mjs`; SHA содержимого не перепроверен |
+| V3 production | Отдельный закреплённый release, user-systemd | Ранее `active`; ExecStart `/home/drpoh/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-9dd5964/src/pilot/telegram-readonly.mjs`. **437/437 tracked source bytes и exec bits PASS**, SHA из RELEASE_COMMIT подтверждён; установленный runtime/dependencies отдельно не проверены |
 | Rollback | Исторически `97343fa` | Проверить путь/наличие перед любым использованием |
 | V2 production | `/home/drpoh/ha-telegram-bot` | `ha-telegram-bot.service` **active** (read-only systemd); путь ExecStart, API и runtime SHA не перепроверены |
 | Historical V3 | `/home/drpoh/rs-home-ai-v3` | Не изменять; связан с Gate D |
@@ -52,7 +53,7 @@
 | A | ⚠️ Историческая база | Не приравнивать старое принятие к новой версии |
 | B | **OPEN** | Физическая идентичность, доверенная HA-registry привязка и отдельно разрешённое управление новыми светильниками |
 | C | ⚠️ Частичный offline | Реальная fault/recovery проверка независимо от mock |
-| D | ⚠️ Сверка байтов ещё не проверена | Владелец подтвердил наличие rollback каталогов **`c6a9812` и `97343fa`** (2026-10-13); предыдущий `tar --compare` вернул `UNVERIFIED` с `Mode/Uid/Gid differs`. Это расхождение метаданных, не доказательство повреждения или совпадения содержимого. В DEV подготовлена read-only проверка по Git blobs, включая исполняемые биты. Single poller и реальный rollback остаются непроверенными |
+| D | ✅ Отслеживаемые source bytes подтверждены; Gate D **OPEN** | Владелец подтвердил `RELEASE_SOURCE_STATUS=PASS` (**437/437** tracked Git blobs совпадают, exec bits PASS, no missing/modified/type errors). SHA `9dd5964a4956b88227ec4002ac80ef46a186d632`. Rollback каталоги `c6a9812` и `97343fa` присутствуют, но не запущены и не проверены функционально. **Открыто:** dependencies/untracked, соответствие живого процесса, single-poller, Telegram API и recovery/rollback |
 | E | **OPEN** | Реальный голосовой цикл и безопасные подтверждения |
 
 Подробности критериев: [Gate B](gates/GATE-B.md) · [Gate C](gates/GATE-C.md) · [Gate D](gates/GATE-D.md) · [Gate E](gates/GATE-E.md). Это не отдельный источник актуального статуса.
@@ -69,7 +70,7 @@
 
 ## 5. Следующие приоритеты
 
-1. После **4/4 live HA-MCP read-only PASS** перейти к Gate D: только чтением проверить фактические V2/V3 ExecStart, `RELEASE_COMMIT` активного pinned V3, целостность git-archive-содержимого относительно указанного SHA, rollback path и single-poller статус; никаких рестартов/promote без отдельного owner approval.
+1. После **4/4 live HA-MCP read-only PASS** и **437/437 V3 tracked source PASS** далее Gate D: только чтением сверить живой `MainPID`/`ExecStart` V2/V3 с этим release, проверить единственность Telegram poller и заранее оценить план отката. Никаких рестартов/promote без отдельного owner approval.
 2. Четыре присутствующие кухонные HA-сущности **уже live-прочитаны** в DEV (1 ON / 3 OFF / 0 UNKNOWN); следующий шаг — подтверждение точного физического контура `light.kukhnia_svet` (Switch as X) через HA registry и независимое сопоставление без включений. После удаления двух несуществующих `light.*` уточнить судьбу `light.spalnia` в HA UI. Не выдавать устаревшие снимки 27/38 за текущий инвентарь.
 3. Подготовить строго ограниченный, отдельно согласованный первый реальный тест нового света; никаких разрешений из одного только Telegram текста.
 4. Завершить Gate B/C/D acceptance без новых инфраструктурных велосипедов (systemd, HA-MCP, Assist, ESPHome).

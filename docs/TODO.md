@@ -6,7 +6,7 @@
 
 ## P0 — полезное безопасное управление светом
 
-- [ ] **Gate D provenance:** владелец подтвердил `c6a9812` и `97343fa` rollback директории (`PRESENT`). Проверка через `tar --compare` вернула `UNVERIFIED` с `Mode/Uid/Gid differs`, что может быть только метаданными, но байтовое совпадение пока не доказано. После CI + безопасной синхронизации Pi DEV вручную выполнить **только чтение** `node scripts/manual/v3-release-content-readonly.mjs --readonly --operator-approved` (Git blobs + exec bits), затем проверить V2/V3 ExecStart, single poller и возможность rollback отдельно. Не менять production.
+- [ ] **Gate D remaining:** пользователь подтвердил `RELEASE_SOURCE_STATUS=PASS` для pinned V3 `9dd5964`: **437/437** отслеживаемых файлов и исполняемые биты идентичны Git, missing/modified/type errors = 0. Оба rollback каталога `c6a9812`, `97343fa` есть, но процедуру отката не испытывали. Осталось read-only проверить запущенный V2/V3 `ExecStart`/MainPID, единственность Telegram poller, необходимые зависимости/untracked configuration и recovery/rollback, прежде чем готовить новый prod-релиз. Не выполнять restart/HA writes.
 - [ ] **Identity:** привязать `light.kukhnia_svet` к exact HA entity, устройству, области и физическому контуру; проверить риск дублей/виртуальных ламп.
 - [ ] После успешного read-only `light.kukhnia_svet=off` (снимок 2026-10-13) проверить через **HA UI entity registry** точные `entity_id`, integration/platform, связанное device и area; затем сопоставить с независимым подтверждением физического контура без переключения. При отсутствующей device/area ссылке оставить блокировку. Telegram `/lightcheck` остаётся source-only до отдельного release.
 - [ ] После подтверждения первой физической идентичности проверять остальные контуры по актуальному HA registry, а не старому списку 19 кандидатов. Исторические 10 unavailable уже не являются текущим списком неисправностей; не переносить их в разрешённый action scope и не приравнивать `unavailable` к `off`.
@@ -23,6 +23,8 @@
 - [ ] Проверить существенные пробелы Gates B/C/D/E: HA registry/device-source trust, fault isolation, recovery/reboot, голос/Assist; отделять offline mock от реального HA теста.
 - [ ] Пересмотреть фактический V2 runtime и актуальные команды / память / очередь без второго poller. Повторно использовать имеющиеся `src/ai/`, `src/mcp/`, `src/memory/`, `src/telegram/`, `p-queue`, а не создавать параллельную инфраструктуру.
 - [ ] Формализовать безопасный DEV → offline STAGE → pinned PROD процесс с явным ручным promote и rollback; повторно проверять ExecStart, SHA, права и single-poller invariant.
+
+- [ ] **Прогресс тестов в терминале Raspberry Pi:** GitHub DEV PR добавляет две стадии (`npm run check` и isolated tests) с TTY progress bar, процентом, количеством файлов, ошибками и прошедшим временем; CI выводит краткие 10%-checkpoint. После PR CI и безопасной Pi DEV синхронизации подтвердить реальный TTY-render через `npm test`; проверить, что финальная сводка не изменилась, нет ANSI-шума в CI, bash/SSH не закрывается при ошибке.
 
 ## P1 — документация, безопасность и наблюдаемость
 

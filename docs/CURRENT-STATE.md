@@ -2,7 +2,7 @@
 
 > **Единственная актуальная сводка проекта.** Данные об устройствах — снимок на момент проверки, не текущие состояния. Исторические записи в других документах не обновляют эту сводку автоматически.
 >
-> **Последняя проверка владельца, 2026-10-13:** Raspberry Pi DEV `npm test` — **391/391 syntax files, 212 test files / 785 assertions / 0 failures**. Компактный TTY прогресс подтверждён владельцем (`S [########]`, `T [########]`), без разрастания истории обновлений. Ручной **Gate D runtime read-only**: `GATE_D_RUNTIME_READONLY=PASS`, V2 `MainPID=927`, V3 `MainPID=3713`, оба ожидаемых Node entrypoint совпадают, PID различаются, **1 процесс на каждый известный entrypoint, 0 дубликатов, 0 недоступных процессов**. Отдельно ранее на Pi: **437/437 отслеживаемых Git bytes + executable bits PASS** для закреплённого V3 релиза `9dd5964a4956b88227ec4002ac80ef46a186d632`; live HA-MCP natural questions **4/4 complete**. **Ещё не проверены:** единственность Telegram polling по токену, installed deps/untracked configs, Telegram end-to-end и функциональный rollback. HA writes и production deployment не выполнялись.
+> **Последняя проверка владельца, 2026-10-13:** Raspberry Pi DEV `npm test` — **391/391 syntax files, 212 test files / 785 assertions / 0 failures**. Компактный TTY прогресс подтверждён владельцем (`S [########]`, `T [########]`), без разрастания истории обновлений. Ручной **Gate D runtime read-only**: `GATE_D_RUNTIME_READONLY=PASS`, V2 `MainPID=927`, V3 `MainPID=3713`, оба ожидаемых Node entrypoint совпадают, PID различаются, **1 процесс на каждый известный entrypoint, 0 дубликатов, 0 недоступных процессов**. Отдельно ранее на Pi: **437/437 отслеживаемых Git bytes + executable bits PASS** для закреплённого V3 релиза `9dd5964a4956b88227ec4002ac80ef46a186d632`; live HA-MCP natural questions **4/4 complete**. **Новый результат read-only dependency review:** активный `9dd5964` и основной rollback `c6a9812` имеют `RELEASE_STRUCTURE=PRESENT`, `DEPENDENCIES=PASS_STATIC` по `npm ls --offline`; исторический `97343fa` вернул `RELEASE_STRUCTURE=UNVERIFIED`, точная недостающая проверка ещё не установлена. **Не проверены:** Telegram polling по токену, содержимое установленных пакетов, Telegram end-to-end и реальный откат. HA writes и production deployment не выполнялись.
 
 ## 1. Что подтверждено
 
@@ -39,8 +39,8 @@
 | --- | --- | --- |
 | DEV | `/home/drpoh/projects/rs-home-ai-dev`, ветка `feature/v3-home-agent` | Единственный изменяемый рабочий каталог |
 | STAGE | Offline mock / CI-gated immutable candidate | Не является работающей HA-инсталляцией |
-| V3 production | Отдельный закреплённый release, user-systemd | Ранее `active`; ExecStart `/home/drpoh/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-9dd5964/src/pilot/telegram-readonly.mjs`. **437/437 tracked source bytes и exec bits PASS**, SHA из RELEASE_COMMIT подтверждён; установленный runtime/dependencies отдельно не проверены |
-| Rollback | Исторически `97343fa` | Проверить путь/наличие перед любым использованием |
+| V3 production | Отдельный закреплённый release, user-systemd | Ранее `active`, main PID `3713` и точный V3 Node entrypoint verified; путь `.../rs-home-ai-v3-release-9dd5964/src/pilot/telegram-readonly.mjs`. **437/437** tracked bytes/exec bits PASS, `RELEASE_STRUCTURE=PRESENT`, `DEPENDENCIES=PASS_STATIC`. Это не проверяет содержимое node_modules или Telegram API |
+| Rollback | `c6a9812` основной; `97343fa` архивный/дополнительный | Оператор подтвердил структуру + `npm ls --offline` **PASS_STATIC** для `c6a9812`, но **функционально откат не выполнен**. `97343fa`: каталог ранее PRESENT, теперь `RELEASE_STRUCTURE=UNVERIFIED` по составной проверке — не считать готовым без точной диагностики. Ничего не удалять/переустанавливать |
 | V2 production | `/home/drpoh/ha-telegram-bot` | `ha-telegram-bot.service` **active**; операторский `/proc` snapshot подтвердил ожидаемый V2 Node entrypoint и `MainPID=927`, отдельно от V3. Telegram API, secret identity и installed dependencies не проверены |
 | Historical V3 | `/home/drpoh/rs-home-ai-v3` | Не изменять; связан с Gate D |
 | Home Assistant Green | Независимый контроллер устройств | Продолжает работать при остановке RS Home AI |
@@ -54,7 +54,7 @@
 | A | ⚠️ Историческая база | Не приравнивать старое принятие к новой версии |
 | B | **OPEN** | Физическая идентичность, доверенная HA-registry привязка и отдельно разрешённое управление новыми светильниками |
 | C | ⚠️ Частичный offline | Реальная fault/recovery проверка независимо от mock |
-| D | ⚠️ Gate D OPEN; tracked release и local runtime evidence PASS | Владелец подтвердил **437/437 Git blob bytes и exec bits** закреплённого V3 `9dd5964` + `GATE_D_RUNTIME_READONLY=PASS` (две независимые службы, точные entrypoints, локальных известных дубликатов нет). Rollback каталоги `c6a9812` и `97343fa` существуют, но не активировались. Остаток: installed dependency tree, Telegram token-level polling/API и реальный recovery/rollback |
+| D | ⚠️ Gate D OPEN; source, local runtime, static deps основного rollback PASS | Владелец подтвердил **437/437** source/exec bits для active V3, `GATE_D_RUNTIME_READONLY=PASS` (V2/V3 ожидаемые Node процессы без локальных известных дублей); `npm ls --offline`: `9dd5964` и `c6a9812` — **PASS_STATIC**, `97343fa` — **STRUCTURE=UNVERIFIED**. Никакой restart/rollback не проводился. Открыто: Telegram token-level polling/API, код/зависимости в памяти, функциональный rollback, secondary rollback inventory |
 | E | **OPEN** | Реальный голосовой цикл и безопасные подтверждения |
 
 Подробности критериев: [Gate B](gates/GATE-B.md) · [Gate C](gates/GATE-C.md) · [Gate D](gates/GATE-D.md) · [Gate E](gates/GATE-E.md). Это не отдельный источник актуального статуса.
@@ -71,7 +71,7 @@
 
 ## 5. Следующие приоритеты
 
-1. После **4/4 live HA-MCP PASS**, **437/437 tracked source PASS** и **Gate D local runtime PASS** перейти к проверке установленных зависимостей и rollback readiness **только чтением** средствами `npm ls --offline`/`test`; затем отдельный approved Telegram API/release plan. Token-level polling и функциональный откат пока не доказаны; никаких restart/promote или HA writes.
+1. **Gate D static dependency review получен:** active `9dd5964` и основной fallback `c6a9812` — PASS_STATIC; дополнительный старый `97343fa` — UNVERIFIED. Следом — только чтением определить точное отсутствующее условие у `97343fa`; затем проверить **уже работающий V3 Telegram** через `/status` и `/sauna` без restart/нового poller. Эти команды есть в pinned V3 `9dd5964`. Продвижение DEV/new write scope — исключительно отдельным review.
 2. Четыре присутствующие кухонные HA-сущности **уже live-прочитаны** в DEV (1 ON / 3 OFF / 0 UNKNOWN); следующий шаг — подтверждение точного физического контура `light.kukhnia_svet` (Switch as X) через HA registry и независимое сопоставление без включений. После удаления двух несуществующих `light.*` уточнить судьбу `light.spalnia` в HA UI. Не выдавать устаревшие снимки 27/38 за текущий инвентарь.
 3. Подготовить строго ограниченный, отдельно согласованный первый реальный тест нового света; никаких разрешений из одного только Telegram текста.
 4. Завершить Gate B/C/D acceptance без новых инфраструктурных велосипедов (systemd, HA-MCP, Assist, ESPHome).

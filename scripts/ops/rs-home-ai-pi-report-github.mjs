@@ -80,7 +80,7 @@ const rules = new Map([
 ]);
 const values = new Map();
 for (const line of diagnostic.trim().split(/\r?\n/)) {
-  const match = /^([A-Z_]+)=(.*)$/.exec(line);
+  const match = /^([A-Z0-9_]+)=(.*)$/.exec(line);
   if (!match || !rules.has(match[1]) || !rules.get(match[1]).test(match[2]) || values.has(match[1])) {
     console.error('REPORT=unexpected_diagnostic_output');
     process.exit(2);

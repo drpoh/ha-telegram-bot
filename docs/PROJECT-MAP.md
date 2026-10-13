@@ -24,6 +24,10 @@ Updated 2026-10-12 (owner-confirmed first CI-gated immutable candidate after PR 
 
 Engineering direction: [reuse-first ADR](ADR-REUSE-FIRST-2026-10-11.md). For code/document grouping and safe cleanup decisions see [structure index](STRUCTURE-INDEX.md).
 
+## Documentation phase 1 (2026-10-13)
+
+Read [index](README.md) → [only current status](CURRENT-STATE.md) → [short handoff](development/HANDOFF.md) → [open TODO](TODO.md). The old 100 KB `CHAT-HANDOFF.md` and dated snapshots remain historical at their original paths until checked references permit archival; do not treat this map's old table values as a newer runtime check.
+
 ## Repository navigation
 | Path | Role |
 |---|---|

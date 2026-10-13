@@ -10,6 +10,7 @@ import {createNineLightTelegramConsent} from '../home/nine-light-telegram-consen
 import {createNewLightDispatch} from '../home/new-light-physical-dispatch.mjs';
 import {RESPONDING_NEW_LIGHT_IDS} from '../home/responding-new-light-batch.mjs';
 import {inspectSingleNewLight} from '../home/single-new-light-status.mjs';
+import {createReviewedLightReadonlyReader} from '../home/reviewed-light-readonly-client.mjs';
 import {classifySaunaQuestionMode} from '../home/sauna-question-mode.mjs';
 import {summarizeTambourLight} from '../home/tambour-light-status.mjs';
 import {classifyTambourQuestionMode} from '../home/tambour-question-mode.mjs';
@@ -30,6 +31,7 @@ const claimsPath='/home/drpoh/.local/state/rs-home-ai-v3/claims.db';
 const storage=prepareV3PilotExecutionJournal({dbPath:claimsPath,rollbackRoot:'/home/drpoh/rs-home-ai-v3'});
 const executionJournal=storage.journal;
 const saunaRead=createKitchenMcpClient({lanMvp:true,ownerApprovedLanHttpPilot:true});
+const newLightRead=createReviewedLightReadonlyReader();
 // New-light commands are visible in the DEV source but physically disabled until
 // a separate trusted deployment review provisions exact physical target approvals.
 const newLightDispatch=createNewLightDispatch({releaseEnabled:false,approvedIds:[]});
@@ -74,7 +76,7 @@ bot.command('lightcheck',async ctx=>{
  if(parts.length!==2)return ctx.reply('Формат: /lightcheck light.kukhnia_svet');
  const result=await inspectSingleNewLight({
   entityId:parts[1],
-  readState:id=>saunaRead('ha_get_state',{entity_id:id})
+  readState:id=>newLightRead(id)
  });
  return ctx.reply(result.text);
 });

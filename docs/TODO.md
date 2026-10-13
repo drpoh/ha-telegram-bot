@@ -13,8 +13,8 @@
 - [ ] Подготовить отдельно утверждаемую минимальную физическую capability/долговременную запись подтверждения для одного exact ID с rollback; сохранить старое поведение `light.tambur_svet_l1`. Source-only `/newlight` **не даёт разрешения** на реальный сервисный вызов.
 - [ ] Только после explicit owner approval и release gate: один контролируемый реальный тест ON/verification/OFF/verification через Telegram `/confirm`, отказные сценарии и возможность отката. Никаких массовых комнатных переключений или автоматического разрешения из LLM.
 
-- [ ] **Identity review — последний HA Template (27 `light.*`)**: 9 ON / 13 OFF / 5 UNKNOWN после обновления Home Assistant. `Switch as X` подтвердил семь ID: `light.koridor`, `light.koridor_1_etazh`, `light.koridor_spot`, `light.kukhnia_svet`, `light.vykliuchatel_z_gostinaia_l1/l2/l3`. Сущности Switch as X — представления выключателей, не доказательство независимых физических светильников. Из UNKNOWN отдельно изучить `light.sonoff_1000d78a79`, `light.spalnia`, `light.svet_kukhni`; один Browser Mod и `light.ves_svet_2` исключать из новых физических разрешений. Проверить, что удалённые ранее связанные сущности не используются автоматизациями/дашбордами; не восстанавливать и не удалять ничего автоматически.
-- [ ] **Приёмка актуального kitchen read-only MVP на Pi**: исходный список из 7 включал четыре ныне отсутствующие виртуальные/связанные сущности. В DEV подготовлена замена на четыре присутствующие (`light.kukhnia_led_niz_l1`, `light.kukhnia_led_niz_l2`, `light.kukhnia_svet`, `light.led_kukhnia`). После PR/CI и безопасного `git merge --ff-only` вручную запустить `scripts/manual/v3-kitchen-lights-readonly-preflight.mjs --readonly --operator-approved`; проверка может вернуть `partial`. Никакого второго Telegram poller, изменений production или новых write permissions.
+- [ ] **Identity review — после очистки HA**: последний полный пользовательский Template был **27 `light.*` (9 ON / 13 OFF / 5 UNKNOWN)**, но после него удалены два несуществующих ID: `light.svet_kukhni` и `light.sonoff_1000d78a79`. Не считать их живыми проблемами и не вычислять новый полный счет без повторного снимка. `Switch as X` ранее подтвердил 7 ID; проверить точную привязку `light.kukhnia_svet` к контуру и `light.spalnia` через HA registry. Browser Mod и `light.ves_svet_2` не авторизовать для физических операций. Проверить возможные зависимости удалённых ID в автоматизациях/дашбордах отдельно, только чтением.
+- [ ] **Telegram MVP acceptance**: Pi DEV **уже проверил** 4-entity kitchen read-only CLI (`complete`, 1 ON / 3 OFF / 0 UNKNOWN). Не приравнивать CLI к реально развёрнутым новым Telegram диалогам. Для end-to-end `Что со светом на кухне?` потребуется отдельно согласованный pinned V3 release и проверка единственного Telegram poller; до этого production не обновлять.
 
 ## P1 — надёжность и приемка
 
@@ -26,6 +26,8 @@
 
 - [ ] Исторические Markdown-пути сохранять, пока есть потребители; нет необходимости продолжать массовую реорганизацию. Pi DEV документация на `5380a75` уже прошла `DOCS_CHECK=PASS files=15 links=131`.
 - [ ] При необходимости подключить GitHub App ChatGPT **только для чтения** приватного репозитория диагностических отчётов. После отдельной проверки решить судьбу неудачного Tor workflow и выделенного диагностического ключа/секретов; не ломать Termux SSH.
+
+- [ ] **GitHub настройки безопасности и чистоты** (owner UI, не код): проверить `delete_branch_on_merge` (**сейчас false**) и включить после согласования, затем проверить Secret Scanning / Push Protection в GitHub Security; не переписывать историю и не чистить вручную критичные release/rollback ветки. Отдельно рассмотреть Dependabot с ограничением частоты PR (после MVP), без auto-merge и billable функций.
 
 ## P2 — дальнейшие возможности (после P0)
 

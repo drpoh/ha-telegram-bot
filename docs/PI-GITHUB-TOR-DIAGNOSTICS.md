@@ -80,7 +80,7 @@ HA_MCP_HTTP=reachable|unverified
 HA_WRITES=none
 ```
 
-Do not treat example values as evidence of today's Pi state. The runner waits up to 120 seconds for Tor to report `Bootstrapped 100% (done)` before attempting SSH, then makes at most two strictly pinned SSH attempts. The combined timeout is bounded by the ten-minute job limit. On a bootstrap timeout the workflow reports only `TOR_LAST_STAGE`, Tor process/SOCKS status and selected warning categories; it never prints raw Tor logs or network addresses. If the workflow still fails, check the stage and SSH error; a banner-exchange timeout may indicate onion reachability or Tor service issues on the Pi and is not proof of a wrong SSH key. Never disable key pinning, expose TCP 22, or disable Tor security to make it pass.
+Do not treat example values as evidence of today's Pi state. The runner waits up to 120 seconds for Tor to report `Bootstrapped 100% (done)` before attempting SSH, then makes at most two strictly pinned SSH attempts. The combined timeout is bounded by the ten-minute job limit. On a bootstrap timeout the workflow reports whether the Tor log exists/contains entries, number of bootstrap messages, presence of warnings/errors, `TOR_LAST_STAGE`, Tor process/SOCKS status and selected warning categories; it never prints raw Tor logs or network addresses. If the workflow still fails, check the stage and SSH error; a banner-exchange timeout may indicate onion reachability or Tor service issues on the Pi and is not proof of a wrong SSH key. Never disable key pinning, expose TCP 22, or disable Tor security to make it pass.
 
 ## Rollback
 

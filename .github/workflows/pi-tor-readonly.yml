@@ -37,6 +37,31 @@ jobs:
           done
           if [[ "$ready" != true ]]; then
             echo 'TOR_BOOTSTRAP=timeout'
+            # Output only bounded classifications and counts. Never disclose raw
+            # Tor log lines, peer addresses, onion names or sensitive settings.
+            if [[ ! -f "$RUNNER_TEMP/tor.log" ]]; then
+              echo 'TOR_LOG=missing'
+            elif [[ ! -s "$RUNNER_TEMP/tor.log" ]]; then
+              echo 'TOR_LOG=empty'
+            else
+              echo 'TOR_LOG=nonempty'
+              count="$(grep -Ec 'Bootstrapped [0-9]+%' "$RUNNER_TEMP/tor.log" || true)"
+              echo "TOR_BOOTSTRAP_EVENTS=${count:-0}"
+              if grep -Eiq '\\[(warn|err)\\]' "$RUNNER_TEMP/tor.log"; then
+                echo 'TOR_HAS_WARN_OR_ERROR=yes'
+              else
+                echo 'TOR_HAS_WARN_OR_ERROR=no'
+              fi
+              if grep -Fqi 'DisableNetwork is set' "$RUNNER_TEMP/tor.log"; then
+                echo 'TOR_NETWORK_DISABLED=yes'
+              fi
+              if grep -Fqi 'No route to host' "$RUNNER_TEMP/tor.log"; then
+                echo 'TOR_WARNING_NO_ROUTE=yes'
+              fi
+              if grep -Fqi 'Cannot connect to guard' "$RUNNER_TEMP/tor.log"; then
+                echo 'TOR_WARNING_GUARD=yes'
+              fi
+            fi
             # Print only predefined classifications, never full Tor logs
             # (which could include network addresses or connection details).
             last_stage="$(grep -E 'Bootstrapped [0-9]+%' "$RUNNER_TEMP/tor.log" | tail -n 1 |

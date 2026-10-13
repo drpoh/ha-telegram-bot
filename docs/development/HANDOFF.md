@@ -28,7 +28,7 @@
 2. В DEV источник естественных вопросов о кухне обновлён с устаревших 7 до **4 присутствующих HA ID** (`light.kukhnia_led_niz_l1/l2`, `light.kukhnia_svet`, `light.led_kukhnia`). В отдельно выделенный `ha_get_state` reader добавлен только exact ID `light.kukhnia_led_niz_l2`. Исторические 19 review candidates и action policy не изменять.
 3. Владелец уже выполнил live read-only kitchen CLI после PR #116: **complete, 4 сущности, 1 ON (`light.kukhnia_svet`), 3 OFF, 0 UNKNOWN**, physical identity unverified. Два несуществующих ID (`light.svet_kukhni`, `light.sonoff_1000d78a79`) удалены в HA; последний полный список 27 ID был до удаления. **Никакой новой Telegram production acceptance пока нет.**
 4. Реальное физическое соответствие Switch as X `light.kukhnia_svet` **не подтверждено**. Из ранее неизвестных **`light.spalnia`** остаётся целью registry review; Browser Mod и `light.ves_svet_2` не используются как физические цели. Удалённые два ID не диагностировать как существующие. Новые физические действия — DENY до явного согласования.
-5. Из Gate D остаётся read-only проверка SHA активного `...release-9dd5964` и V2 ExecStart; нельзя автоматически переключать pinned production. После milestone — обновить только CURRENT-STATE/TODO/HANDOFF; подробности — в WORKLOG.
+5. В новом DEV PR #118 текстовые Telegram read-only вопросы маршрутизируются через отдельно тестируемую injected-reader функцию: test-only fake MCP без запуска poller, прежние `/confirm`/`/cancel` и action restrictions не меняются. После PR CI: безопасный `ff-only` только в DEV, production по-прежнему pinned. Gate D: прочитать фактический SHA `...release-9dd5964` и V2 ExecStart; нужен отдельный release review перед live Telegram проверкой.
 
 ## Правила завершения итерации
 

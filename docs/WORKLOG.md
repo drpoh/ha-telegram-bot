@@ -1,5 +1,11 @@
 # WORKLOG — Development checkpoint journal
 
+## 2026-10-13 — real pinned V3 Telegram natural-language acceptance (owner evidence)
+
+Operator used **already running** private `RSHomeAI_v3_bot` on pinned `9dd5964`, without starting another Telegram process or triggering physical HA writes. Live Telegram replies: `/status` reported protected journal available; `/confirm` **without pending request** returned «Нет действующего запроса для подтверждения»; `/sauna` returned 88.625 °C, ready, 85 °C threshold. Three separately sent natural questions all responded: «Сколько градусов в сауне?» → 89 °C / ready; «Где горит свет?» → **0 ON / 4 OFF / 0 UNKNOWN among exactly 4 selected HA entities**, not whole home; «Горит ли свет в тамбуре?» → off.
+
+Confirms only scoped Telegram ingress/owner replies and HA-MCP read-only status of pinned active V3, not broad intent coverage or DEV read-only kitchen Telegram, not global token poller uniqueness or functional rollback. Pi prior evidence: 437/437 tracked V3 Git blobs + exec bits PASS, local V2/V3 process check PASS, `npm ls --offline` static PASS for active and two historical release dirs, historical `97343fa` selected Git blobs 3/3 PASS. Compare `9dd5964...fabfaa7`: 116 DEV commits/121 changed files; full DEV promotion is not a scoped release. Next: review read-only kitchen delta and prepare explicitly approved single-poller release/rollback, no automatic production change.
+
 ## 2026-10-13 — documentation phase 1 (DEV source only)
 
 Created `docs/README.md` index and compact `docs/development/HANDOFF.md`; rewrote `docs/CURRENT-STATE.md` as the only operational status; reduced `docs/TODO.md` to open tasks. The old full TODO is preserved in `docs/archive/TODO-snapshot-before-phase1-2026-10-13.md` and historical `docs/CHAT-HANDOFF.md` remains in place until phase 2. Updated AGENTS and navigation. This is GitHub-only: no Pi runtime, HA or production changes.

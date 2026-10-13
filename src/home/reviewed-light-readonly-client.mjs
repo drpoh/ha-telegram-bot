@@ -7,7 +7,9 @@ import {StreamableHTTPClientTransport} from '@modelcontextprotocol/sdk/client/st
 import {inspectKitchenLanEndpoint} from '../pilot/kitchen-lan-endpoint-policy.mjs';
 import {NEW_LIGHT_IDS} from './new-light-candidates.mjs';
 
-const reviewedIds=new Set(NEW_LIGHT_IDS);
+// Explicit additional read-only target observed in owner HA Template, 2026-10-13.
+// Keep historic 19 review candidates and every action-capable client unchanged.
+const reviewedIds=new Set([...NEW_LIGHT_IDS,'light.kukhnia_led_niz_l2']);
 export function createReviewedLightReadonlyReader({
  endpointFile='/home/drpoh/.config/rs-home-ai-v3/mcp-url',
  readConfig=readFileSync,

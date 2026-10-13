@@ -36,7 +36,32 @@ jobs:
             sleep 1
           done
           if [[ "$ready" != true ]]; then
-            echo 'Tor did not finish bootstrapping within 120 seconds'
+            echo 'TOR_BOOTSTRAP=timeout'
+            # Print only predefined classifications, never full Tor logs
+            # (which could include network addresses or connection details).
+            last_stage="$(grep -E 'Bootstrapped [0-9]+%' "$RUNNER_TEMP/tor.log" | tail -n 1 |
+              sed -nE 's/.*Bootstrapped ([0-9]+)% \(([a-zA-Z0-9_]+)\).*/\1% \2/p' || true)"
+            echo "TOR_LAST_STAGE=${last_stage:-none}"
+            if pgrep -x tor > /dev/null; then
+              echo 'TOR_PROCESS=running'
+            else
+              echo 'TOR_PROCESS=not-running'
+            fi
+            if nc -z 127.0.0.1 9050 >/dev/null 2>&1; then
+              echo 'TOR_SOCKS=reachable'
+            else
+              echo 'TOR_SOCKS=unreachable'
+            fi
+            for category in 'Problem bootstrapping' 'Network is unreachable' 'Connection refused' 'TLS error'; do
+              if grep -Fiq "$category" "$RUNNER_TEMP/tor.log"; then
+                case "$category" in
+                  'Problem bootstrapping') echo 'TOR_WARNING_BOOTSTRAP=yes' ;;
+                  'Network is unreachable') echo 'TOR_WARNING_NETWORK=yes' ;;
+                  'Connection refused') echo 'TOR_WARNING_REFUSED=yes' ;;
+                  'TLS error') echo 'TOR_WARNING_TLS=yes' ;;
+                esac
+              fi
+            done
             exit 1
           fi
           echo 'TOR_BOOTSTRAP=ready'

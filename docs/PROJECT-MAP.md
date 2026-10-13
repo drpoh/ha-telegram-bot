@@ -1,5 +1,8 @@
 # RS Home AI — authoritative project map
 
+**2026-10-13 correction:** Owner-verified Pi DEV is `6f6e694` (clean, 198 files / 726 assertions), and a real read-only 19-light survey found nine responsive and ten unavailable. Historical rows below identify a `c6a9812` production release while other historical notes identify `9dd5964`; **current active `ExecStart` is not independently confirmed**. Neither claim authorizes deployment. [Latest state](CURRENT-STATE.md) · [documentation audit](DOCUMENTATION-AUDIT-2026-10-13.md).
+
+
 **Start with [CURRENT-STATE](CURRENT-STATE.md) for the concise latest verified status.** Older dated checkpoints in this map remain historical, not permission to deploy.
 
 Updated 2026-10-12 (owner-confirmed first CI-gated immutable candidate after PR #33). See [latest cleanup audit](PROJECT-AUDIT-2026-10-11.md) before considering any file or branch removal. **Start here to avoid confusing source branches with running services.**

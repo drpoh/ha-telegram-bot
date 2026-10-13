@@ -44,6 +44,16 @@ node scripts/manual/v3-all-lights-readonly-inventory.mjs --readonly --operator-a
 
 Если HA возвращает неполную выдачу, пагинацию, неверный формат, превышение 500 или ошибку — `ALL_LIGHTS_INVENTORY=unverified_or_incomplete` / `read_failed` и код 1. Такой результат **не** разрешает считать список полным. Повторное или bulk-чтение живого HA — только с согласия оператора; никогда не запускать это автоматически.
 
+## Gate D — живые Node-процессы V2/V3 (только чтение)
+
+После CI и безопасной синхронизации DEV оператор вручную запускает:
+
+```sh
+node scripts/manual/v3-runtime-readonly-preflight.mjs --readonly --operator-approved
+```
+
+Проверяет только локальные systemd `MainPID` и `/proc` с точными pinned V2/V3 Node entrypoints, не печатает argv или приватную среду, не читает HA и не запускает Telegram. `PASS` относится только к известным локальным entrypoint и их привязке к systemd — **не** к единственности Telegram poller по токену или end-to-end. Нет прав изменять service/HA/release.
+
 ## Gate D — побайтовая сверка исходников pinned release (только чтение)
 
 После CI и безопасной `ff-only` синхронизации DEV:

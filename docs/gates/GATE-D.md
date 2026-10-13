@@ -78,6 +78,21 @@ node scripts/manual/v3-release-content-readonly.mjs --readonly --operator-approv
 
 Если `ExecStart` указывает на другой путь, отсутствует `RELEASE_COMMIT`, новый verifier возвращает `UNVERIFIED` либо нет rollback — **Gate D остаётся открытым**, никаких автоматических изменений сервисов. После read-only evidence отдельно проверить реальные poller/rollback/Telegram API через operator-approved release plan, а не выдавать systemd `active` за end-to-end PASS.
 
+## Новый проверочный этап: локальные V2/V3 процессы без Telegram API
+
+После read-only **437/437 tracked source PASS** (operator evidence, 2026-10-13) исходники закреплённого V3 подтверждены. Следующая проверка должна ответить на другой вопрос: **какие Node процессы реально привязаны к V2/V3 systemd MainPID**, не запуская Telegram polling.
+
+После CI и безопасного `ff-only` обновления **только DEV**:
+
+```sh
+cd /home/drpoh/projects/rs-home-ai-dev
+node scripts/manual/v3-runtime-readonly-preflight.mjs --readonly --operator-approved
+```
+
+Одноразовый скрипт читает `systemctl show -p ActiveState,MainPID` для системного V2 и пользовательского V3 и локальные `/proc/*/cmdline` + `cwd`. Содержимое аргументов, секреты, EnvironmentFile и URL **не выводятся**: сравниваются только заранее известные entrypoint `/home/drpoh/ha-telegram-bot/src/index.mjs` и pinned V3 `.../rs-home-ai-v3-release-9dd5964/src/pilot/telegram-readonly.mjs`. Результат содержит статусы `V2_MAIN_ENTRYPOINT_MATCH`, `V3_MAIN_ENTRYPOINT_MATCH`, PIDs и **счётчики** локальных процессов с этими entrypoint. Два разных ожидаемых MainPID и отсутствие дополнительных копий известных entrypoint дают `GATE_D_RUNTIME_READONLY=PASS`, недоступные процессы — `PARTIAL` или `UNVERIFIED`.
+
+**Ограничение:** ни `PASS`, ни отсутствие локальных дубликатов не доказывает единственности Telegram `getUpdates` poller на всех хостах, правильность токена, доступность Telegram API, сохранность `node_modules`, отсутствие иных неизвестных запусков, реальный rollback или наличие сообщения пользователя. Новое физическое управление не разрешается. Для проверки токенов/Telegram API требуется отдельная согласованная процедура без их вывода. Не применять к production изменений от одного этого скрипта.
+
 ## Исторические источники
 
 [Операции](../V3-OPERATIONS.md) · [review 2026-10-09](../REVIEW-2026-10-09.md) · [план окружений](../ADR-DEV-STAGE-PROD.md) · [карта каталогов](../PROJECT-MAP.md).

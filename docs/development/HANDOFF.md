@@ -30,7 +30,7 @@
 4. Только после Gate D review и **отдельного owner approval** планировать продвижение конкретной read-only версии в один действующий Telegram poller и реальную проверку текстового ответа. Никаких автоматических переключений production, вызовов HA writes или изменений systemd.
 5. Gate B ещё открыт: `light.kukhnia_svet` — Switch as X, physical fixture unverified. `light.svet_kukhni` и `light.sonoff_1000d78a79` удалены владельцем; `light.spalnia` ещё требует HA registry review. По GitHub — 66 branches, открытые Jules PR в `main` отдельно; массовой очистки refs нет.
 
-6. Текущий DEV PR добавляет **визуальный прогресс** обоих шагов `npm test` (Node syntax и isolated runner): TTY bar + %, счётчик/ошибки/секунды, в GitHub Actions sparse checkpoints и прежняя финальная сводка. После CI — только Pi DEV `ff-only` и операторский `npm test` для проверки терминального вывода; V2/V3 production не меняются.
+6. На просьбу не растягивать прогресс вниз в DEV PR подготовлен **строго короткий TTY-ряд** с перерисовкой CR (без ANSI), ASCII 8-символьная шкала, учёт ширины Termux; локальная труба/remote capture печатает только начальный и итоговый статус. **После PR CI** — проверить реальный `npm test` на Pi DEV. Тот же PR добавляет **операторский read-only Gate D runtime snapshot** (`scripts/manual/v3-runtime-readonly-preflight.mjs --readonly --operator-approved`): только systemd MainPID и `/proc` Node entrypoint, без Telegram, HA writes или изменения сервисов. Процессы ≠ доказательство единственности polling-сессий по секретному токену.
 
 ## Правила завершения итерации
 

@@ -71,7 +71,7 @@ export function createTestProgress({
    failed=whole(errors);
    if(interval)clearInterval(interval);
    render(true);
-   if(tty)stream.write('\n');
+   if(tty&&!disabled)stream.write('\n');
    finished=true;
   }
  };

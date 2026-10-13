@@ -5,7 +5,9 @@ const telegram=readFileSync(new URL('../src/pilot/telegram-readonly.mjs',import.
 const router=readFileSync(new URL('../src/pilot/v3-readonly-question-router.mjs',import.meta.url),'utf8');
 
 test('natural kitchen Telegram questions use injected exact-ID read-only router',()=>{
- assert.match(telegram,/routeV3ReadonlyQuestion\(/);
+ assert.match(telegram,/readonlyFollowups\.route\(/);
+ assert.match(telegram,/actor:actor\(ctx\)/);
+ assert.match(telegram,/const readonlyFollowups=createV3ReadonlyFollowupRouter\(\)/);
  assert.match(telegram,/readKitchenState:id=>newLightRead\(id\)/);
  assert.match(router,/if\(intent==='kitchen_review'\)result=await summarizeReviewedKitchenLights\(/);
  assert.match(router,/readState:readKitchenState/);

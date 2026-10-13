@@ -73,7 +73,8 @@ test('Telegram source gates owner identity before router; returned readonly answ
  const body=src.slice(src.indexOf("bot.on('message',async ctx=>{"));
  assert.ok(body.length>200);
  const allowIndex=body.indexOf('if(!allow(ctx))return;');
- const routeIndex=body.indexOf('const routed=await routeV3ReadonlyQuestion(');
+ const routeIndex=body.indexOf('const routed=await readonlyFollowups.route(');
+ assert.ok(body.includes('actor:actor(ctx)'));
  const stopIndex=body.indexOf('if(routed.handled)return ctx.reply(routed.text);');
  const actionIndex=body.indexOf('const r=pilot.request(actor(ctx),ctx.message?.text);');
  assert.ok(allowIndex>=0&&allowIndex<routeIndex);

@@ -33,6 +33,9 @@ import {
 } from "../learning/corrections.mjs";
 
 let bot = null;
+// Destructive memory clear is private and requires a second explicit command.
+const clearConfirmations = new Map();
+const CLEAR_TTL_MS = 60_000;
 
 function isAllowed(ctx) {
   return ctx.from?.id === config.telegram.allowedUserId;
@@ -188,18 +191,36 @@ bot.command("status", async (ctx) => {
   });
 
   bot.command("clear", async (ctx) => {
-    if (!isAllowed(ctx)) return;
+    if (!isAllowed(ctx) || ctx.chat?.type !== "private" ||
+        ctx.chat?.id !== ctx.from?.id) return;
+
+    const now = Date.now();
+    const args = String(ctx.message?.text || "").trim().split(/\\s+/);
+    if (args.length === 1) {
+      clearConfirmations.set(ctx.from.id, now + CLEAR_TTL_MS);
+      await ctx.reply("⚠️ Очистить историю разговора, память устройств и ожидающие подтверждения?\\nОтправьте /clear confirm в течение 60 секунд или /clear cancel.");
+      return;
+    }
+    if (args.length === 2 && args[1] === "cancel") {
+      clearConfirmations.delete(ctx.from.id);
+      await ctx.reply("❎ Очистка отменена.");
+      return;
+    }
+    const expiresAt = clearConfirmations.get(ctx.from.id);
+    clearConfirmations.delete(ctx.from.id);
+    if (args.length !== 2 || args[1] !== "confirm" ||
+        !Number.isFinite(expiresAt) || now >= expiresAt) {
+      await ctx.reply("ℹ️ Нет действующего подтверждения. Начните с /clear.");
+      return;
+    }
 
     clearConversationHistory();
     clearDeviceMemory();
     clearControlledMemory();
     clearPendingConfirmations();
 
-    console.log("Memory → cleared");
-
-    await ctx.reply(
-      "🧹 Память разговора и устройств очищена."
-    );
+    console.log("Memory → clear requested by authorized owner");
+    await ctx.reply("🧹 История разговора, память устройств и ожидающие подтверждения очищены (если сохранение в БД доступно).");
   });
 
   bot.on("text", async (ctx) => {

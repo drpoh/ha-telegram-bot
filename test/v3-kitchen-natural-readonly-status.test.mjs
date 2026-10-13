@@ -32,6 +32,12 @@ test('missing, mismatched, unavailable, and MCP failure remain unknown rather th
  assert.equal(calls,7);assert.equal(r.status,'partial');
  assert.deepEqual(r.counts,{on:0,off:3,unknown:4});
  assert.match(r.text,/неизвестно или недоступно 4/);
+ assert.deepEqual(r.unknownReasons.map(item=>item.reason),[
+  'unavailable','identity_mismatch','read_error','mcp_error'
+ ]);
+ assert.match(r.text,/light\.kukhnia_led_niz_l1_2 \(недоступна в HA\)/);
+ assert.match(r.text,/ID ответа не совпал/);
+ assert.match(r.text,/ошибка MCP/);
  assert.doesNotMatch(r.text,/secret_token/);
  assert.equal(r.authorization,false);assert.equal(r.actualWrite,false);
 });

@@ -27,7 +27,7 @@
 1. GitHub DEV PR #104–#108 объединены. Владелец подтвердил на Pi `5380a75`, **202/737/0** в `npm test`, `DOCS_CHECK=PASS files=15 links=131`. Новый `/lightcheck` и CLI source/offline проверены, в production не развёрнуты; live HA-MCP read ещё не показан. Исторические документы не переносить без необходимости.
 2. Из оставшегося Gate D: проверить фактический Git SHA содержимого активного pinned V3 каталога, V2 ExecStart и recovery/rollback, без перезапуска сервисов.
 3. Pi DEV `5380a75`: владелец подтвердил **live read-only** `light.kukhnia_svet=off`, `SINGLE_LIGHT_STATUS=complete`, `PHYSICAL_IDENTITY=unverified`. Следующий шаг — вручную прочитать в HA UI entity / device / area / integration и сверить с физическим контуром; не переключать и не запускать второй Telegram poller. `/lightcheck` остаётся source-only до отдельного release.
-4. После identity review подготовить узкий опциональный confirmed action path; никаких самостоятельных включений.
+4. Новый GitHub DEV PR добавляет строго ограниченные русские вопросы о 7 выбранных сущностях кухни через отдельный MCP read-only reader. До CI/Pi проверки и явного release gate не считать, что Telegram production это поддерживает; обновлять только DEV. После identity review подготовить узкий confirmed action path — новых физических включений нет.
 5. Сверяться с [активным TODO](../TODO.md) и [правилами агента](../../AGENTS.md). Вести малые PR с CI; обновлять текущий статус только после проверенного milestone.
 
 ## Правила завершения итерации

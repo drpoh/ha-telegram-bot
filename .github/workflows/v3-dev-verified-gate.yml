@@ -17,4 +17,24 @@ jobs:
           node-version: '20'
       - run: sudo apt-get update && sudo apt-get install -y sqlite3
       - run: npm ci --ignore-scripts --no-audit --no-fund
-      - run: npm test
+      # No generated REVIEW-*.md per run: Actions stores the concise operational result.
+      - name: Run isolated tests and write a compact GitHub summary
+        shell: bash
+        run: |
+          set -o pipefail
+          set +e
+          npm test | tee "$RUNNER_TEMP/rs-v3-offline-tests.log"
+          test_exit=$?
+          set -e
+          {
+            echo '### RS Home AI V3 — DEV offline verification'
+            echo
+            echo "- Commit: \`$GITHUB_SHA\`"
+            if [ "$test_exit" -eq 0 ]; then
+              echo '- Outcome: **PASS**'
+            else
+              echo '- Outcome: **FAIL** (see job log)'
+            fi
+            grep -E '^Isolated test files:' "$RUNNER_TEMP/rs-v3-offline-tests.log" || true
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "$test_exit"

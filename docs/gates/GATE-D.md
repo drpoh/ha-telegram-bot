@@ -93,6 +93,59 @@ node scripts/manual/v3-runtime-readonly-preflight.mjs --readonly --operator-appr
 
 **Ограничение:** ни `PASS`, ни отсутствие локальных дубликатов не доказывает единственности Telegram `getUpdates` poller на всех хостах, правильность токена, доступность Telegram API, сохранность `node_modules`, отсутствие иных неизвестных запусков, реальный rollback или наличие сообщения пользователя. Новое физическое управление не разрешается. Для проверки токенов/Telegram API требуется отдельная согласованная процедура без их вывода. Не применять к production изменений от одного этого скрипта.
 
+## Pi read-only acceptance и следующий Gate D этап (2026-10-13)
+
+Оператор выполнил `v3-runtime-readonly-preflight.mjs --readonly --operator-approved`: **`GATE_D_RUNTIME_READONLY=PASS`**. `V2_SERVICE_ACTIVE=true`, `V3_SERVICE_ACTIVE=true`, PIDs **927** и **3713**, оба `MAIN_ENTRYPOINT_MATCH=true`, `SERVICE_PIDS_DISTINCT=true`, `KNOWN_ENTRYPOINT_PROCESS_COUNTS={"v2":1,"v3":1,"unreadable":0}`, дубликатов известных entrypoint нет. Отдельно ранее проверены **437/437 Git blob bytes + executable bits** pinned V3 релиза `9dd5964`, оба каталога rollback существуют. Это подтверждает только локальные процессы и tracked source; **не** Telegram polling по токену, установленные зависимости или функциональный откат.
+
+Перед следующим операторским review разумнее использовать встроенный **`npm ls`** и штатный `test`, а не разрабатывать собственный менеджер зависимостей. Ниже — одноразовый **read-only** осмотр установленных production dependency trees и статической комплектности закреплённого V3 и двух сохранённых rollback-каталогов. Не запускает Node entrypoint, Telegram, HA-MCP, systemd или npm install; не печатает приватные конфигурации.
+
+```bash
+# Запуск от drpoh. Любая ошибка остаётся диагностическим UNVERIFIED.
+for suffix in active c6a9812 97343fa; do
+  case "$suffix" in
+    active) dir=/home/drpoh/projects/rs-home-ai-v3-candidates/rs-home-ai-v3-release-9dd5964 ;;
+    *) dir="/home/drpoh/projects/rs-home-ai-v3-release-$suffix" ;;
+  esac
+  echo "=== GATE_D_DEPENDENCIES $suffix ==="
+  if [ ! -d "$dir" ] || [ -L "$dir" ]; then
+    echo "RELEASE_DIRECTORY=UNVERIFIED"
+    continue
+  fi
+  if [ ! -f "$dir/RELEASE_COMMIT" ] || [ ! -f "$dir/package-lock.json" ] ||
+     [ ! -f "$dir/package.json" ] ||
+     [ ! -f "$dir/src/pilot/telegram-readonly.mjs" ]; then
+    echo "RELEASE_STATIC_FILES=UNVERIFIED"
+    continue
+  fi
+  read -r commit < "$dir/RELEASE_COMMIT"
+  if ! [[ "$commit" =~ ^[0-9a-f]{40}$ ]]; then
+    echo "RELEASE_COMMIT_MARKER=UNVERIFIED"
+    continue
+  fi
+  if [ "$suffix" = active ]; then expected=9dd5964; else expected="$suffix"; fi
+  if [[ "$commit" != "$expected"* ]]; then
+    echo "RELEASE_COMMIT_MARKER=UNVERIFIED"
+    continue
+  fi
+  echo "RELEASE_STATIC_FILES=PRESENT"
+  echo "RELEASE_COMMIT_PREFIX_MATCH=true"
+  if [ ! -d "$dir/node_modules" ] || [ -L "$dir/node_modules" ]; then
+    echo "DEPENDENCY_TREE=UNVERIFIED"
+    continue
+  fi
+  echo "DEPENDENCY_CHECK=RUNNING_OFFLINE"
+  if npm --prefix "$dir" ls --omit=dev --all --offline --loglevel=silent > /dev/null 2>&1; then
+    echo "DEPENDENCY_TREE=PASS_STATIC"
+  else
+    echo "DEPENDENCY_TREE=UNVERIFIED"
+  fi
+done
+```
+
+Здесь `PASS_STATIC` означает, что **на момент проверки** npm смог построить дерево локально установленных пакетов по package metadata. Это не подтверждает содержимое каждого пакета, успешность загрузки конкретного SDK, соответствие фактически загруженному коду в памяти, наличие приватной конфигурации или функциональность rollback. `UNVERIFIED` требует выяснить причину без автоматического ремонта и без повторной установки пакетов. `npm ls` выполняется в offline mode и не устанавливает зависимости; в случае ошибок npm может создать локальный diagnostic log, но не меняет release dependencies.
+
+Только после этого можно подготовить отдельную операторскую процедуру Telegram end-to-end / однополлерного release с сохранением старых V2/V3 services. **Не запускать новый polling-клиент для проверки уникальности токена.** Gate D до такой процедуры остаётся OPEN.
+
 ## Исторические источники
 
 [Операции](../V3-OPERATIONS.md) · [review 2026-10-09](../REVIEW-2026-10-09.md) · [план окружений](../ADR-DEV-STAGE-PROD.md) · [карта каталогов](../PROJECT-MAP.md).

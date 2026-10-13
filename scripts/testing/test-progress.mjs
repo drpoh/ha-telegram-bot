@@ -24,7 +24,7 @@ export function createTestProgress({
  const disabled=env?.RS_TEST_PROGRESS==='off';
  const tty=Boolean(stream?.isTTY)&&env?.CI!=='true'&&env?.TERM!=='dumb'&&env?.RS_TEST_PROGRESS!=='plain';
  const start=now();
- let completed=0,failed=0,lastBucket=-1,lastLoggedAt=start,lastLogDone=-1,lastLogFailures=-1,lastTTY='',finished=false;
+ let completed=0,failed=0,lastBucket=-1,lastLoggedAt=0,lastLogDone=-1,lastLogFailures=-1,lastTTY='',finished=false;
  const elapsed=()=>Math.max(0,now()-start);
 
  const render=(final=false)=>{

@@ -42,3 +42,11 @@
 
 - [ ] PR #134: выполнить изолированные offline `node --check` / `node --test` на точном SHA `cdcfdcdaeeec408fa89001e578639b9144b1a7e1` в Node 20 на Pi ARMv7; отдельная regression-проверка существующего `/confirm`/authorization без Telegram poller и HA writes. Предыдущий GitHub source-only audit от 2026-10-13 подтвердил 6 файлов / 186 additions / 0 deletions, но **0 workflow runs и 0 statuses**. Desktop Commander сейчас блокирует выполнение из-за лимита; не считать проверку состоявшейся.
 - [ ] Запустить/получить CI именно кандидата PR #134 и проверить SHA, затем подготовить immutable candidate, контроль целостности, однополлерный cutover и rollback drill; никаких deployment/systemd изменений без отдельного approval владельца.
+
+## Reuse First — уточнения после проверки Perplexity, 2026-10-13
+
+- [ ] **После Gate D kitchen release review:** найти реальную точку хранения контекста pinned V3 и построить один чистый, read-only тестируемый vertical slice «Что со светом в тамбуре? — А в коридоре?» на существующих `src/context/builder.mjs`, строгом `src/home/strict-area-resolver.mjs` и exact `ha_get_state`. Не интерпретировать местоимение как write-authorization и не включать новые лампы.
+- [ ] До context promotion проверить isolation по доверенным `user_id/chat_id`, инвалидацию по TTL/restart, ambiguous aliases, неизвестную цель и stale HA states. Отдельно проверить `src/home/entity-resolver.mjs` (first `includes` match) и не допускать вывода из него сразу в физический `ha_call_service`.
+- [ ] Добавить в существующие `node:test` точечный golden-набор русских **read-only** запросов (точное/неоднозначное помещение, неизвестное устройство, `unavailable`, transport error, cross-chat). Не вводить новый test framework.
+- [ ] После готового текстового read-only MVP проверить уже установленные Assist/Whisper/Piper/ESPHome возможности для voice input/response на offline/isolated пути; сначала без изменения HA pipeline/production. `conversation.process` может **выполнять действия** — не использовать его как обход Policy Engine.
+- [ ] Snapshots + «верни как было» и расширение action allowlist оставить после Gate B physical identity, policy/confirmation и согласованного release. Не внедрять Mem0, векторную БД, Mastra, LangGraph, Vercel AI SDK, новый SQLite schema или второй Telegram poller по одной только рекомендации Deep Research.

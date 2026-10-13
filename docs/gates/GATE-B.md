@@ -96,6 +96,18 @@ Switch-as-X total entries: {{ ids | count }}
 
 Для **read-only ответов по кухне** текущий операторский инвентарь из четырех присутствующих ID: `light.kukhnia_led_niz_l1`, `light.kukhnia_led_niz_l2`, `light.kukhnia_svet`, `light.led_kukhnia`. Оба LED channel находятся под одним устройством `2 channel dimmer` — не считать их двумя разными физическими модулями, не утверждать, что это полный свет комнаты, и не давать автоматически права. Исторический список 19 кандидатов оставлен как документ предыдущего наблюдения.
 
+### Точное определение исходного выключателя для `light.kukhnia_svet` (без включений)
+
+По HA Template от владельца `light.kukhnia_svet` находится в комнате **Кухня**, device **Кухня свет**, model **Wall switch module**, а `integration_entities('switch_as_x')` подтверждает принадлежность к **Switch as X**. Эти поля **не устанавливают**, какой конкретно физический контур управляется исходным switch.
+
+Самый быстрый безопасный путь через готовый UI Home Assistant:
+
+1. **Settings → Devices & services → Helpers**: найдите helper, создавший `light.kukhnia_svet` (Switch as X / «Change device type of a switch»), и **просмотрите** исходный `switch.*` entity. Ничего не редактируйте.
+2. **Settings → Devices & services → Entities**: найдите **точно** `light.kukhnia_svet` и исходный switch entity, сверьте Integration, Device и Area. Убедитесь, что helper не указывает на группу, другой helper либо устаревший entity.
+3. Сопоставьте исходный выключатель с известным физическим контуром по маркировке/схеме или подтверждённому наблюдению владельца. **Не посылайте `turn_on`/`turn_off` и не повышайте write scope** на основании только helper/registry.
+
+Для `light.spalnia` (ранее `unavailable`, HA Template не показывал device) отдельно проверить точный Entity Registry и платформу. Два других старых UNKNOWN (`light.svet_kukhni`, `light.sonoff_1000d78a79`) **удалены владельцем как несуществующие** и не должны фигурировать как актуальные неисправные устройства. Полный инвентарь после удаления ещё не проверялся; ранее подсчитанные 27 и 38 — исторические снимки.
+
 ## Продолжение
 
 [Первичные критерии Gate B](../GATE-B-ACCEPTANCE.md) · [Решения](../GATE-B-PILOT-DECISIONS.md) · [История физического допуска](../V3-LIGHTS-RELEASE-GATE-2026-10-12.md) · [19 read-only кандидатов](../V3-NEW-LIGHTS-REAL-READ-2026-10-12.md).

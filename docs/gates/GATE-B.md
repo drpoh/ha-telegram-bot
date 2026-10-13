@@ -40,6 +40,47 @@
 
 Это **только сведения HA** о присутствующих состояниях, area и связанном device. Отсутствие device/area и совпадающие friendly names требуют ручного анализа в **Settings → Devices & services → Entities/Devices**, включая название интеграции. Disabled entries могут не попасть в state inventory, а group/template entity может не иметь физического device. Уровень Gate B не повышать только по выводу шаблона; не раскрывать serial/identifiers и не отправлять полный registry в публичный GitHub.
 
+### Уточнение из HA Template (владелец, 2026-10-13)
+
+В более позднем снимке `states.light` находится **38 сущностей: 9 ON, 13 OFF, 16 UNKNOWN/unavailable**. Предыдущий поиск HA-MCP дал в другой момент **5/16/17**. Это разные моменты наблюдения, не несовпадение реестра.
+
+Среди текущих **16 UNKNOWN**:
+- 2 `browser_mod` screen — не физические контуры управления;
+- **11 потенциально производных/дублирующих световых сущностей**: в `device_attr(entity_id,'model')` после `|` указана другая `light.*` сущность. Это **не доказанная** ссылка в HA entity registry и не достоверная принадлежность к `switch_as_x`;
+- **3 без явного `| light.*`**: `light.sonoff_1000d78a79` (device model D1R1), `light.spalnia` и `light.svet_kukhni` (device не найден в Template) — требуют отдельного изучения.
+
+Предположительные связи для проверки в HA UI, а не для автоматического удаления или управления:
+
+| Недоступный alias (кандидат) | Ссылка в model на другой HA ID |
+| --- | --- |
+| `light.kukhnia_led_niz_l1_2` | `light.kukhnia_led_niz_l1` |
+| `light.kukhnia_led_niz_l2_2` | `light.kukhnia_led_niz_l2` |
+| `light.kukhnia_svet_3` | `light.kukhnia_svet` |
+| `light.podsvetka_kukhnia` | `light.led_kukhnia` |
+| `light.liustra` | `light.vykliuchatel_z_gostinaia_l2` |
+| `light.podsvetka` | `light.vykliuchatel_z_gostinaia_l1` |
+| `light.podsvetka_2` | `light.vykliuchatel_z_gostinaia_l3` |
+| `light.svet` | `light.kukhnia_svet_2` **нет в `states.light`** последнего снимка |
+| `light.tambur_svet_l1_2` | `light.tambur_svet_l1` |
+| `light.tambur_svet_l2_2` | `light.tambur_svet_l2` |
+| `light.ves_svet_2` | `light.ves_svet` (whole-house group) |
+
+Другие нефизические цели (не допускать к массовому световому действию): 4 `light.browser_mod_*` в последнем Template, status LED устройств Louder/Atom Echo/Sauna_TE, виртуальная whole-house группа `light.ves_svet`. Наличие комнатной area/device ещё **не** доказывает конкретный физический контур. `light.dukhovka_light` и Bambu chamber light — устройства, но не автоматически комнатное освещение.
+
+**Проверить вероятные Switch as X через стандартные HA функции, без нового MCP-протокола и без каких-либо записей:**
+
+```jinja
+{% set ids = integration_entities('switch_as_x') %}
+Switch-as-X total entries: {{ ids | count }}
+{% for id in ids | sort %}
+{% if id.startswith('light.') %}
+{{ id }} | state={{ states(id) }} | device={{ device_name(id) or '-' }} | model={{ device_attr(id, 'model') or '-' }}
+{% endif %}
+{% endfor %}
+```
+
+`integration_entities('switch_as_x')` читает список сущностей зарегистрированной интеграции и **не** является прямым доказательством физического устройства. Если список пустой либо не включает подозрительные `light.*`, проверить их **Settings → Devices & services → Entities** (Integration, Device, Area) и **Helpers**, не переименовывать и не удалять. Последующий список распознанных физических устройств должен быть отдельным человеческим review-документом, не permission allowlist. Не публиковать содержимое приватных registry identifiers/serials в GitHub.
+
 ## Продолжение
 
 [Первичные критерии Gate B](../GATE-B-ACCEPTANCE.md) · [Решения](../GATE-B-PILOT-DECISIONS.md) · [История физического допуска](../V3-LIGHTS-RELEASE-GATE-2026-10-12.md) · [19 read-only кандидатов](../V3-NEW-LIGHTS-REAL-READ-2026-10-12.md).

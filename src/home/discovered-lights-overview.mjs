@@ -29,9 +29,18 @@ export async function summarizeDiscoveredLights({readTool,maxEntities=200,timeou
    unknownDetails.push(Object.freeze({id:e.entity_id,reason:e.state==='unavailable'?'unavailable':e.state==='unknown'?'unknown':'other_state'}));
   }
  }
+ // Prefix buckets are diagnostic hints ONLY, not a physical-vs-virtual classification.
+ const browserModPrefixCount=d.entities.filter(e=>e.entity_id.startsWith('light.browser_mod_')).length;
+ const unknownBrowserModPrefixCount=unknown.filter(id=>id.startsWith('light.browser_mod_')).length;
+ const reviewBuckets=Object.freeze({
+  browserModPrefix:browserModPrefixCount,
+  otherEntityIds:d.entities.length-browserModPrefixCount,
+  unknownBrowserModPrefix:unknownBrowserModPrefixCount,
+  unknownOtherEntityIds:unknown.length-unknownBrowserModPrefixCount
+ });
  const summary=`Из ${d.entities.length} найденных светильников: включено ${on.length}, выключено ${off.length}, состояние неизвестно у ${unknown.length}.`;
  const visibleOn=on.slice(0,20);
  const remaining=on.length-visibleOn.length;
  const details=on.length?` Включены: ${visibleOn.join(', ')}${remaining?`; ещё ${remaining} (список сокращён)`:''}.`:' Подтверждённых включённых светильников нет.';
- return {status:unknown.length?'partial':'complete',authorization:false,actualWrite:false,checked:d.entities.length,on,off,unknown,unknownDetails,text:summary+details+(unknown.length?' Неизвестные не считаются выключенными.':'')};
+ return {status:unknown.length?'partial':'complete',authorization:false,actualWrite:false,checked:d.entities.length,on,off,unknown,unknownDetails,reviewBuckets,text:summary+details+(unknown.length?' Неизвестные не считаются выключенными.':'')};
 }

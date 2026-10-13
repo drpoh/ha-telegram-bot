@@ -5,18 +5,15 @@ import {createKitchenMcpDispatchBoundary} from './kitchen-mcp-dispatch-boundary.
 import {createKitchenLiveAdmission} from './kitchen-live-admission.mjs';
 import {createKitchenMcpClient} from './kitchen-mcp-client.mjs';
 import {prepareV3PilotExecutionJournal} from '../ops/v3-pilot-execution-journal.mjs';
-import {summarizeSauna} from '../home/sauna-status.mjs';
 import {createNineLightTelegramConsent} from '../home/nine-light-telegram-consent.mjs';
 import {createNewLightDispatch} from '../home/new-light-physical-dispatch.mjs';
 import {RESPONDING_NEW_LIGHT_IDS} from '../home/responding-new-light-batch.mjs';
 import {inspectSingleNewLight} from '../home/single-new-light-status.mjs';
-import {summarizeReviewedKitchenLights} from '../home/kitchen-light-readonly-status.mjs';
-import {createReviewedLightReadonlyReader} from '../home/reviewed-light-readonly-client.mjs';
-import {classifySaunaQuestionMode} from '../home/sauna-question-mode.mjs';
+import {summarizeSauna} from '../home/sauna-status.mjs';
 import {summarizeTambourLight} from '../home/tambour-light-status.mjs';
-import {classifyTambourQuestionMode} from '../home/tambour-question-mode.mjs';
 import {summarizeLightOverview} from '../home/light-overview.mjs';
-import {classifyReadonlyQuestion,classifyLightQuestionMode} from '../home/readonly-question-intent.mjs';
+import {createReviewedLightReadonlyReader} from '../home/reviewed-light-readonly-client.mjs';
+import {routeV3ReadonlyQuestion} from './v3-readonly-question-router.mjs';
 const base='/home/drpoh/.config/rs-home-ai-v3/';
 const token=readFileSync(base+'telegram-token','utf8').trim();
 const userId=Number(readFileSync(base+'allowed-user-id','utf8').trim());
@@ -109,14 +106,17 @@ bot.command('sauna',async ctx=>{
  const result=await summarizeSauna({readState:id=>saunaRead('ha_get_state',{entity_id:id})});
  return ctx.reply(result.text);
 });
-bot.on('message',ctx=>{
+bot.on('message',async ctx=>{
  if(!allow(ctx))return;
- const intent=classifyReadonlyQuestion(ctx.message?.text);
- if(intent==='sauna')return summarizeSauna({readState:id=>saunaRead('ha_get_state',{entity_id:id}),mode:classifySaunaQuestionMode(ctx.message?.text)}).then(result=>ctx.reply(result.text));
- if(intent==='lights')return summarizeLightOverview({readState:id=>saunaRead('ha_get_state',{entity_id:id}),mode:classifyLightQuestionMode(ctx.message?.text)}).then(result=>ctx.reply(result.text));
- if(intent==='tambour')return summarizeTambourLight({readState:id=>saunaRead('ha_get_state',{entity_id:id}),mode:classifyTambourQuestionMode(ctx.message?.text)}).then(result=>ctx.reply(result.text));
- if(intent==='kitchen_review')return summarizeReviewedKitchenLights({readState:id=>newLightRead(id)}).then(result=>ctx.reply(result.text));
- if(intent==='unsupported_question')return ctx.reply('Этот вопрос пока не поддерживается. Доступны температура сауны, свет в тамбуре, обзор выбранных светильников и чтение выбранных сущностей кухни.');
+ // Telegram stickers/photos/non-text payloads must never reach a physical request path.
+ if(typeof ctx.message?.text!=='string'||!ctx.message.text.trim())return;
+ const routed=await routeV3ReadonlyQuestion({
+  text:ctx.message?.text,
+  readState:id=>saunaRead('ha_get_state',{entity_id:id}),
+  readKitchenState:id=>newLightRead(id)
+ });
+ if(routed.handled)return ctx.reply(routed.text);
+ // Preserve the existing separately gated tambour physical-confirmation path.
  pendingNewLights.delete(ctx.from.id);
  newLightConsent.cancel(actor(ctx));
  const r=pilot.request(actor(ctx),ctx.message?.text);

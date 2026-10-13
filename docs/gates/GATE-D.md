@@ -283,6 +283,34 @@ The first real use of the adopted [engineering practices](../development/ENGINEE
 
 **Next action after offline tests:** prepare a **separately reviewed** minimal immutable candidate or integration approach that cannot touch existing V3 physical/Telegram authorization boundaries; verify source hashes and rollback with the old `9dd5964`, then seek explicit owner approval before any production `systemd` change. Do **not** run a second Telegram poller even for staging.
 
+## Небольшое предложение релиза от pinned SHA — PR #134 (не развёрнуто)
+
+Чтобы избежать переноса 100+ DEV коммитов, открыт [отдельный исходный PR #134](https://github.com/drpoh/ha-telegram-bot/pull/134) **на Git базе `9dd5964`**. Подготовлено только 6 изменённых файлов: 3 DEV-модуля для детерминированного read-only отчёта о 4 выбранных кухонных `light.*`; 1 строка `kitchen_review` в classifier; импорт и маршрут в pinned Telegram entrypoint (**2 новые строки, ни одной старой не изменено**); 1 offline `node:test`. Старый `/confirm`, `/cancel`, claims journal, admission, `pilot.request`, owner/chat gate, `bot.launch` не изменены. Ветка кандидата не служит запуском или production.
+
+**Ограничение CI:** у pinned workflow `.github/workflows/offline-node.yml` `pull_request.branches: [feature/v3-home-agent]`; PR #134 в отдельную release-base ветку **не вызывает GitHub CI**. Не выдавать его за прошедший тест. Предпочтительный следующий шаг — вручную **только offline isolated worktree** на Raspberry Pi, без изменения DEV branch или работающих сервисов:
+
+```bash
+dev=/home/drpoh/projects/rs-home-ai-dev
+stage=/home/drpoh/projects/rs-home-ai-v3-kitchen-offline-proposal
+if [ ! -e "$stage" ] && [ ! -L "$stage" ] &&
+   [ "$(git -C "$dev" branch --show-current)" = "feature/v3-home-agent" ] &&
+   [ -z "$(git -C "$dev" status --porcelain)" ]; then
+  git -C "$dev" fetch origin refs/heads/release-proposal/v3-kitchen-readonly-20261013 &&
+  git -C "$dev" worktree add --detach "$stage" FETCH_HEAD &&
+  (
+    cd "$stage" &&
+    node --check src/pilot/telegram-readonly.mjs &&
+    node --check src/home/readonly-question-intent.mjs &&
+    node --check src/home/kitchen-light-readonly-status.mjs &&
+    node --test test/v3-pinned-kitchen-readonly-proposal.test.mjs
+  )
+else
+  echo OFFLINE_STAGE=SKIPPED_UNVERIFIED
+fi
+```
+
+Команда не устанавливает зависимости, не запускает entrypoint, не подключается к HA-MCP и не вызывает Telegram API, не копирует приватные токены. Она создаёт отдельный **тестовый worktree**; не выполнять `npm install`, `systemctl restart`, `bot.launch` или `ha_call_service`. Результат проверяет лишь офлайн-функции и Node syntax, **не** весь ARMv7 release/Telegram/rollback. После результата нужна полноценная отдельная приёмка, включая CI на exact candidate commit и explicit owner approval перед переключением производства.
+
 ## Исторические источники
 
 [Операции](../V3-OPERATIONS.md) · [review 2026-10-09](../REVIEW-2026-10-09.md) · [план окружений](../ADR-DEV-STAGE-PROD.md) · [карта каталогов](../PROJECT-MAP.md).

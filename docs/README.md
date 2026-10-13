@@ -14,6 +14,15 @@
 | Проверить один из Gates | [GATE-B-ACCEPTANCE.md](GATE-B-ACCEPTANCE.md), [GATE-B-PROGRESS-CHECKPOINT.md](GATE-B-PROGRESS-CHECKPOINT.md), [V3-MVP-OPERATIONAL-ACCEPTANCE.md](V3-MVP-OPERATIONAL-ACCEPTANCE.md) |
 | Увидеть историю решений | [WORKLOG.md](WORKLOG.md), [PROGRESS.md](PROGRESS.md), [документ-аудит](DOCUMENTATION-AUDIT-2026-10-13.md) |
 
+## Разделы по назначению
+
+- [Архитектура и ADR](architecture/README.md)
+- [Оператор / Raspberry Pi / systemd](operator/README.md)
+- [Разработка и короткий handoff](development/README.md)
+- [Карта приёмки Gates](gates/README.md)
+
+Разделы пока содержат **ссылки на существующие файлы**, без переименования путей и ломания истории. Инструмент `scripts/docs/check-active-markdown-links.mjs` проверяет активные документы и локальные ссылки без сетевых запросов; он запускается в offline CI.
+
 ## Ответственность файлов
 
 - **CURRENT-STATE.md** — единственный обновляемый документ о состоянии DEV / STAGE / PROD и Gates. Факты сопровождаются датой проверки.

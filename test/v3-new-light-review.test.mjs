@@ -58,3 +58,74 @@ test('unknown reasons distinguish unavailable, identity mismatch, MCP and transp
  assert.ok(r.entries.every(x=>x.review==='unverified'));
  assert.equal(r.authorization,false);assert.equal(r.actualWrite,false);
 });
+
+test('10 HA unavailable entries recorded as unknown (not OFF) and next observation recovers',async()=>{
+ const unavailableIds = new Set(NEW_LIGHT_IDS.slice(0, 10));
+
+ const r1 = await inspectNewLights({readState: async id => {
+  if (unavailableIds.has(id)) {
+   return {data: {entity_id: id, state: 'unavailable'}};
+  }
+  return {data: {entity_id: id, state: 'off'}};
+ }});
+
+ assert.equal(r1.status, 'partial');
+ assert.equal(r1.counts.unknown, 10);
+ assert.equal(r1.counts.off, 9);
+ assert.equal(r1.counts.on, 0);
+ assert.equal(r1.authorization, false);
+ assert.equal(r1.actualWrite, false);
+
+ const unavailableEntries = r1.entries.filter(e => unavailableIds.has(e.id));
+ assert.equal(unavailableEntries.length, 10);
+ assert.ok(unavailableEntries.every(e => e.state === 'unknown' && e.reason === 'unavailable'));
+
+ const r2 = await inspectNewLights({readState: async id => {
+  if (unavailableIds.has(id)) {
+   const index = NEW_LIGHT_IDS.indexOf(id);
+   return {data: {entity_id: id, state: index % 2 === 0 ? 'on' : 'off'}};
+  }
+  return {data: {entity_id: id, state: 'off'}};
+ }});
+
+ assert.equal(r2.status, 'complete');
+ assert.equal(r2.counts.unknown, 0);
+ assert.equal(r2.counts.on, 5);
+ assert.equal(r2.counts.off, 14);
+ assert.equal(r2.authorization, false);
+ assert.equal(r2.actualWrite, false);
+ assert.ok(r2.entries.every(e => e.reason === 'ok' && (e.state === 'on' || e.state === 'off')));
+});
+
+test('connection failure is independent of entity unavailable state',async()=>{
+ const rUnavailable = await inspectNewLights({readState: async id => {
+  return {data: {entity_id: id, state: 'unavailable'}};
+ }});
+ assert.ok(rUnavailable.entries.every(e => e.state === 'unknown' && e.reason === 'unavailable'));
+
+ const rTransportErr = await inspectNewLights({readState: async () => {
+  throw new Error('Connection failed: socket hangup');
+ }});
+ assert.ok(rTransportErr.entries.every(e => e.state === 'unknown' && e.reason === 'read_error'));
+
+ const rMcpErr = await inspectNewLights({readState: async () => {
+  return {isError: true, error: 'MCP tool invocation failed'};
+ }});
+ assert.ok(rMcpErr.entries.every(e => e.state === 'unknown' && e.reason === 'mcp_error'));
+
+ let count = 0;
+ const rMixed = await inspectNewLights({readState: async id => {
+  count++;
+  if (count === 1) return {data: {entity_id: id, state: 'unavailable'}};
+  if (count === 2) throw new Error('Connection refused');
+  if (count === 3) return {isError: true};
+  return {data: {entity_id: id, state: 'on'}};
+ }});
+
+ assert.equal(rMixed.entries[0].reason, 'unavailable');
+ assert.equal(rMixed.entries[1].reason, 'read_error');
+ assert.equal(rMixed.entries[2].reason, 'mcp_error');
+ assert.equal(rMixed.entries[3].reason, 'ok');
+ assert.equal(rMixed.authorization, false);
+ assert.equal(rMixed.actualWrite, false);
+});

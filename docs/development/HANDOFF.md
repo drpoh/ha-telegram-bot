@@ -26,8 +26,8 @@
 
 1. По последнему HA Template владельца (2026-10-13) **27 `light.*`, 9 ON / 13 OFF / 5 UNKNOWN** после обновления; `integration_entities('switch_as_x')` подтвердило **7 конкретных световых ID**, включая `light.kukhnia_svet`. Данные снимка и остаток Gate B — в [CURRENT-STATE](../CURRENT-STATE.md) и [Gate B](../gates/GATE-B.md).
 2. В DEV источник естественных вопросов о кухне обновлён с устаревших 7 до **4 присутствующих HA ID** (`light.kukhnia_led_niz_l1/l2`, `light.kukhnia_svet`, `light.led_kukhnia`). В отдельно выделенный `ha_get_state` reader добавлен только exact ID `light.kukhnia_led_niz_l2`. Исторические 19 review candidates и action policy не изменять.
-3. После PR CI и безопасной DEV `ff-only` синхронизации на Pi вручную выполнить `npm test` и `node scripts/manual/v3-kitchen-lights-readonly-preflight.mjs --readonly --operator-approved`; не запускать второй Telegram poller или DEV как production.
-4. Реальное физическое соответствие Switch as X `light.kukhnia_svet` **не подтверждено**. Три UNKNOWN `light.sonoff_1000d78a79`, `light.spalnia`, `light.svet_kukhni` требуют отдельного HA registry review. Новые физические действия — DENY до явного согласования.
+3. Владелец уже выполнил live read-only kitchen CLI после PR #116: **complete, 4 сущности, 1 ON (`light.kukhnia_svet`), 3 OFF, 0 UNKNOWN**, physical identity unverified. Два несуществующих ID (`light.svet_kukhni`, `light.sonoff_1000d78a79`) удалены в HA; последний полный список 27 ID был до удаления. **Никакой новой Telegram production acceptance пока нет.**
+4. Реальное физическое соответствие Switch as X `light.kukhnia_svet` **не подтверждено**. Из ранее неизвестных **`light.spalnia`** остаётся целью registry review; Browser Mod и `light.ves_svet_2` не используются как физические цели. Удалённые два ID не диагностировать как существующие. Новые физические действия — DENY до явного согласования.
 5. Из Gate D остаётся read-only проверка SHA активного `...release-9dd5964` и V2 ExecStart; нельзя автоматически переключать pinned production. После milestone — обновить только CURRENT-STATE/TODO/HANDOFF; подробности — в WORKLOG.
 
 ## Правила завершения итерации

@@ -139,10 +139,10 @@ reviewed and scrubbed of Telegram IDs, tokens, home addresses, and HA URLs.
 ## Architecture
 
 The current entrypoint is `src/index.mjs`, not one 640-line
-`bot.mjs`. Telegram lives in `src/telegram/`, AI in `src/ai/`, MCP
-in `src/mcp/`, memory in `src/memory/`, queueing in
-`src/utils/queue.mjs`, and HTTP in `src/api/`. Prefer incremental
-refactoring to duplicating these modules. The v3 pilot uses a separately
-pinned release with strictly bounded device permissions.
+`bot.mjs`.
+
+The repository root is intentionally small. Old `test-*.mjs` provider experiments and `list-models.mjs` are already archived under [`scripts/legacy/`](scripts/legacy/README.md) and are **not** part of `npm test`. Root `bot.mjs` remains as a historical monolith until external consumers are audited; root `smoke-auto-safe.mjs` may operate real devices and must never be run as a cleanup check. Production services run from separately pinned paths.
+
+Telegram lives in `src/telegram/`, AI in `src/ai/`, MCP in `src/mcp/`, memory in `src/memory/`, queueing in `src/utils/queue.mjs`, and HTTP in `src/api/`. Prefer incremental refactoring to duplicating these modules. The v3 pilot uses a separately pinned release with strictly bounded device permissions.
 
 See [live-light acceptance and modernization tasks](docs/TODO.md).

@@ -121,6 +121,7 @@ test('Telegram handler uses reviewed router without altering actor/confirmation 
  const router=readFileSync(new URL('../src/pilot/v3-readonly-question-router.mjs',import.meta.url),'utf8');
  assert.match(source,/bot\.on\('message',async ctx=>\{/);
  assert.match(source,/if\(!allow\(ctx\)\)return;/);
+ assert.match(source,/if\(typeof ctx\.message\?\.text!=='string'\|\|!ctx\.message\.text\.trim\(\)\)return;/);
  assert.match(source,/const routed=await routeV3ReadonlyQuestion\(/);
  assert.match(source,/readKitchenState:id=>newLightRead\(id\)/);
  assert.match(source,/if\(routed\.handled\)return ctx\.reply\(routed\.text\);/);

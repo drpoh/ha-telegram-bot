@@ -35,6 +35,7 @@ import {
 let bot = null;
 // Destructive memory clear is private and requires a second explicit command.
 const clearConfirmations = new Map();
+const debugModelChats = new Set();
 const CLEAR_TTL_MS = 60_000;
 
 function isAllowed(ctx) {
@@ -142,6 +143,21 @@ bot.command("status", async (ctx) => {
         ? `✅ ${entityId}: удалено behavioral corrections: ${removed}.`
         : `ℹ️ ${entityId}: behavioral corrections не найдены.`
     );
+  });
+
+  bot.command("debug", async (ctx) => {
+    if (!isAllowed(ctx) || ctx.chat?.type !== "private" ||
+        ctx.chat?.id !== ctx.from?.id) return;
+    const part = String(ctx.message?.text || "").trim().split(/\\s+/);
+    if (part.length !== 2 || !["on", "off"].includes(part[1])) {
+      await ctx.reply("🐞 Использование: /debug on или /debug off");
+      return;
+    }
+    if (part[1] === "on") debugModelChats.add(ctx.from.id);
+    else debugModelChats.delete(ctx.from.id);
+    await ctx.reply(part[1] === "on"
+      ? "🐞 Debug включён: после AI-ответа показывается использованная модель."
+      : "✅ Debug выключен.");
   });
 
   bot.command("model", async (ctx) => {
@@ -275,11 +291,20 @@ bot.command("status", async (ctx) => {
         return;
       }
 
+      const startedAt = Date.now();
       const answer = await queueHomeAssistantRequest(text, {
         actor,
       });
 
-      await ctx.reply(answer);
+      if (debugModelChats.has(ctx.from.id)) {
+        const ai = getAIStatus();
+        const suffix = Number.isFinite(ai.timestamp) && ai.timestamp >= startedAt
+          ? `\\n\\n🐞 AI: ${ai.provider || "unknown"} / ${ai.model || "unknown"}`
+          : "\\n\\n🐞 AI: модель не вызывалась";
+        await ctx.reply(String(answer) + suffix);
+      } else {
+        await ctx.reply(answer);
+      }
     } catch (error) {
       console.error("Telegram error:", error);
 

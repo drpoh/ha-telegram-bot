@@ -8,6 +8,7 @@ import {prepareV3PilotExecutionJournal} from '../ops/v3-pilot-execution-journal.
 import {summarizeSauna} from '../home/sauna-status.mjs';
 import {createNineLightTelegramConsent} from '../home/nine-light-telegram-consent.mjs';
 import {createNewLightDispatch} from '../home/new-light-physical-dispatch.mjs';
+import {RESPONDING_NEW_LIGHT_IDS} from '../home/responding-new-light-batch.mjs';
 import {classifySaunaQuestionMode} from '../home/sauna-question-mode.mjs';
 import {summarizeTambourLight} from '../home/tambour-light-status.mjs';
 import {classifyTambourQuestionMode} from '../home/tambour-question-mode.mjs';
@@ -57,6 +58,13 @@ bot.command('cancel',ctx=>{
  if(!allow(ctx))return;
  if(pendingNewLights.delete(ctx.from.id))return ctx.reply(newLightConsent.cancel(actor(ctx)).status==='cancelled'?'Запрос отменён.':'Активного запроса нет.');
  return ctx.reply(pilot.cancel(actor(ctx))?'Запрос отменён.':'Активного запроса нет.');
+});
+// Source inventory is not a live HA state snapshot or a physical identity grant.
+bot.command('newlights',ctx=>{
+ if(!allow(ctx))return;
+ return ctx.reply('💡 Девять отзывавшихся светильников для проверки:\n'+
+  RESPONDING_NEW_LIGHT_IDS.map(id=>'• '+id).join('\n')+
+  '\n\nСписок основан на предыдущем чтении HA; текущее состояние не проверено. Новые физические команды в этой версии НЕ включены.');
 });
 bot.command('newlight',ctx=>{
  if(!allow(ctx))return;

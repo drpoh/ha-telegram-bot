@@ -1,0 +1,60 @@
+name: Raspberry Pi read-only diagnostics via Tor
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: raspberry-pi-readonly-diagnostics
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Install Tor and SOCKS-compatible OpenBSD netcat
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends tor netcat-openbsd
+      - name: Start Tor (outbound only)
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/tor-data"
+          tor --SocksPort 127.0.0.1:9050 --DataDirectory "$RUNNER_TEMP/tor-data" \
+            --Log "warn stdout" > "$RUNNER_TEMP/tor.log" 2>&1 &
+          timeout 60 bash -c 'until nc -z 127.0.0.1 9050; do sleep 1; done'
+      - name: Verify pinned host key and connect through Tor
+        env:
+          PI_DIAG_ONION: ${{ secrets.PI_DIAG_ONION }}
+          PI_DIAG_SSH_KEY: ${{ secrets.PI_DIAG_SSH_KEY }}
+          PI_DIAG_KNOWN_HOSTS: ${{ secrets.PI_DIAG_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          umask 077
+          [[ "$PI_DIAG_ONION" =~ ^[a-z2-7]{56}\.onion$ ]] || { echo 'Invalid onion host'; exit 1; }
+          [[ -n "$PI_DIAG_SSH_KEY" && -n "$PI_DIAG_KNOWN_HOSTS" ]] ||
+            { echo 'Required Secrets are not configured'; exit 1; }
+          key="$RUNNER_TEMP/pi-diag-key"
+          hosts="$RUNNER_TEMP/pi-diag-known-hosts"
+          printf '%s\n' "$PI_DIAG_SSH_KEY" > "$key"
+          printf '%s\n' "$PI_DIAG_KNOWN_HOSTS" > "$hosts"
+          ssh-keygen -y -f "$key" > /dev/null
+          ssh-keygen -F "$PI_DIAG_ONION" -f "$hosts" > /dev/null ||
+            { echo 'Pinned known_hosts does not contain onion host'; exit 1; }
+          timeout 150 ssh -T -i "$key" \
+            -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$hosts" -o ConnectTimeout=55 \
+            -o ServerAliveInterval=15 -o ServerAliveCountMax=3 \
+            -o 'ProxyCommand=nc -X 5 -x 127.0.0.1:9050 %h %p' \
+            "drpoh@$PI_DIAG_ONION" diagnose-v1 | tee "$RUNNER_TEMP/pi-diagnostic-report.txt"
+      - name: Store redacted diagnostic report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raspberry-pi-readonly-report
+          path: ${{ runner.temp }}/pi-diagnostic-report.txt
+          if-no-files-found: ignore
+          retention-days: 3

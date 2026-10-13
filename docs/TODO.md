@@ -1,3 +1,28 @@
+
+## Action plan — 2026-10-13 (owner priority; current live verification still required)
+
+### P0: working V3 light control before new architecture
+- [x] GitHub DEV PRs #80-#84: nine responsive candidates; offline consent, HA-MCP boundary, acceptance with mocked MCP.
+- [x] GitHub DEV PR #85 merged: Telegram `/newlight <exact_entity_id> on|off`, `/confirm`, `/cancel` wired in source; physical dispatch **intentionally hard disabled**.
+- [ ] Verify the actual Pi DEV HEAD and unit ExecStart; Desktop Commander is online but remote execution blocked by monthly quota as of 2026-10-13. Do not infer deployment from GitHub merges.
+- [ ] Inspect exact nine HA registry/device/area identities and current states read-only; never treat the 10 unavailable entities as OFF. Check `light.browser_mod*` remains excluded.
+- [ ] Owner reviews the exact physical device for first live test (suggest `light.kukhnia_svet`) and explicitly approves bounded live deployment; separate trusted admission policy/release config must be reviewed. No widening via Telegram text, LLM, or source-only consent.
+- [ ] Connect the new-light execution boundary to a separately approved, audited MCP capability and durable journal, preserving existing tambour behavior, rollback, one poller, no parallel live V2 interference.
+- [ ] Run a single real Telegram `/newlight light.kukhnia_svet on` then `/confirm`, verify from HA and physical observation; repeat OFF, verify timeout/replay/denial and rollback path.
+- [ ] Gradually approve remaining eight exact target IDs after owner fixture mapping; confirm each ON/OFF in reality; count verified devices, not merely selected IDs.
+- [ ] Independently check V2, Gate D, DEV stage, immutable production release; promote only by explicit release approval. Never auto-push to active prod.
+- [ ] Triage ten unavailable via HA registry read-only; defer until P0 verified.
+
+### P1: V2 bot modularity and operational reliability (after P0)
+- [ ] Inventory actual active V2 `src/index.mjs` / `src/bot.mjs` before assuming a 640-line monolith; reuse existing `src/ai/`, `src/mcp/`, `src/memory/`, `src/telegram/` modules rather than blindly recreate files. Write an import/dependency map and split only remaining coupling.
+- [ ] Target responsibilities: `src/bot.js` composition, `src/ai/gemini.js`, `src/ai/tools.js`, `src/ai/prompt.js` (prompt source file), `src/ha/mcp.js`, `src/memory.js`, `src/queue.js`, `src/http.js`, `src/config.js`. Keep existing .mjs ES modules if migration to .js adds churn; honor existing structure.
+- [ ] Replace fragile Promise chain with `p-queue` (simple single-process Pi) only after benchmark/test; use BullMQ **only if persistent Redis-backed queue becomes a requirement**. Test per-user sequencing, restart and rate limits.
+- [ ] Add tested `/status`, `/memory`, `/clear` with owner-only authorization and explicit confirmation for destructive memory clear; preserve privacy and durable memory separation. Avoid command collisions between V2 and V3.
+- [ ] Show model identifier only in debug; improve concise emoji/Markdown-escaped outputs, handle Telegram formatting failures gracefully.
+- [ ] Improve README: architecture, Russian example conversation screenshots with synthetic/redacted messages, example `.env`, HA-MCP setup, example commands, troubleshooting and safety limits.
+- [ ] Add `Dockerfile`, `docker-compose.yml`, `.dockerignore`. Compose baseline: service `ha-telegram-bot`, `build: .`, `env_file: .env`, `restart: unless-stopped`, `ports: [\"3000:3000\"]`. Docker remains an OPTIONAL alternative to systemd; never run both Telegram pollers or expose HTTP 3000 publicly without explicit deployment review. Use `.dockerignore` to omit `.env`, node_modules, token files, credentials, .git.
+- [ ] Integration/regression tests, docs, CI; separately approved rollout with rollback, without overwriting live V2.
+
 # RS Home AI V3 — active tasks (2026-10-12)
 
 **For the one-page current plan see [CURRENT-STATE](CURRENT-STATE.md).** Earlier unchecked TODO entries are historical, not necessarily still pending; use the newest verified checkpoint below.

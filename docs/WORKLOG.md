@@ -1,5 +1,8 @@
 # WORKLOG — Development checkpoint journal
 
+> **2026-10-14 — mass DEV capability batch + production snapshot.** Owner's live V3 `93f11cd` deployment PASS, one process, V2 unchanged, 447/447 integrity; Telegram conversation kitchen 1 ON/3 OFF → corridor 0 ON/3 OFF → tambour ON confirmed. Read-only PR #152 batch introduced groups for 19 pre-existing candidate lights and two exact sensor reads, room intents/followups, conservative unknown handling and no new physical write permissions. GitHub CI #38538434803 PASS: 399 syntax files, 216 test files / 806 assertions. Squash merged into DEV `6b9ba5bbb623a3f7f749323b86929ca5443e6e4c`. Production still pinned `93f11cd`; source features are NOT yet production-tested.
+
+
 > **2026-10-14 corridor production Telegram acceptance PASS.** Rel f744557, PID 6783, V3 process count 1, V2 unchanged, rollback 2fbee8f. Node20 Pi 337 syntax files pass, 177 isolated files/676 assertions pass, tracked 445/445 pass. Live Telegram corridor 0 on/3 off/0 unknown, kitchen 1 on/3 off/0 unknown, sauna 27.5625 C threshold 85 C. No physical ID verification and no write permissions for kitchen/corridor. Release PR #146 contains evidence. Separate reboot and /cancel smoke remain.
 
 

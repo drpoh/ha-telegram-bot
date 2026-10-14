@@ -36,5 +36,7 @@ jobs:
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Check active documentation and local Markdown links (offline)
         run: node scripts/docs/check-active-markdown-links.mjs
+      - name: Inventory all tracked Markdown including historical docs (read-only)
+        run: node scripts/docs/audit-all-markdown.mjs
       - name: Run isolated checks with fake credentials and loopback MCP
         run: npm test

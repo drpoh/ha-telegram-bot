@@ -1,3 +1,11 @@
+## 2026-10-14 — All-Markdown audit actual findings
+
+GitHub PR #181 CI run 38575866492: 87 tracked Markdown files, 181 relative links, 59 external/anchors skipped, 2 missing links in archived `docs/archive/TODO-history-through-2026-10-11.md`; active 16 documents and 142 links passed. Syntax 451/451, isolated 242 files / 897 assertions PASS. Resolved both historical broken references by changing only parent-relative Markdown hrefs to `../PI-REPOSITORY-LAYOUT-PLAN.md` and `../REVIEW-2026-10-10.md`. Repeat exact-commit CI must show 0 findings before merge. No physical or production operations.
+
+## 2026-10-14 — Full Markdown coverage audit
+
+The existing CI scanner covered a fixed set of 16 active Markdown entrypoints only. Added a read-only scan of every git-tracked Markdown path with relative link inventory and a separate offline CI step. Historical findings remain nonblocking pending classification; no bulk moving or rewriting historical records, no HA/Telegram or production change. Audit counts require CI results.
+
 ## 2026-10-14 — PR #179 verified, merged, CI regression fixed
 
 - Starting DEV base `f3dbb5fcef072b1b9d675a49d62510dca27d98dc` after PR #178. PR #179 introduced area/floor/device names in normalized five-registry catalog and pure Russian metadata answers for named zones, floor inventory, exact entity placement, unassigned and disabled entities and `light.*` registry count (not physical fixtures). No Telegram integration, tokens, HA state calls or physical actions.

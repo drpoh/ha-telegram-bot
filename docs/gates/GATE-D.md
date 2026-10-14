@@ -311,6 +311,22 @@ fi
 
 Команда не устанавливает зависимости, не запускает entrypoint, не подключается к HA-MCP и не вызывает Telegram API, не копирует приватные токены. Она создаёт отдельный **тестовый worktree**; не выполнять `npm install`, `systemctl restart`, `bot.launch` или `ha_call_service`. Результат проверяет лишь офлайн-функции и Node syntax, **не** весь ARMv7 release/Telegram/rollback. После результата нужна полноценная отдельная приёмка, включая CI на exact candidate commit и explicit owner approval перед переключением производства.
 
+## Verification-only CI и source artifact кухни — 2026-10-14 (НЕ разрешение на выпуск)
+
+**Новая актуальная проверка замещает предыдущую 6-file/unverified CI заметку только в отношении кода, а не эксплуатации.** [PR #134](https://github.com/drpoh/ha-telegram-bot/pull/134) теперь `base=9dd5964a4956b88227ec4002ac80ef46a186d632`, `head=e902efeb923a2090ca0d188e92d1ccdc28d1627e`, diff **7 файлов**. Седьмой — единственное исправление устаревшего offline-теста для нового вопроса `«Какой свет на кухне?»`, **ни одной дополнительной runtime строки**. В `src/pilot/telegram-readonly.mjs` по-прежнему только два добавления: импорт и строго read-only маршрут `ha_get_state`. Проверка GitHub Actions восстановила **побайтовое равенство всех ранее существовавших строк entrypoint** путём вычитания ровно двух новых строк; это сильное доказательство неизменности source-consent, но не эксплуатационная приёмка.
+
+[Временный verification-only PR #139](https://github.com/drpoh/ha-telegram-bot/pull/139) создан только для запуска workflow без изменения release base или head source workflow. Внутри CI **literal checkout именно candidate SHA**, даже если status check относится к ветке test harness; [run 38503518196](https://github.com/drpoh/ha-telegram-bot/actions/runs/38503518196) **SUCCESS**: Node v20.20.2, 4 focused assertions, full `npm test` **176 test files / 672 passed assertions / 0 failed files**. PR #139 **закрыт без merge**. Первый полный прогон на предыдущем candidate `cdcfdcda` обнаружил один старый неверный тест; теперь он исправлен и вся suite зелёная. Не заявлять, что GitHub status PR #134 непосредственно прошёл workflow: результаты отдельного harness должны проверяться по логам и exact SHA.
+
+CI создал **source-only** детерминированный архив без `node_modules`, с `RELEASE_COMMIT=e902efeb923a2090ca0d188e92d1ccdc28d1627e`, прошедшим `SHA256SUMS` self-check. Artifact `11867150164` (ZIP digest `sha256:baca7ab088b90de426bd9e962feb9e2ea48716c4be801e54fc06845894de03cf`), expires 2026-10-28 UTC. Не путать ZIP digest с SHA256 внутреннего tar.gz: его значение находится в отдельном `SHA256SUMS`. Истечение GitHub artifact не удаляет Git commit.
+
+**Блокирующие условия перед любым production switch:**
+1. Изолированная **Pi Node20/ARMv7** проверка точного candidate SHA: `node --check`, targeted `node --test`, source marker, dependencies, read-only mock, без живого poller и HA writes. Существующий GitHub x64 CI не подменяет ARMv7.
+2. Повторный read-only Gate D: существующий активный `9dd5964` и основной backup `c6a9812` (папки, installed deps, ExecStart, PID), отсутствие нежелательных конкурирующих Telegram pollers *по одному токену*, сохранность V2/HA; без печати secrets. Процедура реального восстановительного запуска всё ещё не выполнена.
+3. **Отдельное явное owner approval** на включение новой версии. При утверждённом switch план строго `stop old V3 → confirm stopped → start exactly one new V3 → read-only Telegram kitchen acceptance`. При ошибке `stop candidate → restore verified 9dd5964 → confirm exactly one V3 poller`; не стартовать одновременно два V3. Никогда не менять V2 или HA Green в ходе выпуска V3.
+4. Gate B по `light.kukhnia_svet` остаётся **OPEN** независимо от успеха read-only релиза. Никаких новых физических write-разрешений или автоматического повышения автономности.
+
+До выполнения этих условий: **Gate D OPEN; production deployment NO-GO**.
+
 ## Исторические источники
 
 [Операции](../V3-OPERATIONS.md) · [review 2026-10-09](../REVIEW-2026-10-09.md) · [план окружений](../ADR-DEV-STAGE-PROD.md) · [карта каталогов](../PROJECT-MAP.md).

@@ -11,6 +11,7 @@ import {summarizeLightOverview} from '../home/light-overview.mjs';
 import {summarizeCorridorLights} from '../home/corridor-light-readonly-status.mjs';
 import {summarizeReviewedKitchenLights} from '../home/kitchen-light-readonly-status.mjs';
 import {classifyReadonlyQuestion} from '../home/readonly-question-intent.mjs';
+import {createPinnedLightFollowups} from './v3-pinned-light-followups.mjs';
 const base='/home/drpoh/.config/rs-home-ai-v3/';
 const token=readFileSync(base+'telegram-token','utf8').trim();
 const userId=Number(readFileSync(base+'allowed-user-id','utf8').trim());
@@ -31,6 +32,7 @@ const pilot=createKitchenDryrunConsent({
  dispatch:({action})=>boundary.dispatch({action})
 });
 const actor=ctx=>({userId:ctx.from.id,chatId:ctx.chat.id});
+const lightFollowups=createPinnedLightFollowups();
 const allow=ctx=>ctx.chat?.type==='private'&&ctx.chat?.id===userId&&ctx.from?.id===userId;
 bot.start(ctx=>allow(ctx)?ctx.reply('RS Home AI v3: пилот тамбура. Команды только для light.tambur_svet_l1 и только после /confirm.'):undefined);
 bot.command('status',ctx=>allow(ctx)?ctx.reply(storage.ready?'RS Home AI v3: защищённый журнал доступен. Для реальной команды требуется /confirm и проверка разрешений.':'RS Home AI v3: исполнение заблокировано — защищённый журнал не готов. HA не затронут.'):undefined);
@@ -55,15 +57,30 @@ bot.command('sauna',async ctx=>{
  const result=await summarizeSauna({readState:id=>saunaRead('ha_get_state',{entity_id:id})});
  return ctx.reply(result.text);
 });
-bot.on('message',ctx=>{
+bot.on('message',async ctx=>{
  if(!allow(ctx))return;
- const intent=classifyReadonlyQuestion(ctx.message?.text);
- if(intent==='sauna')return summarizeSauna({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
- if(intent==='lights')return summarizeLightOverview({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
- if(intent==='tambour')return summarizeTambourLight({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
- if(intent==='corridor')return summarizeCorridorLights({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
- if(intent==='kitchen_review')return summarizeReviewedKitchenLights({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));
- if(intent==='unsupported_question')return ctx.reply('Этот вопрос пока не поддерживается. Доступны температура сауны, свет в тамбуре и обзор выбранных светильников.');
+ if(typeof ctx.message?.text!=='string'||!ctx.message.text.trim())return;
+ const followup=await lightFollowups.route({
+  actor:actor(ctx),text:ctx.message.text,
+  readState:id=>saunaRead('ha_get_state',{entity_id:id}),
+  readKitchenState:id=>saunaRead('ha_get_state',{entity_id:id})
+ });
+ if(followup.handled)return ctx.reply(followup.text);
+ const intent=classifyReadonlyQuestion(ctx.message.text);
+ const replyRead=promise=>promise.then(result=>{
+  lightFollowups.remember({actor:actor(ctx),text:ctx.message.text,answer:result});
+  return ctx.reply(result.text);
+ });
+ if(intent==='sauna')return replyRead(summarizeSauna({readState:id=>saunaRead('ha_get_state',{entity_id:id})}));
+ if(intent==='lights')return replyRead(summarizeLightOverview({readState:id=>saunaRead('ha_get_state',{entity_id:id})}));
+ if(intent==='tambour')return replyRead(summarizeTambourLight({readState:id=>saunaRead('ha_get_state',{entity_id:id})}));
+ if(intent==='corridor')return replyRead(summarizeCorridorLights({readState:id=>saunaRead('ha_get_state',{entity_id:id})}));
+ if(intent==='kitchen_review')return replyRead(summarizeReviewedKitchenLights({readState:id=>saunaRead('ha_get_state',{entity_id:id})}));
+ if(intent==='unsupported_question'){
+  lightFollowups.clear(actor(ctx));
+  return ctx.reply('Этот вопрос пока не поддерживается. Доступны температура сауны, свет в тамбуре и обзор выбранных светильников.');
+ }
+ lightFollowups.clear(actor(ctx));
  const r=pilot.request(actor(ctx),ctx.message?.text);
  return ctx.reply(r.status==='pending'?'Цель: light.tambur_svet_l1. Действие: '+(ctx.message.text.toLowerCase().startsWith('включи')?'ВКЛЮЧИТЬ':'ВЫКЛЮЧИТЬ')+'. Для РЕАЛЬНОГО переключения отправь /confirm в течение 60 секунд либо /cancel.':'Режим тестирования. Попробуй: «Включи свет в тамбуре» или «Выключи свет в тамбуре».');
 });

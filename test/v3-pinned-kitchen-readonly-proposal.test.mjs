@@ -58,7 +58,9 @@ test('pinned pilot retains original consent/actor and Telegram poller, kitchen b
  const src=readFileSync(new URL('../src/pilot/telegram-readonly.mjs',import.meta.url),'utf8');
  const gate="const allow=ctx=>ctx.chat?.type==='private'&&ctx.chat?.id===userId&&ctx.from?.id===userId;";
  const conf="const result=await pilot.confirm(actor(ctx));";
- const expected="if(intent==='kitchen_review')return summarizeReviewedKitchenLights({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));";
+ const expected="if(intent==='kitchen_review')return replyRead(summarizeReviewedKitchenLights({readState:id=>saunaRead('ha_get_state',{entity_id:id})}));";
+ assert.match(src,/lightFollowups\.remember\(/);
+ assert.match(src,/lightFollowups\.route\(/);
  assert.ok(src.includes(gate));
  assert.ok(src.includes(conf));
  assert.ok(src.includes(expected));

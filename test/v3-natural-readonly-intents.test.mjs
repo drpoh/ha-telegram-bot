@@ -11,7 +11,8 @@ test('exact Russian read-only queries allow only scoped subjects',()=>{
   assert.equal(classifyReadonlyQuestion(input),'tambour');
 });
 test('questions outside reviewed scope never become write proposals',()=>{
- for(const input of ['Какой свет на кухне?', 'Сколько осталось до нагрева сауны?', 'Температура на улице?', 'Где мой телефон?'])
+ assert.equal(classifyReadonlyQuestion('Какой свет на кухне?'),'kitchen_review');
+ for(const input of ['Сколько осталось до нагрева сауны?', 'Температура на улице?', 'Где мой телефон?'])
   assert.equal(classifyReadonlyQuestion(input),'unsupported_question');
  for(const input of ['Включи свет в тамбуре','Выключи свет в тамбуре'])
   assert.equal(classifyReadonlyQuestion(input),null);

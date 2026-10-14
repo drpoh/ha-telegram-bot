@@ -27,7 +27,9 @@ test('pinned corridor uses only existing overview ID subset; unavailable never c
 });
 test('pinned Telegram direct corridor route stays within readonly branch and same poller',()=>{
  const s=readFileSync(new URL('../src/pilot/telegram-readonly.mjs',import.meta.url),'utf8');
- assert.match(s,/if\(intent==='corridor'\)return summarizeCorridorLights\(\{readState:id=>saunaRead\('ha_get_state',\{entity_id:id\}\)\}\)\.then\(result=>ctx\.reply\(result\.text\)\)/);
+ assert.match(s,/if\(intent==='corridor'\)return replyRead\(summarizeCorridorLights\(\{readState:id=>saunaRead\('ha_get_state',\{entity_id:id\}\)\}\)\)/);
+ assert.match(s,/lightFollowups\.remember\(/);
+ assert.match(s,/lightFollowups\.route\(/);
  assert.equal((s.match(/bot\.launch\(/g)||[]).length,1);
  assert.match(s,/bot\.command\('confirm',async ctx=>/);
  assert.match(s,/bot\.command\('cancel',ctx=>/);

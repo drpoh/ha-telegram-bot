@@ -1,5 +1,8 @@
 # RS Home AI V3 — короткий handoff
 
+> **2026-10-14 live findings:** 17/17 HA areas, 100 area-assigned device records (17 calls), and 15 labels verified; `entity_entry` supports `area`, `device_id`, `label_names`. PR #167 DEV-only native category adapter merged `2fa25e7`; never infer full registry or physical authorization. Next operator test: `scripts/manual/v3-ha-entity-domain-proof.mjs`, a single schema-gated `ha_get_entity({domain:'light'})` call that logs only sanitized response shape. Source-only until full CI and owner Pi output. Production `93f11cd` unchanged.
+
+
 > **2026-10-14 latest handoff:** Owner HA-MCP floor-area response verified 17 areas (two floors 5+7 plus five unassigned), zero orphaned. DEV PR #160 merged `23cd630`, source-only bounded joins for native areas + independently validated partial entity/device/label data. CI #38546737652 PASS 417 syntax / 225 isolated files / 833 assertions. New operator-only schema tool `scripts/manual/v3-ha-mcp-argument-shapes.mjs` uses `listTools` ONLY and prints constrained complex input argument shapes; it does not call HA tools. No live entity/device registry snapshot yet. Production V3 `93f11cd` unchanged, do not promote broad DEV. Next: operator manifest evidence, then select limited read-only metadata calls with reviewed schemas.
 
 

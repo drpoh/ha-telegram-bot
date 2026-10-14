@@ -1,5 +1,8 @@
 # RS Home AI V3 — текущее состояние
 
+> **2026-10-14 owner evidence / next DEV stage:** 17/17 areas read successfully; 100 area-scoped device records over 17 device calls, not full HA device registry. Owner's HA-MCP `ha_get_entity` returned `entity_entry` with `area` and `label_names` (while `area_id` null and `labels` empty); `ha_config_get_label` returned 15 labels: one lighting, one control, one system, 12 other. DEV PR #167 added native entity metadata adapter; production remains pinned `93f11cd`, V2 unchanged. Next candidate: one *fixed domain=light* `ha_get_entity` read for enumeration-shape evidence, no raw IDs or state output, then decide whether actual pagination/full registry is possible. All new functionality DEV-only, no new HA read/action permissions.
+
+
 > **2026-10-14 latest DEV milestone:** Owner live HA-MCP area read verified 17 zones across two floors (5+7) plus five unassigned; zero orphaned. PR #160 merged in DEV commit `23cd6306315515aa8f2136063a561c0037cd980b`: bounded entity/device/label-to-native-area metadata join and sanitized `ha_get_entity` / `ha_get_device` / `ha_search` / label-tool argument schema audit. GitHub CI run #38546737652 PASS: 417 syntax files; 225 isolated test files / 833 assertions, zero failures. No live per-entity registry snapshot has been made, and HA-MCP may expose only partial entity records: registry completeness is NOT established; discovery never authorizes physical writes or new reads. Current production V3 still owner-confirmed `93f11cd`, V2 unchanged. Next operator-only manifest audit `scripts/manual/v3-ha-mcp-argument-shapes.mjs`, then review safe actual metadata tool arguments before any live calls.
 
 

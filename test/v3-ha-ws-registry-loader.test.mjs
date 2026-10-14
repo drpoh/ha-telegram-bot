@@ -39,7 +39,10 @@ test('sequential five read-only command calls; returns counts but no permissions
 test('failed second read stops and does not leak provider exception',async()=>{
  const c=connection();const call=c.sendMessagePromise;
  c.sendMessagePromise=async function(message){
-  if(message.type===HA_REGISTRY_READ_COMMANDS[1])throw Error('secret access denied');
+  if(message.type===HA_REGISTRY_READ_COMMANDS[1]){
+   c.calls.push(message);
+   throw Error('secret access denied');
+  }
   return call.call(this,message);
  };
  const result=await readHARegistrySnapshot(c);

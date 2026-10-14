@@ -1,5 +1,7 @@
 # RS Home AI V3 — короткий handoff
 
+> **2026-10-14 owner-area rename fixture:** Pure mock integration now exercises `area_registry_updated` → stale → full snapshot refresh → old area answer absent / new Russian area answer present. CI/live Pi proof separate. GitHub source-only; no live zone edits, credentials, new poller or prod change.
+
 > **2026-10-14 source-only reconnect race fix:** Observer previously queued a retry after an in-flight read failed with `concurrent_change` even if connection had disconnected. New connected gate suppresses timers and events offline, `ready` triggers revalidation; mock regression added. Next GitHub CI then Pi read-only live proof. No new poller or production deployment.
 
 > **Markdown audit result (2026-10-14):** GitHub CI run 38575866492 scanned 87 git-tracked Markdown files, 181 local links and reported exactly two broken paths in `docs/archive/TODO-history-through-2026-10-11.md`. Both targets were corrected with `../` in the PR branch; final CI still required before merge. Legacy content otherwise untouched. Pi access and live catalog event delivery remain unverified.

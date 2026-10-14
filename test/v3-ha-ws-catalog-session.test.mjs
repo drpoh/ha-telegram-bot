@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHAReadOnlyCatalogSession} from '../src/home/ha-ws-catalog-session.mjs';
+import {answerHARegistryQuestion} from '../src/home/ha-catalog-questions.mjs';
 const results={
  'config/floor_registry/list':[{floor_id:'ground',name:'Первый этаж'}],
  'config/area_registry/list':[{area_id:'kitchen',name:'Кухня',floor_id:'ground',labels:[]}],
@@ -85,5 +86,28 @@ test('failing any registry read cannot advertise a fresh catalog',async()=>{
  assert.equal(session.getStatus().status,'stale');
  assert.equal(session.getVerifiedCatalog(),null);
  assert.doesNotMatch(JSON.stringify(session.getStatus()),/private failure/);
+ await session.close();
+});
+
+test('owner-driven area rename event makes previous answer stale then uses renamed area',async()=>{
+ const {conn,clock}=mockConnection();
+ let name='Кухня';
+ const original=conn.sendMessagePromise;
+ conn.sendMessagePromise=async msg=>msg.type==='config/area_registry/list'?
+   [{area_id:'kitchen',name,floor_id:'ground',labels:[]}]:original(msg);
+ const session=createHAReadOnlyCatalogSession({connection:conn,...clock,debounceMs:100});
+ await session.start();await clock.flush();
+ const initial=answerHARegistryQuestion(session,'Какие устройства есть на кухне?');
+ assert.equal(initial.status,'answered');
+ assert.match(initial.text,/Кухня/);
+ name='Столовая';
+ conn.registryEvent('area_registry_updated');
+ assert.equal(answerHARegistryQuestion(session,'Какие устройства есть на кухне?').reason,'catalog_not_fresh');
+ await clock.flush();
+ assert.equal(answerHARegistryQuestion(session,'Какие устройства есть на кухне?').reason,'unsupported_question');
+ const renamed=answerHARegistryQuestion(session,'Какие устройства есть в столовой?');
+ assert.equal(renamed.status,'answered');
+ assert.match(renamed.text,/Столовая/);
+ assert.equal(renamed.authorizesWrite,false);
  await session.close();
 });

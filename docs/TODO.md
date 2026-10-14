@@ -1,5 +1,8 @@
 # RS Home AI V3 — только открытые задачи
 
+> **2026-10-14 newest:** [x] Owner HA-MCP native area shape read: 17 zones, 2 floors, 5 unassigned, no orphaned. [x] DEV PR #160 merged `23cd630`; bounded area/entity/device/label join + sanitized MCP read-tool argument audit, 417 syntax / 225 files / 833 assertions CI pass. [ ] Run one operator-only listTools schema audit for `ha_get_entity`, `ha_get_device`, `ha_search`, `ha_config_get_label`. [ ] Review exact schemas and perform bounded read-only metadata extraction through existing HA-MCP; distinguish partial lookup from full registry. [ ] Validate label classification and only then integrate scoped room answers. Keep existing production `93f11cd` unchanged until separately pinned release and authorization.
+
+
 > **LATEST open TODO 2026-10-14:** [x] Bulk read-only room/sensor DEV PR #152 merged (`6b9ba5b`) after CI 399 syntax files, 216 isolated files / 806 assertions, all PASS. [x] Production V3 `93f11cd` live contextual kitchen→corridor→tambour verified with 447/447 source. [ ] Prepare pinned **production-based** batch candidate with only reviewed DEV room/sensor read-only code and CI; [ ] validate newly added candidate IDs against actual HA state/physical identities read-only, never infer OFF from unavailable; [ ] operator approval and rollback-protected release only after Pi stage check; [ ] optional /cancel smoke and reboot persistence. V2 unchanged. Older TODO milestones below are historical.
 
 

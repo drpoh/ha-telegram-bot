@@ -1,5 +1,25 @@
 # Home Agent v3 — strategy and acceptance gates
 
+## 2026-10-14 — OWNER-APPROVED STRATEGY: V2 agent parity first
+
+**Primary goal:** deliver a genuinely useful Russian-language Home Assistant assistant, preserving and improving the capabilities proven by the running V2. Use V2's existing agent/tool-calling/context implementation as a reusable reference, not a reason to bypass V3 safety. Stop optimizing isolated infrastructure while basic home questions are missing.
+
+**Target pipeline:** Telegram/Assist -> conversation context + device memory -> AI plans/selects typed tools -> deterministic capability/policy gate -> HA-MCP (live state/history/diagnostics; actions only after authorization) -> verify/result -> short Russian answer -> bounded memory. The existing five-registry WebSocket catalog supplies fresh names/relationships, NOT live device states or authority.
+
+**Functional parity gates, in priority order:**
+1. Read-only: "Что включено на кухне?", "Какой свет выключен в гостиной?", and cross-turn "А какой выключен?" preserving the last room and device class. Resolve actual area membership and inspect authoritative current states; distinguish unavailable/unknown and physical devices from HA entities. No guesses.
+2. Read-only: current sauna temperature and historical heating duration **only if supported by actual HA history/statistics**, clearly distinguishing events and aggregates; system repairs/add-on warnings with attributed sources.
+3. Shared Russian dialogue agent: adapt V2 `src/ai/agent.mjs`, prompt, conversation/device memory and existing HA-MCP client/provider router selectively; bounded steps, timeout, tool schema, tool error handling, privacy-safe logs and explicit fallbacks. **Never directly route model-selected write calls to the legacy unrestricted executor.**
+4. Controlled actions: retain immutable V3 envelope, exact actor/target/provenance, fresh scope/preconditions, policy, explicit confirmation where required, act/verify/audit. Start with existing single-light approved pilot; no broad room actions or expanded auto_safe without Gates B/C/D and owner consent.
+5. Extend Telegram V3 using the **existing authorized route, not a second poller**, then Assist/ESPHome via the same engine after identity/voice risk review.
+
+**Reuse First:** use installed HA-MCP, Home Assistant, existing provider router, systemd, Telegram infrastructure, ESPHome and HA Assist. Adapt V2 conversational capabilities; do not reproduce its permissive write path, raw MCP response logging or unreviewed persistence. Do not build a competing HA state store or custom MCP transport.
+
+**Definition of Done for MVP parity:** reproducible offline tests for each read-only example (including unavailable, ambiguous, renamed rooms, missing data, second-turn context, MCP failures), independently verified Pi3 runtime read-only queries, and reviewed end-to-end Telegram acceptance without interrupting V2. Comparisons must use actual identical requests; CI-only claims are not live acceptance. Home Assistant must keep working if AI is unavailable. Prior Gating A–E continues to govern write/voice/production release; functional read-only parity is a distinct delivery milestone.
+
+**Priority rule:** freeze optional catalog/infrastructure enhancements unless required for one of these vertical slices, safety, or an existing approved acceptance check. In-flight PRs may complete if narrow/low-risk; no new general architecture refactor until MVP parity is demonstrated.
+
+
 Status: active development on `feature/v3-home-agent`. Keep the running v2 service available.
 
 ## Architecture

@@ -1,5 +1,8 @@
 # RS Home AI V3 — короткий handoff
 
+> **2026-10-14 registry events:** DEV pure injected `ha-ws-registry-event-observer.mjs` now uses documented HA JS `subscribeEvents(cb,type)` promise-unsubscribe and connection `ready`/`disconnected`/`reconnect-error` listeners. Five subscriptions, debounced full five-list reload, stale guard if zones change during fetch, unsubscribe on stop. Offline fake tests; not activated against HA or production. Next: verify actual bus event availability and integrate an owner-reviewed DEV-only read-only adapter, without keeping any token in GitHub/chat. Existing production pinned `93f11cd`.
+
+
 > **2026-10-14 owner decision:** Native HA WebSocket full registry snapshot must track future changes to zones and metadata. AGENTS.md now records this permanent design. Pure DEV refresh coordinator invalidates on registry events/disconnect and rejects in-flight reads invalidated by changes. Not yet connected to live HA events; V3 production pinned `93f11cd`, V2 unchanged.
 
 > **OWNER-CONFIRMED HA WS SUCCESS 2026-10-14:** `HA_WS_READ=validated_snapshot`; counts floors=2, areas=17, devices=294, entities=2881, labels=15, unassignedEntities=1987, unassignedDevices=194, disabledEntities=1339, hiddenEntities=7. Test was 5 max registry reads with 0 writes, no prod changes, token not provided in chat or persisted by tool. Note 100 area-assigned devices matches earlier per-area MCP census but does not measure distinct physical devices. Added DEV pure aggregate report module `src/home/ha-registry-coverage-summary.mjs` (only verified five-registry source, permission-independent). Next: integrate event-based update and privacy-safe scope summaries; do not ask for another token or raw catalog file. Preserve live V3 `93f11cd` and V2.

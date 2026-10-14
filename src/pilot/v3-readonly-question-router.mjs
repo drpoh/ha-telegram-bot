@@ -3,6 +3,7 @@
 import {summarizeSauna} from '../home/sauna-status.mjs';
 import {summarizeTambourLight} from '../home/tambour-light-status.mjs';
 import {summarizeLightOverview} from '../home/light-overview.mjs';
+import {summarizeCorridorLights} from '../home/corridor-light-readonly-status.mjs';
 import {summarizeReviewedKitchenLights} from '../home/kitchen-light-readonly-status.mjs';
 import {classifyReadonlyQuestion,classifyLightQuestionMode} from '../home/readonly-question-intent.mjs';
 import {classifySaunaQuestionMode} from '../home/sauna-question-mode.mjs';
@@ -25,6 +26,7 @@ export async function routeV3ReadonlyQuestion({text,readState,readKitchenState}=
   else if(intent==='lights')result=await summarizeLightOverview({
    readState,mode:classifyLightQuestionMode(text)
   });
+  else if(intent==='corridor')result=await summarizeCorridorLights({readState});
   else if(intent==='tambour')result=await summarizeTambourLight({
    readState,mode:classifyTambourQuestionMode(text)
   });

@@ -11,7 +11,7 @@ export function authorizeEntityLabelProof(tools){
  if(entity.length!==1||label.length!==1)return {allowed:false,reason:'missing_or_duplicate_tool'};
  const e=entity[0].inputSchema,l=label[0].inputSchema;
  if(e?.type!=='object'||l?.type!=='object'||!acceptsString(e.properties?.entity_id)||
-    !acceptsString(l.properties?.label_id)||!Array.isArray(e.required??[])||
+    !acceptsString(l.properties?.label_id)||!Array.isArray(l.properties?.label_id?.anyOf)||!l.properties.label_id.anyOf.some(x=>x?.type==='null')||!Array.isArray(e.required??[])||
     !Array.isArray(l.required??[])||
     (e.required??[]).some(k=>k!=='entity_id')||
     (l.required??[]).some(k=>k!=='label_id'))

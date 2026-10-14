@@ -1,5 +1,8 @@
 # RS Home AI V3 — короткий handoff
 
+> **Latest handoff 2026-10-14:** DEV added pure WebSocket five-registry loader (`src/home/ha-ws-registry-loader.mjs`) that accepts an injected already-authenticated `sendMessagePromise` interface, calls only five native list operations and validates full response payload arrays; partial/error/timeout -> unverified. Pure freshness tracker invalidates after registry changes/disconnect. No actual HA WS access granted, no credential creation, no runtime connection or promotion. Next: verify HA Core version-specific WebSocket listing permissions and selected sanitized shapes under a specifically approved owner-run probe; confirm child devices and benchmark Pi3. Preserve `93f11cd` production.
+
+
 > **2026-10-14 latest:** Source research saved; official Home Assistant WebSocket API and home-assistant-js-websocket sendMessagePromise/CreateLongLivedTokenAuth were checked. New DEV pure fixture-only five-registry join module `src/home/ha-ws-registry-snapshot.mjs` requires complete successful floor/area/device/entity/label lists, flags partial/unknown links, does not grant HA read/write permissions. Do NOT use Perplexity's unverified sample client directly or create token automatically. Next: test actual HA instance registry list permissions through approved minimal read-only access, then consider event-driven refresh. Production `93f11cd` unchanged.
 
 

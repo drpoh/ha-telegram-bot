@@ -23,6 +23,14 @@ Before any work, **first read `docs/CURRENT-STATE.md`**, then `docs/development/
 ## Source of truth
 GitHub is the source of truth for code and documentation. Never rely on chat/model memory as the only project state. Before substantial changes, inspect the current branch and relevant files.
 
+## Permanent Home Assistant registry synchronization rule — owner request 2026-10-14
+
+- Home Assistant native **WebSocket registry lists** are the approved source for the complete metadata catalog: floors, areas, devices, entities and labels. A successful live owner-operated read-only sweep on Pi confirmed 2 floors, 17 areas, 294 registered device records, 2881 entity records and 15 labels on 2026-10-14. These counts are a dated snapshot, not a constant. See `docs/CURRENT-STATE.md`.
+- Owner intends to **rename, move, create and remove areas and other HA registry objects**. Never hardcode the area/device/entity/label inventory, inferred physical room assignment or these dated counts as permanent facts. Refresh data from Home Assistant; an entity area overrides its device area; entities/devices without areas remain legitimately unassigned.
+- On registry change events, connectivity loss, failed subscription, or reconnect, mark the local metadata cache stale. Revalidate through the full five-list snapshot before advertising an up-to-date all-home inventory; discard snapshot reads raced by a later change event. Apply bounded work and fail-closed freshness rules.
+- Keep **HA-MCP** for explicitly authorized live state reads and actions; WebSocket registry metadata, room assignments and labels are *not* authorization to read states or control devices. No registry writes or automatic physical actions follow discovery. No token or runtime credential may enter GitHub, chat, logs or tests. Production changes still require the existing release gates and owner approval.
+- Prefer the validated standard HA APIs and existing adapters over repeated exploratory search probes or new custom infrastructure. Run pure offline/mock tests in DEV before any separately approved live read.
+
 ## Architecture rules
 - Home Assistant remains the authority for device state and automation.
 - HA-MCP is the primary control/read interface.

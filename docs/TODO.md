@@ -1,5 +1,7 @@
 # RS Home AI V3 — только открытые задачи
 
+> **2026-10-14 owner request:** [x] Save permanent WebSocket catalog synchronization policy in AGENTS.md, including future area moves/renames. [x] Implement offline-tested refresh coordinator with generation guard for registry changes during a read. [ ] Validate HA registry event subscription shape, then wire the observer and reconnect resnapshot under an explicitly reviewed rollout; no HA registry edits by the bot. Production `93f11cd` and V2 unchanged.
+
 > **Updated after successful live WS registry read 2026-10-14:** [x] Direct local HA WebSocket access and five native registry reads confirmed by owner, with no writes. [x] 2 floors / 17 areas / 294 device registry records / 2881 entity registry records / 15 labels; 194 devices and 1987 entities unassigned to rooms, 1339 disabled and 7 hidden. [x] Build pure aggregate-only summary of validated snapshot with consistent counts and no authority grant. [ ] Use existing credential only with operator approval for future live refresh; no token should enter repository, terminal history, chat or logs. [ ] Add bounded event-based stale cache and proper reconnect lifecycle with mocked tests. [ ] Categorize scoped active lights from native label metadata without granting permissions or assuming unassigned implies defect. [ ] Pi3 resource and reconnect test, stage gate, then separately pinned production proposal; production `93f11cd` unchanged.
 
 

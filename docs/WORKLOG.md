@@ -1,3 +1,8 @@
+## 2026-10-14 — DEV catalog natural-language metadata slice
+
+GitHub-only feature work because Desktop Commander remote terminal quota prevents Pi commands. Extend the already proven five-registry normalizer with display names; add a pure bounded Russian question adapter, intentionally not plugged into Telegram/persistent services. Offline tests cover area counts, light entity vs physical light distinction, unassigned/disabled, exact entity area, second floor and stale/ambiguous requests. Live event delivery, reconnect, Pi resource and Telegram remain unverified; no HA WS calls, writes, credentials or production changes.
+
+
 # WORKLOG — Development checkpoint journal
 
 > **2026-10-14 — mass DEV capability batch + production snapshot.** Owner's live V3 `93f11cd` deployment PASS, one process, V2 unchanged, 447/447 integrity; Telegram conversation kitchen 1 ON/3 OFF → corridor 0 ON/3 OFF → tambour ON confirmed. Read-only PR #152 batch introduced groups for 19 pre-existing candidate lights and two exact sensor reads, room intents/followups, conservative unknown handling and no new physical write permissions. GitHub CI #38538434803 PASS: 399 syntax files, 216 test files / 806 assertions. Squash merged into DEV `6b9ba5bbb623a3f7f749323b86929ca5443e6e4c`. Production still pinned `93f11cd`; source features are NOT yet production-tested.

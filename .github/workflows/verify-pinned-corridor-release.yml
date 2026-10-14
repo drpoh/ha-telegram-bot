@@ -1,0 +1,68 @@
+name: Verify exact pinned corridor release
+
+on:
+  pull_request:
+    branches:
+      - feature/v3-home-agent
+
+permissions:
+  contents: read
+
+jobs:
+  verify-exact-release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      BASE_SHA: 2fbee8f9c4c45ae1b669e9e3f1d6d119d1c0cb1c
+      CANDIDATE_SHA: 1c7e3f7a6638fab529b31081fde9e0f5da7e5bf5
+      CI: 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 1c7e3f7a6638fab529b31081fde9e0f5da7e5bf5
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify fixed SHA and four-file read-only diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          test "$(git merge-base "$BASE_SHA" "$CANDIDATE_SHA")" = "$BASE_SHA"
+          python3 - <<'PY'
+          import os, subprocess
+          from pathlib import Path
+          base=os.environ['BASE_SHA']
+          head=os.environ['CANDIDATE_SHA']
+          expected={
+            'src/home/corridor-light-readonly-status.mjs',
+            'src/home/readonly-question-intent.mjs',
+            'src/pilot/telegram-readonly.mjs',
+            'test/v3-pinned-corridor-readonly-release.test.mjs',
+          }
+          changed=set(subprocess.check_output(['git','diff','--name-only',base,head],text=True).splitlines())
+          assert changed==expected, f'unexpected_diff: {sorted(changed^expected)}'
+          old=subprocess.check_output(['git','show',base+':src/pilot/telegram-readonly.mjs'])
+          new=Path('src/pilot/telegram-readonly.mjs').read_bytes()
+          lines=[
+            b"import {summarizeCorridorLights} from '../home/corridor-light-readonly-status.mjs';\n",
+            b" if(intent==='corridor')return summarizeCorridorLights({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));\n",
+          ]
+          for line in lines:
+            assert new.count(line)==1, 'incorrect_route_addition'
+            new=new.replace(line,b'',1)
+          assert new==old, 'existing_telegram_poller_or_consent_changed'
+          print('PINNED_DIFF=PASS')
+          print('TELEGRAM_PREEXISTING_BYTES=IDENTICAL')
+          PY
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - name: Install offline test prerequisites
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends sqlite3
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Focused corridor test
+        run: node --test test/v3-pinned-corridor-readonly-release.test.mjs
+      - name: Full offline suite exact candidate
+        run: npm test

@@ -1,5 +1,8 @@
 # RS Home AI V3 — короткий handoff
 
+> **2026-10-14:** Source-only `ha-ws-catalog-session.mjs` now composes loader + freshness coordinator + five-event observer. End-to-end fake WebSocket tests check ordering, read-list-only traffic, area-update debounce and reconnect. No live connection; preserve production `93f11cd` and V2. Next: prove real HA event subscriptions and review failure/ready race under live Pi DEV credentials before any stage or production activation.
+
+
 > **2026-10-14 registry events:** DEV pure injected `ha-ws-registry-event-observer.mjs` now uses documented HA JS `subscribeEvents(cb,type)` promise-unsubscribe and connection `ready`/`disconnected`/`reconnect-error` listeners. Five subscriptions, debounced full five-list reload, stale guard if zones change during fetch, unsubscribe on stop. Offline fake tests; not activated against HA or production. Next: verify actual bus event availability and integrate an owner-reviewed DEV-only read-only adapter, without keeping any token in GitHub/chat. Existing production pinned `93f11cd`.
 
 

@@ -1,5 +1,8 @@
 # RS Home AI V3 — только открытые задачи
 
+> **2026-10-14 read-only V2-parity slice (PR pending):** Added pure `src/home/ha-room-lights-readonly.mjs` resolving room from verified current catalog plus separately supplied complete authorized light states, with follow-up context and fail-closed tests. No HA live connection, Telegram integration, new MCP rights or state fetch in this module. Next: CI, adapt bounded state reader through existing HA-MCP, Pi live read-only acceptance, then reviewed Telegram route.
+
+
 ## CURRENT DELIVERY ORDER — V2 FUNCTIONAL PARITY FIRST (2026-10-14)
 
 - [ ] Inventory reusable V2 agent/provider/history/device context/HA-MCP tool interfaces against V3 existing read-only route; record minimal integration points, privacy and permission differences.

@@ -1,5 +1,7 @@
 # RS Home AI V3 — текущее состояние
 
+> **2026-10-14 integration blocker found in PR #183 CI:** the five-registry WebSocket loader previously returned only normalized entity records/counts, dropping normalized area/floor/device names before the session exposed the catalog. This prevented real session-backed metadata questions from answering, despite isolated adapter tests. DEV loader now forwards these fields; requires successful exact-head CI. Real HA change event delivery remains unverified.
+
 > **2026-10-14 DEV-only acceptance fixture:** Added an offline end-to-end owner-initiated area rename regression across injected WS session, registry update event, stale catalog guard, five-list refresh and natural Russian answer on newly named area. This is a simulated HA event, **not** proof of actual event delivery on Raspberry Pi. No new tokens, MCP permissions, Telegram poller or production deployment. Check exact PR CI before counting as passed.
 
 > **2026-10-14 DEV WebSocket disconnect hardening candidate:** observed an offline race: an in-flight five-list read completing after `disconnected` could queue a refresh while still offline. Observer now gates scheduled work, change callbacks and concurrent-change retry on authenticated `ready`, retaining stale state after disconnection. New mock regression covers disconnect mid-flight -> no retry -> ready -> full refresh. This is source-only CI candidate; live HA event delivery, reconnect and Pi3 still not verified. Pinned production unchanged.

@@ -1,5 +1,8 @@
 # RS Home AI V3 — текущее состояние
 
+> **2026-10-14 DEV-only catalog question slice (GitHub feature branch; CI pending):** Native registry normalizer now retains area/floor/device display names alongside existing complete five-registry entity joins. Pure `answerHARegistryQuestion` supports bounded Russian metadata questions about a named area, `light.*` entity counts, exact-ID entity location, unassigned/disabled entity records and the second floor. Distinguishes registry records from physical appliances, requires a verified fresh catalog and grants no HA-MCP reads or actions. Not wired to Telegram, not live tested on Pi; separate event delivery/reconnect acceptance still open. Pinned V3 production `93f11cd` and V2 unchanged.
+
+
 > **2026-10-14 next acceptance gate (DEV-only):** owner previously confirmed complete 5-registry HA WS snapshot (2 floors, 17 areas, 294 devices, 2881 entities, 15 labels). New `src/home/ha-ws-registry-subscription-proof.mjs` and operator-only `scripts/manual/v3-ha-ws-registry-subscription-proof.mjs` test whether the live instance accepts exactly five native `subscribe_events` event types (floors, areas, devices, entities, labels), without modifying HA, reading entity states, capturing event data or starting a permanent service. Offline-first `--preflight`; only explicit `--read-only` with owner-provided private environment credential accesses LAN. Five accepted subscriptions prove subscription availability, **not actual event delivery**, which must be separately verified during an owner-initiated change. No production rollout; pinned V3 `93f11cd`, V2 unchanged.
 
 

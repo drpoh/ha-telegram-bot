@@ -1,5 +1,8 @@
 # RS Home AI V3 — только открытые задачи
 
+> **2026-10-14 bulk DEV batch (not production):** Owner-confirmed current production `93f11cd` passed contextual Telegram kitchen→corridor→tambour, V3 process count 1, V2 unchanged, tracked source 447/447. In isolated DEV feature `feat/v3-bulk-room-readonly-20261014` add read-only grouping for all 19 existing unverified candidate `light.*` IDs across living/bedroom/bathroom/kitchen extra/hallway extra, two exact sensors (`sensor.posudomoika_power`, `sensor.vykliuchatel_vannaia_battery`), fixed Russian questions, room followups, and offline fail-closed tests. No new physical light control, no broad registry discovery. This remains **DEV only** until CI, pinned diff, owner approvals, and live HA validation. Group names are review metadata, not verified physical identity. Continue batching read-only improvements rather than micro-releases.
+
+
 > **2026-10-14 live milestone:** Production f744557 released successfully (one V3, V2 unchanged). Telegram corridor 0 on/3 off/0 unknown; kitchen 1 on/3 off/0 unknown; sauna 27.5625 C threshold 85 C. Pi tests 177 files/676 assertions PASS; integrity 445/445 PASS. Next: pinned read-only conversational followups from DEV. No new kitchen/corridor control permission. Reboot persistence and /cancel current-version smoke remain optional checks.
 
 

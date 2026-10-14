@@ -43,7 +43,7 @@ test('metadata remains a proposal; no unseen candidate receives approval',()=>{
   area:'кухня',approvedReadIds:['light.kitchen']
  });
  assert.equal(rows.find(x=>x.id==='light.kitchen').readApproved,true);
- assert.equal(rows.find(x=>x.id==='light.browser_mod_private').requiresReview,true);
+ assert.equal(rows.some(x=>x.id==='light.browser_mod_private'),false);
  assert.equal(rows.some(x=>x.id==='light.unknown'),false);
  assert.equal(rows.some(x=>x.id==='light.conflict'),false);
  assert.deepEqual(proposeReadOnlyEntityIds(index,{area:'no-such-room'}),[]);

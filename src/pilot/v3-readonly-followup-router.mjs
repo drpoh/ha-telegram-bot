@@ -4,7 +4,7 @@ import {classifyReadonlyQuestion} from '../home/readonly-question-intent.mjs';
 import {summarizeCorridorLights} from '../home/corridor-light-readonly-status.mjs';
 import {routeV3ReadonlyQuestion} from './v3-readonly-question-router.mjs';
 
-const supported=new Set(['lights','kitchen_review','tambour']);
+const supported=new Set(['lights','corridor','kitchen_review','tambour']);
 const normalize=value=>typeof value==='string'?
  value.toLocaleLowerCase('ru-RU').replace(/ё/g,'е').trim()
   .replace(/[?!.]+$/g,'').replace(/\s+/g,' '):'';

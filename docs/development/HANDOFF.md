@@ -1,5 +1,8 @@
 # RS Home AI V3 — короткий handoff
 
+> **2026-10-14 current work:** GitHub feature branch `feat/v3-catalog-room-answers-20261014` carries pure, non-deployed registry catalog Russian questions and normalization of area/floor/device names. No live Pi access via Desktop Commander (monthly remote-tool limit); do not label GitHub CI as ARMv7/live HA acceptance. Next: finish PR CI, then read-only Pi test and owner-driven actual event proof, followed by Telegram wiring after separate gate. Never touch pinned production `93f11cd` or V2.
+
+
 > **2026-10-14 operator next:** One-shot bounded native WebSocket subscription probe checks `floor_registry_updated`, `area_registry_updated`, `device_registry_updated`, `entity_registry_updated`, `label_registry_updated` using existing LAN/token env; offline preflight default, explicit `--read-only` only, no raw payload logs/HA writes. Run from clean canonical Pi DEV after CI merge. A subscription ACK does NOT validate actual change events. Production V3 `93f11cd` and V2 unchanged.
 
 

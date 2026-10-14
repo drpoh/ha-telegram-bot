@@ -1,5 +1,8 @@
 # RS Home AI V3 — короткий handoff
 
+> **2026-10-14 operator next:** One-shot bounded native WebSocket subscription probe checks `floor_registry_updated`, `area_registry_updated`, `device_registry_updated`, `entity_registry_updated`, `label_registry_updated` using existing LAN/token env; offline preflight default, explicit `--read-only` only, no raw payload logs/HA writes. Run from clean canonical Pi DEV after CI merge. A subscription ACK does NOT validate actual change events. Production V3 `93f11cd` and V2 unchanged.
+
+
 > **2026-10-14:** Source-only `ha-ws-catalog-session.mjs` now composes loader + freshness coordinator + five-event observer. End-to-end fake WebSocket tests check ordering, read-list-only traffic, area-update debounce and reconnect. No live connection; preserve production `93f11cd` and V2. Next: prove real HA event subscriptions and review failure/ready race under live Pi DEV credentials before any stage or production activation.
 
 

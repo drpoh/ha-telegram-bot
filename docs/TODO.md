@@ -1,5 +1,7 @@
 # RS Home AI V3 — только открытые задачи
 
+> **CURRENT TOP PRIORITIES 2026-10-14: COMPLETED owner-approved hotfix production e902efeb -> 2fbee8f with rollback, one V3 process, V2 unchanged; full Pi Node20 ARMv7 offline tests 176 files / 673 assertions PASS; release integrity 441/441; live Telegram kitchen 0 on / 4 off / 0 unknown and sauna 27.875 C. PENDING: one short live Telegram overview, request tambour on, then /cancel on current hotfix (do not require repeated physical /confirm); check reboot persistence when naturally possible; review/integrate PR #142 into DEV source without broad promotion; proceed source-only bounded conversational followup on existing DEV router. Physical identity of kitchen and any HA kitchen writes remain DENIED; owner approval required to expand writes. Historical TODOs below were written before release and do not override this checkpoint.**
+
 > **Актуальное состояние и проверенные версии:** [CURRENT-STATE.md](CURRENT-STATE.md). Этот файл содержит только **ещё не завершённые** работы. Результаты пройденных тестов и закрытые пункты — [WORKLOG.md](WORKLOG.md) и [архив TODO до этапа 1](archive/TODO-snapshot-before-phase1-2026-10-13.md).
 >
 > Приоритеты обновлены 2026-10-13. Systemd read-only: V3 `active`, ExecStart в `rs-home-ai-v3-release-9dd5964`; V2 `active`. Это не доказательство SHA содержимого, Telegram API или recovery.

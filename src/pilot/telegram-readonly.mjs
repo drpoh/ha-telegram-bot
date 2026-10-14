@@ -115,7 +115,8 @@ bot.on('message',async ctx=>{
   actor:actor(ctx),
   text:ctx.message?.text,
   readState:id=>saunaRead('ha_get_state',{entity_id:id}),
-  readKitchenState:id=>newLightRead(id)
+  readKitchenState:id=>newLightRead(id),
+  readCandidateState:id=>newLightRead(id)
  });
  if(routed.handled)return ctx.reply(routed.text);
  // Preserve the existing separately gated tambour physical-confirmation path.

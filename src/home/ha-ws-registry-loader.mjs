@@ -36,6 +36,7 @@ export async function readHARegistrySnapshot(connection,{timeoutMs=10000}={}){
  return Object.freeze({
   status:'validated_snapshot',complete:true,completed:5,
   counts:catalog.counts,entities:catalog.entities,
+  areas:catalog.areas,floors:catalog.floors,devices:catalog.devices,
   authorizesRead:false,authorizesWrite:false
  });
 }

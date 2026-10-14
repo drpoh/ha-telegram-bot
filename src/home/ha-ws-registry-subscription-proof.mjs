@@ -17,7 +17,7 @@ export async function probeHARegistrySubscriptions({
   return invalid('credential_not_configured');
  if(typeof WebSocketImpl!=='function'||!Number.isSafeInteger(timeoutMs)||
     timeoutMs<1000||timeoutMs>30000||!Number.isSafeInteger(observeMs)||
-    observeMs<0||observeMs>5000)return invalid('invalid_options');
+    observeMs<0||observeMs>60000)return invalid('invalid_options');
  let socket,timeout,finish,observation;
  const acknowledged=new Set(),events=new Map(HA_REGISTRY_EVENTS.map(x=>[x,0]));
  let phase='authentication',sequence=0,settled=false;
@@ -33,7 +33,7 @@ export async function probeHARegistrySubscriptions({
    const end=value=>{if(settled)return;settled=true;clearTimeout(timeout);
     clearTimeout(observation);close();resolve(value);};
    const send=msg=>socket.send(JSON.stringify(msg));
-   timeout=setTimeout(()=>end(invalid('timeout')),timeoutMs);
+   timeout=setTimeout(()=>end(invalid('timeout')),timeoutMs+observeMs);
    socket.addEventListener('error',()=>end(invalid('connection_error')));
    socket.addEventListener('close',()=>end(invalid('connection_closed')));
    socket.addEventListener('message',ev=>{

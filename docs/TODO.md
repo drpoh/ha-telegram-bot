@@ -1,5 +1,8 @@
 # RS Home AI V3 — только открытые задачи
 
+> **2026-10-14 next catalog milestone:** [x] Add DEV-only pure metadata-question adapter using native floor/area/device display names, exact entity IDs and five-list verified snapshot; [ ] CI and Pi Node20 offline test evidence; [ ] actual owner-initiated area rename/move event delivery + refreshed query; [ ] injected-session reconnect and bounded retry proof; [ ] integrate verified fresh catalog into existing V3 Telegram read-only route only after Pi testing, policy review and separate release approval. No new poller or HA changes.
+
+
 > **2026-10-14 event acceptance:** [x] Add 5-event native HA WS subscribe-only probe with bounded lifetime, offline mock tests, no token persistence, no writes. [ ] Owner run `scripts/manual/v3-ha-ws-registry-subscription-proof.mjs --read-only` on Pi after CI merge using private token entry; check five subscriptions, preserve logs without token. [ ] Separately observe an owner-initiated zone rename/move event and verify fresh catalog reload; never edit zones automatically. [ ] Validate reconnect and Pi memory before pinned stage/prod proposal; V3 production `93f11cd` unchanged.
 
 

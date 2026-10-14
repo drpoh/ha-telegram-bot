@@ -1,5 +1,8 @@
 # RS Home AI V3 — только открытые задачи
 
+> **Current 2026-10-14:** [x] Implement mock-tested Home Assistant WebSocket handshake + five-command one-shot reader, no new dependency. [x] Add no-network `--preflight` (Node20 global WebSocket capability). [ ] Operator to run preflight; if Node20 native WebSocket absent, evaluate verified `ws` dependency, not hacks. [ ] Review safe local endpoint and existing least-privilege token access before `--read-only`; no token disclosure, no auto-created token. [ ] Verify actual 5 registry schemas/counts, especially 2026.x child devices; then implement event refresh and stage gate. `93f11cd` stays in production.
+
+
 > **Latest 2026-10-14 work:** [x] Pure five-list native HA WebSocket reader with injected transport, bounded timeout/fail-closed normalization and no dependencies or credentials. [x] Offline dirty-event/disconnect freshness gate. [ ] Review owner-authorized, minimal real WS access without sharing tokens in chat or modifying production. [ ] Validate actual full registry array shapes (child devices / nullable relationships), compare against previous 17 areas, 15 labels, 100 area-scoped device records without treating them as all devices. [ ] Benchmark on Pi3 before stage; connect subscriptions only after verification; keep HA-MCP as conversational agent path. Production `93f11cd` unchanged.
 
 

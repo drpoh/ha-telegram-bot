@@ -1,0 +1,79 @@
+name: Pinned V3 kitchen read-only source verification
+
+on:
+  pull_request:
+    branches:
+      - release-proposal/v3-kitchen-readonly-20261013
+
+permissions:
+  contents: read
+
+jobs:
+  exact-pinned-candidate:
+    name: Exact SHA source/consent and offline Node 20 tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      CI: "true"
+      PINNED_BASE: "9dd5964a4956b88227ec4002ac80ef46a186d632"
+      PINNED_CANDIDATE: "cdcfdcdaeeec408fa89001e578639b9144b1a7e1"
+    steps:
+      - name: Checkout exact candidate, not the verification PR merge
+        uses: actions/checkout@v4
+        with:
+          ref: cdcfdcdaeeec408fa89001e578639b9144b1a7e1
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify exact Git SHA and six-file read-only scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$PINNED_CANDIDATE"
+          test "$(git merge-base "$PINNED_BASE" "$PINNED_CANDIDATE")" = "$PINNED_BASE"
+          python3 - <<'PY'
+          import os, subprocess
+          from pathlib import Path
+          base=os.environ['PINNED_BASE']
+          head=os.environ['PINNED_CANDIDATE']
+          expected={
+            'src/home/kitchen-light-readonly-status.mjs',
+            'src/home/new-light-candidates.mjs',
+            'src/home/new-light-review.mjs',
+            'src/home/readonly-question-intent.mjs',
+            'src/pilot/telegram-readonly.mjs',
+            'test/v3-pinned-kitchen-readonly-proposal.test.mjs'
+          }
+          changed=set(subprocess.check_output(
+            ['git','diff','--name-only',base,head],text=True).splitlines())
+          assert changed==expected, f'unexpected_release_scope: {sorted(changed ^ expected)}'
+          entry='src/pilot/telegram-readonly.mjs'
+          old=subprocess.check_output(['git','show',base+':'+entry])
+          new=Path(entry).read_bytes()
+          additions=(
+            b"import {summarizeReviewedKitchenLights} from '../home/kitchen-light-readonly-status.mjs';\n",
+            b" if(intent==='kitchen_review')return summarizeReviewedKitchenLights({readState:id=>saunaRead('ha_get_state',{entity_id:id})}).then(result=>ctx.reply(result.text));\n",
+          )
+          for line in additions:
+            assert new.count(line)==1, 'missing_or_duplicate_readonly_line'
+            new=new.replace(line,b'',1)
+          assert new==old,'PREEXISTING_TELEGRAM_CONSENT_BYTES_CHANGED'
+          print('EXACT_SOURCE_SHA='+head)
+          print('CHANGED_FILES=6')
+          print('PREEXISTING_TELEGRAM_ENTRYPOINT_BYTES=IDENTICAL')
+          print('NEW_ROUTE=ha_get_state_only')
+          PY
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Prove Node 20 runtime
+        run: node -e "if(process.versions.node.split('.')[0]!=='20')process.exit(1);console.log('NODE20_VERIFIED='+process.version)"
+      - name: Install offline-test prerequisites on disposable runner only
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends sqlite3
+      - name: Install locked npm packages without lifecycle scripts on runner only
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Exact candidate focused offline regression
+        run: node --test test/v3-pinned-kitchen-readonly-proposal.test.mjs
+      - name: Full existing isolated suite on exact candidate
+        run: npm test

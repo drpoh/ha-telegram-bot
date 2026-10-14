@@ -1,5 +1,23 @@
 # Home Agent v3 — strategy and acceptance gates
 
+## CURRENT STRATEGY — owner decision 2026-10-14: V2 evolution, V3 archived as candidate R&D
+
+**V2 stays the product.** Its existing conversational AI tool-calling + context + HA-MCP behavior already answers real household questions well. The previous goal of delivering a separate V3 replacement, including the 2026-10-14 V2-parity-first plan below, is **superseded**. Do not rebuild features that V2 already provides.
+
+**Success criterion:** a change to V2 demonstrably improves accuracy, convenience, reliability, privacy or safety on actual user scenarios, with no regression or break in running service.
+
+**Delivery roadmap:**
+1. Establish V2 baseline using existing example conversations: room light on/off + follow-up context, sauna heating duration, HA errors/warnings. Preserve current runtime and only collect privacy-safe aggregates.
+2. Identify one user-visible weakness or concrete risk per iteration. Prefer a small existing V2 module improvement over a new stack.
+3. Reuse vetted V3 building blocks **selectively**: read-only registry freshness, safer diagnostics, typed tool validation, redacted logging and deterministic write-policy checks when needed. Avoid migrating the V2 agent into a replacement V3.
+4. Test in isolated DEV with offline fixtures; prove Pi/runtime read-only behavior where appropriate; review secrets, model-selected tools, rate limits, action safety and rollback.
+5. Promote to the **same single V2 service** only by separate owner-approved deployment/rollback; never run two Telegram pollers.
+
+**Stop / defer:** V3 feature parity as an independent milestone, general Gate B infrastructure for its own sake, nonessential registry watcher, speculative multi-agent services. Keep existing open PRs #188 and #190 for reassessment (do not merge blindly). Retain historical architecture and tests as research, not a promise of deployment.
+
+**Security:** V2's unrestricted model-selected tool invocation is an improvement candidate, not permission to copy it into production changes without review. Maintain HA Green independence; no unattended critical actions, no untrusted tool authorization, no secrets in logs, no new public network listeners.
+
+
 ## 2026-10-14 — OWNER-APPROVED STRATEGY: V2 agent parity first
 
 **Primary goal:** deliver a genuinely useful Russian-language Home Assistant assistant, preserving and improving the capabilities proven by the running V2. Use V2's existing agent/tool-calling/context implementation as a reusable reference, not a reason to bypass V3 safety. Stop optimizing isolated infrastructure while basic home questions are missing.

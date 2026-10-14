@@ -1,5 +1,8 @@
 # RS Home AI V3 — короткий handoff
 
+> **OWNER-CONFIRMED HA WS SUCCESS 2026-10-14:** `HA_WS_READ=validated_snapshot`; counts floors=2, areas=17, devices=294, entities=2881, labels=15, unassignedEntities=1987, unassignedDevices=194, disabledEntities=1339, hiddenEntities=7. Test was 5 max registry reads with 0 writes, no prod changes, token not provided in chat or persisted by tool. Note 100 area-assigned devices matches earlier per-area MCP census but does not measure distinct physical devices. Added DEV pure aggregate report module `src/home/ha-registry-coverage-summary.mjs` (only verified five-registry source, permission-independent). Next: integrate event-based update and privacy-safe scope summaries; do not ask for another token or raw catalog file. Preserve live V3 `93f11cd` and V2.
+
+
 > **2026-10-14 DEV WebSocket transport:** One-shot `src/home/ha-ws-once-reader.mjs` has injected WebSocket transport and fake-auth/message regression; `scripts/manual/v3-ha-ws-registry-once.mjs --preflight` requires no env, no secrets, no network and reports Node WebSocket availability. Explicit `--read-only` separately requires owner-configured `HA_CATALOG_WS_URL` and `HA_CATALOG_TOKEN`; never ask owner to paste token in chat or hardcode token. No live connection or production action has occurred. Maintain pinned V3 `93f11cd`.
 
 

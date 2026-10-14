@@ -1,5 +1,8 @@
 # RS Home AI V3 — только открытые задачи
 
+> **Updated after successful live WS registry read 2026-10-14:** [x] Direct local HA WebSocket access and five native registry reads confirmed by owner, with no writes. [x] 2 floors / 17 areas / 294 device registry records / 2881 entity registry records / 15 labels; 194 devices and 1987 entities unassigned to rooms, 1339 disabled and 7 hidden. [x] Build pure aggregate-only summary of validated snapshot with consistent counts and no authority grant. [ ] Use existing credential only with operator approval for future live refresh; no token should enter repository, terminal history, chat or logs. [ ] Add bounded event-based stale cache and proper reconnect lifecycle with mocked tests. [ ] Categorize scoped active lights from native label metadata without granting permissions or assuming unassigned implies defect. [ ] Pi3 resource and reconnect test, stage gate, then separately pinned production proposal; production `93f11cd` unchanged.
+
+
 > **Current 2026-10-14:** [x] Implement mock-tested Home Assistant WebSocket handshake + five-command one-shot reader, no new dependency. [x] Add no-network `--preflight` (Node20 global WebSocket capability). [ ] Operator to run preflight; if Node20 native WebSocket absent, evaluate verified `ws` dependency, not hacks. [ ] Review safe local endpoint and existing least-privilege token access before `--read-only`; no token disclosure, no auto-created token. [ ] Verify actual 5 registry schemas/counts, especially 2026.x child devices; then implement event refresh and stage gate. `93f11cd` stays in production.
 
 

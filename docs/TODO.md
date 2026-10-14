@@ -1,5 +1,8 @@
 # RS Home AI V3 — только открытые задачи
 
+> **Latest 2026-10-14 work:** [x] Pure five-list native HA WebSocket reader with injected transport, bounded timeout/fail-closed normalization and no dependencies or credentials. [x] Offline dirty-event/disconnect freshness gate. [ ] Review owner-authorized, minimal real WS access without sharing tokens in chat or modifying production. [ ] Validate actual full registry array shapes (child devices / nullable relationships), compare against previous 17 areas, 15 labels, 100 area-scoped device records without treating them as all devices. [ ] Benchmark on Pi3 before stage; connect subscriptions only after verification; keep HA-MCP as conversational agent path. Production `93f11cd` unchanged.
+
+
 > **2026-10-14 next prioritized:** [x] Save Perplexity report/source URLs; verify official WebSocket docs and JS client API. [x] Implement offline five-registry normalization (floors/areas/devices/entities/labels), coverage, label provenance, hidden/disabled tests in DEV. [ ] Confirm actual HA Core registry list authorization and output shapes through separately authorized read-only connection (not via production bot). [ ] Evaluate reusing an existing credential without broadening permissions; new credential requires owner approval. [ ] Run bounded Pi3 offline benchmark before stage; implement events/reconnect only after genuine snapshot validity and authorization. [ ] Prepare pinned limited release proposal separately, leave `93f11cd` untouched.
 
 

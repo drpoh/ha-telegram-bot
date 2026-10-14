@@ -1,5 +1,7 @@
 # RS Home AI V3 — только открытые задачи
 
+> **2026-10-14 full Markdown findings:** [x] Inventory 87 tracked `.md` and 181 relative links; [x] identify two broken archive links and correct their `../` paths without rewriting history; [ ] confirm zero findings on final exact-head CI; [ ] separately consolidate stale status prose later, without changing historical evidence or authoritative CURRENT-STATE policy.
+
 > **2026-10-14 Markdown-wide documentation audit:** [x] Add whole-repository tracked-Markdown path/link inventory as a distinct read-only CI step; retain strict 16-active-doc gate. [ ] Inspect actual CI finding counts and classify historical broken links without blind rewrites; [ ] fix high-value active/referenced errors with independent PRs if any; [ ] reduce outdated top-of-file status duplication only after a documented historical preservation plan. No stage/prod or HA changes.
 
 

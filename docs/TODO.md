@@ -1,5 +1,7 @@
 # RS Home AI V3 — только открытые задачи
 
+> **Area rename end-to-end mock:** [x] Add stale → refreshed rename → natural answer regression for injected session; [ ] check CI; [ ] verify event delivery on real Pi/HA after owner changes zone; [ ] approve secure ChatGPT DEV access through restricted MCP connector; [ ] separately validate on Pi before Telegram integration. Current production unchanged.
+
 > **Reconnect race (2026-10-14):** [x] Prevent read-retry scheduling while WS disconnected, add offline mid-flight disconnect regression. [ ] Confirm focused/full CI; [ ] actual Pi 3 read-only reconnect/resubscribe acceptance, burst/memory measurement and owner-initiated area update. [ ] Only then attach to a permitted Telegram DEV read-only route. No service or token changes.
 
 > **2026-10-14 full Markdown findings:** [x] Inventory 87 tracked `.md` and 181 relative links; [x] identify two broken archive links and correct their `../` paths without rewriting history; [ ] confirm zero findings on final exact-head CI; [ ] separately consolidate stale status prose later, without changing historical evidence or authoritative CURRENT-STATE policy.

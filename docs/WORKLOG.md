@@ -1,3 +1,7 @@
+## 2026-10-14 — End-to-end registry rename acceptance fixture
+
+Added a deterministic offline regression that updates an area name in the mock five-registry WebSocket reader, emits `area_registry_updated`, verifies stale responses fail closed, then verifies reloaded area names drive Russian catalog questions. This does not simulate real Pi transport/HA event delivery. GitHub CI required; production and Telegram not touched.
+
 ## 2026-10-14 — DEV registry observer offline disconnect race
 
 Found a concrete retry race in existing `ha-ws-registry-event-observer.mjs`: a pending read can resolve `concurrent_change` after socket disconnect and queue a timer while offline. Added explicit connected gate for schedule/drain/registry callbacks and completion follow-up; readiness restores permission to refresh. Regression test covers mid-flight disconnect and no new reads until ready, without HA network/service/credentials. GitHub CI and real Pi reconnect evidence remain separate checks.

@@ -1,5 +1,12 @@
 # AGENTS.md — Home Assistant AI Agent
 
+## Owner decision — 2026-10-14: evolve V2, do NOT replace it with V3
+
+The running V2 is the **primary home assistant and product baseline**. Stop developing V3 as a separate replacement. Preserve the V3 DEV branch as a source of optional, independently reviewed ideas, tests and safe modules. Before starting any work, ask whether it improves V2's actual user experience, reliability or safety. If not, defer it. No feature-parity recreation, parallel Telegram poller, forced V3 migration or speculative infrastructure.
+
+Implement only narrow opt-in enhancements to a separate DEV copy of the V2 lineage; compare real user scenarios against untouched V2, run offline tests and safe Pi acceptance, then seek explicit release approval with rollback. Do not edit or restart running V2, current V3 pilot, Home Assistant, secrets or systemd as part of this strategy change. Existing V3 policy/safety gates remain applicable to any reused write/action capability. The preceding V3 parity-first plan is superseded.
+
+
 ## Delivery priority — owner-approved 2026-10-14
 
 **V2 functional parity is the immediate V3 priority.** V2 already answers live state questions, follow-up context, sauna history and system health using an AI tool-calling loop plus HA-MCP. V3 must recover these *read-only* capabilities first, then exceed V2 with deterministic action policy, verification and safe memory. See [revised strategy](docs/home-agent-v3-strategy.md). Build complete user-visible vertical slices; do not spend new iterations on generic infrastructure or isolated registry metadata at the expense of answering everyday home questions.

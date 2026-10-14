@@ -1,5 +1,8 @@
 # RS Home AI V3 — текущее состояние
 
+> **LATEST OWNER DECISION 2026-10-14 — V2 EVOLUTION FIRST:** The user explicitly chose to keep the working V2 as the permanent primary assistant and stop V3 as a separate replacement product. Use V3 as a research/feature library only; implement small evidence-based enhancements in isolated V2 DEV, then seek release approval. Prior "V2 parity first inside V3" strategy has been superseded. PRs #188 (HA registry event watch) and #190 (V3 room light answer) remain open, not approved for merger solely by old roadmap. Last proven Pi DEV checkout `b0ac4d4` clean; do not infer runtime V2 commit or deploy. No services, HA or production were modified by strategy approval.
+
+
 > **2026-10-14 OWNER STRATEGY CHANGE — V2 PARITY FIRST:** User showed V2 answering live kitchen/living-room lights, second-turn off-state, sauna heating duration and HA problems while current V3 does not provide equivalent user-facing behavior. Source review confirms V2 agent/tool-calling/history/memory and V3's registry-question adapter is metadata-only. New top priority: reuse safe V2 agent conversation + HA-MCP READ interfaces behind V3 policy and restore read-only functional parity; actual write calls remain gated by V3 policy, never use V2 permissive executor directly. Offline scenarios -> Pi live read-only proof -> authorized Telegram V3 acceptance, no second poller. HA WS registry watch stays supporting work, not MVP blocker. Existing release gates and pinned production remain unchanged. **Latest confirmed Pi DEV SHA** `b0ac4d476482b7055fbbd7cca75e3973abce32fb` clean via live RS Pi DEV MCP. This is a strategy/docs-only change, not implementation or runtime acceptance.
 
 

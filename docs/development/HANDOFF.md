@@ -1,5 +1,8 @@
 # RS Home AI V3 — короткий handoff
 
+> **2026-10-14 latest:** Source research saved; official Home Assistant WebSocket API and home-assistant-js-websocket sendMessagePromise/CreateLongLivedTokenAuth were checked. New DEV pure fixture-only five-registry join module `src/home/ha-ws-registry-snapshot.mjs` requires complete successful floor/area/device/entity/label lists, flags partial/unknown links, does not grant HA read/write permissions. Do NOT use Perplexity's unverified sample client directly or create token automatically. Next: test actual HA instance registry list permissions through approved minimal read-only access, then consider event-driven refresh. Production `93f11cd` unchanged.
+
+
 > **2026-10-14 live findings:** 17/17 HA areas, 100 area-assigned device records (17 calls), and 15 labels verified; `entity_entry` supports `area`, `device_id`, `label_names`. PR #167 DEV-only native category adapter merged `2fa25e7`; never infer full registry or physical authorization. Next operator test: `scripts/manual/v3-ha-entity-domain-proof.mjs`, a single schema-gated `ha_get_entity({domain:'light'})` call that logs only sanitized response shape. Source-only until full CI and owner Pi output. Production `93f11cd` unchanged.
 
 

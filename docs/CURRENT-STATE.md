@@ -1,5 +1,8 @@
 # RS Home AI V3 — текущее состояние
 
+> **2026-10-14 next acceptance gate (DEV-only):** owner previously confirmed complete 5-registry HA WS snapshot (2 floors, 17 areas, 294 devices, 2881 entities, 15 labels). New `src/home/ha-ws-registry-subscription-proof.mjs` and operator-only `scripts/manual/v3-ha-ws-registry-subscription-proof.mjs` test whether the live instance accepts exactly five native `subscribe_events` event types (floors, areas, devices, entities, labels), without modifying HA, reading entity states, capturing event data or starting a permanent service. Offline-first `--preflight`; only explicit `--read-only` with owner-provided private environment credential accesses LAN. Five accepted subscriptions prove subscription availability, **not actual event delivery**, which must be separately verified during an owner-initiated change. No production rollout; pinned V3 `93f11cd`, V2 unchanged.
+
+
 > **2026-10-14 DEV milestone:** Integrated the existing five-registry loader, refresh coordinator and event observer in pure injected `src/home/ha-ws-catalog-session.mjs`. It requires an already authenticated Home Assistant JS WebSocket connection, subscribes before initial snapshot, requests five exact registry list operations, invalidates/reloads after HA registry events or reconnect, and refuses to expose a stale catalog. Mock end-to-end regression tests added; the module does NOT open a real socket, use a credential, create a running service or modify HA. Real registry event availability and Pi3 runtime acceptance remain unverified. Production V3 `93f11cd`, V2 unchanged.
 
 

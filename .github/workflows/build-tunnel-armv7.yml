@@ -36,7 +36,7 @@ jobs:
           go build -trimpath -o ../dist/tunnel-client-armv7 ./cmd/client
           cd ..
           file dist/tunnel-client-armv7
-          sha256sum dist/tunnel-client-armv7 > dist/SHA256SUMS
+          (cd dist && sha256sum tunnel-client-armv7 > SHA256SUMS)
       - uses: actions/upload-artifact@v4
         with:
           name: tunnel-client-linux-armv7-1099560

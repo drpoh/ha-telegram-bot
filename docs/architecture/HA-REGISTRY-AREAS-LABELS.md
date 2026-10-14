@@ -28,3 +28,16 @@ References: [HA WebSocket API](https://developers.home-assistant.io/docs/api/web
 Before trying a live registry snapshot, run `node scripts/manual/v3-ha-registry-capability-audit.mjs` **from the canonical DEV checkout** on Raspberry Pi after updating its source. This script connects only to the already-configured trusted HA-MCP URL, calls MCP `listTools()` once and closes the connection. It never calls any discovered HA-MCP tool, reads HA entities, writes HA or starts Telegram polling; it outputs only registry-tool names and a coarse status, not private endpoint credentials. It does not need a new Home Assistant token. Offline checks are in `test/v3-ha-registry-mcp-capabilities.test.mjs`.
 
 If the deployed HA-MCP server exposes only `ha_get_overview`, `ha_search`, `ha_config_get_label` or `ha_config_get_category`, do **not** treat these as a complete registry snapshot. They lack proof of a complete area/device/entity/label join. Do not automatically fall back to an HA WebSocket privileged token. Instead review the tool manifest and choose an existing supported read-only registry capability if available, or plan a separately authorized read-only snapshot import. A `listTools` name is merely a candidate: its arguments and behaviors must be checked before any invocation. Production remains pinned `93f11cd`.
+
+## Actual owner HA-MCP capability result (2026-10-14)
+
+The Raspberry Pi DEV script `v3-ha-registry-capability-audit.mjs` listed **53 MCP tools** but no exposed explicit area/device/entity/label registry list methods. It DID expose `ha_list_floors_areas`, `ha_get_entity`, `ha_get_device`, `ha_search`, `ha_config_get_label`, `ha_config_get_category`, `ha_get_overview`, and `ha_get_zone`. Listing names cannot prove completeness or the safety/shape of calls. The first audit invoked no HA tool and changed no production component.
+
+Instead of introducing a separate privileged WebSocket client prematurely, use the existing MCP SDK and the existing LAN endpoint to run the **schema-only** follow-up:
+
+```bash
+cd /home/drpoh/projects/rs-home-ai-dev
+node scripts/manual/v3-ha-mcp-schema-audit.mjs
+```
+
+It only calls MCP `listTools` and reports a fixed allowlisted set of tool names with sanitized top-level input property names/types. No tool is invoked, and no tokens or endpoints are logged. When the real descriptions/schemas are reviewed, determine whether these existing operations support area/entity/label joins; if not, plan an operator-reviewed read-only snapshot through a supported HA interface. Until then, use the pure metadata index only with offline fixture snapshots. In particular, **no inference of physical controls or full-registry coverage**, no new service-call permissions, and **production remains `93f11cd`**.

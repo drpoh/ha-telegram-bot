@@ -1,5 +1,8 @@
 # RS Home AI V3 — короткий handoff
 
+> **2026-10-14 latest handoff:** Owner HA-MCP floor-area response verified 17 areas (two floors 5+7 plus five unassigned), zero orphaned. DEV PR #160 merged `23cd630`, source-only bounded joins for native areas + independently validated partial entity/device/label data. CI #38546737652 PASS 417 syntax / 225 isolated files / 833 assertions. New operator-only schema tool `scripts/manual/v3-ha-mcp-argument-shapes.mjs` uses `listTools` ONLY and prints constrained complex input argument shapes; it does not call HA tools. No live entity/device registry snapshot yet. Production V3 `93f11cd` unchanged, do not promote broad DEV. Next: operator manifest evidence, then select limited read-only metadata calls with reviewed schemas.
+
+
 > **LATEST HANDOFF 2026-10-14:** Production V3 owner-confirmed pinned `93f11cd`, one V3 process, V2 unchanged, rollback `f744557`, live Telegram kitchen -> corridor -> tambour conversational QA PASS; source 447/447 verified. Bulk DEV-only PR #152 merged as `6b9ba5b` into `feature/v3-home-agent`: 19 previously reviewed/unverified candidate lights grouped by living/bedroom/bathroom/kitchen-extra/hallway-extra, two exact sensor reads (dishwasher power, bathroom switch battery), Russian questions and room followups; no physical light permissions. GitHub CI #38538434803 syntax 399, 216 isolated files/806 assertions PASS. DEV broad diff not deployable directly: prepare pinned candidate atop `93f11cd`, validate exact read boundary, stage on Pi, secure operator authorization. Prior production f744557 below historical.
 
 

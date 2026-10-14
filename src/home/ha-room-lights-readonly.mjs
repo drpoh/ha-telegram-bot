@@ -2,7 +2,7 @@
 // Caller supplies fresh verified native HA registry catalog and separately authorized
 // current light states. Metadata membership alone grants no permission to read or act.
 const fail = reason => Object.freeze({status:'unverified',reason,authorizesRead:false,authorizesWrite:false});
-const norm = value => typeof value==='string' ? value.trim().toLocaleLowerCase('ru') : '';
+const norm = value => typeof value==='string' ? value.trim().toLocaleLowerCase('ru').replaceAll('ё','е') : '';
 const requestedState = q => /(?:выключен|выключены|не горит|погашен)/u.test(q) ? 'off'
   : /(?:включен|включены|горит|горят|что включено)/u.test(q) ? 'on' : null;
 const lightQuestion = q => /(?:свет|ламп|освещени|люстр|подсветк|какой выключен|какие выключены|что включено|что выключено)/u.test(q);
@@ -17,7 +17,7 @@ function matchedAreas(areas,question){
 export function answerRoomLightsReadOnly({catalog,question,context=null,stateById=null}={}){
  if(typeof question!=='string'||question.length>250)return fail('invalid_question');
  const q=norm(question);
- if(/(?:^|[^\\p{L}])(включи|выключи|переключи|удали|измени)(?=$|[^\\p{L}])/u.test(q))return fail('action_denied');
+ if(/(?:^|[^\p{L}])(включи|выключи|переключи|удали|измени)(?=$|[^\p{L}])/u.test(q))return fail('action_denied');
  if(!lightQuestion(q))return fail('unsupported_question');
  const target=requestedState(q);
  if(!target)return fail('state_not_specified');

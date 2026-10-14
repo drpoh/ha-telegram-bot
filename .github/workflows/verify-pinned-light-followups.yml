@@ -14,12 +14,12 @@ jobs:
     timeout-minutes: 20
     env:
       BASE_SHA: f744557d394d38418e9e47ecbc61184a461a40d4
-      CANDIDATE_SHA: 6e12dc5e75828e348d0124f3a4d4645d51bc2306
+      CANDIDATE_SHA: 93f11cd6811c3df7a1f2987325cc500e08c6c22b
       CI: 'true'
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 6e12dc5e75828e348d0124f3a4d4645d51bc2306
+          ref: 93f11cd6811c3df7a1f2987325cc500e08c6c22b
           fetch-depth: 0
           persist-credentials: false
       - name: Verify fixed SHA and four-file read-only diff
@@ -37,6 +37,8 @@ jobs:
             'src/pilot/telegram-readonly.mjs',
             'src/pilot/v3-pinned-light-followups.mjs',
             'test/v3-pinned-light-followups.test.mjs',
+            'test/v3-pinned-corridor-readonly-release.test.mjs',
+            'test/v3-pinned-kitchen-readonly-proposal.test.mjs',
           }
           changed=set(subprocess.check_output(['git','diff','--name-only',base,head],text=True).splitlines())
           assert changed==expected, f'unexpected_diff: {sorted(changed^expected)}'

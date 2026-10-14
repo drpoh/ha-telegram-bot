@@ -1,5 +1,8 @@
 # RS Home AI — authoritative project map
 
+> **2026-10-14 STRATEGY/OWNERSHIP UPDATE:** GitHub `refactor/v2` is the reusable reference for live conversational tool calling; `feature/v3-home-agent` is the **only DEV source integration branch** and must preserve V3 policy gating for actions. Verified Raspberry Pi DEV `/home/drpoh/projects/rs-home-ai-dev` at `b0ac4d4` clean via live read-only RS Pi DEV MCP; no Git execution/write permission from ChatGPT. Older SHA/status assertions below are historical snapshots. Current priority: read-only live state + follow-up conversational parity, then sauna/history/repairs, not more generic registry infrastructure. V2 runtime remains untouched; production release pin must be reverified before any rollout. [Strategy](home-agent-v3-strategy.md).
+
+
 > **Verified DEV map update, 2026-10-14:** Canonical **remote GitHub** DEV `feature/v3-home-agent` includes [PR #179](https://github.com/drpoh/ha-telegram-bot/pull/179), squash SHA `7cfd96d`. GitHub checks passed (451 syntax / 242 isolated files / 897 assertions). Canonical **local Pi DEV** path remains `/home/drpoh/projects/rs-home-ai-dev`; its live HEAD/clean state have **not** been revalidated due to remote-command quota, and no force checkout/pull was performed. `src/home/ha-catalog-questions.mjs` is a DEV-only pure adapter without Telegram wiring. Previous table rows describing c6a9812 or 9dd5964 as active production are **historical**; owner-confirmed production V3 is pinned `93f11cd` per [CURRENT-STATE](CURRENT-STATE.md). Live ExecStart not independently checked in this session; V2 preserved. No stage or production activation is implied by GitHub merge.
 
 

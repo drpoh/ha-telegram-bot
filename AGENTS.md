@@ -1,5 +1,14 @@
 # AGENTS.md — Home Assistant AI Agent
 
+## Delivery priority — owner-approved 2026-10-14
+
+**V2 functional parity is the immediate V3 priority.** V2 already answers live state questions, follow-up context, sauna history and system health using an AI tool-calling loop plus HA-MCP. V3 must recover these *read-only* capabilities first, then exceed V2 with deterministic action policy, verification and safe memory. See [revised strategy](docs/home-agent-v3-strategy.md). Build complete user-visible vertical slices; do not spend new iterations on generic infrastructure or isolated registry metadata at the expense of answering everyday home questions.
+
+Reuse V2's agent, prompt, context/device memory, provider router and HA-MCP interfaces selectively, with bounded tool contracts, privacy controls and test evidence. Never transplant V2's direct unrestricted model-to-`ha_call_service` executor: all actions require V3 provenance, policy, allowed scope, confirmation as applicable, verification and audit. Live HA registry is authoritative for area membership, HA-MCP for approved current state/history/actions. The registry alone cannot answer on/off/history questions. Keep one Telegram poller, independent HA Green and pinned production. Maintain gates B–E unchanged for writes, runtime rollout and voice.
+
+**MVP acceptance:** kitchen lights on; living-room lights off; contextual "А какой выключен?"; sauna live status/history from real evidence; HA repair/add-on health summaries. Handle unknown/unavailable states explicitly. Run offline regression, Pi read-only validation, then owner-approved narrow Telegram V3 pilot; do not claim parity from source-only work.
+
+
 > **Current runtime and acceptance are recorded only in [docs/CURRENT-STATE.md](docs/CURRENT-STATE.md).** Dated prior checkpoints here are historical, not a replacement for live evidence or permission to modify HA. Selective external engineering practices: [docs/development/ENGINEERING-PRACTICES.md](docs/development/ENGINEERING-PRACTICES.md).
 
 

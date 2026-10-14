@@ -1,5 +1,19 @@
 # RS Home AI V3 — только открытые задачи
 
+## CURRENT DELIVERY ORDER — V2 FUNCTIONAL PARITY FIRST (2026-10-14)
+
+- [ ] Inventory reusable V2 agent/provider/history/device context/HA-MCP tool interfaces against V3 existing read-only route; record minimal integration points, privacy and permission differences.
+- [ ] Vertical slice 1: read-only per-room actual on/off lights, correct area/entity mapping, unavailable/unknown and follow-up "А какой выключен?" using bounded conversation context.
+- [ ] Vertical slice 2: sauna current temperature and verified history/heating duration; distinguish unknown data and actual source.
+- [ ] Vertical slice 3: HA repairs/add-on warning summary from authorized diagnostics tools with source attribution.
+- [ ] Offline regression each example, adversarial ambiguous/renamed/unknown/unauthorized cases, typed MCP errors, timeouts and history context boundaries.
+- [ ] Owner-approved Pi3 read-only acceptance, resource checks; integrate into single existing Telegram V3 route without second bot poller; compare exact V2/V3 conversation examples.
+- [ ] Only after read-only parity and separate Gate B/C/D authorization: controlled actions using V3 policy/confirmation/verification; then Assist/ESPHome Gate E.
+- [ ] Supporting task: actual HA registry-event delivery/reconnect owner-operated proof (PR #188 pending separately); do not block basic state queries on this task.
+- [x] Pi DEV fast-forward confirmed `b0ac4d4` clean with live RS Pi DEV MCP, read-only tools only. No additional MCP rights.
+- [ ] Preserve historical TODO notes below as dated backlog, not competing active priorities; consolidate later without deleting evidence.
+
+
 > **2026-10-14 Pi MCP checkpoint:** [x] ARMv7 artifact built and Pi CLI launched; [x] profile doctor passed and tunnel `/readyz` HTTP 200; [x] ChatGPT plugin connected and both read-only tools live-tested against Pi DEV SHA `cae610e1`; [x] PR #186 ARMv7 checksum path fix merged after CI (`aa376c34`). [ ] Owner safely fast-forwards clean Pi DEV checkout; [ ] safely confirm actual HA registry change event delivery using owner-operated change; [ ] isolate Pi MCP process before considering write/test tools. Preserve V2 and V3 production.
 
 > **ARMv7 transport:** [x] add manual pinned upstream Linux ARMv7 GitHub Actions cross-build; [ ] CI, dispatch and artifact verification; [ ] owner copies artifact to Pi and runs `--help`; [ ] confirm runtime tunnel connectivity and account costs before using keys. No Go installation on Pi required.

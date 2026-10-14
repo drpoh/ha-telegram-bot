@@ -1,5 +1,8 @@
 # RS Home AI V3 — короткий handoff
 
+> **2026-10-14 DEV WebSocket transport:** One-shot `src/home/ha-ws-once-reader.mjs` has injected WebSocket transport and fake-auth/message regression; `scripts/manual/v3-ha-ws-registry-once.mjs --preflight` requires no env, no secrets, no network and reports Node WebSocket availability. Explicit `--read-only` separately requires owner-configured `HA_CATALOG_WS_URL` and `HA_CATALOG_TOKEN`; never ask owner to paste token in chat or hardcode token. No live connection or production action has occurred. Maintain pinned V3 `93f11cd`.
+
+
 > **Latest handoff 2026-10-14:** DEV added pure WebSocket five-registry loader (`src/home/ha-ws-registry-loader.mjs`) that accepts an injected already-authenticated `sendMessagePromise` interface, calls only five native list operations and validates full response payload arrays; partial/error/timeout -> unverified. Pure freshness tracker invalidates after registry changes/disconnect. No actual HA WS access granted, no credential creation, no runtime connection or promotion. Next: verify HA Core version-specific WebSocket listing permissions and selected sanitized shapes under a specifically approved owner-run probe; confirm child devices and benchmark Pi3. Preserve `93f11cd` production.
 
 

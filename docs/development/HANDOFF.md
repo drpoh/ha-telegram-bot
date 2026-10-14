@@ -1,5 +1,7 @@
 # RS Home AI V3 — короткий handoff
 
+> **ARMv7 tunnel transport:** Owner confirmed Pi ARMv7, no Go, 921 MiB RAM, upstream `tunnel-client` Go 1.27. Source-only manual cross-build GitHub workflow and operator runbook [ARMV7-TUNNEL-BUILD.md](ARMV7-TUNNEL-BUILD.md); no artifact/runtime/tunnel authenticated yet. Next verify CI, dispatch build, test binary safely. Do not disclose keys or alter production.
+
 > **2026-10-14 ChatGPT Pi access candidate:** Read-only stdio MCP bootstrap committed on isolated feature branch, docs at [RS PI DEV MCP](RS-PI-DEV-MCP.md). Only fixed-document reads + sanitized Git status; no arbitrary commands, no API keys or auto-run. The owner sees ChatGPT Add custom MCP server; next check Tunnel entitlement in the UI, Platform rights and pricing, then manually connect after CI. Do not declare connection established until real tool call succeeds.
 
 > **2026-10-14 owner-area rename fixture:** Pure mock integration now exercises `area_registry_updated` → stale → full snapshot refresh → old area answer absent / new Russian area answer present. CI/live Pi proof separate. GitHub source-only; no live zone edits, credentials, new poller or prod change.

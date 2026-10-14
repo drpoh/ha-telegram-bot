@@ -1,3 +1,7 @@
+## 2026-10-14 — Catalog loader/session integration bug
+
+CI for PR #183 failed on an initial session-backed question. Root cause: `readHARegistrySnapshot` dropped normalized `areas`, `floors` and `devices` while returning `entities` and `counts`. The standalone question adapter tested correctly in isolation but could not receive those fields from the actual session. Fixed passthrough in the DEV loader and retained end-to-end test across event/refresh/rename. Await exact-head CI.
+
 ## 2026-10-14 — End-to-end registry rename acceptance fixture
 
 Added a deterministic offline regression that updates an area name in the mock five-registry WebSocket reader, emits `area_registry_updated`, verifies stale responses fail closed, then verifies reloaded area names drive Russian catalog questions. This does not simulate real Pi transport/HA event delivery. GitHub CI required; production and Telegram not touched.

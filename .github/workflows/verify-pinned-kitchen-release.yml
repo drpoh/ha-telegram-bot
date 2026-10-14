@@ -78,3 +78,32 @@ jobs:
         run: node --test test/v3-pinned-kitchen-readonly-proposal.test.mjs
       - name: Full existing isolated suite on exact candidate
         run: npm test
+
+      - name: Produce deterministic source-only archive with pinned release marker
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$PINNED_CANDIDATE"
+          mkdir -p dist/payload
+          git archive --format=tar HEAD | tar -xf - -C dist/payload
+          printf '%s\n' "$PINNED_CANDIDATE" > dist/payload/RELEASE_COMMIT
+          archive="rs-home-ai-v3-kitchen-src-$PINNED_CANDIDATE.tar.gz"
+          tar -C dist/payload --sort=name --mtime='@0' --owner=0 --group=0 --numeric-owner -czf "dist/$archive" .
+          (
+            cd dist
+            sha256sum "$archive" > SHA256SUMS
+            sha256sum --check SHA256SUMS
+          )
+          test "$(tar -xOf "dist/$archive" ./RELEASE_COMMIT)" = "$PINNED_CANDIDATE"
+          rm -rf dist/payload
+          echo "SOURCE_ARCHIVE_SHA=$PINNED_CANDIDATE"
+          echo "ARCHIVE_KIND=SOURCE_ONLY_NO_NODE_MODULES"
+      - name: Store source-only candidate artifact, never deploy
+        uses: actions/upload-artifact@v4
+        with:
+          name: rs-home-ai-v3-kitchen-source-e902efeb923a
+          path: |
+            dist/*.tar.gz
+            dist/SHA256SUMS
+          retention-days: 14
+          if-no-files-found: error

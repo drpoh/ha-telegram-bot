@@ -1,0 +1,38 @@
+name: Build optional ARMv7 tunnel-client
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  armv7:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Fetch pinned upstream
+        run: |
+          git clone https://github.com/openai/tunnel-client.git upstream
+          cd upstream
+          git checkout --detach 10995608eeefac930f7199bccbb146378f883de8
+          test "$(git rev-parse HEAD)" = 10995608eeefac930f7199bccbb146378f883de8
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: upstream/go.mod
+          cache: false
+      - name: Cross-compile for Pi 3 ARMv7
+        env:
+          GOOS: linux
+          GOARCH: arm
+          GOARM: '7'
+          CGO_ENABLED: '0'
+        run: |
+          mkdir -p dist
+          cd upstream
+          go build -trimpath -o ../dist/tunnel-client-armv7 ./cmd/client
+          cd ..
+          file dist/tunnel-client-armv7
+          sha256sum dist/tunnel-client-armv7 > dist/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tunnel-client-linux-armv7-1099560
+          path: dist/
+          retention-days: 7

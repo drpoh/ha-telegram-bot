@@ -4,7 +4,7 @@ import {classifyReadonlyQuestion} from '../home/readonly-question-intent.mjs';
 import {summarizeCorridorLights} from '../home/corridor-light-readonly-status.mjs';
 import {routeV3ReadonlyQuestion} from './v3-readonly-question-router.mjs';
 
-const supported=new Set(['lights','corridor','kitchen_review','tambour','living','bedroom','bathroom','kitchen_extra','hallway_extra','dishwasher_power','bathroom_switch_battery']);
+const supported=new Set(['lights','corridor','kitchen_review','tambour','living','bedroom','bathroom','kitchen_extra','hallway_extra']);
 const normalize=value=>typeof value==='string'?
  value.toLocaleLowerCase('ru-RU').replace(/ё/g,'е').trim()
   .replace(/[?!.]+$/g,'').replace(/\s+/g,' '):'';

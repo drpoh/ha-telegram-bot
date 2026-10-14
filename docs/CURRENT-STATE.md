@@ -1,5 +1,8 @@
 # RS Home AI V3 — текущее состояние
 
+> **2026-10-14 DEV milestone:** Integrated the existing five-registry loader, refresh coordinator and event observer in pure injected `src/home/ha-ws-catalog-session.mjs`. It requires an already authenticated Home Assistant JS WebSocket connection, subscribes before initial snapshot, requests five exact registry list operations, invalidates/reloads after HA registry events or reconnect, and refuses to expose a stale catalog. Mock end-to-end regression tests added; the module does NOT open a real socket, use a credential, create a running service or modify HA. Real registry event availability and Pi3 runtime acceptance remain unverified. Production V3 `93f11cd`, V2 unchanged.
+
+
 > **2026-10-14 latest DEV-only native registry event milestone:** Added `src/home/ha-ws-registry-event-observer.mjs` using official `home-assistant-js-websocket` `connection.subscribeEvents` and lifecycle `ready`/`disconnected`/`reconnect-error` interfaces (official API source verified). Subscribes to five registry update event types before initial snapshot, debounces bursts, forces full five-list refresh after updates or reconnect, and does not surface stale snapshots from in-flight reads. Offline mock tests cover area edits, reconnect, event races and subscription rollback. **Not attached to live HA, running bots or production**; no token, new connection or registry writes. Owner's verified snapshot remains 2 floors, 17 areas, 294 devices, 2881 entities, 15 labels (dated observations, not fixed inventory). V3 production pinned `93f11cd` and V2 unchanged. Next: stage-compatible read-only integration and live event subscription acceptance under separate owner review, including actual installed event names/privileges.
 
 

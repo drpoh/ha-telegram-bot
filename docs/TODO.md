@@ -1,5 +1,8 @@
 # RS Home AI V3 — только открытые задачи
 
+> **2026-10-14 active work:** [x] Compose reusable injected HA WebSocket catalog session from existing five-list loader and change observer; end-to-end mock tested. [ ] Verify on real HA that floor/area/device/entity/label events can all be subscribed to, and that reconnect resubscription completes before freshness is announced. [ ] Add operator-run read-only live event acceptance with private token input, bounded lifetime and no HA writes (no owner-zone edits required). [ ] Test Pi3 memory and performance; then separately approve a minimal stage/prod release. Production `93f11cd` untouched.
+
+
 > **2026-10-14 next:** [x] Official HA JS WS subscriptions/lifecycle contract verified; DEV-only observer with five native registry event subscriptions, debounce, reconnect invalidation and mocked race tests implemented. [ ] Verify installed HA Core emits all five event types; absent/unauthorized event subscriptions must be treated as stale, never silently accepted. [ ] Test an owner-initiated zone rename/move through safe DEV reader with fresh count/area identity; no HA modifications from bot. [ ] Validate Pi3 resource use and lifecycle cleanup before stage integration. [ ] Review separate pinned production-based release, keep V3 `93f11cd` and V2 untouched.
 
 

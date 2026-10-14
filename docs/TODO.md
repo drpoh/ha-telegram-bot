@@ -1,5 +1,8 @@
 # RS Home AI V3 — только открытые задачи
 
+> **2026-10-14 current tasks:** [x] 17-zone floor/area sweep. [x] Per-area device census: 100 records, 17 reads (not whole registry). [x] 15 HA labels; native entity `label_names`/`area` data proof. [x] PR #167 pure adapter merged. [ ] Determine whether HA-MCP `ha_get_entity({domain:'light'})` supports bounded domain enumeration; inspect only safe shape first; if not, use supported discovery or separate reviewed read-only registry export. [ ] Prove device→entity joins across real samples and labels; keep exact-ID read permissions separate. [ ] Plan staged/pinned production-based release, never auto-promote entire DEV; preserve V2 and rollback. Production `93f11cd` unchanged.
+
+
 > **2026-10-14 newest:** [x] Owner HA-MCP native area shape read: 17 zones, 2 floors, 5 unassigned, no orphaned. [x] DEV PR #160 merged `23cd630`; bounded area/entity/device/label join + sanitized MCP read-tool argument audit, 417 syntax / 225 files / 833 assertions CI pass. [ ] Run one operator-only listTools schema audit for `ha_get_entity`, `ha_get_device`, `ha_search`, `ha_config_get_label`. [ ] Review exact schemas and perform bounded read-only metadata extraction through existing HA-MCP; distinguish partial lookup from full registry. [ ] Validate label classification and only then integrate scoped room answers. Keep existing production `93f11cd` unchanged until separately pinned release and authorization.
 
 

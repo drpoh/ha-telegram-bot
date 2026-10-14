@@ -1,5 +1,7 @@
 # RS Home AI V3 — короткий handoff
 
+> **LATEST HANDOFF 2026-10-14: owner confirms V3 production SHA 2fbee8f on Raspberry Pi3 ARMv7 Node20.19.2 via 99-kitchen-release.conf, DEPLOYMENT=PASS, PID 25870 observed, one V3 process, V2 unchanged. Live Telegram kitchen query now reports 0 ON / 4 OFF / 0 UNKNOWN instead of four read errors; sauna returned 27.875 C. Hotfix source in PR #142 limits extra permissions exclusively to ha_get_state for four reviewed kitchen IDs, no kitchen writes. Pi full offline test suite 176 files / 673 assertions PASS and release 441/441 tracked sources PASS. e902efeb is immediate rollback and 9dd5964/c6a9812 remain preserved. Still need live overview and /cancel on this newest PID; no forced reboot. DO NOT regard historical production 9dd5964 claims below as current. User wants more source-only autonomous work and fewer interactions; next vertical slice read-only conversation context, reuse DEV router and MCP, never deploy whole DEV blindly.**
+
 > **Перед продолжением обязательно прочитайте [CURRENT-STATE](../CURRENT-STATE.md).** Там находится актуальный статус; здесь только точка продолжения работы. Старый [CHAT-HANDOFF](../CHAT-HANDOFF.md) сохранён как история.
 
 ## Цель

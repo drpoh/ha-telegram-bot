@@ -1,6 +1,9 @@
 name: Build optional ARMv7 tunnel-client
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - feature/v3-home-agent
 permissions:
   contents: read
 jobs:

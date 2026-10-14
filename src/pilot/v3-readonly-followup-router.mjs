@@ -4,14 +4,19 @@ import {classifyReadonlyQuestion} from '../home/readonly-question-intent.mjs';
 import {summarizeCorridorLights} from '../home/corridor-light-readonly-status.mjs';
 import {routeV3ReadonlyQuestion} from './v3-readonly-question-router.mjs';
 
-const supported=new Set(['lights','corridor','kitchen_review','tambour']);
+const supported=new Set(['lights','corridor','kitchen_review','tambour','living','bedroom','bathroom','kitchen_extra','hallway_extra','dishwasher_power','bathroom_switch_battery']);
 const normalize=value=>typeof value==='string'?
  value.toLocaleLowerCase('ru-RU').replace(/ё/g,'е').trim()
   .replace(/[?!.]+$/g,'').replace(/\s+/g,' '):'';
 const followupIntent=Object.freeze({
  'а в коридоре':'corridor',
  'а на кухне':'kitchen_review',
- 'а в тамбуре':'tambour'
+ 'а в тамбуре':'tambour',
+ 'а в гостиной':'living',
+ 'а в спальне':'bedroom',
+ 'а в ванной':'bathroom',
+ 'а остальные на кухне':'kitchen_extra',
+ 'а другой свет в коридоре':'hallway_extra'
 });
 const deny=(status,text)=>({handled:true,status,authorization:false,actualWrite:false,text});
 const clarification=()=>deny('unsupported',
@@ -31,7 +36,7 @@ export function createV3ReadonlyFollowupRouter({clock=Date.now,ttlMs=120000}={})
  if(typeof clock!=='function'||!Number.isSafeInteger(ttlMs)||ttlMs<1000||ttlMs>300000)
   throw Error('invalid_followup_configuration');
  const sessions=new Map();
- const route=async ({actor,text,readState,readKitchenState}={})=>{
+ const route=async ({actor,text,readState,readKitchenState,readCandidateState}={})=>{
   // Untrusted actor must never create a conversation or route into a write path.
   if(!validActor(actor))return unavailable();
   const key=actor.userId+':'+actor.chatId;
@@ -46,8 +51,8 @@ export function createV3ReadonlyFollowupRouter({clock=Date.now,ttlMs=120000}={})
    let result;
    if(kind==='corridor')result=await summarizeCorridorLights({readState});
    else result=await routeV3ReadonlyQuestion({
-    text:kind==='kitchen_review'?'Что со светом на кухне?':'Что со светом в тамбуре?',
-    readState,readKitchenState
+    text:({kitchen_review:'Что со светом на кухне?',tambour:'Что со светом в тамбуре?',living:'Какой свет в гостиной?',bedroom:'Какой свет в спальне?',bathroom:'Какой свет в ванной?',kitchen_extra:'Какой дополнительный свет на кухне',hallway_extra:'Какой дополнительный свет в коридоре'})[kind],
+    readState,readKitchenState,readCandidateState
    });
    // New state context is never established on unknown/failed reads.
    const answer=kind==='corridor'?{handled:true,...result}:result;
@@ -61,7 +66,7 @@ export function createV3ReadonlyFollowupRouter({clock=Date.now,ttlMs=120000}={})
    return unsupported();
   }
   const intent=classifyReadonlyQuestion(text);
-  const answer=await routeV3ReadonlyQuestion({text,readState,readKitchenState});
+  const answer=await routeV3ReadonlyQuestion({text,readState,readKitchenState,readCandidateState});
   const now=clock();
   if(supported.has(intent)&&validResult(answer)&&Number.isSafeInteger(now)){
    sessions.set(key,{kind:intent,at:now});

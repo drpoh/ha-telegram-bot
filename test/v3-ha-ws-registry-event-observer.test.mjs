@@ -95,3 +95,31 @@ test('subscription failures safely roll back listeners/subscriptions',async()=>{
  connection.emit('ready');
  assert.equal(scheduler.size(),0);
 });
+
+
+test('disconnect during in-flight refresh cannot schedule a retry until ready',async()=>{
+ const {connection,scheduler}=fake();
+ let finish,n=0;
+ const coordinator=createHACatalogCoordinator({fetchSnapshot:async()=>{
+  n++;
+  return n===1?new Promise(resolve=>{finish=resolve;}):snapshot(19);
+ }});
+ const observer=createHARegistryEventObserver({connection,coordinator,...scheduler,debounceMs:100});
+ await observer.start();
+ await scheduler.fire();
+ connection.emit('disconnected');
+ finish(snapshot(17));
+ await tick();
+ assert.equal(coordinator.getStatus().status,'stale');
+ assert.equal(scheduler.size(),0);
+ assert.equal(n,1);
+ connection.event('area_registry_updated');
+ assert.equal(scheduler.size(),0);
+ connection.emit('ready');
+ assert.equal(scheduler.size(),1);
+ await scheduler.fire();
+ assert.equal(coordinator.getStatus().status,'fresh');
+ assert.equal(coordinator.getStatus().coverage.areas,19);
+ assert.equal(n,2);
+ await observer.stop();
+});

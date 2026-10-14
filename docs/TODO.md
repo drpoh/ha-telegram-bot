@@ -1,5 +1,16 @@
 # RS Home AI V3 — только открытые задачи
 
+## CURRENT PRIORITIES — V2 EVOLUTION (owner-approved 2026-10-14)
+
+- [ ] Keep live V2 operational and unchanged; read-only verify its current runtime identity and baseline capabilities when access permits.
+- [ ] Compare high-value V2 scenarios: room lights on/off and follow-up references, sauna history and HA problems; identify concrete incorrect, slow or risky cases rather than rebuilding working features.
+- [ ] Review existing V2 tool-calling security, raw MCP result logging, error/timeout/retry behavior and context memory for narrowly scoped improvements.
+- [ ] For each change, create separate V2-oriented DEV proposal with offline regression, Pi proof where authorized, rollback and owner approval before touching the one live V2 service.
+- [ ] Triage PR #188 and #190 as optional V3 research; do not merge/promote solely to reach V3 parity.
+- [ ] Keep V3 pinned runtime, Telegram poller, HA tokens and HA Green untouched; no automatic migration.
+- [x] Owner selected V2 as the main product; V3 replacement objective retired. Earlier roadmap entries below are historical only.
+
+
 ## CURRENT DELIVERY ORDER — V2 FUNCTIONAL PARITY FIRST (2026-10-14)
 
 - [ ] Inventory reusable V2 agent/provider/history/device context/HA-MCP tool interfaces against V3 existing read-only route; record minimal integration points, privacy and permission differences.

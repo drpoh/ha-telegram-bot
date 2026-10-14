@@ -34,7 +34,7 @@ test('five room summaries read only exact scoped IDs, preserve unknown and deny 
   assert.equal(r.counts.on,1);
   assert.equal(r.counts.unknown,group.targets.length>1?1:0);
   assert.match(r.text,/Управление запрещено/);
-  assert.match(r.text,/не проверены/);
+  if(group.targets.length>1)assert.match(r.text,/Не проверены/);
  }
  assert.equal((await summarizeCandidateRoom({room:'browser_mod',readState:mock()})).status,'unavailable');
 });

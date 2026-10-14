@@ -59,3 +59,9 @@ Candidate synchronization: first complete snapshot, then registry change events 
 - [ ] Stage and acceptance gates before any production activation; pinned V3 `93f11cd` and V2 unchanged.
 
 **Source:** owner-provided Perplexity export (`export_4222467098315290382.md`, received 2026-10-14). This note preserves the actionable findings and original URLs; consult owner's original export for broader comparisons and code snippets. Research conclusions are not independently audited.
+
+## Verified against official sources and offline implementation, 2026-10-14
+
+Official [HA WebSocket API](https://developers.home-assistant.io/docs/api/websocket/) confirms `config/entity_registry/list_for_display` is for **enabled only**. Official [home-assistant-js-websocket README](https://github.com/home-assistant/home-assistant-js-websocket) documents `createLongLivedTokenAuth`, `createConnection`, `connection.sendMessagePromise({type})`, `subscribeEvents`, and auto reconnect. The Perplexity code sample's `connection.msgId()` / custom subscribeMessage request flow must not be copied. For Node, the upstream README notes `ws` polyfill. These are **source verifications**, not evidence of authorization on the owner's HA instance.
+
+Implemented source-only pure `src/home/ha-ws-registry-snapshot.mjs` using exact five command identifiers and deterministic joins; tests use offline fake WebSocket list replies, no tokens or live connections. It keeps area/device/entity label provenance independent; explicit entity area overrides device area; disabled and hidden remain represented separately; dangling references reject completeness. **Do not supply a list_for_display payload as a full entity list.** Next live validation must be separately scoped and owner-approved; no new token should be generated implicitly.

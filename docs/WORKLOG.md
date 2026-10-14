@@ -1,3 +1,7 @@
+## 2026-10-14 — ARMv7 Secure MCP Tunnel cross-build preparation
+
+Owner diagnostic: Raspbian 13 `armv7l`, no Go, upstream `openai/tunnel-client` commit `1099560` requires Go 1.27, RAM 921 MiB and 461 MiB available. To avoid Pi toolchain build pressure, added manual-only GitHub Actions cross-build of pinned upstream source for linux/arm/v7, producing a downloadable hashed artifact. Neither GitHub build nor live Pi connection has been confirmed yet. No daemon, HA access or production changes.
+
 ## 2026-10-14 — Optional ChatGPT → Pi DEV MCP bootstrap
 
 Built an intentionally narrow, opt-in stdio MCP server using the project’s existing SDK and Node.js 20. Allows only sanitized DEV Git HEAD/branch/dirty count and seven allowlisted Markdown reads; rejects arbitrary paths and external symlinks, performs no writes, HA/network operations or daemon setup. Added Secure MCP Tunnel operator runbook with explicit workspace permissions, secret handling and cost caveat. No connection or live Pi access established yet; awaits CI and user-controlled tunnel setup.

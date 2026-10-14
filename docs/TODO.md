@@ -1,5 +1,7 @@
 # RS Home AI V3 — только открытые задачи
 
+> **ARMv7 transport:** [x] add manual pinned upstream Linux ARMv7 GitHub Actions cross-build; [ ] CI, dispatch and artifact verification; [ ] owner copies artifact to Pi and runs `--help`; [ ] confirm runtime tunnel connectivity and account costs before using keys. No Go installation on Pi required.
+
 > **ChatGPT → Pi DEV custom MCP:** [x] Create source-only read-only stdio bootstrap and private tunnel runbook. [ ] CI PASS; [ ] user verifies Platform Tunnel availability, cost and workspace permission; [ ] operator manually runs tunnel client without sharing credentials; [ ] verify plugin discovers two tools and `dev_git_status` returns actual Pi DEV SHA; [ ] separately review restricted DEV write tools. Never expose production and HA secrets.
 
 > **2026-10-14 registry loader contract:** [x] Regression reproduced via mock session-to-question integration; [x] fix missing areas/floors/devices metadata fields in validated loader output; [ ] CI confirmation and Pi acceptance.

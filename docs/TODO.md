@@ -1,5 +1,7 @@
 # RS Home AI V3 — только открытые задачи
 
+> **2026-10-14 Pi MCP checkpoint:** [x] ARMv7 artifact built and Pi CLI launched; [x] profile doctor passed and tunnel `/readyz` HTTP 200; [x] ChatGPT plugin connected and both read-only tools live-tested against Pi DEV SHA `cae610e1`; [x] PR #186 ARMv7 checksum path fix merged after CI (`aa376c34`). [ ] Owner safely fast-forwards clean Pi DEV checkout; [ ] safely confirm actual HA registry change event delivery using owner-operated change; [ ] isolate Pi MCP process before considering write/test tools. Preserve V2 and V3 production.
+
 > **ARMv7 transport:** [x] add manual pinned upstream Linux ARMv7 GitHub Actions cross-build; [ ] CI, dispatch and artifact verification; [ ] owner copies artifact to Pi and runs `--help`; [ ] confirm runtime tunnel connectivity and account costs before using keys. No Go installation on Pi required.
 
 > **ChatGPT → Pi DEV custom MCP:** [x] Create source-only read-only stdio bootstrap and private tunnel runbook. [ ] CI PASS; [ ] user verifies Platform Tunnel availability, cost and workspace permission; [ ] operator manually runs tunnel client without sharing credentials; [ ] verify plugin discovers two tools and `dev_git_status` returns actual Pi DEV SHA; [ ] separately review restricted DEV write tools. Never expose production and HA secrets.

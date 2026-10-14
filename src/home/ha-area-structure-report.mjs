@@ -4,7 +4,7 @@ const obj=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
 const safeKey=x=>/^[a-z][a-z0-9_]{0,60}$/i.test(x);
 const brief=v=>Array.isArray(v)?'array':v===null?'null':typeof v;
 function describe(value,depth=0){
- if(depth>2)return {type:brief(value)};
+ if(depth>3)return {type:brief(value)};
  if(Array.isArray(value)){
   const item=value.find(x=>x!==null);
   return {type:'array',count:value.length,

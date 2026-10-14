@@ -1,5 +1,8 @@
 # RS Home AI V3 — только открытые задачи
 
+> **2026-10-14 owner-gated live event acceptance candidate:** Add `--watch-read-only` to the existing subscription probe: 45-second bounded observation of five registry event types, count-only sanitized output, no event payloads, token logging, HA service calls or writes. Requires owner-operated HA area change during the window and separately approved local credential. A nonzero `area_registry_updated` count proves delivery only, not automatic five-list refresh/reconnect. CI and real owner-run evidence pending.
+
+
 > **2026-10-14 Pi MCP checkpoint:** [x] ARMv7 artifact built and Pi CLI launched; [x] profile doctor passed and tunnel `/readyz` HTTP 200; [x] ChatGPT plugin connected and both read-only tools live-tested against Pi DEV SHA `cae610e1`; [x] PR #186 ARMv7 checksum path fix merged after CI (`aa376c34`). [ ] Owner safely fast-forwards clean Pi DEV checkout; [ ] safely confirm actual HA registry change event delivery using owner-operated change; [ ] isolate Pi MCP process before considering write/test tools. Preserve V2 and V3 production.
 
 > **ARMv7 transport:** [x] add manual pinned upstream Linux ARMv7 GitHub Actions cross-build; [ ] CI, dispatch and artifact verification; [ ] owner copies artifact to Pi and runs `--help`; [ ] confirm runtime tunnel connectivity and account costs before using keys. No Go installation on Pi required.

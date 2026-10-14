@@ -16,15 +16,15 @@ jobs:
     env:
       CI: "true"
       PINNED_BASE: "9dd5964a4956b88227ec4002ac80ef46a186d632"
-      PINNED_CANDIDATE: "cdcfdcdaeeec408fa89001e578639b9144b1a7e1"
+      PINNED_CANDIDATE: "e902efeb923a2090ca0d188e92d1ccdc28d1627e"
     steps:
       - name: Checkout exact candidate, not the verification PR merge
         uses: actions/checkout@v4
         with:
-          ref: cdcfdcdaeeec408fa89001e578639b9144b1a7e1
+          ref: e902efeb923a2090ca0d188e92d1ccdc28d1627e
           fetch-depth: 0
           persist-credentials: false
-      - name: Verify exact Git SHA and six-file read-only scope
+      - name: Verify exact Git SHA and seven-file read-only/test-only scope
         shell: bash
         run: |
           set -euo pipefail
@@ -41,7 +41,8 @@ jobs:
             'src/home/new-light-review.mjs',
             'src/home/readonly-question-intent.mjs',
             'src/pilot/telegram-readonly.mjs',
-            'test/v3-pinned-kitchen-readonly-proposal.test.mjs'
+            'test/v3-pinned-kitchen-readonly-proposal.test.mjs',
+            'test/v3-natural-readonly-intents.test.mjs'
           }
           changed=set(subprocess.check_output(
             ['git','diff','--name-only',base,head],text=True).splitlines())
@@ -58,7 +59,7 @@ jobs:
             new=new.replace(line,b'',1)
           assert new==old,'PREEXISTING_TELEGRAM_CONSENT_BYTES_CHANGED'
           print('EXACT_SOURCE_SHA='+head)
-          print('CHANGED_FILES=6')
+          print('CHANGED_FILES=7')
           print('PREEXISTING_TELEGRAM_ENTRYPOINT_BYTES=IDENTICAL')
           print('NEW_ROUTE=ha_get_state_only')
           PY

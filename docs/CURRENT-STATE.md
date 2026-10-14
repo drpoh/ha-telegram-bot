@@ -1,5 +1,8 @@
 # RS Home AI V3 — текущее состояние
 
+> **2026-10-14 latest DEV implementation (source-only):** Home Assistant native WebSocket catalog reader added as injected-connection module `src/home/ha-ws-registry-loader.mjs`, making only five exact `config/*_registry/list` calls and validating all five payloads. `src/home/ha-ws-registry-freshness.mjs` adds pure event/disconnect invalidation: never serve stale results as fresh. Isolated mock transport tests cover failures, partial returns, bounded timeouts and empty/disabled behavior. No new dependencies, tokens, WebSocket connection, HA writes, Telegram poller or service changes. The actual HA Core WebSocket registry permission/shape and Pi3 performance remain UNVERIFIED. Owner-confirmed V3 production remains pinned `93f11cd` with V2 untouched.
+
+
 > **2026-10-14 latest research and offline DEV implementation:** Owner's HA-MCP evidence includes 17 areas, 100 area-scoped device records (not all HA devices), 15 labels, and one entity entry with `label_names`/`area`. External Perplexity report stored in `docs/research/HA-REGISTRY-CATALOG-PERPLEXITY-2026-10-14.md`. Official HA WS and JS client source checked; DEV-only pure `src/home/ha-ws-registry-snapshot.mjs` normalizes five native registry lists offline with explicit area precedence, label provenance, disabled/hidden accounting and fail-closed completeness. NO new HA token, WebSocket connection, running service or production change. Pending operator-reviewed access and real full snapshot proof. Production V3 pinned `93f11cd`, V2 unchanged.
 
 

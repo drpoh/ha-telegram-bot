@@ -1,5 +1,8 @@
 # RS Home AI V3 — короткий handoff
 
+> **LATEST HANDOFF 2026-10-14:** Production V3 owner-confirmed pinned `93f11cd`, one V3 process, V2 unchanged, rollback `f744557`, live Telegram kitchen -> corridor -> tambour conversational QA PASS; source 447/447 verified. Bulk DEV-only PR #152 merged as `6b9ba5b` into `feature/v3-home-agent`: 19 previously reviewed/unverified candidate lights grouped by living/bedroom/bathroom/kitchen-extra/hallway-extra, two exact sensor reads (dishwasher power, bathroom switch battery), Russian questions and room followups; no physical light permissions. GitHub CI #38538434803 syntax 399, 216 isolated files/806 assertions PASS. DEV broad diff not deployable directly: prepare pinned candidate atop `93f11cd`, validate exact read boundary, stage on Pi, secure operator authorization. Prior production f744557 below historical.
+
+
 > **LATEST live 2026-10-14:** production V3=`f744557d394d38418e9e47ecbc61184a461a40d4` (PID 6783 observed at start, one process, V2 unchanged, rollback to 2fbee8f). Real Telegram on current release: corridor 0 on/3 off/0 unknown; kitchen 1 on (`light.kukhnia_led_niz_l1`)/3 off/0 unknown; sauna 27.5625°C, threshold 85°C. Raspberry Pi3 Node20 syntax 337/337, 177 isolated test files/676 assertions PASS, source integrity 445/445. Compact S/T progress included. Gate D live read-only acceptance PASS. No additional light write permission or physical identity verification. Next: reuse existing DEV `src/pilot/v3-readonly-followup-router.mjs` for minimal pinned-production followup release without whole DEV or second Telegram poller; build, stage, review, separately approve. Natural reboot persistence and `/cancel` smoke test remain separate reliability checks.
 
 

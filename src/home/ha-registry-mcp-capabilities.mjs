@@ -7,7 +7,7 @@ const registryHints=Object.freeze({
  labels:['label_registry','list_labels','get_labels','label_list']
 });
 const callDenied=/set|create|delete|remove|update|edit|write|call_service|execute|trigger|reload|restart|toggle|turn_on|turn_off|install/i;
-const canonicalReadOnly=/^ha_(?:config_)?(?:get|list|search|overview|read)_/;
+const canonicalReadOnly=/^(?:ha_(?:config_)?(?:get|list|search|overview|read)_|ha_search$)/;
 const normalize=x=>typeof x==='string'?x.toLowerCase().trim():'';
 export function inspectHARegistryCapabilities(tools){
  if(!Array.isArray(tools))throw Error('invalid_mcp_tool_manifest');

@@ -1,5 +1,7 @@
 # RS Home AI V3 — текущее состояние
 
+> **2026-10-14 ARMv7 Tunnel build candidate:** Pi owner confirmed Raspbian trixie ARMv7, no Go, 921 MiB RAM; upstream official tunnel-client commit `1099560` requires Go 1.27.0. Added manual-only GitHub Actions cross-build pinned to upstream SHA, no automatic deployment or secrets. See [ARMv7 build](development/ARMV7-TUNNEL-BUILD.md). Source-only; build artifact not yet verified on Pi; tunnel plugin not connected. Production unchanged.
+
 > **2026-10-14 private Pi MCP bootstrap candidate (source only):** Added optional `scripts/manual/rs-pi-dev-mcp-readonly.mjs` using existing MCP SDK and stdio. Only two read-only DEV tools (commit/status and a fixed Markdown allowlist); no HA/token/shell/write interfaces, listener or automatic startup. Operator runbook at [RS Pi DEV MCP](development/RS-PI-DEV-MCP.md). A Secure MCP Tunnel requires separate Platform tunnel rights and runtime key; zero-cost availability has NOT been verified. No Pi deployment, ChatGPT plugin connection or live acceptance. Production V3 `93f11cd`, V2 untouched.
 
 > **2026-10-14 integration blocker found in PR #183 CI:** the five-registry WebSocket loader previously returned only normalized entity records/counts, dropping normalized area/floor/device names before the session exposed the catalog. This prevented real session-backed metadata questions from answering, despite isolated adapter tests. DEV loader now forwards these fields; requires successful exact-head CI. Real HA change event delivery remains unverified.

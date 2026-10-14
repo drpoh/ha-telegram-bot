@@ -1,5 +1,8 @@
 # WORKLOG — Development checkpoint journal
 
+> **2026-10-14 corridor production Telegram acceptance PASS.** Rel f744557, PID 6783, V3 process count 1, V2 unchanged, rollback 2fbee8f. Node20 Pi 337 syntax files pass, 177 isolated files/676 assertions pass, tracked 445/445 pass. Live Telegram corridor 0 on/3 off/0 unknown, kitchen 1 on/3 off/0 unknown, sauna 27.5625 C threshold 85 C. No physical ID verification and no write permissions for kitchen/corridor. Release PR #146 contains evidence. Separate reboot and /cancel smoke remain.
+
+
 > **2026-10-14 RELEASE RECORD: Exact fix PR #142 rooted at e902efeb permits four reviewed kitchen entity IDs for MCP ha_get_state only, preserving all write limits. Previous live e902efeb kitchen query yielded four read_error because read allowlist did not include those IDs; sauna, overview, confirm and cancel functioned. Pi3 ARMv7 Node20 hotfix isolated npm test 176 files / 673 assertions / zero failures; 149 npm production packages; 441/441 tracked release contents verified. systemd conflict between 90-kitchen and 90-release-9dd5964 resolved using 99-kitchen-release.conf. Owner-approved switch to 2fbee8f: DEPLOYMENT=PASS, PID 25870 observed, one V3 process, V2 unchanged, immediate rollback to e902efeb saved. Live Telegram on hotfix kitchen status: ON=0 OFF=4 UNKNOWN=0; sauna 27.875 C, threshold 85 C. No kitchen physical identity or writes granted. Remaining overview and /cancel live on this version, reboot persistence separately. Source is owner chat evidence plus PR #142.**
 
 ## 2026-10-13 — pinned-base, additive kitchen read-only release proposal (not deployed)

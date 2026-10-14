@@ -1,5 +1,8 @@
 # RS Home AI V3 — текущее состояние
 
+> **2026-10-14 latest research and offline DEV implementation:** Owner's HA-MCP evidence includes 17 areas, 100 area-scoped device records (not all HA devices), 15 labels, and one entity entry with `label_names`/`area`. External Perplexity report stored in `docs/research/HA-REGISTRY-CATALOG-PERPLEXITY-2026-10-14.md`. Official HA WS and JS client source checked; DEV-only pure `src/home/ha-ws-registry-snapshot.mjs` normalizes five native registry lists offline with explicit area precedence, label provenance, disabled/hidden accounting and fail-closed completeness. NO new HA token, WebSocket connection, running service or production change. Pending operator-reviewed access and real full snapshot proof. Production V3 pinned `93f11cd`, V2 unchanged.
+
+
 > **2026-10-14 owner evidence / next DEV stage:** 17/17 areas read successfully; 100 area-scoped device records over 17 device calls, not full HA device registry. Owner's HA-MCP `ha_get_entity` returned `entity_entry` with `area` and `label_names` (while `area_id` null and `labels` empty); `ha_config_get_label` returned 15 labels: one lighting, one control, one system, 12 other. DEV PR #167 added native entity metadata adapter; production remains pinned `93f11cd`, V2 unchanged. Next candidate: one *fixed domain=light* `ha_get_entity` read for enumeration-shape evidence, no raw IDs or state output, then decide whether actual pagination/full registry is possible. All new functionality DEV-only, no new HA read/action permissions.
 
 

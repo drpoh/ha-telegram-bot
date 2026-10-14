@@ -1,3 +1,7 @@
+## 2026-10-14 — Optional ChatGPT → Pi DEV MCP bootstrap
+
+Built an intentionally narrow, opt-in stdio MCP server using the project’s existing SDK and Node.js 20. Allows only sanitized DEV Git HEAD/branch/dirty count and seven allowlisted Markdown reads; rejects arbitrary paths and external symlinks, performs no writes, HA/network operations or daemon setup. Added Secure MCP Tunnel operator runbook with explicit workspace permissions, secret handling and cost caveat. No connection or live Pi access established yet; awaits CI and user-controlled tunnel setup.
+
 ## 2026-10-14 — Catalog loader/session integration bug
 
 CI for PR #183 failed on an initial session-backed question. Root cause: `readHARegistrySnapshot` dropped normalized `areas`, `floors` and `devices` while returning `entities` and `counts`. The standalone question adapter tested correctly in isolation but could not receive those fields from the actual session. Fixed passthrough in the DEV loader and retained end-to-end test across event/refresh/rename. Await exact-head CI.

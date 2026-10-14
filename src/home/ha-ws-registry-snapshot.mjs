@@ -82,7 +82,11 @@ export function normalizeHAWebSocketSnapshot(registries){
    disabledEntities:output.filter(e=>!e.enabled).length,
    hiddenEntities:output.filter(e=>e.hidden).length
   }),
-  entities:Object.freeze(output),authorizesRead:false,authorizesWrite:false,
+  entities:Object.freeze(output),
+  areas:Object.freeze(registries.areas.map(a=>Object.freeze({id:a.area_id,name:typeof a.name==='string'?a.name:'',floorId:a.floor_id??null}))),
+  floors:Object.freeze(registries.floors.map(f=>Object.freeze({id:f.floor_id,name:typeof f.name==='string'?f.name:''}))),
+  devices:Object.freeze(registries.devices.map(d=>Object.freeze({id:d.id,areaId:d.area_id??null,name:typeof d.name_by_user==='string'?d.name_by_user:typeof d.name==='string'?d.name:''}))),
+  authorizesRead:false,authorizesWrite:false,
   // Proven complete only with individually successful native registry lists.
   source:'native_ws_all_five_lists_required'
  });

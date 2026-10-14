@@ -36,6 +36,7 @@ test('shape-only output never emits underlying names, states or credentials',()=
  assert.deepEqual(result.fields.find(x=>x.key==='entity_entries').itemKeys,['area','entity_id','state']);
  assert.doesNotMatch(JSON.stringify(result),/light.private|Bedroom|owner private info|do-not-log/);
  assert.equal(inspectEntityDomainReply({isError:true,structuredContent:{}}).status,'unavailable');
+ assert.equal(inspectEntityDomainReply({structuredContent:{success:false,message:'private provider error'}}).status,'provider_rejected');
 });
 test('operator audit can call only a fixed HA read, no Telegram poller',()=>{
  const source=readFileSync(new URL('../scripts/manual/v3-ha-entity-domain-proof.mjs',import.meta.url),'utf8');

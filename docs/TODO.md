@@ -1,5 +1,8 @@
 # RS Home AI V3 — только открытые задачи
 
+> **2026-10-14 Markdown-wide documentation audit:** [x] Add whole-repository tracked-Markdown path/link inventory as a distinct read-only CI step; retain strict 16-active-doc gate. [ ] Inspect actual CI finding counts and classify historical broken links without blind rewrites; [ ] fix high-value active/referenced errors with independent PRs if any; [ ] reduce outdated top-of-file status duplication only after a documented historical preservation plan. No stage/prod or HA changes.
+
+
 > **CURRENT PRIORITIES after PR #179 (2026-10-14):** [x] Native registry metadata question adapter merged to DEV `7cfd96d`, GitHub CI 451 syntax / 242 isolated files / 897 assertions PASS. [x] Five registry snapshot read and five subscription ACKs verified by owner; these **do not prove event delivery**. [ ] Obtain read-only Pi DEV SHA/Node20/ARMv7 test and resource evidence when remote access is restored. [ ] During an **owner-made** HA area rename/move, prove the area registry event reaches Pi, cache becomes stale, subsequent five-list refresh yields the new area and old name stops matching. [ ] Fault-test disconnect/reconnect, resubscribe, generation/race guard, bounded retries, cancellation and cleanup before any permanent listener. [ ] Integrate refreshed catalog with the existing authorized Telegram V3 read-only route (no second poller or expanded HA-MCP authority), stage/approve separately. [ ] Review opt-in DEV credential file with mode 0600 using existing secrets layout; never embed tokens, copy production bot tokens or modify systemd without permission. Production V3 `93f11cd` and V2 remain unchanged. Older `CI pending` and `owner run subscription probe` lines below are historical, not currently open.
 
 

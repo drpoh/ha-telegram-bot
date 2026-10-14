@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {classifyReadonlyQuestion} from '../src/home/readonly-question-intent.mjs';
 import {REVIEWED_KITCHEN_LIGHTS,summarizeReviewedKitchenLights} from '../src/home/kitchen-light-readonly-status.mjs';
+import {createKitchenMcpClient} from '../src/pilot/kitchen-mcp-client.mjs';
 
 const ids=['light.kukhnia_led_niz_l1','light.kukhnia_led_niz_l2','light.kukhnia_svet','light.led_kukhnia'];
 
@@ -66,4 +67,19 @@ test('pinned pilot retains original consent/actor and Telegram poller, kitchen b
  assert.ok(src.indexOf(expected)<src.indexOf("const r=pilot.request(actor(ctx),ctx.message?.text);"));
  assert.doesNotMatch(expected,/ha_call_service|\.dispatch\(|\.confirm\(/);
  assert.doesNotMatch(src,/createNewLightDispatch|pendingNewLights|newLightConsent/);
+});
+
+// Regression from live Telegram 2026-10-14: the scoped kitchen question was routed
+// correctly, but each real MCP read was denied before accessing the endpoint.
+test('MCP client permits the exact four kitchen state reads, while keeping writes and unknown IDs denied',async()=>{
+ const read=createKitchenMcpClient({endpointFile:'/nonexistent-v3-kitchen-scope-regression/mcp-url'});
+ for(const entity_id of ids){
+  await assert.rejects(read('ha_get_state',{entity_id}),err=>{
+   assert.equal(err?.code,'ENOENT'); // passed allowlist, attempted endpoint config read; no network
+   return true;
+  });
+ }
+ await assert.rejects(read('ha_get_state',{entity_id:'light.not_reviewed'}),/scope_denied/);
+ await assert.rejects(read('ha_get_state',{entity_id:ids[0],extra:true}),/scope_denied/);
+ await assert.rejects(read('ha_call_service',{domain:'light',service:'turn_on',entity_id:ids[0]}),/scope_denied/);
 });

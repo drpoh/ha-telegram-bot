@@ -1,5 +1,8 @@
 # RS Home AI V3 — текущее состояние
 
+> **2026-10-14 new DEV source-only checkpoint:** added one-shot WebSocket protocol adapter with injected WebSocket constructor and an operator command whose **default is offline-only**. Exact native HA handshake + five read-list commands validated against mocked WebSocket; explicit `--read-only` requires owner-configured environment endpoint/token, never reads existing MCP secrets or adds credentials. URL policy rejects public plaintext WebSocket. No actual HA WS network call performed yet; production V3 `93f11cd` and V2 unchanged. Next operator check: `node scripts/manual/v3-ha-ws-registry-once.mjs --preflight` to confirm Node20 native WebSocket, then owner-reviewed connection settings if appropriate.
+
+
 > **2026-10-14 latest DEV implementation (source-only):** Home Assistant native WebSocket catalog reader added as injected-connection module `src/home/ha-ws-registry-loader.mjs`, making only five exact `config/*_registry/list` calls and validating all five payloads. `src/home/ha-ws-registry-freshness.mjs` adds pure event/disconnect invalidation: never serve stale results as fresh. Isolated mock transport tests cover failures, partial returns, bounded timeouts and empty/disabled behavior. No new dependencies, tokens, WebSocket connection, HA writes, Telegram poller or service changes. The actual HA Core WebSocket registry permission/shape and Pi3 performance remain UNVERIFIED. Owner-confirmed V3 production remains pinned `93f11cd` with V2 untouched.
 
 

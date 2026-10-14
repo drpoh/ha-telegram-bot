@@ -8,7 +8,7 @@ if(args.length===0||args.length===1&&args[0]==='--preflight'){
  console.log('NETWORK_CALLS=0');
  console.log('TOKEN_INSPECTED=NO');
  console.log('HA_WRITES=0');
-}else if(args.length===1&&args[0]==='--read-only'){
+}else if(args.length===1&&['--read-only','--watch-read-only'].includes(args[0])){
  if(checkHACatalogEndpoint(process.env.HA_CATALOG_WS_URL).status!=='approved_url'){
   console.log('REGISTRY_EVENTS=unverified');
   console.log('REASON=endpoint_denied');
@@ -17,7 +17,7 @@ if(args.length===0||args.length===1&&args[0]==='--preflight'){
   const r=await probeHARegistrySubscriptions({
    url:process.env.HA_CATALOG_WS_URL,
    token:process.env.HA_CATALOG_TOKEN,WebSocketImpl:globalThis.WebSocket,
-   timeoutMs:12000,observeMs:1500
+   timeoutMs:12000,observeMs:args[0]==='--watch-read-only'?45000:1500
   });
   console.log('REGISTRY_EVENTS='+r.status);
   console.log('REASON='+r.reason);
@@ -29,6 +29,6 @@ if(args.length===0||args.length===1&&args[0]==='--preflight'){
   if(r.status!=='subscribed')process.exitCode=1;
  }
 }else{
- console.log('USAGE=--preflight|--read-only');process.exitCode=2;
+ console.log('USAGE=--preflight|--read-only|--watch-read-only');process.exitCode=2;
 }
 console.log('PRODUCTION_CHANGED=NO');

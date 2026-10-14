@@ -26,7 +26,7 @@ export function buildHAReadOnlyMetadataIndex({areas,devices,labels,entities}={})
  const indexed=[];
  for(const e of entities){
   const eid=entityId(e?.entity_id??e?.ei);
-  if(!eid||e?.disabled_by!=null||e?.hidden_by!=null||e?.hb===true)continue;
+  if(!eid||eid.startsWith('light.browser_mod')||e?.disabled_by!=null||e?.hidden_by!=null||e?.hb===true)continue;
   const did=id(e?.device_id??e?.di),dev=deviceMap.get(did);
   // Entity area overrides device area. No area? Leave unassigned, never guess.
   const areaId=id(e?.area_id??e?.ai)??id(dev?.area_id);

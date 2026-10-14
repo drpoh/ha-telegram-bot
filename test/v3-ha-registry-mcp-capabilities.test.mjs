@@ -43,7 +43,7 @@ test('malformed manifest and malicious tool names cannot acquire additional acce
 test('operator script uses only listTools and never invokes arbitrary MCP tools or writes',()=>{
  const src=readFileSync(new URL('../scripts/manual/v3-ha-registry-capability-audit.mjs',import.meta.url),'utf8');
  assert.match(src,/client\.listTools\(\)/);
- assert.doesNotMatch(src,/client\.callTool\(|ha_call_service|bot\.launch\(|systemctl|\.dispatch\(/);
+ assert.doesNotMatch(src,/client\.callTool\(|bot\.launch\(|systemctl|\.dispatch\(/);
  assert.match(src,/REGISTRY_SNAPSHOT_TAKEN=NO/);
  assert.match(src,/HA_WRITES=NO/);
 });

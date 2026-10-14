@@ -1,5 +1,7 @@
 # RS Home AI V3 — текущее состояние
 
+> **2026-10-14 private Pi MCP bootstrap candidate (source only):** Added optional `scripts/manual/rs-pi-dev-mcp-readonly.mjs` using existing MCP SDK and stdio. Only two read-only DEV tools (commit/status and a fixed Markdown allowlist); no HA/token/shell/write interfaces, listener or automatic startup. Operator runbook at [RS Pi DEV MCP](development/RS-PI-DEV-MCP.md). A Secure MCP Tunnel requires separate Platform tunnel rights and runtime key; zero-cost availability has NOT been verified. No Pi deployment, ChatGPT plugin connection or live acceptance. Production V3 `93f11cd`, V2 untouched.
+
 > **2026-10-14 integration blocker found in PR #183 CI:** the five-registry WebSocket loader previously returned only normalized entity records/counts, dropping normalized area/floor/device names before the session exposed the catalog. This prevented real session-backed metadata questions from answering, despite isolated adapter tests. DEV loader now forwards these fields; requires successful exact-head CI. Real HA change event delivery remains unverified.
 
 > **2026-10-14 DEV-only acceptance fixture:** Added an offline end-to-end owner-initiated area rename regression across injected WS session, registry update event, stale catalog guard, five-list refresh and natural Russian answer on newly named area. This is a simulated HA event, **not** proof of actual event delivery on Raspberry Pi. No new tokens, MCP permissions, Telegram poller or production deployment. Check exact PR CI before counting as passed.

@@ -30,6 +30,9 @@ jobs:
         run: |
           mkdir -p dist
           cd upstream
+          # Upstream constant assertions use native uint; time.Duration nanoseconds
+          # exceed 32-bit uint. Use uint64 only for these compile-time checks.
+          sed -i -E 's/^const _ = uint\(/const _ = uint64(/' pkg/runtimeconfig/config.go
           go build -trimpath -o ../dist/tunnel-client-armv7 ./cmd/client
           cd ..
           file dist/tunnel-client-armv7

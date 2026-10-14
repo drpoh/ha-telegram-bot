@@ -11,7 +11,13 @@ export function answerHARegistryQuestion(session,question){
    !Array.isArray(catalog.devices)||!Array.isArray(catalog.floors))
   return fail('catalog_not_fresh');
  const q=clean(question);
- const area=catalog.areas.filter(a=>a.name&&q.includes(clean(a.name)));
+ if(/\b(включи|выключи|открой|закрой|удали|измени|перемести)\b/u.test(q))return fail('action_request_denied');
+ const area=catalog.areas.filter(a=>{
+  const name=clean(a.name);
+  // Common Russian prepositional forms: кухня→кухне, ванная→ванной.
+  const root=name.endsWith('ня')?name.slice(0,-1):name.endsWith('ая')?name.slice(0,-2):name;
+  return name.length>=4&&(q.includes(name)||(root.length>=4&&q.includes(root)));
+ });
  if(/не распределен|без комнат|без зоны/.test(q)){
   const n=catalog.entities.filter(e=>e.areaId===null).length;
   return result(`Без назначенной комнаты: ${n} записей сущностей Home Assistant. Это не обязательно ошибка.`,'unassigned');

@@ -22,6 +22,7 @@ test('answers scoped room and light queries without physical count inference',()
  assert.equal(a.status,'answered');
  assert.match(a.text,/1 записей устройств HA/);
  assert.match(a.text,/1 записей сущностей/);
+ assert.equal(answerHARegistryQuestion(session,'Какие устройства есть на кухне?').status,'answered');
  const b=answerHARegistryQuestion(session,'Сколько светильников в Коридор?');
  assert.match(b.text,/2 сущностей light/);
  assert.match(b.text,/Количество физических светильников неизвестно/);
@@ -35,6 +36,7 @@ test('unassigned, disabled, exact entity, and floor reads remain metadata-only',
 test('stale and ambiguous requests fail closed',()=>{
  assert.equal(answerHARegistryQuestion({getVerifiedCatalog:()=>null},'Какие устройства есть в Кухня?').status,'unverified');
  assert.equal(answerHARegistryQuestion(session,'Где термостат?').reason,'exact_entity_id_required');
- assert.equal(answerHARegistryQuestion(session,'Включи свет в Кухня').status,'unverified');
+ assert.equal(answerHARegistryQuestion(session,'Включи свет в Кухня').reason,'action_request_denied');
+ assert.equal(answerHARegistryQuestion(session,'Выключи и какие устройства есть на кухне?').reason,'action_request_denied');
  assert.equal(answerHARegistryQuestion(session,'Какие устройства есть в Кухня и Коридор?').reason,'ambiguous_area');
 });

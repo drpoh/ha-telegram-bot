@@ -1,5 +1,7 @@
 # RS Home AI V3 — только открытые задачи
 
+> **2026-10-14 registry loader contract:** [x] Regression reproduced via mock session-to-question integration; [x] fix missing areas/floors/devices metadata fields in validated loader output; [ ] CI confirmation and Pi acceptance.
+
 > **Area rename end-to-end mock:** [x] Add stale → refreshed rename → natural answer regression for injected session; [ ] check CI; [ ] verify event delivery on real Pi/HA after owner changes zone; [ ] approve secure ChatGPT DEV access through restricted MCP connector; [ ] separately validate on Pi before Telegram integration. Current production unchanged.
 
 > **Reconnect race (2026-10-14):** [x] Prevent read-retry scheduling while WS disconnected, add offline mid-flight disconnect regression. [ ] Confirm focused/full CI; [ ] actual Pi 3 read-only reconnect/resubscribe acceptance, burst/memory measurement and owner-initiated area update. [ ] Only then attach to a permitted Telegram DEV read-only route. No service or token changes.

@@ -1,5 +1,8 @@
 # RS Home AI V3 — только открытые задачи
 
+> **2026-10-14 event acceptance:** [x] Add 5-event native HA WS subscribe-only probe with bounded lifetime, offline mock tests, no token persistence, no writes. [ ] Owner run `scripts/manual/v3-ha-ws-registry-subscription-proof.mjs --read-only` on Pi after CI merge using private token entry; check five subscriptions, preserve logs without token. [ ] Separately observe an owner-initiated zone rename/move event and verify fresh catalog reload; never edit zones automatically. [ ] Validate reconnect and Pi memory before pinned stage/prod proposal; V3 production `93f11cd` unchanged.
+
+
 > **2026-10-14 active work:** [x] Compose reusable injected HA WebSocket catalog session from existing five-list loader and change observer; end-to-end mock tested. [ ] Verify on real HA that floor/area/device/entity/label events can all be subscribed to, and that reconnect resubscription completes before freshness is announced. [ ] Add operator-run read-only live event acceptance with private token input, bounded lifetime and no HA writes (no owner-zone edits required). [ ] Test Pi3 memory and performance; then separately approve a minimal stage/prod release. Production `93f11cd` untouched.
 
 

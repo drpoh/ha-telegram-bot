@@ -1,0 +1,70 @@
+name: Verify exact pinned conversational followups
+
+on:
+  pull_request:
+    branches:
+      - feature/v3-home-agent
+
+permissions:
+  contents: read
+
+jobs:
+  verify-exact-release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      BASE_SHA: f744557d394d38418e9e47ecbc61184a461a40d4
+      CANDIDATE_SHA: 6e12dc5e75828e348d0124f3a4d4645d51bc2306
+      CI: 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 6e12dc5e75828e348d0124f3a4d4645d51bc2306
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify fixed SHA and four-file read-only diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          test "$(git merge-base "$BASE_SHA" "$CANDIDATE_SHA")" = "$BASE_SHA"
+          python3 - <<'PY'
+          import os, subprocess
+          from pathlib import Path
+          base=os.environ['BASE_SHA']
+          head=os.environ['CANDIDATE_SHA']
+          expected={
+            'src/pilot/telegram-readonly.mjs',
+            'src/pilot/v3-pinned-light-followups.mjs',
+            'test/v3-pinned-light-followups.test.mjs',
+          }
+          changed=set(subprocess.check_output(['git','diff','--name-only',base,head],text=True).splitlines())
+          assert changed==expected, f'unexpected_diff: {sorted(changed^expected)}'
+          old=subprocess.check_output(['git','show',base+':src/pilot/telegram-readonly.mjs'],text=True)
+          new=Path('src/pilot/telegram-readonly.mjs').read_text()
+          for token in ("bot.command('confirm',async ctx=>", "bot.command('cancel',ctx=>",
+                        "const r=pilot.request(actor(ctx),ctx.message?.text);",
+                        "await bot.launch({dropPendingUpdates:true});"):
+            assert token in old and token in new, 'consent_or_poller_changed'
+          assert new.count("bot.launch(")==1
+          print('PINNED_DIFF=PASS')
+          print('TELEGRAM_CONSENT_AND_SINGLE_POLLER=VERIFIED')
+          PY
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - name: Install offline test prerequisites
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends sqlite3
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Verify progress scripts are bundled
+        run: |
+          node --check scripts/check-syntax.mjs
+          node --check scripts/run-isolated-tests.mjs
+          node --check scripts/testing/test-progress.mjs
+          node -e "if(require('./package.json').scripts.check!=='node scripts/check-syntax.mjs')process.exit(1)"
+      - name: Focused followup test
+        run: node --test test/v3-pinned-light-followups.test.mjs
+      - name: Full offline suite exact candidate
+        run: npm test

@@ -1,5 +1,8 @@
 # RS Home AI V3 — короткий handoff
 
+> **CURRENT HANDOFF — 2026-10-14 (supersedes older entries):** GitHub DEV `feature/v3-home-agent` contains squashed PR #179 at `7cfd96d0b63a4ba49ad5afb2cc6271699986334b`. Exact PR CI [38573071467](https://github.com/drpoh/ha-telegram-bot/actions/runs/38573071467) PASSED: Node 20.20.2/x64; syntax 451/451; isolated 242 test files / 897 assertions / zero failures; documentation link check 16 files / 142 links. New pure `src/home/ha-catalog-questions.mjs` answers selected metadata questions from verified fresh snapshots; **not connected to Telegram**. Real HA five-list snapshot and five subscribe ACKs are owner-proven, **not actual change-event delivery**. Raspberry Pi remote command access is quota-blocked; verify canonical Pi DEV worktree/HEAD before local synchronization. **Next single vertical slice:** owner-initiated HA zone change -> event delivery -> stale -> full five-list refresh -> renamed-zone question, with disconnect/reconnect fault acceptance; then reviewed Telegram read-only integration and owner-gated release. Do not start a second poller, touch credentials, change HA zones, systemd or pinned prod `93f11cd`/V2. Previous 'feature PR pending CI' handoff immediately below is historical.
+
+
 > **2026-10-14 current work:** GitHub feature branch `feat/v3-catalog-room-answers-20261014` carries pure, non-deployed registry catalog Russian questions and normalization of area/floor/device names. No live Pi access via Desktop Commander (monthly remote-tool limit); do not label GitHub CI as ARMv7/live HA acceptance. Next: finish PR CI, then read-only Pi test and owner-driven actual event proof, followed by Telegram wiring after separate gate. Never touch pinned production `93f11cd` or V2.
 
 

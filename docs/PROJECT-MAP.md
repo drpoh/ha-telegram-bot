@@ -1,5 +1,8 @@
 # RS Home AI — authoritative project map
 
+> **Verified DEV map update, 2026-10-14:** Canonical **remote GitHub** DEV `feature/v3-home-agent` includes [PR #179](https://github.com/drpoh/ha-telegram-bot/pull/179), squash SHA `7cfd96d`. GitHub checks passed (451 syntax / 242 isolated files / 897 assertions). Canonical **local Pi DEV** path remains `/home/drpoh/projects/rs-home-ai-dev`; its live HEAD/clean state have **not** been revalidated due to remote-command quota, and no force checkout/pull was performed. `src/home/ha-catalog-questions.mjs` is a DEV-only pure adapter without Telegram wiring. Previous table rows describing c6a9812 or 9dd5964 as active production are **historical**; owner-confirmed production V3 is pinned `93f11cd` per [CURRENT-STATE](CURRENT-STATE.md). Live ExecStart not independently checked in this session; V2 preserved. No stage or production activation is implied by GitHub merge.
+
+
 **2026-10-13 correction:** Owner-verified Pi DEV is `6f6e694` (clean, 198 files / 726 assertions), and a real read-only 19-light survey found nine responsive and ten unavailable. Historical rows below identify a `c6a9812` production release while other historical notes identify `9dd5964`; **current active `ExecStart` is not independently confirmed**. Neither claim authorizes deployment. [Latest state](CURRENT-STATE.md) · [documentation audit](DOCUMENTATION-AUDIT-2026-10-13.md).
 
 

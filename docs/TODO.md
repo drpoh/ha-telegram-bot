@@ -1,5 +1,8 @@
 # RS Home AI V3 — только открытые задачи
 
+> **LATEST open TODO 2026-10-14:** [x] Bulk read-only room/sensor DEV PR #152 merged (`6b9ba5b`) after CI 399 syntax files, 216 isolated files / 806 assertions, all PASS. [x] Production V3 `93f11cd` live contextual kitchen→corridor→tambour verified with 447/447 source. [ ] Prepare pinned **production-based** batch candidate with only reviewed DEV room/sensor read-only code and CI; [ ] validate newly added candidate IDs against actual HA state/physical identities read-only, never infer OFF from unavailable; [ ] operator approval and rollback-protected release only after Pi stage check; [ ] optional /cancel smoke and reboot persistence. V2 unchanged. Older TODO milestones below are historical.
+
+
 > **2026-10-14 bulk DEV batch (not production):** Owner-confirmed current production `93f11cd` passed contextual Telegram kitchen→corridor→tambour, V3 process count 1, V2 unchanged, tracked source 447/447. In isolated DEV feature `feat/v3-bulk-room-readonly-20261014` add read-only grouping for all 19 existing unverified candidate `light.*` IDs across living/bedroom/bathroom/kitchen extra/hallway extra, two exact sensors (`sensor.posudomoika_power`, `sensor.vykliuchatel_vannaia_battery`), fixed Russian questions, room followups, and offline fail-closed tests. No new physical light control, no broad registry discovery. This remains **DEV only** until CI, pinned diff, owner approvals, and live HA validation. Group names are review metadata, not verified physical identity. Continue batching read-only improvements rather than micro-releases.
 
 

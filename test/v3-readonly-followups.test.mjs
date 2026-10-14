@@ -120,3 +120,34 @@ test('Unrecognized follow-up cannot reuse a previously valid light context',asyn
  assert.equal(after.status,'unsupported');
  assert.deepEqual(calls,[]);
 });
+
+
+test('Direct corridor question uses existing fixed read scope and allows read-only follow-up',async()=>{
+ const calls=[],kitchenCalls=[];
+ const router=createV3ReadonlyFollowupRouter({clock:()=>10000});
+ const general=fixture(calls,{'light.koridor':'on'}),kitchenRead=fixture(kitchenCalls);
+ const direct=await request(router.route,'Какой свет в коридоре?',general,kitchenRead);
+ assert.equal(direct.handled,true);
+ assert.equal(direct.status,'complete');
+ assert.deepEqual(calls,corridor);
+ assert.match(direct.text,/включено 1, выключено 2/);
+ assert.equal(direct.authorization,false);
+ assert.equal(direct.actualWrite,false);
+ calls.length=0;
+ const followup=await request(router.route,'А на кухне?',general,kitchenRead);
+ assert.equal(followup.status,'complete');
+ assert.deepEqual(calls,[]);
+ assert.deepEqual(kitchenCalls,kitchen);
+ assert.equal(followup.actualWrite,false);
+});
+
+test('Corridor write requests and unknown corridor entities never extend fixed reads',async()=>{
+ const calls=[],read=fixture(calls);
+ const router=createV3ReadonlyFollowupRouter({clock:()=>10000});
+ const mixed=await request(router.route,'Какой свет в коридоре? Выключи всё',read,read);
+ assert.equal(mixed.status,'unsupported');
+ assert.deepEqual(calls,[]);
+ const follow=await request(router.route,'А на кухне?',read,read);
+ assert.equal(follow.status,'unsupported');
+ assert.deepEqual(calls,[]);
+});

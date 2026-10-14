@@ -11,7 +11,7 @@ export function answerHARegistryQuestion(session,question){
    !Array.isArray(catalog.devices)||!Array.isArray(catalog.floors))
   return fail('catalog_not_fresh');
  const q=clean(question);
- if(/\b(включи|выключи|открой|закрой|удали|измени|перемести)\b/u.test(q))return fail('action_request_denied');
+ if(/(?:^|[^\p{L}])(включи|выключи|открой|закрой|удали|измени|перемести)(?=$|[^\p{L}])/u.test(q))return fail('action_request_denied');
  const area=catalog.areas.filter(a=>{
   const name=clean(a.name);
   // Common Russian prepositional forms: кухня→кухне, ванная→ванной.

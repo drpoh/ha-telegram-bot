@@ -1,5 +1,7 @@
 # RS Home AI V3 — короткий handoff
 
+> **2026-10-14 ChatGPT Pi access candidate:** Read-only stdio MCP bootstrap committed on isolated feature branch, docs at [RS PI DEV MCP](RS-PI-DEV-MCP.md). Only fixed-document reads + sanitized Git status; no arbitrary commands, no API keys or auto-run. The owner sees ChatGPT Add custom MCP server; next check Tunnel entitlement in the UI, Platform rights and pricing, then manually connect after CI. Do not declare connection established until real tool call succeeds.
+
 > **2026-10-14 owner-area rename fixture:** Pure mock integration now exercises `area_registry_updated` → stale → full snapshot refresh → old area answer absent / new Russian area answer present. CI/live Pi proof separate. GitHub source-only; no live zone edits, credentials, new poller or prod change.
 
 > **2026-10-14 source-only reconnect race fix:** Observer previously queued a retry after an in-flight read failed with `concurrent_change` even if connection had disconnected. New connected gate suppresses timers and events offline, `ready` triggers revalidation; mock regression added. Next GitHub CI then Pi read-only live proof. No new poller or production deployment.

@@ -19,42 +19,43 @@ export function createHARegistryEventObserver({
     typeof coordinator?.getStatus!=='function'||
     !Number.isSafeInteger(debounceMs)||debounceMs<50||debounceMs>10000)
    throw Error('invalid_registry_observer_contract');
- let stopped=false,started=false,timer=null,reading=false,pending=false;
+ let stopped=false,started=false,connected=true,timer=null,reading=false,pending=false;
  const unsubscribe=[],handlers=[];
  const clear=()=>{if(timer!==null){clearTimeoutFn(timer);timer=null;}};
  const schedule=()=>{
-  if(stopped)return;
+  if(stopped||!connected)return;
   pending=true;
   clear();
   timer=setTimeoutFn(()=>{timer=null;void drain();},debounceMs);
  };
  async function drain(){
-  if(stopped||reading||!pending)return;
+  if(stopped||!connected||reading||!pending)return;
   reading=true;pending=false;
   try{
    const result=await coordinator.refresh();
    // A registry event during the refresh may have invalidated the result.
    // One new debounced attempt will be queued instead of claiming fresh.
-   if(!stopped&&result?.status!=='fresh'&&
+   if(!stopped&&connected&&result?.status!=='fresh'&&
       result?.reason==='concurrent_change')pending=true;
   }catch{/* coordinator is already stale and exceptions are not logged */}
   finally{
    reading=false;
-   if(!stopped&&pending)schedule();
+   if(!stopped&&connected&&pending)schedule();
   }
  }
  const onChange=(eventType)=>()=>{
-  if(stopped)return;
+  if(stopped||!connected)return;
   coordinator.changed(eventType);
   schedule();
  };
  const onDisconnected=()=>{
   if(stopped)return;
-  clear();pending=false;
+  connected=false;clear();pending=false;
   coordinator.disconnected();
  };
  const onReady=()=>{
   if(stopped)return;
+  connected=true;
   // Refresh every time the connection is authenticated/reconnected.
   // Autoresubscription is managed by upstream HA JS client.
   coordinator.disconnected();

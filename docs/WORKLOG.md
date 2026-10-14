@@ -1,3 +1,7 @@
+## 2026-10-14 — DEV registry observer offline disconnect race
+
+Found a concrete retry race in existing `ha-ws-registry-event-observer.mjs`: a pending read can resolve `concurrent_change` after socket disconnect and queue a timer while offline. Added explicit connected gate for schedule/drain/registry callbacks and completion follow-up; readiness restores permission to refresh. Regression test covers mid-flight disconnect and no new reads until ready, without HA network/service/credentials. GitHub CI and real Pi reconnect evidence remain separate checks.
+
 ## 2026-10-14 — All-Markdown audit actual findings
 
 GitHub PR #181 CI run 38575866492: 87 tracked Markdown files, 181 relative links, 59 external/anchors skipped, 2 missing links in archived `docs/archive/TODO-history-through-2026-10-11.md`; active 16 documents and 142 links passed. Syntax 451/451, isolated 242 files / 897 assertions PASS. Resolved both historical broken references by changing only parent-relative Markdown hrefs to `../PI-REPOSITORY-LAYOUT-PLAN.md` and `../REVIEW-2026-10-10.md`. Repeat exact-commit CI must show 0 findings before merge. No physical or production operations.

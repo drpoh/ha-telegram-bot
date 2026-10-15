@@ -20,3 +20,6 @@ Improve the **existing V2** in small, testable steps; do not build or promote V3
 
 ## Safety boundaries
 Never commit `.env`, database contents, raw HA audit JSON, tokens or conversation memory. Treat development database as private. No production action, HA writes or service changes without explicit separate authorization. This source-only documentation update does **not** constitute a live DEV functional test.
+
+## Owner workflow instruction (2026-10-15)
+Continue self-sufficient DEV/GitHub work without prompting the owner for routine acknowledgments; batch unavoidable Pi operations. Full regression on DEV MCP-logging patch confirmed 125 files/502 assertions/0 failures, exit code 0 at 1f1098c, production service still active. Do not rerun the full suite for documentation-only edits. No production modifications or feature reductions.

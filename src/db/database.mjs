@@ -28,6 +28,14 @@ export function initDatabase(dbPath = DEFAULT_DB_PATH) {
   runSql(`
     PRAGMA journal_mode=WAL;
 
+    CREATE TABLE IF NOT EXISTS conversation (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      role TEXT NOT NULL,
+      text TEXT NOT NULL,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_conversation_created ON conversation(created_at);
+
     CREATE TABLE IF NOT EXISTS memory (
       key TEXT PRIMARY KEY,
       value TEXT NOT NULL,

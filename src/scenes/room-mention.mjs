@@ -18,6 +18,10 @@ export function explicitSceneAreaMention(userText, areaName) {
  const area=normalize(areaName);
  if(!input||!area) return false;
  const words=new Set(input.split(' '));
+ const mentioned=Object.entries(CASES).filter(([,forms])=>forms.some(form=>words.has(form))).map(([key])=>key);
+ // Multiple distinct room names require clarification. 'Ванная и Сауна'
+ // remains a single HA room only when the full area label is explicit.
+ if(mentioned.length>1 && !(' '+input+' ').includes(' '+area+' ')) return false;
  // Full canonical area names can be given verbatim.
  if((' '+input+' ').includes(' '+area+' ')) return true;
  // A compound HA room such as "Ванная и Сауна" can be named by

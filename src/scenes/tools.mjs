@@ -6,6 +6,8 @@ import {
 import { resolveArea } from "../home/area-resolver.mjs";
 import { captureAiScene } from "./capture.mjs";
 import { planAiSceneOperation } from "./safe-scene-plan.mjs";
+import { applyVerifiedLightScene } from "./verified-run.mjs";
+import { callHA } from "../mcp/executor.mjs";
 
 export function isAiSceneTool(name) {
   return [
@@ -53,7 +55,8 @@ export async function callAiSceneTool(
     const trustedArea = { ...area, requestedArea: args.area };
     const scene = name === "ai_scene_capture" ? null : getAiScene(args.name, area.area_id);
     const decision = await planAiSceneOperation({
-      toolName:name, args, source:context.source, area:trustedArea, scene
+      toolName:name, args, source:context.source, area:trustedArea, scene,
+      callTool: (tool, data) => callHA(tool, data)
     });
     if (!decision.allowed) return { success:false, blocked:true, outcome:decision.status };
     if (name === "ai_scene_capture") return captureAiScene(args.name, area.area_id);
@@ -61,8 +64,8 @@ export async function callAiSceneTool(
       const deleted = deleteAiScene(args.name, area.area_id);
       return { success:deleted, deleted, name:args.name, area_id:area.area_id };
     }
-    // Scene playback is kept disabled until verified per-entity execution is wired.
-    return { success:false, blocked:true, outcome:"scene_run_requires_verified_execution" };
+    // Only simple lighting scenes are executable; unsupported legacy domains fail closed.
+    return applyVerifiedLightScene(scene, (tool, data) => callHA(tool, data));
   }
 
   if (name === "ai_scene_list") {

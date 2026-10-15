@@ -8,6 +8,7 @@ import { captureAiScene } from "./capture.mjs";
 import { planAiSceneOperation } from "./safe-scene-plan.mjs";
 import { applyVerifiedLightScene } from "./verified-run.mjs";
 import { callHA } from "../mcp/executor.mjs";
+import { explicitSceneAreaMention } from "./room-mention.mjs";
 
 export function isAiSceneTool(name) {
   return [
@@ -50,11 +51,9 @@ export async function callAiSceneTool(
     if (!args.name || !args.area || !normalize(context.userText).includes(normalize(args.name))) {
       return { success:false, blocked:true, outcome:"scene_identity_unconfirmed" };
     }
-    const fromUser = await resolveArea(context.userText);
-    if (!fromUser) return { success:false, blocked:true, outcome:"scene_area_unconfirmed" };
     const area = await resolveRequiredArea(args.area);
-    if (area.area_id !== fromUser.area_id)
-      return { success:false, blocked:true, outcome:"scene_area_mismatch" };
+    if (!explicitSceneAreaMention(context.userText, area.name))
+      return { success:false, blocked:true, outcome:"scene_area_unconfirmed" };
     const trustedArea = { ...area, requestedArea: args.area };
     const scene = name === "ai_scene_capture" ? null : getAiScene(args.name, area.area_id);
     const decision = await planAiSceneOperation({

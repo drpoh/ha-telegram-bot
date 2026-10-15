@@ -1,5 +1,8 @@
 # v3 Home AI Agent Architecture
 
+> **Scope note (2026-10-15):** This document describes historical V3 architecture, not the approved V2 evolution design. Follow [V2 ROADMAP](ROADMAP.md), [CURRENT-STATE](CURRENT-STATE.md) and the actual V2 source before implementing changes. Preserve this document for reference.
+
+
 v3 evolves the existing v2 Telegram + AI + HA-MCP agent without replacing its working core.
 
 The project is intended to become a reusable Home Assistant agent for other users. The maintainer's home is a reference/test deployment, not the product model. Core logic must avoid installation-specific entity IDs, room names, language assumptions and device brands; deployment-specific policy, entity mappings and preferences belong in configuration.

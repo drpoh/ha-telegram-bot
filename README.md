@@ -1,5 +1,8 @@
 # Home Assistant Telegram AI Bot
 
+> **V2 EVOLUTION (2026-10-15):** The working V2 is the primary product. For the isolated development copy, read [Current state](docs/CURRENT-STATE.md), [Roadmap](docs/ROADMAP.md), [Handoff](docs/development/HANDOFF.md), [AGENTS](AGENTS.md) before work. V3 documentation is preserved as research; it is not a release plan for V2. Do not run a second Telegram poller or reuse production secrets in DEV.
+
+
 AI-powered Telegram assistant for Home Assistant using MCP.
 
 ## Features

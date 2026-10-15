@@ -1,3 +1,11 @@
+## 2026-10-15 — V2 evolution baseline and privacy checks
+
+- Owner confirmed independent DEV source commit `32b5299`, 124 original test files / 498 assertions passing, private SQLite snapshot integrity OK (7 tables), no copied `.env`; original V2 service remained active.
+- DEV change on separate PR #194 reduces verbose MCP payload logs and adds privacy regressions and 20-cell progress bar in isolated test runner.
+- Owner ran full DEV tests at runtime-code commit `1f1098c`: 125 files, 502 assertions, 0 failures, exit code 0. No production changes or feature reductions.
+- Continuing V2 memory audit; SQLite disk size auto-grows, while 40-message conversation retention is separate. Preserve short-term behavior while investigating optional long-term archive.
+- Owner preference: keep progressing without pausing for routine confirmation; batch necessary Pi operations; full tests only for meaningful milestones, always showing progress.
+
 # WORKLOG — Development checkpoint journal
 
 ## 2026-10-09 — project and file review

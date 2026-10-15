@@ -40,6 +40,16 @@ export async function applyVerifiedLightScene(scene, callTool) {
    if(entity.state==='on' && Number.isInteger(brightness) && brightness>=0 && brightness<=255 &&
       (typeof state.attributes?.brightness!=='number' || Math.abs(state.attributes.brightness-brightness)>1))
      return {success:false,partial:confirmed>0,confirmed,outcome:'brightness_unverified'};
+   if(entity.state==='on' && Array.isArray(rgb) && rgb.length===3 &&
+      rgb.every(v=>Number.isInteger(v)&&v>=0&&v<=255)) {
+     const actual=state.attributes?.rgb_color;
+     if(!Array.isArray(actual)||actual.length!==3||
+        actual.some((v,i)=>!Number.isInteger(v)||Math.abs(v-rgb[i])>2))
+       return {success:false,partial:confirmed>0,confirmed,outcome:'color_unverified'};
+   } else if(entity.state==='on' && Number.isInteger(kelvin)&&kelvin>=1000&&kelvin<=10000 &&
+       (typeof state.attributes?.color_temp_kelvin!=='number'||
+        Math.abs(state.attributes.color_temp_kelvin-kelvin)>50))
+     return {success:false,partial:confirmed>0,confirmed,outcome:'color_temp_unverified'};
    confirmed++;
  }
  return {success:true,confirmed,entities:scene.entities.length};

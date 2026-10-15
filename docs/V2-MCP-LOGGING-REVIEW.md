@@ -23,3 +23,11 @@ The documentation PR #192 targets the exact V2 source baseline and must not be m
 
 ## Test workflow update (2026-10-15)
 Owner requirement: always show a simple progress bar and avoid unnecessary full-suite runs during development. The isolated runner now prints a 20-cell completion bar and accepts an optional filename substring, e.g. `node scripts/run-isolated-tests.mjs mcp-log-summary`. Continue to run `npm test` in the DEV copy as a full gate before merge. No running V2 code/config/service or live DB modified. The owner-provided `124 files / 498 assertions` result is from the old local checkout and does NOT validate this branch; await fresh focused/full results. SQLite size scales automatically; the V2 40-message history cap is a separate product design choice and must not be changed until behavior/limits are tested.
+
+## Non-regression contract (owner requirement)
+- Running V2 source checkout, its local Git remotes, credentials, service and SQLite database are strictly read-only. No deploying, running a second Telegram poller, or copying production secrets.
+- Never remove or reduce behavior: Telegram, natural-language responses, AI tool routing, HA-MCP calls, conversation and device memory, room context, history, action verification, scenes and safety guards must remain functional.
+- Every automated test invocation should show a simple progress bar. Use the filtered isolated runner for local iteration; full-suite tests are mandatory before merge/release, not after every small edit.
+- The local V2 clone may have a filesystem `origin`. Keep that remote unchanged and add a separate `github` remote pointing at the GitHub repository only in the isolated DEV checkout.
+- Increasing SQLite **database capacity** is unnecessary because the file grows as needed. Increasing retained conversation context is a distinct feature requiring independent regression and token-budget testing; preserve the present 40-message policy until such a change is proved better.
+- New branch PR #194 is **not** verified on Pi yet. The last owner-provided `124 / 498 / 0` run predates the branch checkout and its test count does not cover the new test.

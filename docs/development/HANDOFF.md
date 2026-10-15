@@ -13,3 +13,6 @@ Review the existing V2 `src/ai/agent.mjs`, prompt, `src/mcp/executor.mjs`, memor
 
 ## Source / history boundaries
 V2 original: `~/ha-telegram-bot` (read-only operational reference). V2 DEV: `~/projects/rs-home-ai-v2-running-copy`. V3 research: `~/projects/rs-home-ai-dev`, distinct branch. Github is source of truth; local DB and secrets never enter GitHub.
+
+## Owner workflow preference (2026-10-15)
+If the next work can be completed via GitHub or safe offline analysis without the owner's intervention, keep working rather than stopping to ask for permission or a routine acknowledgment. Batch Pi-only commands when truly necessary. Avoid repeated full test suites: focused tests during iteration, full regression once at meaningful milestone, always with a progress bar. Production V2 is strictly off limits; preserve every existing feature.

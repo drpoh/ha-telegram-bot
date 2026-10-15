@@ -31,3 +31,6 @@ Owner requirement: always show a simple progress bar and avoid unnecessary full-
 - The local V2 clone may have a filesystem `origin`. Keep that remote unchanged and add a separate `github` remote pointing at the GitHub repository only in the isolated DEV checkout.
 - Increasing SQLite **database capacity** is unnecessary because the file grows as needed. Increasing retained conversation context is a distinct feature requiring independent regression and token-budget testing; preserve the present 40-message policy until such a change is proved better.
 - New branch PR #194 is **not** verified on Pi yet. The last owner-provided `124 / 498 / 0` run predates the branch checkout and its test count does not cover the new test.
+
+## Focused test evidence (owner, 2026-10-15)
+On the isolated Raspberry Pi development checkout, `node scripts/run-isolated-tests.mjs mcp-log-summary` reported a completed 100% progress bar, 1 test file, 4 assertions and 0 failed files. Full regression suite on this branch still pending. Owner requests fewer interruptions: group read-only audits and full-suite checks into a single operator command whenever safe. Production V2 remains off limits.

@@ -41,8 +41,7 @@ export async function callHA(name, args = {}, { mcpClient = null } = {}) {
       );
 
       console.log("Memory → updated entity count", memory.entities.length);
-
-      }
+    }
   }
 
   if (

@@ -20,3 +20,6 @@
 4. Record exact head hash and tests, then update CURRENT-STATE, TODO, WORKLOG and HANDOFF on the V2 documentation branch.
 
 The documentation PR #192 targets the exact V2 source baseline and must not be merged into a V3 release branch.
+
+## Test workflow update (2026-10-15)
+Owner requirement: always show a simple progress bar and avoid unnecessary full-suite runs during development. The isolated runner now prints a 20-cell completion bar and accepts an optional filename substring, e.g. `node scripts/run-isolated-tests.mjs mcp-log-summary`. Continue to run `npm test` in the DEV copy as a full gate before merge. No running V2 code/config/service or live DB modified. The owner-provided `124 files / 498 assertions` result is from the old local checkout and does NOT validate this branch; await fresh focused/full results. SQLite size scales automatically; the V2 40-message history cap is a separate product design choice and must not be changed until behavior/limits are tested.

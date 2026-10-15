@@ -21,3 +21,6 @@ Improve the existing working V2's usefulness, reliability, accuracy and security
 
 ## Definition of done for any improvement
 User-visible benefit or security benefit documented; failing-before/passing-after regression where feasible; isolated tests pass; no secrets in source/logs; no double polling; production unchanged until authorized; documentation CURRENT-STATE, TODO, HANDOFF and WORKLOG updated.
+
+## Working cadence
+Proceed autonomously with read-only research, DEV code, tests and Markdown documentation whenever tools allow. Ask the owner only for access, authorization or a meaningful blocker. Batch user-run Pi commands and avoid unnecessary repeated full-suite runs. Report verified work, not just intentions.

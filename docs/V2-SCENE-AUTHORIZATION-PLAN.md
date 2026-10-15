@@ -16,3 +16,6 @@ Required wiring for next stage:
 - Progress bar for testing, quick targeted tests in iteration, full suite only before a meaningful merge. Do not deploy to running V2.
 
 Validation: code added in GitHub; Pi tests not executed yet.
+
+## Stage 2 added (2026-10-15)
+A pure read-only `discoverSceneAreaEntities` helper now verifies complete HA area membership across four supported domains, rejects truncation/invalid payloads/cross-area entities, and uses injected tool calls. Added focused offline regression tests. This is not yet wired into the runtime scene dispatcher and cannot control devices. Additional validation required: real HA search response shape and strict entity-area identity; direct scene manager still lacks per-action authorization and complete execution verification. **Do not remove the current scene mutation block until end-to-end guarded dispatch is ready.**

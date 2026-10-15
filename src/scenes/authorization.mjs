@@ -12,6 +12,10 @@ export function authorizeAiSceneOperation({toolName,args={},source,area,scene=nu
  if (READS.has(toolName)) return {allowed:true,status:'read_only'};
  if (source!=='user_explicit') return {allowed:false,status:'explicit_user_required'};
  if (!validName(args.name) || !validName(args.area)) return {allowed:false,status:'missing_scene_identity'};
+ // The LLM-supplied room name is never sufficient on its own.
+ // A previously independently resolved and matched area must be carried by the dispatcher.
+ if (typeof area.requestedArea !== 'string' || area.requestedArea.trim().toLocaleLowerCase('ru-RU') !== args.area.trim().toLocaleLowerCase('ru-RU'))
+   return {allowed:false,status:'area_not_bound_to_request'};
  if (toolName==='ai_scene_capture') return {allowed:true,status:'capture_authorized_for_area'};
  if (!scene || scene.area_id!==area.area_id) return {allowed:false,status:'scene_not_in_area'};
  if (toolName==='ai_scene_delete') return {allowed:true,status:'delete_local_scene_only'};

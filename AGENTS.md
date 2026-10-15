@@ -1,5 +1,8 @@
 # AGENTS.md — Home Assistant AI Agent
 
+> **CURRENT V2 DEVELOPMENT RULE (2026-10-15):** The owner chose to evolve the running V2 rather than replace it with V3. The **current** status is [docs/CURRENT-STATE.md](docs/CURRENT-STATE.md), next steps [docs/development/HANDOFF.md](docs/development/HANDOFF.md), active roadmap [docs/ROADMAP.md](docs/ROADMAP.md). Existing V3-focused instructions below are historical and may not override this product decision. Only modify isolated `/home/drpoh/projects/rs-home-ai-v2-running-copy`; never edit/restart running `/home/drpoh/ha-telegram-bot` or activate a second Telegram poller. The local database snapshot and any secrets stay untracked. Require offline tests, Git review and explicit owner approval for any production rollout.
+
+
 ## Mission
 Build a reliable conversational Home Assistant agent that can remember useful context, analyze Home Assistant history, and autonomously perform explicitly permitted non-critical actions.
 

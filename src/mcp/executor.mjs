@@ -7,35 +7,14 @@ import {
   verifyActionStates,
 } from "../decision/verifier.mjs";
 
+// Never log raw tool payloads: they may contain private HA states and histories.
 function logMcpResult(name, result) {
-  const content = result?.structuredContent ?? result;
-
-  if (name === "ha_get_history") {
-    const data = content?.data ?? content ?? {};
-    const entities = Array.isArray(data?.entities) ? data.entities : [];
-    const records = entities.reduce(
-      (sum, entity) => sum + (entity.states?.length ?? entity.statistics?.length ?? 0),
-      0
-    );
-    const first = entities[0] ?? {};
-
-    console.log("MCP ← ha_get_history", {
-      entities: entities.length,
-      records,
-      total_count: first.total_count ?? null,
-      offset: first.offset ?? null,
-      has_more: first.has_more ?? false,
-      next_offset: first.next_offset ?? null,
-      period: first.period ?? data?.period ?? null,
-    });
-    return;
-  }
-
-  console.log(`MCP ← ${name}`, JSON.stringify(content, null, 2));
+  const outcome = result?.isError === true ? "error" : "received";
+  console.log("MCP result", { tool: name, outcome });
 }
 
 export async function callHA(name, args = {}, { mcpClient = null } = {}) {
-  console.log(`MCP → ${name}`, args);
+  console.log("MCP request", { tool: name });
 
   const mcp = mcpClient ?? getMcpClient();
 
@@ -54,24 +33,8 @@ export async function callHA(name, args = {}, { mcpClient = null } = {}) {
 
     if (updated) {
       const memory = getDeviceMemory();
-
-      rememberLearningSearch(
-        memory.query,
-        memory.domain,
-        memory.entities
-      );
-
-      console.log(
-        `Memory → ${memory.query} / ${memory.domain} / ${memory.entities.length} entities`
-      );
-
-      console.log(
-        "Memory entities →",
-        memory.entities.map(
-          (e) =>
-            `${e.entity_id} (${e.friendly_name}) [${e.state}]`
-        )
-      );
+      rememberLearningSearch(memory.query, memory.domain, memory.entities);
+      console.log("MCP search memory updated", { count: memory.entities.length });
     }
   }
 

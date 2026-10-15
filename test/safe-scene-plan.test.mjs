@@ -24,3 +24,11 @@ test('fail closed on missing or incomplete discovery',async()=>{
  const result=await plan({toolName:'ai_scene_run',source:'user_explicit',args,area,scene,callTool:async()=>({structuredContent:{entities:[],entity_has_more:true}})});
  assert.equal(result.allowed,false);
 });
+
+test('wrong LLM room rejected before any HA call',async()=>{
+ let calls=0;
+ const result=await plan({toolName:'ai_scene_run',source:'user_explicit',args:{...args,area:'Кухня'},area,scene,callTool:async()=>{calls++;throw Error('should not read');}});
+ assert.equal(result.allowed,false);
+ assert.equal(result.status,'area_not_bound_to_request');
+ assert.equal(calls,0);
+});

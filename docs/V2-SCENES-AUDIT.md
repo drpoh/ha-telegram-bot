@@ -31,3 +31,13 @@ Owner-provided real dialog demonstrates creating, activating, listing, deleting,
 - Existing user-facing successful workflows must remain available in any approved future release.
 
 This audit is read-only source analysis. No production changes; no new tests run. Full regressions only once at a meaningful milestone with progress.
+
+## Pi inventory verified by owner (2026-10-15)
+- The **running** systemd service has a valid PID and process cwd `/home/drpoh/ha-telegram-bot`; Git commit `32b5299`, service active.
+- Both production and isolated DEV `src/scenes/tools.mjs` include `scene_operation_not_authorized`; capture/run/delete route calls are absent.
+- Production modules `src/scenes/capture.mjs`, `manager.mjs`, `store.mjs` are present.
+- Production database contains **1** row in `ai_scenes`, **3** rows in `ai_scene_entities`. Counts only, no private scene names or contents accessed.
+- Both checkouts have 0 non-ignored untracked files. This does **not** exclude ignored private files or other deployment assets.
+- `config/lighting-classification.local.json` was absent in production.
+
+**Conclusion:** current running code has a blocked direct AI-scene tool entry point, despite preserved local scene records. Prior successful conversational transcript may refer to earlier runtime or an unverified alternate dispatch; never assume the current live path can mutate scenes. This is a release parity blocker. Restoring via old unguarded `refactor/v2` dispatcher is not acceptable; implement and test safety authorization in isolated DEV before proposing any deployment. No production modifications.

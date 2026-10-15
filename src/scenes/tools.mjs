@@ -43,15 +43,18 @@ export async function callAiSceneTool(
     if (context.source !== "user_explicit" || typeof context.userText !== "string") {
       return { success: false, blocked: true, outcome: "scene_operation_not_authorized" };
     }
-    // Require the actual user utterance to name both the scene and area.
-    // Context-based references ("первую", "её") remain blocked until a
-    // trusted explicit disambiguation flow is implemented.
+    // Scope is resolved independently from the original user request,
+    // not from a room proposed by the model. Russian case variants are
+    // handled by resolveArea; ambiguous or unnamed rooms fail closed.
     const normalize = (v) => String(v || "").toLocaleLowerCase("ru-RU").replace(/ё/g,"е").trim();
-    if (!args.name || !args.area || !normalize(context.userText).includes(normalize(args.name)) ||
-        !normalize(context.userText).includes(normalize(args.area))) {
+    if (!args.name || !args.area || !normalize(context.userText).includes(normalize(args.name))) {
       return { success:false, blocked:true, outcome:"scene_identity_unconfirmed" };
     }
+    const fromUser = await resolveArea(context.userText);
+    if (!fromUser) return { success:false, blocked:true, outcome:"scene_area_unconfirmed" };
     const area = await resolveRequiredArea(args.area);
+    if (area.area_id !== fromUser.area_id)
+      return { success:false, blocked:true, outcome:"scene_area_mismatch" };
     const trustedArea = { ...area, requestedArea: args.area };
     const scene = name === "ai_scene_capture" ? null : getAiScene(args.name, area.area_id);
     const decision = await planAiSceneOperation({

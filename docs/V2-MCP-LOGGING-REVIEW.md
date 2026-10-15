@@ -34,3 +34,6 @@ Owner requirement: always show a simple progress bar and avoid unnecessary full-
 
 ## Focused test evidence (owner, 2026-10-15)
 On the isolated Raspberry Pi development checkout, `node scripts/run-isolated-tests.mjs mcp-log-summary` reported a completed 100% progress bar, 1 test file, 4 assertions and 0 failed files. Full regression suite on this branch still pending. Owner requests fewer interruptions: group read-only audits and full-suite checks into a single operator command whenever safe. Production V2 remains off limits.
+
+## Full isolated regression verified by owner (2026-10-15)
+At DEV commit `1f1098c`, the full run completed 125/125 files, 502 assertions, 0 failed files, exit code 0. Production service still `active`. Later commits on this PR only update Markdown documentation, not tested runtime code. Owner requests no repeated full suite runs for trivial edits; reserve next full suite for a substantial milestone. Production remains untouched.

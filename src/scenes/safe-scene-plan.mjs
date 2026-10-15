@@ -9,6 +9,8 @@ export async function planAiSceneOperation({
  const core={toolName,args,source,area,scene};
  if(toolName!=='ai_scene_run') return authorizeAiSceneOperation(core);
  if(source!=='user_explicit') return {allowed:false,status:'explicit_user_required'};
+ if(typeof area?.requestedArea!=='string' || area.requestedArea.trim().toLocaleLowerCase('ru-RU')!==args?.area?.trim?.().toLocaleLowerCase('ru-RU'))
+   return {allowed:false,status:'area_not_bound_to_request'};
  if(!area?.area_id || !scene || scene.area_id!==area.area_id)
    return {allowed:false,status:'scene_not_in_area'};
  const discovery=await discoverSceneAreaEntities(area.area_id,callTool);

@@ -176,7 +176,8 @@ export async function askHomeAssistant(
         } else if (isAiSceneTool(call.name)) {
           result = await callAiSceneTool(
             call.name,
-            call.args || {}
+            call.args || {},
+            { source, userText }
           );
         } else {
           const shadow = shadowEvaluateToolCall(

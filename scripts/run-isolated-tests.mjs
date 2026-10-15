@@ -3,7 +3,20 @@ import {join} from "node:path";
 import {tmpdir} from "node:os";
 import {execFileSync,spawn} from "node:child_process";
 
-const files=readdirSync("test").filter(f=>f.endsWith(".test.mjs")).sort();
+const allFiles=readdirSync("test").filter(f=>f.endsWith(".test.mjs")).sort();
+const filter=process.argv[2] || "";
+const files=filter ? allFiles.filter(f=>f.includes(filter)) : allFiles;
+if (!files.length) {
+ console.error("No test files match filter");
+ process.exit(2);
+}
+const progress=(done,total)=> {
+ const width=20;
+ const filled=Math.floor(done*width/total);
+ const bar="█".repeat(filled)+"░".repeat(width-filled);
+ process.stdout.write("\r["+bar+"] "+Math.floor(done*100/total)+"% ("+done+"/"+total+")");
+ if(done===total)process.stdout.write("\n");
+};
 const schema=readFileSync("test/fixtures/bot-schema.sql","utf8");
 if(!schema.includes("CREATE TABLE")) throw Error("SQLite schema unavailable");
 const root=mkdtempSync(join(tmpdir(),"ha-bot-test-"));
@@ -19,7 +32,8 @@ const testEnv={
  MCP_URL:"http://127.0.0.1:1/mcp",
  HTTP_PORT:"0",
 };
-let next=0,failed=0,passed=0;
+let next=0,failed=0,passed=0,completed=0;
+progress(0,files.length);
 try{
  const jobs=Array.from({length:3},async()=>{
   while(next<files.length){
@@ -39,6 +53,8 @@ try{
    });
    const pass=Number(output.text.match(/# pass (\d+)/)?.[1]||0);
    passed+=pass;
+   completed++;
+   progress(completed, files.length);
    if(output.exit!==0){
     failed++;
     console.error("FAIL",file,"\n",output.text.slice(-3000));

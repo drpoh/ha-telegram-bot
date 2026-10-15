@@ -7,35 +7,14 @@ import {
   verifyActionStates,
 } from "../decision/verifier.mjs";
 
+import { summarizeMcpRequest, summarizeMcpResponse } from "./log-summary.mjs";
+
 function logMcpResult(name, result) {
-  const content = result?.structuredContent ?? result;
-
-  if (name === "ha_get_history") {
-    const data = content?.data ?? content ?? {};
-    const entities = Array.isArray(data?.entities) ? data.entities : [];
-    const records = entities.reduce(
-      (sum, entity) => sum + (entity.states?.length ?? entity.statistics?.length ?? 0),
-      0
-    );
-    const first = entities[0] ?? {};
-
-    console.log("MCP ← ha_get_history", {
-      entities: entities.length,
-      records,
-      total_count: first.total_count ?? null,
-      offset: first.offset ?? null,
-      has_more: first.has_more ?? false,
-      next_offset: first.next_offset ?? null,
-      period: first.period ?? data?.period ?? null,
-    });
-    return;
-  }
-
-  console.log(`MCP ← ${name}`, JSON.stringify(content, null, 2));
+  console.log("MCP ←", summarizeMcpResponse(name, result));
 }
 
 export async function callHA(name, args = {}, { mcpClient = null } = {}) {
-  console.log(`MCP → ${name}`, args);
+  console.log("MCP →", summarizeMcpRequest(name));
 
   const mcp = mcpClient ?? getMcpClient();
 
@@ -61,17 +40,7 @@ export async function callHA(name, args = {}, { mcpClient = null } = {}) {
         memory.entities
       );
 
-      console.log(
-        `Memory → ${memory.query} / ${memory.domain} / ${memory.entities.length} entities`
-      );
-
-      console.log(
-        "Memory entities →",
-        memory.entities.map(
-          (e) =>
-            `${e.entity_id} (${e.friendly_name}) [${e.state}]`
-        )
-      );
+      console.log("Memory → updated entity count", memory.entities.length);
     }
   }
 
@@ -106,16 +75,7 @@ export async function callHA(name, args = {}, { mcpClient = null } = {}) {
         verification,
       };
 
-      console.log("VERIFY →", {
-        entity_ids: entityIds,
-        expected: expectedState,
-        status: verification.status,
-        entities: verification.entities.map((item) => ({
-          entity_id: item.entityId,
-          observed: item.observedState,
-          status: item.status,
-        })),
-      });
+      console.log("VERIFY →", { status: verification.status, entityCount: verification.entities.length });
     }
 
     if (result?.structuredContent?.success === true) {

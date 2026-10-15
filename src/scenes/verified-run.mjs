@@ -16,6 +16,11 @@ export async function applyVerifiedLightScene(scene, callTool) {
    const brightness=entity.attributes?.brightness;
    if(entity.state==='on' && Number.isInteger(brightness) && brightness>=0 && brightness<=255)
      args.brightness=brightness;
+   const rgb=entity.attributes?.rgb_color;
+   const kelvin=entity.attributes?.color_temp_kelvin;
+   if(entity.state==='on' && Array.isArray(rgb) && rgb.length===3 &&
+      rgb.every(v=>Number.isInteger(v)&&v>=0&&v<=255)) args.rgb_color=[...rgb];
+   else if(entity.state==='on' && Number.isInteger(kelvin)&&kelvin>=1000&&kelvin<=10000) args.color_temp_kelvin=kelvin;
    let result;
    try { result=await callTool('ha_call_service',args); }
    catch {return {success:false,partial:confirmed>0,confirmed,outcome:'service_failed'};}
@@ -32,6 +37,9 @@ export async function applyVerifiedLightScene(scene, callTool) {
    const state=d?.entity_id===entity.entity_id?d:d?.state?.entity_id===entity.entity_id?d.state:d?.entity?.entity_id===entity.entity_id?d.entity:null;
    if(!state || state.state!==entity.state)
      return {success:false,partial:confirmed>0,confirmed,outcome:'state_unverified'};
+   if(entity.state==='on' && Number.isInteger(brightness) && brightness>=0 && brightness<=255 &&
+      (typeof state.attributes?.brightness!=='number' || Math.abs(state.attributes.brightness-brightness)>1))
+     return {success:false,partial:confirmed>0,confirmed,outcome:'brightness_unverified'};
    confirmed++;
  }
  return {success:true,confirmed,entities:scene.entities.length};

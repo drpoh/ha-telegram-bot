@@ -8,7 +8,7 @@ const ai = new GoogleGenAI({
   apiKey: config.gemini.apiKey,
 });
 
-export async function generateWithGemini(contents) {
+export async function generateWithGemini(contents, { allowTools = true } = {}) {
   let lastError;
 
   for (const model of GEMINI_MODELS) {
@@ -19,7 +19,7 @@ export async function generateWithGemini(contents) {
         model,
         contents,
         config: {
-          tools,
+          ...(allowTools ? { tools } : {}),
         },
       });
 

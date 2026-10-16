@@ -52,3 +52,9 @@ A large multi-parent archive merge can preserve all histories using `git commit-
 - Archive contains historical Git objects, not a production deploy branch. **Never merge the archive into main or any product branch.**
 - Snapshot file at `~/projects/rs-home-ai-git-audit/branches-before-cleanup.txt`; bundle at `~/projects/rs-home-ai-git-audit/branches-backup.bundle`.
 - Branch cleanup must still exclude active heads, open PR heads and protected branches, verify exact remote tip SHA and archive ancestry immediately before deletion. Preserve the named V2/V3 baseline and release-proposal heads by default until individually reviewed.
+
+## PR-safe pruning review
+
+Owner ran an archival ancestry review against the verified 65-tip GitHub archive. Some `CANDIDATE` branches are **open PR heads**, so ancestry alone is not deletion authorization. Preserve all open PR heads automatically, including docs/v2-copy-baseline-20261015 (#192), docs/v2-evolution-primary-20261014 (#191), feat/ha-registry-live-event-watch-20261014 (#188), feat/v3-readonly-room-lights-20261014 (#190), fix/v3-kitchen-read-scope-e902efeb-20261014 (#142), and older V3 test/follow-up PR heads.
+
+For deletion, additionally require an exact match of tip SHA to the 65-branch snapshot, ancestry in the archive commit, no checked-out worktree, and no open PR. Re-check against live GitHub just before push; use per-ref SHA leases to block races. Maintain V2/V3 baseline, release-proposal, feature/v3-home-agent, main/refactor, active DEV and archive.

@@ -1,0 +1,34 @@
+name: Pi Tor diagnostics static safety checks
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/pi-tor-readonly.yml'
+      - '.github/workflows/pi-tor-readonly-static.yml'
+      - 'scripts/ops/rs-home-ai-gh-readonly-diagnostic.sh'
+      - 'docs/PI-GITHUB-TOR-DIAGNOSTICS.md'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Syntax and safety invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n scripts/ops/rs-home-ai-gh-readonly-diagnostic.sh
+          grep -Fq 'workflow_dispatch:' .github/workflows/pi-tor-readonly.yml
+          grep -Fq 'StrictHostKeyChecking=yes' .github/workflows/pi-tor-readonly.yml
+          grep -Fq 'ProxyCommand=nc -X 5 -x 127.0.0.1:9050' .github/workflows/pi-tor-readonly.yml
+          grep -Fq 'restrict,command=' docs/PI-GITHUB-TOR-DIAGNOSTICS.md
+          grep -Fq 'SSH_ORIGINAL_COMMAND' scripts/ops/rs-home-ai-gh-readonly-diagnostic.sh
+          ! grep -Eq 'ha_call_service|sudo |git pull|systemctl restart' scripts/ops/rs-home-ai-gh-readonly-diagnostic.sh
+          ! grep -Eq 'schedule:|push:|pull_request:' .github/workflows/pi-tor-readonly.yml
+          echo 'PI_TOR_STATIC=PASS'

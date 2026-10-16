@@ -1,0 +1,141 @@
+name: Raspberry Pi read-only diagnostics via Tor
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: raspberry-pi-readonly-diagnostics
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Install Tor and SOCKS-compatible OpenBSD netcat
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends tor netcat-openbsd
+      - name: Start Tor (outbound only)
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/tor-data"
+          tor --SocksPort 127.0.0.1:9050 --DataDirectory "$RUNNER_TEMP/tor-data" \
+            --Log "notice stdout" > "$RUNNER_TEMP/tor.log" 2>&1 &
+          # An open SOCKS port does not mean Tor has built working circuits.
+          # Wait for Tor's own full-bootstrap notice without printing its log.
+          ready=false
+          for _ in $(seq 1 120); do
+            if grep -Fq 'Bootstrapped 100% (done)' "$RUNNER_TEMP/tor.log"; then
+              ready=true
+              break
+            fi
+            sleep 1
+          done
+          if [[ "$ready" != true ]]; then
+            echo 'TOR_BOOTSTRAP=timeout'
+            # Output only bounded classifications and counts. Never disclose raw
+            # Tor log lines, peer addresses, onion names or sensitive settings.
+            if [[ ! -f "$RUNNER_TEMP/tor.log" ]]; then
+              echo 'TOR_LOG=missing'
+            elif [[ ! -s "$RUNNER_TEMP/tor.log" ]]; then
+              echo 'TOR_LOG=empty'
+            else
+              echo 'TOR_LOG=nonempty'
+              count="$(grep -Ec 'Bootstrapped [0-9]+%' "$RUNNER_TEMP/tor.log" || true)"
+              echo "TOR_BOOTSTRAP_EVENTS=${count:-0}"
+              if grep -Eiq '[[]((warn)|(err))[]]' "$RUNNER_TEMP/tor.log"; then
+                echo 'TOR_HAS_WARN_OR_ERROR=yes'
+              else
+                echo 'TOR_HAS_WARN_OR_ERROR=no'
+              fi
+              if grep -Fqi 'DisableNetwork is set' "$RUNNER_TEMP/tor.log"; then
+                echo 'TOR_NETWORK_DISABLED=yes'
+              fi
+              if grep -Fqi 'No route to host' "$RUNNER_TEMP/tor.log"; then
+                echo 'TOR_WARNING_NO_ROUTE=yes'
+              fi
+              if grep -Fqi 'Cannot connect to guard' "$RUNNER_TEMP/tor.log"; then
+                echo 'TOR_WARNING_GUARD=yes'
+              fi
+            fi
+            # Print only predefined classifications, never full Tor logs
+            # (which could include network addresses or connection details).
+            last_stage="$(grep -E 'Bootstrapped [0-9]+%' "$RUNNER_TEMP/tor.log" | tail -n 1 |
+              sed -nE 's/.*Bootstrapped ([0-9]+)% \(([a-zA-Z0-9_]+)\).*/\1% \2/p' || true)"
+            echo "TOR_LAST_STAGE=${last_stage:-none}"
+            if pgrep -x tor > /dev/null; then
+              echo 'TOR_PROCESS=running'
+            else
+              echo 'TOR_PROCESS=not-running'
+            fi
+            if nc -z 127.0.0.1 9050 >/dev/null 2>&1; then
+              echo 'TOR_SOCKS=reachable'
+            else
+              echo 'TOR_SOCKS=unreachable'
+            fi
+            for category in 'Problem bootstrapping' 'Network is unreachable' 'Connection refused' 'TLS error'; do
+              if grep -Fiq "$category" "$RUNNER_TEMP/tor.log"; then
+                case "$category" in
+                  'Problem bootstrapping') echo 'TOR_WARNING_BOOTSTRAP=yes' ;;
+                  'Network is unreachable') echo 'TOR_WARNING_NETWORK=yes' ;;
+                  'Connection refused') echo 'TOR_WARNING_REFUSED=yes' ;;
+                  'TLS error') echo 'TOR_WARNING_TLS=yes' ;;
+                esac
+              fi
+            done
+            exit 1
+          fi
+          echo 'TOR_BOOTSTRAP=ready'
+      - name: Verify pinned host key and connect through Tor
+        env:
+          PI_DIAG_ONION: ${{ secrets.PI_DIAG_ONION }}
+          PI_DIAG_SSH_KEY: ${{ secrets.PI_DIAG_SSH_KEY }}
+          PI_DIAG_KNOWN_HOSTS: ${{ secrets.PI_DIAG_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          umask 077
+          [[ "$PI_DIAG_ONION" =~ ^[a-z2-7]{56}\.onion$ ]] || { echo 'Invalid onion host'; exit 1; }
+          [[ -n "$PI_DIAG_SSH_KEY" && -n "$PI_DIAG_KNOWN_HOSTS" ]] ||
+            { echo 'Required Secrets are not configured'; exit 1; }
+          key="$RUNNER_TEMP/pi-diag-key"
+          hosts="$RUNNER_TEMP/pi-diag-known-hosts"
+          # GitHub Secret contains one-line base64 of the dedicated OpenSSH private key.
+          # Reject malformed content without echoing secret material.
+          printf '%s' "$PI_DIAG_SSH_KEY" | base64 --decode > "$key" ||
+            { echo 'Diagnostic key base64 is invalid'; exit 1; }
+          printf '%s\n' "$PI_DIAG_KNOWN_HOSTS" > "$hosts"
+          ssh-keygen -y -f "$key" > /dev/null
+          ssh-keygen -F "$PI_DIAG_ONION" -f "$hosts" > /dev/null ||
+            { echo 'Pinned known_hosts does not contain onion host'; exit 1; }
+          # Transient onion-circuit failures may prevent SSH banner exchange.
+          # Retry at most twice; pinned host identity and forced command remain mandatory.
+          for attempt in 1 2; do
+            echo "SSH_DIAG_ATTEMPT=$attempt"
+            if timeout 100 ssh -T -i "$key" \
+              -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+              -o UserKnownHostsFile="$hosts" -o ConnectTimeout=80 \
+              -o ServerAliveInterval=15 -o ServerAliveCountMax=3 \
+              -o 'ProxyCommand=nc -X 5 -x 127.0.0.1:9050 %h %p' \
+              "drpoh@$PI_DIAG_ONION" diagnose-v1 | tee "$RUNNER_TEMP/pi-diagnostic-report.txt"; then
+              echo 'SSH_DIAG=success'
+              exit 0
+            fi
+            if [[ "$attempt" -eq 1 ]]; then
+              echo 'SSH_DIAG=retrying'
+              sleep 10
+            fi
+          done
+          echo 'SSH_DIAG=failed'
+          exit 1
+      - name: Store redacted diagnostic report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raspberry-pi-readonly-report
+          path: ${{ runner.temp }}/pi-diagnostic-report.txt
+          if-no-files-found: ignore
+          retention-days: 3

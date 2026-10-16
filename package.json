@@ -5,10 +5,10 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "node src/index.mjs",
-    "dev": "node --watch src/index.mjs",
-    "check": "find src test -name \"*.mjs\" -type f -exec node --check {} \\;",
-    "test": "npm run check && node --test test/*.test.mjs"
+    "start": "node bot.mjs",
+    "dev": "node --watch bot.mjs",
+    "check": "node --check bot.mjs",
+    "test": "npm run check"
   },
   "keywords": [
     "home-assistant",

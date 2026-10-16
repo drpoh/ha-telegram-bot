@@ -2,6 +2,12 @@
 
 AI-powered Telegram assistant for Home Assistant using MCP.
 
+## 🚧 v3 Home AI Agent
+
+Development of the next-generation Home AI Agent is in progress.
+
+**[View v3 development progress](https://github.com/drpoh/ha-telegram-bot/blob/feature/v3-home-agent/docs/PROGRESS.md)**
+
 ## Features
 
 - Telegram interface

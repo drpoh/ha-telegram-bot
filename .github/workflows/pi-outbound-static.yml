@@ -1,0 +1,36 @@
+name: Pi outbound HTTPS diagnostic static safety
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/ops/rs-home-ai-pi-report-github.mjs'
+      - 'docs/PI-GITHUB-OUTBOUND-HTTPS-REPORT.md'
+      - '.github/workflows/pi-outbound-static.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate manual read-only reporter
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/ops/rs-home-ai-pi-report-github.mjs
+          # Regression: V2/V3 labels must be accepted by the parser.
+          grep -Fq 'const match = /^([A-Z0-9_]+)=(.*)$/.exec(line);' scripts/ops/rs-home-ai-pi-report-github.mjs
+          grep -Fq 'RS_PI_GITHUB_REPORT_CONFIRM' scripts/ops/rs-home-ai-pi-report-github.mjs
+          grep -Fq 'PRIVATE_READONLY_REPORT' scripts/ops/rs-home-ai-pi-report-github.mjs
+          grep -Fq "HA_WRITES', /^none" scripts/ops/rs-home-ai-pi-report-github.mjs
+          grep -Fq "'drpoh/rs-home-ai-private-reports'" scripts/ops/rs-home-ai-pi-report-github.mjs
+          grep -Fq "repoInfo?.private !== true" scripts/ops/rs-home-ai-pi-report-github.mjs
+          grep -Fq "repoInfo?.visibility !== 'private'" scripts/ops/rs-home-ai-pi-report-github.mjs
+          grep -Fq 'api.github.com/repos/' scripts/ops/rs-home-ai-pi-report-github.mjs
+          ! grep -Eq 'ha_call_service|systemctl restart|git push|eval\(' scripts/ops/rs-home-ai-pi-report-github.mjs
+          echo 'PI_OUTBOUND_STATIC=PASS'

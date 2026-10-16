@@ -71,13 +71,7 @@ export async function callHA(name, args = {}, { mcpClient = null } = {}) {
         `Memory → ${memory.query} / ${memory.domain} / ${memory.entities.length} entities`
       );
 
-      console.log(
-        "Memory entities →",
-        memory.entities.map(
-          (e) =>
-            `${e.entity_id} (${e.friendly_name}) [${e.state}]`
-        )
-      );
+      // Avoid logging device names and states from private homes.
     }
   }
 

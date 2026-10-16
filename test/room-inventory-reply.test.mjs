@@ -20,3 +20,19 @@ test("fail-closed on area registry failures", async () => {
   const response=await replyToRoomInventory("Какие устройства на кухне?", async()=>({isError:true}));
   assert.match(response,/Не удалось подтвердить/);
 });
+
+test("Russian room inflections and safe fallthrough", () => {
+ assert.equal(extractRoomInventoryQuestion("Какие устройства есть в гостиной?"), "гостиной");
+ assert.equal(extractRoomInventoryQuestion("Какие устройства на кухне?"), "кухне");
+ assert.equal(extractRoomInventoryQuestion("Включи свет в гостиной"), null);
+});
+test("long inventory answer stays compact and reports truncation", async () => {
+ const response = await replyToRoomInventory("Какие устройства на кухне?", async (name) =>
+   name === "ha_list_floors_areas"
+     ? {structuredContent:{success:true,floors:[{areas:[{area_id:"k",name:"Кухня"}]}],unassigned_areas:[]}}
+     : {structuredContent:{success:true,offset:0,count:40,total_count:40,has_more:false,next_offset:null,devices:Array.from({length:40},(_,i)=>({area_id:"k",name:"Device "+i}))}}
+ );
+ assert.match(response, /Устройства помещения «Кухня» \(40\)/);
+ assert.match(response, /Показана только часть списка/);
+ assert.doesNotMatch(response, /Device 39/);
+});

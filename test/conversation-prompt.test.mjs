@@ -45,3 +45,9 @@ test("battery sensor query preserves device type and room", () => {
   assert.match(prompt, /не подставляй ответ от другого устройства/);
   assert.match(prompt, /несколько подходящих датчиков/);
 });
+
+test("second sensor reference is read-only", () => {
+ const p=buildSystemPrompt("А у второго?", "", "", "", "");
+ assert.match(p,/«А у второго\?»/);
+ assert.match(p,/Не трактуй фразу/);
+});

@@ -12,6 +12,7 @@ let requestNumber = 0;
 let pendingRequests = 0;
 let activeRequests = 0;
 let lastRequest = null;
+let lastWasRoomInventory = false;
 
 function enqueue(label, handler) {
   const id = ++requestNumber;
@@ -45,8 +46,17 @@ function enqueue(label, handler) {
 
 export function queueHomeAssistantRequest(userText, options = {}) {
   return enqueue(userText, async () => {
-    const inventory = await replyToRoomInventory(userText, callHA);
-    return inventory ?? askHomeAssistant(userText, options);
+    const followup = /^а\s+(?:на|в|во)\s+([а-яё\w -]+)\??$/iu.exec(String(userText).trim());
+    const inventoryText = lastWasRoomInventory && followup
+      ? `Какие устройства в ${followup[1]}?`
+      : userText;
+    lastWasRoomInventory = false;
+    const inventory = await replyToRoomInventory(inventoryText, callHA);
+    if (inventory !== null) {
+      lastWasRoomInventory = true;
+      return inventory;
+    }
+    return askHomeAssistant(userText, options);
   });
 }
 

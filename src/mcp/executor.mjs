@@ -31,7 +31,13 @@ function logMcpResult(name, result) {
     return;
   }
 
-  console.log(`MCP ← ${name}`, JSON.stringify(content, null, 2));
+  const data = content?.data ?? content;
+  console.log(`MCP ← ${name}`, {
+    success: content?.success ?? !result?.isError,
+    matches: data?.entity_total_matches ?? null,
+    returned: Array.isArray(data?.entities) ? data.entities.length : null,
+    has_more: data?.entity_has_more ?? null,
+  });
 }
 
 export async function callHA(name, args = {}, { mcpClient = null } = {}) {

@@ -10,6 +10,7 @@ let requestQueue = Promise.resolve();
 let requestNumber = 0;
 let pendingRequests = 0;
 let activeRequests = 0;
+let lastRequest = null;
 
 function enqueue(label, handler) {
   const id = ++requestNumber;
@@ -20,8 +21,14 @@ function enqueue(label, handler) {
     console.log(`Queue #${id} START`);
     pendingRequests--;
     activeRequests++;
+    const started = Date.now();
     try {
-      return await handler();
+      const answer = await handler();
+      lastRequest = { status: 'ok', at: Date.now(), durationMs: Date.now()-started };
+      return answer;
+    } catch (error) {
+      lastRequest = { status: 'error', at: Date.now(), durationMs: Date.now()-started };
+      throw error;
     } finally {
       activeRequests--;
       console.log(`Queue #${id} DONE`);
@@ -97,5 +104,6 @@ export function getQueueStatus() {
     active: activeRequests,
     pending: pendingRequests,
     total: requestNumber,
+    lastRequest: lastRequest ? { ...lastRequest } : null,
   };
 }

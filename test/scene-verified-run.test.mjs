@@ -4,7 +4,7 @@ import {applyVerifiedLightScene as apply} from '../src/scenes/verified-run.mjs';
 const s={entities:[{entity_id:'light.a',state:'on',attributes:{brightness:90}}]};
 test('applies light with verified readback',async()=>{
  const calls=[];
- const r=await apply(s,async(name,args)=>{calls.push([name,args]);return name==='ha_get_state'?{structuredContent:{data:{entity_id:'light.a',state:'on'}}}:{structuredContent:{success:true}}});
+ const r=await apply(s,async(name,args)=>{calls.push([name,args]);return name==='ha_get_state'?{structuredContent:{data:{entity_id:'light.a',state:'on',attributes:{brightness:90}}}}:{structuredContent:{success:true}}});
  assert.deepEqual(r,{success:true,confirmed:1,entities:1});
  assert.equal(calls[0][1].brightness,90);
  assert.equal(calls[1][0],'ha_get_state');

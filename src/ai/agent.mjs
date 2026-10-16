@@ -1,5 +1,6 @@
 import { generateAI } from "./router.mjs";
 import { isPureSmallTalk } from "./conversation-intent.mjs";
+import { inspectAreaDevices } from "../home/area-inspection.mjs";
 import { buildSystemPrompt } from "./prompt.mjs";
 import { getKnownDeviceContext } from "../home/entity-resolver.mjs";
 
@@ -173,7 +174,9 @@ export async function askHomeAssistant(
       let activeDecisionAuditId = null;
 
       try {
-        if (isAiHistoryTool(call.name)) {
+        if (call.name === "ai_area_devices") {
+          result = await inspectAreaDevices(call.args?.area, callHA);
+        } else if (isAiHistoryTool(call.name)) {
           result = await callAiHistoryTool(call.name, call.args || {});
         } else if (isAiSceneTool(call.name)) {
           result = await callAiSceneTool(

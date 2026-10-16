@@ -1,4 +1,5 @@
 import { generateAI } from "./router.mjs";
+import { isPureSmallTalk } from "./conversation-intent.mjs";
 import { buildSystemPrompt } from "./prompt.mjs";
 import { getKnownDeviceContext } from "../home/entity-resolver.mjs";
 
@@ -111,6 +112,7 @@ export async function askHomeAssistant(
   } = {}
 ) {
   startLearningSession(userText);
+  const allowTools = !isPureSmallTalk(userText);
   const deviceContext = getDeviceMemoryText();
   const controlledContext = getLastControlledText();
   const knownDeviceContext = getKnownDeviceContext(userText);
@@ -136,7 +138,7 @@ export async function askHomeAssistant(
 
   for (let step = 0; step < MAX_AGENT_STEPS; step++) {
     const { response, model, provider } =
-      await generateAI(contents);
+      await generateAI(contents, { allowTools });
 
     console.log(`${provider} OK → ${model}`);
 

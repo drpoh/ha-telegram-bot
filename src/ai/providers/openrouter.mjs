@@ -156,7 +156,7 @@ function createGeminiCompatibleResponse(message) {
   };
 }
 
-export async function generateWithOpenRouter(contents) {
+export async function generateWithOpenRouter(contents, { allowTools = true } = {}) {
   if (!config.openrouter.apiKey) {
     throw new Error("OPENROUTER_API_KEY отсутствует");
   }
@@ -176,8 +176,8 @@ export async function generateWithOpenRouter(contents) {
     body: JSON.stringify({
       model: MODEL,
       messages: contentsToMessages(contents),
-      tools: convertTools(),
-      tool_choice: "auto",
+      ...(allowTools ? { tools: convertTools() } : {}),
+      ...(allowTools ? { tool_choice: "auto" } : {}),
       temperature: 0,
     }),
   });

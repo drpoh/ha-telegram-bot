@@ -310,7 +310,7 @@ bot.command("status", async (ctx) => {
 
       await ctx.reply(
         /OPENROUTER_API_KEY отсутствует|high demand|503|UNAVAILABLE|No AI provider available|All Gemini models are unavailable/i.test(String(error?.message || ""))
-          ? "⏳ AI-сервис сейчас недоступен. Ничего не выполнено. Повторите запрос позже."
+          ? "⏳ AI-сервис временно недоступен. Не могу подтвердить результат запроса. Если вы просили изменить устройство, проверьте его состояние и повторите позже."
           : "❌ Не удалось обработать запрос. Проверьте журнал DEV-бота."
       );
     }

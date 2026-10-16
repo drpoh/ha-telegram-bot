@@ -58,3 +58,10 @@ test("incomplete HA search does not establish device absence", () => {
  assert.match(p,/не нашёл в результатах поиска/);
  assert.match(p,/полная инвентаризация/);
 });
+
+test("inventory retains unavailable devices and disclaims incomplete search", () => {
+  const prompt = buildSystemPrompt("Какие датчики есть в гостиной?", "", "", "", "");
+  assert.match(prompt, /При инвентаризации обязательно учитывай их/);
+  assert.match(prompt, /не нашёл по этому запросу/);
+  assert.match(prompt, /полного реестра/);
+});

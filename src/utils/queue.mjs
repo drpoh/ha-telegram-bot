@@ -67,6 +67,7 @@ export function queueConfirmedAction(
   { execute = callHA, authorize = null, authorizationTimeoutMs = 3000 } = {}
 ) {
   return enqueue("confirmed pending action", async () => {
+    inventoryContext.delete(`${userId}:${chatId}`);
     const pending = peekPendingConfirmation({ userId, chatId });
     if (!pending) return { status: "missing" };
 
@@ -112,6 +113,7 @@ export function queueConfirmedAction(
 }
 
 export function cancelQueuedConfirmation({ userId, chatId }) {
+  inventoryContext.delete(`${userId}:${chatId}`);
   return cancelPendingConfirmation({ userId, chatId });
 }
 

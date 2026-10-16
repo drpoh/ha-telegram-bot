@@ -1,6 +1,7 @@
 import { askHomeAssistant } from "../ai/agent.mjs";
 import { callHA } from "../mcp/executor.mjs";
 import { replyToRoomInventory } from "../home/room-inventory-reply.mjs";
+import { resolveInventoryFollowup } from "../home/inventory-followup.mjs";
 import {
   cancelPendingConfirmation,
   consumePendingConfirmation,
@@ -12,7 +13,7 @@ let requestNumber = 0;
 let pendingRequests = 0;
 let activeRequests = 0;
 let lastRequest = null;
-let lastWasRoomInventory = false;
+const inventoryContext = new Map();
 
 function enqueue(label, handler) {
   const id = ++requestNumber;
@@ -46,14 +47,15 @@ function enqueue(label, handler) {
 
 export function queueHomeAssistantRequest(userText, options = {}) {
   return enqueue(userText, async () => {
-    const followup = /^а\s+(?:на|в|во)\s+([а-яё\w -]+)\??$/iu.exec(String(userText).trim());
-    const inventoryText = lastWasRoomInventory && followup
-      ? `Какие устройства в ${followup[1]}?`
-      : userText;
-    lastWasRoomInventory = false;
+    const actor = options.actor;
+    const contextKey = actor?.userId != null && actor?.chatId != null
+      ? `${actor.userId}:${actor.chatId}` : null;
+    const previous = contextKey ? inventoryContext.get(contextKey) === true : false;
+    if (contextKey) inventoryContext.delete(contextKey);
+    const inventoryText = resolveInventoryFollowup(userText, previous) ?? userText;
     const inventory = await replyToRoomInventory(inventoryText, callHA);
     if (inventory !== null) {
-      lastWasRoomInventory = true;
+      if (contextKey) inventoryContext.set(contextKey, true);
       return inventory;
     }
     return askHomeAssistant(userText, options);

@@ -1,5 +1,6 @@
 import { generateAI } from "./router.mjs";
 import { isPureSmallTalk } from "./conversation-intent.mjs";
+import { buildQuickConversationPrompt } from "./quick-conversation-prompt.mjs";
 import { inspectAreaDevices } from "../home/area-inspection.mjs";
 import { buildSystemPrompt } from "./prompt.mjs";
 import { getKnownDeviceContext } from "../home/entity-resolver.mjs";
@@ -114,18 +115,19 @@ export async function askHomeAssistant(
 ) {
   startLearningSession(userText);
   const allowTools = !isPureSmallTalk(userText);
+  const quickConversation = !allowTools;
   const deviceContext = getDeviceMemoryText();
   const controlledContext = getLastControlledText();
   const knownDeviceContext = getKnownDeviceContext(userText);
   const requestDevice = resolveKnownDevice(userText);
   const homeContext = await buildCurrentStateContext(userText);
   const contents = [
-    ...getConversationHistory().slice(-12),
+    ...getConversationHistory().slice(quickConversation ? -4 : -12),
     {
       role: "user",
       parts: [
         {
-          text: buildSystemPrompt(
+          text: quickConversation ? buildQuickConversationPrompt(userText) : buildSystemPrompt(
             userText,
             deviceContext,
             controlledContext,

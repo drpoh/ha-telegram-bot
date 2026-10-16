@@ -1,4 +1,5 @@
 import { Telegraf } from "telegraf";
+import { createClearAuthorization } from "./clear-authorization.mjs";
 
 import { config } from "../config/env.mjs";
 import {
@@ -28,8 +29,7 @@ import {
 } from "../learning/corrections.mjs";
 
 let bot = null;
-const clearRequests = new Map();
-const CLEAR_WINDOW_MS = 60000;
+const clearAuthorization = createClearAuthorization();
 
 function isAllowed(ctx) {
   return ctx.from?.id === config.telegram.allowedUserId;
@@ -218,21 +218,19 @@ bot.command("status", async (ctx) => {
 
   bot.command("clear", async (ctx) => {
     if (!isAllowed(ctx)) return;
-    clearRequests.set(ctx.from.id, Date.now() + CLEAR_WINDOW_MS);
+    clearAuthorization.request(ctx.from.id);
     await ctx.reply("⚠️ Очистить память разговора и устройств? Для подтверждения отправьте /clear_confirm в течение 60 секунд. Для отмены — /clear_cancel. Сцены не удаляются.");
   });
 
   bot.command("clear_cancel", async (ctx) => {
     if (!isAllowed(ctx)) return;
-    clearRequests.delete(ctx.from.id);
+    clearAuthorization.cancel(ctx.from.id);
     await ctx.reply("Очистка памяти отменена.");
   });
 
   bot.command("clear_confirm", async (ctx) => {
     if (!isAllowed(ctx)) return;
-    const expiry = clearRequests.get(ctx.from.id);
-    clearRequests.delete(ctx.from.id);
-    if (!expiry || Date.now() > expiry) {
+    if (!clearAuthorization.consume(ctx.from.id)) {
       await ctx.reply("Подтверждение истекло или отсутствует. Сначала отправьте /clear.");
       return;
     }

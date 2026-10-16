@@ -47,6 +47,15 @@ export const tools = [
         },
       },
       {
+        name: "ai_area_devices",
+        description: "Только чтение: получить устройства конкретной комнаты из реестра HA с проверкой полноты. Не является полным списком сущностей.",
+        parameters: {
+          type: "OBJECT",
+          properties: { area: { type: "STRING", description: "Точное название помещения Home Assistant." } },
+          required: ["area"],
+        },
+      },
+      {
         name: "ha_get_state",
         description:
           "Получить текущее состояние конкретной сущности Home Assistant.",

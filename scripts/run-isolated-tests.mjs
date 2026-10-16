@@ -4,9 +4,13 @@ import {tmpdir} from "node:os";
 import {execFileSync,spawn} from "node:child_process";
 
 const allFiles=readdirSync("test").filter(f=>f.endsWith(".test.mjs")).sort();
-const selected=process.argv.slice(2).map(x=>x.replace(/^test\//,""));
-const files=selected.length ? allFiles.filter(f=>selected.includes(f)) : allFiles;
-if(selected.length && files.length!==new Set(selected).size) throw Error("Unknown or duplicate selected test file");
+const args=process.argv.slice(2);
+const v2Only=args.includes("--v2");
+const selected=args.filter(x=>x!=="--v2").map(x=>x.replace(/^test\//,""));
+const eligible=v2Only ? allFiles.filter(f=>!f.startsWith("v3-")) : allFiles;
+const files=selected.length ? eligible.filter(f=>selected.includes(f)) : eligible;
+if(selected.length && files.length!==new Set(selected).size) throw Error("Unknown, excluded or duplicate selected test file");
+console.log(`Test profile: ${v2Only ? "V2.1 focused" : "full"}; selected ${files.length} / ${allFiles.length} files`);
 const schema=readFileSync("test/fixtures/bot-schema.sql","utf8");
 if(!schema.includes("CREATE TABLE")) throw Error("SQLite schema unavailable");
 const root=mkdtempSync(join(tmpdir(),"ha-bot-test-"));

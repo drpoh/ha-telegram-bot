@@ -119,7 +119,7 @@ export async function askHomeAssistant(
   const requestDevice = resolveKnownDevice(userText);
   const homeContext = await buildCurrentStateContext(userText);
   const contents = [
-    ...getConversationHistory(),
+    ...getConversationHistory().slice(-12),
     {
       role: "user",
       parts: [

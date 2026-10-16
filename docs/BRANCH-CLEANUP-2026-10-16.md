@@ -44,3 +44,11 @@ A large multi-parent archive merge can preserve all histories using `git commit-
 - `~/projects/rs-home-ai-git-audit/branches-before-cleanup.txt`: 65 live GitHub head SHA/name pairs.
 - `~/projects/rs-home-ai-git-audit/branches-backup.bundle`: verified complete Git history; 68 included tracking refs because 3 deleted branches remained in local refs. Git bundle integrity verified successfully. Local backup alone is not an off-device preservation guarantee.
 - Next create an immutable archive commit on an isolated archive branch whose parents are **all 65 snapshotted GitHub branch tip commits**; retain the mapping in the archive commit message and local manifest. Archive commit's tree may equal main while its parent pointers preserve histories; never merge this archival ref into main or production. Verify remote archive branch and ancestry before deleting anything else. Do not use origin remote, which points to production checkout.
+
+## Remote historical archive verified by owner
+
+- `archive/branch-history-20261016` was successfully created on GitHub via authenticated SSH.
+- Owner reported `ARCHIVE=VERIFIED` and `PRESERVED_BRANCH_TIPS=65`; validation checked the remote archive SHA and ancestry of all 65 tips from refreshed `branches-before-cleanup.txt`.
+- Archive contains historical Git objects, not a production deploy branch. **Never merge the archive into main or any product branch.**
+- Snapshot file at `~/projects/rs-home-ai-git-audit/branches-before-cleanup.txt`; bundle at `~/projects/rs-home-ai-git-audit/branches-backup.bundle`.
+- Branch cleanup must still exclude active heads, open PR heads and protected branches, verify exact remote tip SHA and archive ancestry immediately before deletion. Preserve the named V2/V3 baseline and release-proposal heads by default until individually reviewed.

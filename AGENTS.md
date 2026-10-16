@@ -3,6 +3,14 @@
 ## Mission
 Build a reliable conversational Home Assistant agent that can remember useful context, analyze Home Assistant history, and autonomously perform explicitly permitted non-critical actions.
 
+## Active deployment and documentation (2026-10-16)
+- Current development track: V2.1 conversational Telegram assistant. V3 experiments and historical Gate B/E notes are not current release blockers for V2.1.
+- Production V2 at `/home/drpoh/ha-telegram-bot`: DO NOT edit, restart, copy secrets/DB, or use as Git update remote. Isolated DEV is `/home/drpoh/projects/rs-home-ai-scene-test`, service `rs-home-ai-rc3.service`.
+- DEV uses remote `github` for fetch; `origin` points to the production checkout and MUST NOT be used for updates. Explicit SSH URL is for vetted GitHub operations only.
+- Primary reading order: this file → `docs/CHAT-HANDOFF.md` → current section of `docs/TODO.md` → `docs/WORKLOG.md`. Historical V3 sections remain reference only.
+- Branch cleanup checkpoint: GitHub branches reduced to 22, with 65 original tips preserved in `archive/branch-history-20261016`; see `docs/BRANCH-CLEANUP-2026-10-16.md`.
+- Batch changes, run one full isolated Node20 regression on DEV, then restart DEV only if all tests pass. Do not claim live validation from GitHub commits alone.
+
 ## Cross-chat continuation
 At the beginning of every new chat, first read `docs/CHAT-HANDOFF.md`, then verify the live Pi Git status, current TODO/WORKLOG and GitHub PRs. Do not treat old chat memories or historical counters as current evidence. Update the handoff after stable milestones.
 

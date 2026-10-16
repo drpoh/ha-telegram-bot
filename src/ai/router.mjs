@@ -18,14 +18,14 @@ let lastAI = {
   timestamp: null,
 };
 
-export async function generateAI(contents) {
+export async function generateAI(contents, options = {}) {
   let lastError;
 
   for (const provider of providers) {
     try {
       console.log(`AI Router → ${provider.name}`);
 
-      const result = await provider.generate(contents);
+      const result = await provider.generate(contents, options);
 
       lastAI = {
         provider: result.provider || provider.name,

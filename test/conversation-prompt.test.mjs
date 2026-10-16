@@ -51,3 +51,10 @@ test("second sensor reference is read-only", () => {
  assert.match(p,/«А у второго\?»/);
  assert.match(p,/Не трактуй фразу/);
 });
+
+test("incomplete HA search does not establish device absence", () => {
+ const p=buildSystemPrompt("А в гостиной есть?", "", "", "", "");
+ assert.match(p,/entity_has_more=true/);
+ assert.match(p,/не нашёл в результатах поиска/);
+ assert.match(p,/полная инвентаризация/);
+});

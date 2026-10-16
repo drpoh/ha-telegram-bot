@@ -316,7 +316,13 @@ bot.command("status", async (ctx) => {
     }
   });
 
-  bot.launch();
+  bot.catch((error, ctx) => {
+    console.error("Telegram update failed:", error?.name, error?.message);
+    if (ctx?.reply) void Promise.resolve(ctx.reply("Запрос завершился с ошибкой. Повторите позже.")).catch(() => {});
+  });
+  void Promise.resolve(bot.launch()).catch(error => {
+    console.error("Telegram polling failed:", error?.name, error?.message);
+  });
 
   console.log("Telegram bot started");
 }

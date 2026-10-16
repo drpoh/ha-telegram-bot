@@ -24,6 +24,7 @@ export function getHealthStatus() {
     uptime: formatUptime(process.uptime()),
     pid: process.pid,
     node: process.version,
+    memoryMb: Math.round(process.memoryUsage().rss / 1048576),
     behavioral: {
       corrections: getBehaviorAuditSnapshot(),
     },

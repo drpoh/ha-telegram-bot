@@ -1,3 +1,13 @@
+## CURRENT PRIORITY — 2026-10-16 (V2.1 DEV, overrides historical V3 notes below)
+
+- Current isolated DEV on Pi: /home/drpoh/projects/rs-home-ai-scene-test, systemd --user rs-home-ai-rc3.service; verified commit 2fa0f11, 135 isolated files / 541 assertions, no failures; service active and zero restarts at test.
+- Telegram DEV demonstrated conversational follow-ups across corridor battery sensors (83% and 100%), kitchen (97%), and living-room question. Claims of no devices in an area still need exhaustive registry validation.
+- Production V2: /home/drpoh/ha-telegram-bot and its service/DB must NEVER be edited, restarted or used for Git fetch/merge. DEV remote name github, NOT origin (origin points to production checkout).
+- Source branch: feat/v2-safe-ai-scene-authorization-20261015. Latest GitHub changes after Pi verified state require a new combined test before release.
+- Safety: preserve baseline/v2-* and main; do not delete active V3 branch or branches with live worktrees/unmerged commits/PRs. Branch deletion requires explicit merge/unique-commit/worktree inventory. Read docs/BRANCH-CLEANUP-2026-10-16.md.
+- Current conversation issues: exact area membership and absent-device claims; no hallucinated complete inventory. Avoid unnecessary intermediate Raspberry Pi tests; batch changes.
+- Prior V3 guidance below is historical and must not supersede active V2.1 development priorities.
+
 # RS Home AI V3 — new-chat handoff
 
 This is the FIRST document to read when resuming this project in another chat.

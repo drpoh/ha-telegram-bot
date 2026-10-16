@@ -38,3 +38,10 @@ test("causal explanations distinguish observed facts from speculation", () => {
  const p = buildSystemPrompt("Почему в сауне холодно?", "", "", "", "");
  assert.match(p, /отделяй наблюдаемые факты от возможных причин/);
 });
+
+test("battery sensor query preserves device type and room", () => {
+  const prompt = buildSystemPrompt("Какой заряд батареи у датчика движения в коридоре?", "", "", "", "");
+  assert.match(prompt, /«датчик движения коридор»/);
+  assert.match(prompt, /не подставляй ответ от другого устройства/);
+  assert.match(prompt, /несколько подходящих датчиков/);
+});

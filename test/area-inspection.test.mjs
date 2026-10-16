@@ -24,3 +24,15 @@ test("incomplete pagination never reports complete",async()=>{
  const result=await inspectAreaDevices("Kitchen",async(name)=>name==="ha_list_floors_areas"?floors:{isError:true});
  assert.equal(result.status,"incomplete");
 });
+
+test("inflected Russian room names resolve exact verified HA area", async () => {
+ const calls=[];
+ const inventory=await inspectAreaDevices("кухне",async(name,args)=>{
+  calls.push(name);
+  return name==="ha_list_floors_areas"
+   ? {structuredContent:{success:true,floors:[{areas:[{area_id:"k",name:"Кухня"}]}],unassigned_areas:[]}}
+   : {structuredContent:{success:true,offset:0,count:0,total_count:0,has_more:false,next_offset:null,devices:[]}};
+ });
+ assert.equal(inventory.status,"complete_device_registry");
+ assert.deepEqual(calls,["ha_list_floors_areas","ha_get_device"]);
+});

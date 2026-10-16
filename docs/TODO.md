@@ -1,10 +1,8 @@
 ## Active V2.1 DEV priorities — 2026-10-16
 - [x] Conversational follow-ups; Pi regression 135 files / 541 assertions at 2fa0f11.
-- [x] Branch inventory started; see docs/BRANCH-CLEANUP-2026-10-16.md.
 - [ ] Validate complete area-based device discovery.
-- [ ] Test latest GitHub changes in one DEV batch; preserve production V2.
 - [x] Archive 65 GitHub tips and prune 47 old branches; 22 remain (2026-10-16).
-- [ ] Run one combined DEV regression for GitHub changes after 2fa0f11.
+- [ ] Run one combined DEV regression for GitHub changes after 2fa0f11 (production V2 unchanged).
 - [ ] Consolidate PR heads deliberately; never auto-close active PRs.
 
 **Pi structure/current deployment warning:** see [PI-REPOSITORY-LAYOUT-PLAN.md](PI-REPOSITORY-LAYOUT-PLAN.md). Both HA checkouts are live service sources; NEVER assume `/home/drpoh/rs-home-ai-v3` is a spare clone. Plan migration before any relocation.

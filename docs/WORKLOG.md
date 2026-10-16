@@ -1,3 +1,10 @@
+## 2026-10-16 — Git branch cleanup and V2.1 documentation
+- 65 original branch tips preserved in verified GitHub archive/branch-history-20261016; local git bundle validated.
+- 3 + 44 old branches deleted with PR-head protection and expected-SHA leases. GitHub independently confirmed 22 branches remain.
+- Updated AGENTS.md and current V2.1 docs; historical V3 gate logs retained as historical evidence rather than rewriting history.
+- Last runtime-verified DEV SHA remains 2fa0f11, with 135/135 test files and 541 assertions. Newer code/docs require one combined DEV regression.
+- Production V2 unchanged.
+
 ## 2026-10-16 — V2.1 conversation and branch inventory
 - DEV verified: 135 test files / 541 assertions, service active; commit 2fa0f11.
 - Multi-turn conversation passed corridor and kitchen battery tests; living-room device absence was not exhaustively supported.

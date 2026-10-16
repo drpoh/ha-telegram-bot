@@ -18,3 +18,15 @@ GitHub search returned **at least 68 branches** with pagination cursor; not a fu
 - Inventory: started via GitHub search. **No GitHub remote branches deleted** during this review.
 - GitHub connector exposes branch search but no delete-ref action. Deleting remotely requires another authorized supported interface; never imply that searching branches removed them.
 - Next: review candidates and dependencies before proposing safe deletions; do not request owner to paste a broad `git push --delete` command prematurely.
+
+## Verified first cleanup — 2026-10-16
+
+Pi confirmed three branch tips are ancestors of `feature/v3-home-agent` and are not checked out in worktrees; GitHub open PR query returned none. User successfully removed via authenticated SSH push (HTTPS password authentication failed):
+
+- `docs/v3-owner-telegram-live-smoke-pass-20261013`
+- `feature/v3-newlight-command-routing-rebased-20261013`
+- `release-proposal/v3-kitchen-base-9dd5964`
+
+Reported remote branches: 68 before → expected 65 after these deletions. Verify by `git ls-remote --heads github | wc -l` before further cleanup.
+
+**Git remote caution:** DEV `github` is HTTPS (suitable for fetch), `origin` points to `/home/drpoh/ha-telegram-bot` (production checkout). For authenticated cleanup use an explicit `git@github.com:drpoh/ha-telegram-bot.git` target; never push/fetch/merge through `origin` to perform DEV updates. Preserve protected and unique-history branches.

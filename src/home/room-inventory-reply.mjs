@@ -20,7 +20,7 @@ export async function replyToRoomInventory(text, callTool) {
   if (result.status === "complete_device_registry") {
     const devices = result.devices.map(device => device.name);
     if (!devices.length) return `В реестре устройств помещения «${result.area}» записей нет. Сущности без устройства здесь не учитываются.`;
-    const displayed = devices.slice(0, 30);
+    const displayed = devices.slice(0, 30).map(name => String(name).slice(0, 90));
     return `Устройства помещения «${result.area}» (${result.count}):\n${displayed.map((name, i) => `${i+1}. ${name}`).join("\n")}${devices.length > 30 ? "\n… Показана только часть списка." : ""}\n\nЭто реестр устройств, не полный список сущностей Home Assistant.`;
   }
   if (result.status === "area_not_found") return `Не нашёл помещение «${area}» в реестре Home Assistant. Проверьте его название.`;

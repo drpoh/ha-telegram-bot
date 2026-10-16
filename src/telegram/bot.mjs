@@ -28,6 +28,8 @@ import {
 } from "../learning/corrections.mjs";
 
 let bot = null;
+const clearRequests = new Map();
+const CLEAR_WINDOW_MS = 60000;
 
 function isAllowed(ctx) {
   return ctx.from?.id === config.telegram.allowedUserId;
@@ -43,7 +45,7 @@ export function startTelegram() {
       "🏠 Home Assistant AI готов.\n\n" +
       "/status — состояние бота\n" +
       "/model — AI-конфигурация\n" +
-      "/clear — очистить память"
+      "/help — список команд"
     );
   });
 
@@ -61,7 +63,9 @@ bot.command("status", async (ctx) => {
 
   await ctx.reply(
     "🏠 RS Home AI — состояние\n\n" +
+    `Версия RS Home AI: ${process.env.RS_HOME_AI_VERSION || "V2.1.0-rc3 DEV"}\n` +
     `Версия Node: ${status.node}\n` +
+    `Резервный AI: ${config.openrouter.apiKey ? "настроен (доступность не проверялась)" : "не настроен"}\n` +
     `HA-MCP: ${status.mcp ? "🟢 подключён" : "🔴 отключён"}\n` +
     `AI: ${aiDescription}\n` +
     `Последний успешный AI-вызов: ${lastAi}\n` +
@@ -85,7 +89,9 @@ bot.command("status", async (ctx) => {
       "/decisions — аудит решений\n" +
       "/behavior — коррекции поведения\n" +
       "/behavior_reset light.entity_id — сброс коррекции\n" +
-      "/clear — очистить память разговора\n" +
+      "/clear — запросить очистку памяти\n" +
+      "/clear_confirm — подтвердить очистку (60 секунд)\n" +
+      "/clear_cancel — отменить очистку\n" +
       "/help — справка\n\n" +
       "Примеры:\n" +
       "• Сколько градусов в сауне?\n" +
@@ -212,17 +218,30 @@ bot.command("status", async (ctx) => {
 
   bot.command("clear", async (ctx) => {
     if (!isAllowed(ctx)) return;
+    clearRequests.set(ctx.from.id, Date.now() + CLEAR_WINDOW_MS);
+    await ctx.reply("⚠️ Очистить память разговора и устройств? Для подтверждения отправьте /clear_confirm в течение 60 секунд. Для отмены — /clear_cancel. Сцены не удаляются.");
+  });
 
+  bot.command("clear_cancel", async (ctx) => {
+    if (!isAllowed(ctx)) return;
+    clearRequests.delete(ctx.from.id);
+    await ctx.reply("Очистка памяти отменена.");
+  });
+
+  bot.command("clear_confirm", async (ctx) => {
+    if (!isAllowed(ctx)) return;
+    const expiry = clearRequests.get(ctx.from.id);
+    clearRequests.delete(ctx.from.id);
+    if (!expiry || Date.now() > expiry) {
+      await ctx.reply("Подтверждение истекло или отсутствует. Сначала отправьте /clear.");
+      return;
+    }
     clearConversationHistory();
     clearDeviceMemory();
     clearControlledMemory();
     clearPendingConfirmations();
-
-    console.log("Memory → cleared");
-
-    await ctx.reply(
-      "🧹 Память разговора и устройств очищена."
-    );
+    console.log("Memory → cleared by explicit confirmation");
+    await ctx.reply("🧹 Память разговора и устройств очищена. AI-сцены сохранены.");
   });
 
   bot.on("text", async (ctx) => {

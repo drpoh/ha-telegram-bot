@@ -36,6 +36,24 @@ export function initDatabase(dbPath = DEFAULT_DB_PATH) {
     );
     CREATE INDEX IF NOT EXISTS idx_conversation_created ON conversation(created_at);
 
+    CREATE TABLE IF NOT EXISTS learned_devices (
+      alias TEXT PRIMARY KEY,
+      entity_id TEXT NOT NULL,
+      domain TEXT NOT NULL,
+      friendly_name TEXT,
+      use_count INTEGER NOT NULL DEFAULT 1,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_learned_entity ON learned_devices(entity_id);
+
+    CREATE TABLE IF NOT EXISTS devices (
+      alias TEXT PRIMARY KEY,
+      entity_id TEXT NOT NULL,
+      domain TEXT,
+      friendly_name TEXT,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
     CREATE TABLE IF NOT EXISTS memory (
       key TEXT PRIMARY KEY,
       value TEXT NOT NULL,

@@ -1,4 +1,5 @@
 import { getMcpClient } from "./client.mjs";
+import { assessSearchCoverage } from "../home/search-coverage.mjs";
 import { updateDeviceMemory, getDeviceMemory } from "../memory/devices.mjs";
 import { rememberLearningSearch, rememberLearningControl } from "../learning/session.mjs";
 import { rememberOperationalAction } from "../memory/operational.mjs";
@@ -50,6 +51,10 @@ export async function callHA(name, args = {}, { mcpClient = null } = {}) {
     arguments: args,
   });
   logMcpResult(name, result);
+  if (name === "ha_search") {
+    const coverage = assessSearchCoverage(result?.structuredContent);
+    console.log("HA search coverage:", coverage.reason);
+  }
 
 
   if (name === "ha_search") {

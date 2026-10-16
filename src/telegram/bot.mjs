@@ -233,7 +233,9 @@ bot.command("status", async (ctx) => {
       console.error("Telegram error:", error);
 
       await ctx.reply(
-        "❌ Ошибка при обращении к Home Assistant."
+        /OPENROUTER_API_KEY отсутствует|high demand|503|UNAVAILABLE|No AI provider available|All Gemini models are unavailable/i.test(String(error?.message || ""))
+          ? "⏳ AI-сервис сейчас недоступен. Ничего не выполнено. Повторите запрос позже."
+          : "❌ Не удалось обработать запрос. Проверьте журнал DEV-бота."
       );
     }
   });

@@ -19,3 +19,22 @@ test("ambiguous device write must clarify", () => {
   assert.match(prompt, /спроси одним коротким вопросом/);
   assert.match(prompt, /существующие проверки/);
 });
+
+test("a follow-up about now requires fresh read, not cached temperature", () => {
+ const p = buildSystemPrompt("А сейчас?", "", "", "", "");
+ assert.match(p, /повторный запрос текущей температуры/);
+ assert.match(p, /не пересказ прежнего показания/);
+});
+test("historical question requires evidence, and unavailable history is acknowledged", () => {
+ const p = buildSystemPrompt("А вчера?", "", "", "", "");
+ assert.match(p, /инструмент истории/);
+ assert.match(p, /данных нет/);
+});
+test("questions about hypothetical actions cannot trigger execution", () => {
+ const p = buildSystemPrompt("Можешь выключить свет?", "", "", "", "");
+ assert.match(p, /не выполняй действие/);
+});
+test("causal explanations distinguish observed facts from speculation", () => {
+ const p = buildSystemPrompt("Почему в сауне холодно?", "", "", "", "");
+ assert.match(p, /отделяй наблюдаемые факты от возможных причин/);
+});

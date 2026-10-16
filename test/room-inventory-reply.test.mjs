@@ -36,3 +36,13 @@ test("long inventory answer stays compact and reports truncation", async () => {
  assert.match(response, /Показана только часть списка/);
  assert.doesNotMatch(response, /Device 39/);
 });
+
+test("same-name devices are not silently merged", async () => {
+ const answer = await replyToRoomInventory("Какие устройства в коридоре?", async(name) =>
+  name==="ha_list_floors_areas"
+   ? {structuredContent:{success:true,floors:[{areas:[{area_id:"h",name:"Коридор"}]}],unassigned_areas:[]}}
+   : {structuredContent:{success:true,offset:0,count:2,total_count:2,has_more:false,next_offset:null,devices:[{area_id:"h",name:"Свет"},{area_id:"h",name:"Свет"}]}}
+ );
+ assert.match(answer,/Коридор» \(2\)/);
+ assert.match(answer,/одноимённых: 2/);
+});

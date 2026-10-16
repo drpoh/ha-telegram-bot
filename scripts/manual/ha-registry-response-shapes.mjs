@@ -8,14 +8,18 @@ function shape(value) {
 }
 try {
   const client = await connectMcp();
+  const areas = await client.callTool({ name: "ha_list_floors_areas", arguments: {} });
+  const registry = areas.structuredContent;
+  const nested = (registry?.floors ?? []).flatMap(floor => floor.areas ?? []);
+  const area = [...nested, ...(registry?.unassigned_areas ?? [])].find(a => a.area_id);
   for (const [name,args] of [
     ["ha_list_floors_areas", {}],
-    ["ha_get_device", { limit: 1, offset: 0, detail_level: "minimal" }],
+    ["ha_get_device", area ? { area_id: area.area_id, limit: 1, offset: 0 } : { limit: 1, offset: 0 }],
     ["ha_search", { query: "датчик движения", limit: 1, offset: 0, result_fields: ["entity_id"] }],
   ]) {
     try {
       const response = await client.callTool({ name, arguments: args });
-      console.log(JSON.stringify({ tool: name, isError: !!response.isError, shape: shape(response.structuredContent), contentKinds: (response.content ?? []).map(c => c.type) }));
+      console.log(JSON.stringify({ tool: name, isError: !!response.isError, shape: shape(response.structuredContent), contentKinds: (response.content ?? []).map(c => c.type), errorCategory: response.isError ? ((response.content ?? []).some(c => /required|missing|must provide|specify/i.test(c.text ?? "")) ? "missing_argument" : (response.content ?? []).some(c => /invalid|unknown|not found|unsupported/i.test(c.text ?? "")) ? "invalid_argument_or_not_found" : "other") : null }));
     } catch (error) {
       console.log(JSON.stringify({tool:name, status:"failed", errorType:error?.name ?? "Error"}));
     }

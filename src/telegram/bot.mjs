@@ -21,7 +21,7 @@ import {
 import { clearPendingConfirmations } from "../decision/pending-confirmation.mjs";
 import { getDecisionAudit, getDecisionAuditSummary } from "../decision/audit.mjs";
 
-import { getHealthStatus } from "../status/health.mjs";
+import { getHealthStatus, getLocalDiagnostics } from "../status/health.mjs";
 import {
   clearBehaviorCorrectionsForEntity,
   getBehaviorAuditSnapshot,
@@ -67,11 +67,54 @@ bot.command("status", async (ctx) => {
     `Последний успешный AI-вызов: ${lastAi}\n` +
     `Очередь: ${status.queue.active} активных / ${status.queue.pending} ожидают\n` +
     `Запросов с запуска: ${status.queue.total}\n` +
+    `Сцен: ${getLocalDiagnostics().scenes ?? "н/д"}\n` +
+    `SQLite: ${getLocalDiagnostics().database}\n` +
     `Память процесса: ${status.memoryMb} МБ\n` +
     `Время работы: ${status.uptime}\n` +
     `PID: ${status.pid}`
   );
 });
+
+  bot.command("help", async (ctx) => {
+    if (!isAllowed(ctx)) return;
+    await ctx.reply(
+      "🏠 RS Home AI — помощь\n\n" +
+      "/status — состояние бота\n" +
+      "/diagnostics — техническая диагностика\n" +
+      "/model — AI-модели\n" +
+      "/decisions — аудит решений\n" +
+      "/behavior — коррекции поведения\n" +
+      "/behavior_reset light.entity_id — сброс коррекции\n" +
+      "/clear — очистить память разговора\n" +
+      "/help — справка\n\n" +
+      "Примеры:\n" +
+      "• Сколько градусов в сауне?\n" +
+      "• Какие сцены есть в гостиной?\n" +
+      "• Запомни освещение в гостиной как Вечер\n" +
+      "• Запусти сцену Вечер в гостиной\n" +
+      "• Удали сцену Вечер в гостиной\n\n" +
+      "Команды управления могут изменить состояние устройств."
+    );
+  });
+
+  bot.command("diagnostics", async (ctx) => {
+    if (!isAllowed(ctx)) return;
+    const status = getHealthStatus();
+    const local = getLocalDiagnostics();
+    const last = status.queue.lastRequest;
+    await ctx.reply(
+      "🔧 RS Home AI — диагностика DEV\n\n" +
+      `HA-MCP (клиент): ${status.mcp ? "подключён" : "отключён"}\n` +
+      `SQLite: ${local.database}\n` +
+      `Сцен: ${local.scenes ?? "недоступно"}\n` +
+      `Свободно на разделе БД: ${local.diskFreeGb ?? "н/д"} ГБ\n` +
+      `Последний запрос: ${last ? (last.status === "ok" ? "успешно" : "ошибка") : "нет данных"}\n` +
+      `Длительность запроса: ${last ? last.durationMs + " мс" : "н/д"}\n` +
+      `Процесс: PID ${status.pid}, Node ${status.node}\n` +
+      `Память RSS: ${status.memoryMb} МБ\n` +
+      `Время работы: ${status.uptime}`
+    );
+  });
 
   bot.command("decisions", async (ctx) => {
     if (!isAllowed(ctx)) return;

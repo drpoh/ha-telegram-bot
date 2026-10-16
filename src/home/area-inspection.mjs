@@ -33,7 +33,7 @@ export async function inspectAreaDevices(areaName, callTool) {
     status: "complete_device_registry",
     area: area.name,
     count: found.devices.length,
-    devices: found.devices.slice(0, 100).map(d => ({
+    devices: found.devices.map(d => ({
       name: d.name || "Без названия",
       manufacturer: d.manufacturer || null,
       model: d.model || null,

@@ -51,14 +51,24 @@ bot.command("status", async (ctx) => {
   if (!isAllowed(ctx)) return;
 
   const status = getHealthStatus();
+  const ai = getAIStatus();
+  const aiDescription = ai.model
+    ? `${ai.provider} / ${ai.model}`
+    : "ещё не использовался";
+  const lastAi = ai.timestamp
+    ? new Date(ai.timestamp).toLocaleString("ru-RU", { timeZone: "Europe/Helsinki" })
+    : "нет данных";
 
   await ctx.reply(
-    "🏠 Home Assistant AI Bot v2\n\n" +
-    `HA-MCP: ${status.mcp ? "🟢 connected" : "🔴 disconnected"}\n` +
-    `Queue: ${status.queue.active} active / ${status.queue.pending} pending\n` +
-    `Requests: ${status.queue.total}\n` +
-    `Uptime: ${status.uptime}\n` +
-    `Node: ${status.node}\n` +
+    "🏠 RS Home AI — состояние\\n\\n" +
+    `Версия Node: ${status.node}\\n` +
+    `HA-MCP: ${status.mcp ? "🟢 подключён" : "🔴 отключён"}\\n` +
+    `AI: ${aiDescription}\\n` +
+    `Последний успешный AI-вызов: ${lastAi}\\n` +
+    `Очередь: ${status.queue.active} активных / ${status.queue.pending} ожидают\\n` +
+    `Запросов с запуска: ${status.queue.total}\\n` +
+    `Память процесса: ${status.memoryMb} МБ\\n` +
+    `Время работы: ${status.uptime}\\n` +
     `PID: ${status.pid}`
   );
 });

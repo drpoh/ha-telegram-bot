@@ -38,3 +38,9 @@ GitHub branch search on 2026-10-16 now returns exactly **65** names after the th
 **Archival design before deleting unique branches:** keep a single immutable, dated snapshot of remote branch tips (name + full SHA), and a durable Git-reachable preservation ref that contains every would-be-deleted tip. A simple `git bundle` on Pi by itself does **not** preserve reachability on GitHub. Before deletion confirm archive ref exists on GitHub, its commit ancestry includes each candidate SHA, and that no PR or worktree uses the branch. Keep snapshot for restoring original names. Archive should contain only Git metadata/history (no accidental production secrets) and never alter main/V2/DEV code.
 
 A large multi-parent archive merge can preserve all histories using `git commit-tree` with the tree of a known safe baseline, but this is an advanced operation: validate in an isolated temporary repo/worktree and verify parent/reachability before using. Do not perform blanket deletion or assume the V3 branch includes all work.
+
+## Verified local backup checkpoint (owner report, 2026-10-16)
+
+- `~/projects/rs-home-ai-git-audit/branches-before-cleanup.txt`: 65 live GitHub head SHA/name pairs.
+- `~/projects/rs-home-ai-git-audit/branches-backup.bundle`: verified complete Git history; 68 included tracking refs because 3 deleted branches remained in local refs. Git bundle integrity verified successfully. Local backup alone is not an off-device preservation guarantee.
+- Next create an immutable archive commit on an isolated archive branch whose parents are **all 65 snapshotted GitHub branch tip commits**; retain the mapping in the archive commit message and local manifest. Archive commit's tree may equal main while its parent pointers preserve histories; never merge this archival ref into main or production. Verify remote archive branch and ancestry before deleting anything else. Do not use origin remote, which points to production checkout.

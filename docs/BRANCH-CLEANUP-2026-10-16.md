@@ -30,3 +30,11 @@ Pi confirmed three branch tips are ancestors of `feature/v3-home-agent` and are 
 Reported remote branches: 68 before → expected 65 after these deletions. Verify by `git ls-remote --heads github | wc -l` before further cleanup.
 
 **Git remote caution:** DEV `github` is HTTPS (suitable for fetch), `origin` points to `/home/drpoh/ha-telegram-bot` (production checkout). For authenticated cleanup use an explicit `git@github.com:drpoh/ha-telegram-bot.git` target; never push/fetch/merge through `origin` to perform DEV updates. Preserve protected and unique-history branches.
+
+## Next checkpoint — 65 branches verified from GitHub
+
+GitHub branch search on 2026-10-16 now returns exactly **65** names after the three verified deletions. All remaining earlier audit candidates were marked UNMERGED relative to `main` and `feature/v3-home-agent`; this alone does not justify deletion. Preserve feature branch for active DEV, main/refactor and baseline branches, PR heads, and distinct histories.
+
+**Archival design before deleting unique branches:** keep a single immutable, dated snapshot of remote branch tips (name + full SHA), and a durable Git-reachable preservation ref that contains every would-be-deleted tip. A simple `git bundle` on Pi by itself does **not** preserve reachability on GitHub. Before deletion confirm archive ref exists on GitHub, its commit ancestry includes each candidate SHA, and that no PR or worktree uses the branch. Keep snapshot for restoring original names. Archive should contain only Git metadata/history (no accidental production secrets) and never alter main/V2/DEV code.
+
+A large multi-parent archive merge can preserve all histories using `git commit-tree` with the tree of a known safe baseline, but this is an advanced operation: validate in an isolated temporary repo/worktree and verify parent/reachability before using. Do not perform blanket deletion or assume the V3 branch includes all work.

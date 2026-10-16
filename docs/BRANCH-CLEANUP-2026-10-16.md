@@ -58,3 +58,11 @@ A large multi-parent archive merge can preserve all histories using `git commit-
 Owner ran an archival ancestry review against the verified 65-tip GitHub archive. Some `CANDIDATE` branches are **open PR heads**, so ancestry alone is not deletion authorization. Preserve all open PR heads automatically, including docs/v2-copy-baseline-20261015 (#192), docs/v2-evolution-primary-20261014 (#191), feat/ha-registry-live-event-watch-20261014 (#188), feat/v3-readonly-room-lights-20261014 (#190), fix/v3-kitchen-read-scope-e902efeb-20261014 (#142), and older V3 test/follow-up PR heads.
 
 For deletion, additionally require an exact match of tip SHA to the 65-branch snapshot, ancestry in the archive commit, no checked-out worktree, and no open PR. Re-check against live GitHub just before push; use per-ref SHA leases to block races. Maintain V2/V3 baseline, release-proposal, feature/v3-home-agent, main/refactor, active DEV and archive.
+
+## Final mass cleanup verified — 2026-10-16
+
+- Pi reported **44** SHA-leased deletions succeeded (`BRANCH_CLEANUP=PASS`), after excluding PR heads, worktrees and preserved core/release/baseline refs.
+- GitHub branch search independently confirmed exactly **22** remaining branches (down from 68 initially). Total removed: **46** (3 initial + 44 mass = **47**; note original 68 + 1 new archive = 69, then 47 deletions = 22 remaining).
+- GitHub archive `archive/branch-history-20261016` retains reachability for **65 original branch tips** verified by owner.
+- Remaining 22 include protected bases, active V2.1 DEV, open PR heads, archival ref and legacy release proposals. Avoid further branch deletion without a fresh PR/reachability audit.
+- Production V2 and active DEV services untouched; DEV software last acceptance at commit `2fa0f11` (135 files, 541 assertions). Documentation and prompt commits newer than that require a combined DEV test.

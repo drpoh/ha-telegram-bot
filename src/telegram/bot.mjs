@@ -60,15 +60,15 @@ bot.command("status", async (ctx) => {
     : "нет данных";
 
   await ctx.reply(
-    "🏠 RS Home AI — состояние\\n\\n" +
-    `Версия Node: ${status.node}\\n` +
-    `HA-MCP: ${status.mcp ? "🟢 подключён" : "🔴 отключён"}\\n` +
-    `AI: ${aiDescription}\\n` +
-    `Последний успешный AI-вызов: ${lastAi}\\n` +
-    `Очередь: ${status.queue.active} активных / ${status.queue.pending} ожидают\\n` +
-    `Запросов с запуска: ${status.queue.total}\\n` +
-    `Память процесса: ${status.memoryMb} МБ\\n` +
-    `Время работы: ${status.uptime}\\n` +
+    "🏠 RS Home AI — состояние\n\n" +
+    `Версия Node: ${status.node}\n` +
+    `HA-MCP: ${status.mcp ? "🟢 подключён" : "🔴 отключён"}\n` +
+    `AI: ${aiDescription}\n` +
+    `Последний успешный AI-вызов: ${lastAi}\n` +
+    `Очередь: ${status.queue.active} активных / ${status.queue.pending} ожидают\n` +
+    `Запросов с запуска: ${status.queue.total}\n` +
+    `Память процесса: ${status.memoryMb} МБ\n` +
+    `Время работы: ${status.uptime}\n` +
     `PID: ${status.pid}`
   );
 });

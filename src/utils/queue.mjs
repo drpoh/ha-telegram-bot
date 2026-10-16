@@ -1,5 +1,6 @@
 import { askHomeAssistant } from "../ai/agent.mjs";
 import { callHA } from "../mcp/executor.mjs";
+import { replyToRoomInventory } from "../home/room-inventory-reply.mjs";
 import {
   cancelPendingConfirmation,
   consumePendingConfirmation,
@@ -43,7 +44,10 @@ function enqueue(label, handler) {
 }
 
 export function queueHomeAssistantRequest(userText, options = {}) {
-  return enqueue(userText, () => askHomeAssistant(userText, options));
+  return enqueue(userText, async () => {
+    const inventory = await replyToRoomInventory(userText, callHA);
+    return inventory ?? askHomeAssistant(userText, options);
+  });
 }
 
 export function queueConfirmedAction(

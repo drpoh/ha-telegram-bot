@@ -1,3 +1,10 @@
+## 2026-10-16 — V2.1 conversation and branch inventory
+- DEV verified: 135 test files / 541 assertions, service active; commit 2fa0f11.
+- Multi-turn conversation passed corridor and kitchen battery tests; living-room device absence was not exhaustively supported.
+- At least 68 branch names inventoried; no branch deleted pending dependency checks.
+- Updated handoff, cleanup plan, missing-device prompt and regression test; Pi acceptance pending.
+- Production V2 unchanged.
+
 # WORKLOG — Development checkpoint journal
 
 ## 2026-10-09 — project and file review

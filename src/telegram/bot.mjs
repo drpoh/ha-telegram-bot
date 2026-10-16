@@ -1,4 +1,6 @@
 import { Telegraf } from "telegraf";
+import { getMcpClient } from "../mcp/client.mjs";
+import { probeMcp } from "../status/mcp-probe.mjs";
 import { createClearAuthorization } from "./clear-authorization.mjs";
 
 import { config } from "../config/env.mjs";
@@ -108,9 +110,13 @@ bot.command("status", async (ctx) => {
     const status = getHealthStatus();
     const local = getLocalDiagnostics();
     const last = status.queue.lastRequest;
+    let mcpClient = null;
+    try { mcpClient = getMcpClient(); } catch { /* disconnected */ }
+    const probe = await probeMcp({ client: mcpClient });
     await ctx.reply(
       "🔧 RS Home AI — диагностика DEV\n\n" +
       `HA-MCP (клиент): ${status.mcp ? "подключён" : "отключён"}\n` +
+      `HA-MCP (ответ HA): ${probe.status}${probe.latencyMs != null ? `, ${probe.latencyMs} мс` : ""}\n` +
       `SQLite: ${local.database}\n` +
       `Сцен: ${local.scenes ?? "недоступно"}\n` +
       `Свободно на разделе БД: ${local.diskFreeGb ?? "н/д"} ГБ\n` +

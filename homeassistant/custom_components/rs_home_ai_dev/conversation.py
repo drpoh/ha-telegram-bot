@@ -6,6 +6,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers import intent
+from homeassistant.components.conversation.chat_log import AssistantContent
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from .const import CONF_API_URL, CONF_API_TOKEN
 
@@ -40,9 +41,9 @@ class RSHomeAIConversation(conversation.ConversationEntity, conversation.Abstrac
         await super().async_will_remove_from_hass()
 
     async def _async_handle_message(self, user_input, chat_log):
-        return await self._forward(user_input)
+        return await self._forward(user_input, chat_log)
 
-    async def _forward(self, user_input: conversation.ConversationInput) -> conversation.ConversationResult:
+    async def _forward(self, user_input: conversation.ConversationInput, chat_log: conversation.ChatLog) -> conversation.ConversationResult:
         session = async_get_clientsession(self.hass)
         response = intent.IntentResponse(language=user_input.language)
         try:
@@ -57,6 +58,9 @@ class RSHomeAIConversation(conversation.ConversationEntity, conversation.Abstrac
             if not body.get("success") or not isinstance(body.get("answer"), str):
                 raise ValueError("Invalid DEV response")
             response.async_set_speech(body["answer"])
+            chat_log.async_add_assistant_content_without_tools(
+                AssistantContent(agent_id=user_input.agent_id, content=body["answer"])
+            )
         except (aiohttp.ClientError, asyncio.TimeoutError, ValueError):
             response.async_set_speech("RS Home AI временно недоступен. Попробуйте ещё раз.")
         return conversation.ConversationResult(response=response, conversation_id=user_input.conversation_id)

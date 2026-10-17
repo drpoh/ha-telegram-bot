@@ -17,7 +17,7 @@ async def async_setup_entry(
 ) -> None:
     async_add_entities([RSHomeAIConversation(entry)])
 
-class RSHomeAIConversation(conversation.ConversationEntity, conversation.AbstractConversationAgent):
+class RSHomeAIConversation(conversation.ConversationEntity):
     _attr_name = "RS Home AI DEV"
     _attr_unique_id = "rs_home_ai_dev_conversation"
 
@@ -28,9 +28,7 @@ class RSHomeAIConversation(conversation.ConversationEntity, conversation.Abstrac
     def supported_languages(self):
         return ["ru"]
 
-    @property
-    def supports_control(self):
-        return True
+    _attr_supported_features = conversation.ConversationEntityFeature.CONTROL
 
     async def async_added_to_hass(self) -> None:
         await super().async_added_to_hass()

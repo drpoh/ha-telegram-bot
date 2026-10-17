@@ -1,3 +1,4 @@
+import { config } from "../config/env.mjs";
 import { generateWithGemini } from "./providers/gemini.mjs";
 import { generateWithOpenRouter } from "./providers/openrouter.mjs";
 
@@ -18,14 +19,15 @@ let lastAI = {
   timestamp: null,
 };
 
-export async function generateAI(contents) {
+export async function generateAI(contents, options = {}) {
   let lastError;
 
   for (const provider of providers) {
+    if (provider.name === "openrouter" && !config.openrouter.apiKey) continue;
     try {
       console.log(`AI Router → ${provider.name}`);
 
-      const result = await provider.generate(contents);
+      const result = await provider.generate(contents, options);
 
       lastAI = {
         provider: result.provider || provider.name,

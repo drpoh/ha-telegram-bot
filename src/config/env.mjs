@@ -30,5 +30,6 @@ export const config = {
 
   http: {
     port: Number(process.env.HTTP_PORT || 3000),
+    apiToken: process.env.HTTP_API_TOKEN || null,
   },
 };

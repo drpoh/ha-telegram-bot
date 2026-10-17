@@ -26,6 +26,14 @@ function sanitizeLightAttributes(attributes = {}) {
     safe.brightness = attributes.brightness;
   }
 
+  if (Array.isArray(attributes.rgb_color) && attributes.rgb_color.length === 3 &&
+      attributes.rgb_color.every(v => Number.isInteger(v) && v >= 0 && v <= 255)) {
+    safe.rgb_color = [...attributes.rgb_color];
+  }
+  if (Number.isInteger(attributes.color_temp_kelvin) &&
+      attributes.color_temp_kelvin >= 1000 && attributes.color_temp_kelvin <= 10000) {
+    safe.color_temp_kelvin = attributes.color_temp_kelvin;
+  }
   return safe;
 }
 

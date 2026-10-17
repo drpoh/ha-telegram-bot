@@ -1,4 +1,7 @@
 import { generateAI } from "./router.mjs";
+import { isPureSmallTalk } from "./conversation-intent.mjs";
+import { buildQuickConversationPrompt } from "./quick-conversation-prompt.mjs";
+import { inspectAreaDevices } from "../home/area-inspection.mjs";
 import { buildSystemPrompt } from "./prompt.mjs";
 import { getKnownDeviceContext } from "../home/entity-resolver.mjs";
 
@@ -111,18 +114,20 @@ export async function askHomeAssistant(
   } = {}
 ) {
   startLearningSession(userText);
+  const allowTools = !isPureSmallTalk(userText);
+  const quickConversation = !allowTools;
   const deviceContext = getDeviceMemoryText();
   const controlledContext = getLastControlledText();
   const knownDeviceContext = getKnownDeviceContext(userText);
   const requestDevice = resolveKnownDevice(userText);
   const homeContext = await buildCurrentStateContext(userText);
   const contents = [
-    ...getConversationHistory(),
+    ...getConversationHistory().slice(quickConversation ? -4 : -12),
     {
       role: "user",
       parts: [
         {
-          text: buildSystemPrompt(
+          text: quickConversation ? buildQuickConversationPrompt(userText) : buildSystemPrompt(
             userText,
             deviceContext,
             controlledContext,
@@ -136,7 +141,7 @@ export async function askHomeAssistant(
 
   for (let step = 0; step < MAX_AGENT_STEPS; step++) {
     const { response, model, provider } =
-      await generateAI(contents);
+      await generateAI(contents, { allowTools });
 
     console.log(`${provider} OK → ${model}`);
 
@@ -171,12 +176,15 @@ export async function askHomeAssistant(
       let activeDecisionAuditId = null;
 
       try {
-        if (isAiHistoryTool(call.name)) {
+        if (call.name === "ai_area_devices") {
+          result = await inspectAreaDevices(call.args?.area, callHA);
+        } else if (isAiHistoryTool(call.name)) {
           result = await callAiHistoryTool(call.name, call.args || {});
         } else if (isAiSceneTool(call.name)) {
           result = await callAiSceneTool(
             call.name,
-            call.args || {}
+            call.args || {},
+            { source, userText }
           );
         } else {
           const shadow = shadowEvaluateToolCall(

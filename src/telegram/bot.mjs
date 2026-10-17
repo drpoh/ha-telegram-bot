@@ -1,4 +1,7 @@
 import { Telegraf } from "telegraf";
+import { getMcpClient } from "../mcp/client.mjs";
+import { probeMcp } from "../status/mcp-probe.mjs";
+import { createClearAuthorization } from "./clear-authorization.mjs";
 
 import { config } from "../config/env.mjs";
 import {
@@ -21,13 +24,14 @@ import {
 import { clearPendingConfirmations } from "../decision/pending-confirmation.mjs";
 import { getDecisionAudit, getDecisionAuditSummary } from "../decision/audit.mjs";
 
-import { getHealthStatus } from "../status/health.mjs";
+import { getHealthStatus, getLocalDiagnostics } from "../status/health.mjs";
 import {
   clearBehaviorCorrectionsForEntity,
   getBehaviorAuditSnapshot,
 } from "../learning/corrections.mjs";
 
 let bot = null;
+const clearAuthorization = createClearAuthorization();
 
 function isAllowed(ctx) {
   return ctx.from?.id === config.telegram.allowedUserId;
@@ -43,7 +47,7 @@ export function startTelegram() {
       "🏠 Home Assistant AI готов.\n\n" +
       "/status — состояние бота\n" +
       "/model — AI-конфигурация\n" +
-      "/clear — очистить память"
+      "/help — список команд"
     );
   });
 
@@ -51,17 +55,78 @@ bot.command("status", async (ctx) => {
   if (!isAllowed(ctx)) return;
 
   const status = getHealthStatus();
+  const ai = getAIStatus();
+  const aiDescription = ai.model
+    ? `${ai.provider} / ${ai.model}`
+    : "ещё не использовался";
+  const lastAi = ai.timestamp
+    ? new Date(ai.timestamp).toLocaleString("ru-RU", { timeZone: "Europe/Helsinki" })
+    : "нет данных";
 
   await ctx.reply(
-    "🏠 Home Assistant AI Bot v2\n\n" +
-    `HA-MCP: ${status.mcp ? "🟢 connected" : "🔴 disconnected"}\n` +
-    `Queue: ${status.queue.active} active / ${status.queue.pending} pending\n` +
-    `Requests: ${status.queue.total}\n` +
-    `Uptime: ${status.uptime}\n` +
-    `Node: ${status.node}\n` +
+    "🏠 RS Home AI — состояние\n\n" +
+    `Версия RS Home AI: ${process.env.RS_HOME_AI_VERSION || "V2.1.0-rc3 DEV"}\n` +
+    `Версия Node: ${status.node}\n` +
+    `Резервный AI: ${config.openrouter.apiKey ? "настроен (доступность не проверялась)" : "не настроен"}\n` +
+    `HA-MCP: ${status.mcp ? "🟢 подключён" : "🔴 отключён"}\n` +
+    `AI: ${aiDescription}\n` +
+    `Последний успешный AI-вызов: ${lastAi}\n` +
+    `Очередь: ${status.queue.active} активных / ${status.queue.pending} ожидают\n` +
+    `Запросов с запуска: ${status.queue.total}\n` +
+    `Сцен: ${getLocalDiagnostics().scenes ?? "н/д"}\n` +
+    `SQLite: ${getLocalDiagnostics().database}\n` +
+    `Память процесса: ${status.memoryMb} МБ\n` +
+    `Время работы: ${status.uptime}\n` +
     `PID: ${status.pid}`
   );
 });
+
+  bot.command("help", async (ctx) => {
+    if (!isAllowed(ctx)) return;
+    await ctx.reply(
+      "🏠 RS Home AI — помощь\n\n" +
+      "/status — состояние бота\n" +
+      "/diagnostics — техническая диагностика\n" +
+      "/model — AI-модели\n" +
+      "/decisions — аудит решений\n" +
+      "/behavior — коррекции поведения\n" +
+      "/behavior_reset light.entity_id — сброс коррекции\n" +
+      "/clear — запросить очистку памяти\n" +
+      "/clear_confirm — подтвердить очистку (60 секунд)\n" +
+      "/clear_cancel — отменить очистку\n" +
+      "/help — справка\n\n" +
+      "Примеры:\n" +
+      "• Сколько градусов в сауне?\n" +
+      "• Какие сцены есть в гостиной?\n" +
+      "• Запомни освещение в гостиной как Вечер\n" +
+      "• Запусти сцену Вечер в гостиной\n" +
+      "• Удали сцену Вечер в гостиной\n\n" +
+      "Команды управления могут изменить состояние устройств."
+    );
+  });
+
+  bot.command("diagnostics", async (ctx) => {
+    if (!isAllowed(ctx)) return;
+    const status = getHealthStatus();
+    const local = getLocalDiagnostics();
+    const last = status.queue.lastRequest;
+    let mcpClient = null;
+    try { mcpClient = getMcpClient(); } catch { /* disconnected */ }
+    const probe = await probeMcp({ client: mcpClient });
+    await ctx.reply(
+      "🔧 RS Home AI — диагностика DEV\n\n" +
+      `HA-MCP (клиент): ${status.mcp ? "подключён" : "отключён"}\n` +
+      `HA-MCP (ответ HA): ${probe.status}${probe.latencyMs != null ? `, ${probe.latencyMs} мс` : ""}\n` +
+      `SQLite: ${local.database}\n` +
+      `Сцен: ${local.scenes ?? "недоступно"}\n` +
+      `Свободно на разделе БД: ${local.diskFreeGb ?? "н/д"} ГБ\n` +
+      `Последний запрос: ${last ? (last.status === "ok" ? "успешно" : "ошибка") : "нет данных"}\n` +
+      `Длительность запроса: ${last ? last.durationMs + " мс" : "н/д"}\n` +
+      `Процесс: PID ${status.pid}, Node ${status.node}\n` +
+      `Память RSS: ${status.memoryMb} МБ\n` +
+      `Время работы: ${status.uptime}`
+    );
+  });
 
   bot.command("decisions", async (ctx) => {
     if (!isAllowed(ctx)) return;
@@ -159,17 +224,28 @@ bot.command("status", async (ctx) => {
 
   bot.command("clear", async (ctx) => {
     if (!isAllowed(ctx)) return;
+    clearAuthorization.request(ctx.from.id);
+    await ctx.reply("⚠️ Очистить память разговора и устройств? Для подтверждения отправьте /clear_confirm в течение 60 секунд. Для отмены — /clear_cancel. Сцены не удаляются.");
+  });
 
+  bot.command("clear_cancel", async (ctx) => {
+    if (!isAllowed(ctx)) return;
+    clearAuthorization.cancel(ctx.from.id);
+    await ctx.reply("Очистка памяти отменена.");
+  });
+
+  bot.command("clear_confirm", async (ctx) => {
+    if (!isAllowed(ctx)) return;
+    if (!clearAuthorization.consume(ctx.from.id)) {
+      await ctx.reply("Подтверждение истекло или отсутствует. Сначала отправьте /clear.");
+      return;
+    }
     clearConversationHistory();
     clearDeviceMemory();
     clearControlledMemory();
     clearPendingConfirmations();
-
-    console.log("Memory → cleared");
-
-    await ctx.reply(
-      "🧹 Память разговора и устройств очищена."
-    );
+    console.log("Memory → cleared by explicit confirmation");
+    await ctx.reply("🧹 Память разговора и устройств очищена. AI-сцены сохранены.");
   });
 
   bot.on("text", async (ctx) => {
@@ -233,12 +309,20 @@ bot.command("status", async (ctx) => {
       console.error("Telegram error:", error);
 
       await ctx.reply(
-        "❌ Ошибка при обращении к Home Assistant."
+        /OPENROUTER_API_KEY отсутствует|high demand|503|UNAVAILABLE|No AI provider available|All Gemini models are unavailable/i.test(String(error?.message || ""))
+          ? "⏳ AI-сервис временно недоступен. Не могу подтвердить результат запроса. Если вы просили изменить устройство, проверьте его состояние и повторите позже."
+          : "❌ Не удалось обработать запрос. Проверьте журнал DEV-бота."
       );
     }
   });
 
-  bot.launch();
+  bot.catch((error, ctx) => {
+    console.error("Telegram update failed:", error?.name, error?.message);
+    if (ctx?.reply) void Promise.resolve(ctx.reply("Запрос завершился с ошибкой. Повторите позже.")).catch(() => {});
+  });
+  void Promise.resolve(bot.launch()).catch(error => {
+    console.error("Telegram polling failed:", error?.name, error?.message);
+  });
 
   console.log("Telegram bot started");
 }

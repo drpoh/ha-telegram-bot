@@ -1,4 +1,5 @@
 import { getMcpClient } from "./client.mjs";
+import { assessSearchCoverage } from "../home/search-coverage.mjs";
 import { updateDeviceMemory, getDeviceMemory } from "../memory/devices.mjs";
 import { rememberLearningSearch, rememberLearningControl } from "../learning/session.mjs";
 import { rememberOperationalAction } from "../memory/operational.mjs";
@@ -31,7 +32,13 @@ function logMcpResult(name, result) {
     return;
   }
 
-  console.log(`MCP ← ${name}`, JSON.stringify(content, null, 2));
+  const data = content?.data ?? content;
+  console.log(`MCP ← ${name}`, {
+    success: content?.success ?? !result?.isError,
+    matches: data?.entity_total_matches ?? null,
+    returned: Array.isArray(data?.entities) ? data.entities.length : null,
+    has_more: data?.entity_has_more ?? null,
+  });
 }
 
 export async function callHA(name, args = {}, { mcpClient = null } = {}) {
@@ -44,6 +51,10 @@ export async function callHA(name, args = {}, { mcpClient = null } = {}) {
     arguments: args,
   });
   logMcpResult(name, result);
+  if (name === "ha_search") {
+    const coverage = assessSearchCoverage(result?.structuredContent);
+    console.log("HA search coverage:", coverage.reason);
+  }
 
 
   if (name === "ha_search") {
@@ -65,13 +76,7 @@ export async function callHA(name, args = {}, { mcpClient = null } = {}) {
         `Memory → ${memory.query} / ${memory.domain} / ${memory.entities.length} entities`
       );
 
-      console.log(
-        "Memory entities →",
-        memory.entities.map(
-          (e) =>
-            `${e.entity_id} (${e.friendly_name}) [${e.state}]`
-        )
-      );
+      // Avoid logging device names and states from private homes.
     }
   }
 

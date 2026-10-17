@@ -8,10 +8,11 @@ const ai = new GoogleGenAI({
   apiKey: config.gemini.apiKey,
 });
 
-export async function generateWithGemini(contents) {
+export async function generateWithGemini(contents, { allowTools = true } = {}) {
   let lastError;
 
   for (const model of GEMINI_MODELS) {
+    const startedAt = performance.now();
     try {
       console.log(`Gemini → ${model}`);
 
@@ -19,10 +20,11 @@ export async function generateWithGemini(contents) {
         model,
         contents,
         config: {
-          tools,
+          ...(allowTools ? { tools } : {}),
         },
       });
 
+      console.log(`Gemini latency → ${model}: ${Math.round(performance.now() - startedAt)}ms`);
       return {
         response,
         model,
@@ -37,6 +39,7 @@ export async function generateWithGemini(contents) {
         `Gemini ${model} error:`,
         status || error.message
       );
+      console.log(`Gemini failed latency → ${model}: ${Math.round(performance.now() - startedAt)}ms`);
 
       if (status === 429 || status === 503) {
         console.log("Gemini fallback → next model");

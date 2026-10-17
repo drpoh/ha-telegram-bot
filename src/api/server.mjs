@@ -1,10 +1,19 @@
 import express from "express";
+import { timingSafeEqual } from "node:crypto";
 
 import { config } from "../config/env.mjs";
 import { queueHomeAssistantRequest } from "../utils/queue.mjs";
 import { getHealthStatus } from "../status/health.mjs";
 
 let server = null;
+
+export function isAuthorizedHttpRequest(authorization, secret) {
+  if (typeof secret !== "string" || secret.length < 32 || typeof authorization !== "string") return false;
+  const candidate = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
+  const a = Buffer.from(candidate);
+  const b = Buffer.from(secret);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
 
 export function startHttpServer() {
   const app = express();
@@ -19,6 +28,9 @@ export function startHttpServer() {
   });
 
   app.post("/ask", async (req, res) => {
+    if (!isAuthorizedHttpRequest(req.get("authorization"), config.http.apiToken)) {
+      return res.status(401).json({ success: false, error: "Unauthorized" });
+    }
     try {
       const text = req.body?.text?.trim();
 
@@ -50,7 +62,7 @@ export function startHttpServer() {
 
   server = app.listen(
     config.http.port,
-    "0.0.0.0",
+    config.http.apiToken?.length >= 32 ? "0.0.0.0" : "127.0.0.1",
     () => {
       console.log(
         `HTTP API started on port ${config.http.port}`

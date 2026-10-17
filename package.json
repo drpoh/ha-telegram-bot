@@ -8,7 +8,8 @@
     "start": "node src/index.mjs",
     "dev": "node --watch src/index.mjs",
     "check": "find src test -name \"*.mjs\" -type f -print0 | xargs -0 -P 3 -n 1 node --check",
-    "test": "npm run check && node scripts/run-isolated-tests.mjs"
+    "test": "npm run check && node scripts/run-isolated-tests.mjs",
+    "test:v2": "node scripts/run-isolated-tests.mjs --v2"
   },
   "keywords": [
     "home-assistant",

@@ -1,0 +1,10 @@
+{
+  "domain": "rs_home_ai_dev",
+  "name": "RS Home AI DEV Conversation",
+  "version": "0.1.0",
+  "config_flow": true,
+  "dependencies": [
+    "conversation"
+  ],
+  "iot_class": "local_push"
+}

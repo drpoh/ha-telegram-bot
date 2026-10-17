@@ -16,6 +16,7 @@ test("bridge forwards authorized speech while preserving conversation ID",()=>{
  assert.match(platform,/Authorization.*Bearer/);
  assert.match(platform,/conversation_id/);
  assert.match(platform,/\/ask/);
+ assert.match(platform,/async_add_assistant_content_without_tools/);
 });
 test("HA config flow checks token and URL",()=>{
  assert.match(flow,/CONF_API_TOKEN/);
